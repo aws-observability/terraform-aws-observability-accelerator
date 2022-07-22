@@ -4,7 +4,7 @@ module "eks_observability_accelerator" {
   source = "aws-ia/aws-observability-accelerator/terraform/eks"
 
   # -- or use an existing cluster
-  eks_cluster_id       = var.eks_cluster_id
+  eks_cluster_id = var.eks_cluster_id
 
   # enable managed add-on for ADOT. Do we enforce this or let users
   # have their own configs for OTEL operator
@@ -21,13 +21,13 @@ module "eks_observability_accelerator" {
 
   enable_haproxy = true
   haproxy_config = {
-    amp_endpoint = module/amp.endpoint
+    amp_endpoint     = module / amp.endpoint
     grafana_endpoint = module.grafana.endpoint
   }
 
   enable_java = true
   java_config = {
-    amp_endpoint = ""
+    amp_endpoint     = ""
     grafana_endpoint = ""
   }
 

@@ -1,0 +1,8 @@
+extraArgs:
+  - --enable-certificate-owner-ref=true
+
+installCRDs: true
+
+securityContext:
+  enabled: true
+  fsGroup: 1001

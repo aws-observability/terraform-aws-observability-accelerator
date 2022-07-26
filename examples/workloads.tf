@@ -63,9 +63,7 @@ module "eks_observability_accelerator" {
   # # -- or using existing amg workspace. so we can use API for keys
   # managed_grafana_workspace_id = var.managed_grafana_workspace_id
 
-  tags = {
-    Env = "Test"
-  }
+  tags = local.tags
 
 }
 

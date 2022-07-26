@@ -11,7 +11,7 @@ locals {
     name        = "opentelemetry"
     repository  = "https://open-telemetry.github.io/opentelemetry-helm-charts"
     chart       = "opentelemetry-operator"
-    version     = "0.8.2"
+    version     = "0.10.0"
     namespace   = local.namespace
     timeout     = "1200"
     description = "ADOT Operator helm chart"

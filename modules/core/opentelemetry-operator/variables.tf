@@ -14,11 +14,14 @@ variable "addon_context" {
     aws_region_name                = string
     eks_cluster_id                 = string
     eks_oidc_issuer_url            = string
-    kubernetes_version             = string
     eks_oidc_provider_arn          = string
     irsa_iam_role_path             = string
     tags                           = map(string)
   })
+}
+
+variable "kubernetes_version" {
+  type = string
 }
 
 variable "addon_config" {

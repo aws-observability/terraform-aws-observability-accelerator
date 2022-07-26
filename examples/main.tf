@@ -2,15 +2,40 @@ provider "aws" {
   region = local.region
 }
 
+data "aws_eks_cluster_auth" "this" {
+  name = var.eks_cluster_id
+}
+
+data "aws_eks_cluster" "this" {
+  name = var.eks_cluster_id
+}
+
+provider "kubernetes" {
+  host                   = local.eks_cluster_endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.this.token
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = local.eks_cluster_endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
+    token                  = data.aws_eks_cluster_auth.this.token
+  }
+}
+
 
 locals {
   name   = basename(path.cwd)
   region = var.aws_region
 
-  vpc_cidr = "10.0.0.0/16"
-  //azs      = slice(data.aws_availability_zones.available.names, 0, 3)
+  eks_oidc_issuer_url  = replace(data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")
+  eks_cluster_endpoint = data.aws_eks_cluster.this.endpoint
+  eks_cluster_version  = data.aws_eks_cluster.this.version
 
   tags = {
-    GithubRepo = "github.com/aws-ia/terraform-aws-observability-accelerator"
+    Source = "github.com/aws-ia/terraform-aws-observability-accelerator"
   }
+
+
 }

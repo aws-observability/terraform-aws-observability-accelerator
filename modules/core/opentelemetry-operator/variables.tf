@@ -20,6 +20,11 @@ variable "addon_context" {
   })
 }
 
+variable "enable_cert_manager" {
+  type    = bool
+  default = true
+}
+
 variable "kubernetes_version" {
   type = string
 }

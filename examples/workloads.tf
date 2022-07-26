@@ -1,7 +1,7 @@
 
 
 module "eks_observability_accelerator" {
-  #source = "aws-ia/aws-observability-accelerator/terraform/eks"
+  #source = "aws-ia/terrarom-aws-observability-accelerator"
   source = "../"
 
   aws_region     = var.aws_region
@@ -9,13 +9,9 @@ module "eks_observability_accelerator" {
 
   # deploys AWS Distro for OpenTelemetry operator into the cluster
   enable_amazon_eks_adot = true
-  # amazon_eks_adot_config = object(
-  #   enable_cert_manager = false
-  # )
 
-  # # enable managed add-on for ADOT. Do we enforce this or let users
-  # # have their own configs for OTEL operator
-  # enable_amazon_eks_adot = true
+  # reusing existing certificate manager? defaults to true
+  enable_cert_manager = false
 
   # # -- or enable opentelemetry operator
   # enable_open_telemetry_operator = true

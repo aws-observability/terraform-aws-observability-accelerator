@@ -4,13 +4,14 @@ module "eks_observability_accelerator" {
   #source = "aws-ia/aws-observability-accelerator/terraform/eks"
   source = "../"
 
-  aws_region = var.aws_region
-
+  aws_region     = var.aws_region
   eks_cluster_id = var.eks_cluster_id
 
-
-  # # -- or use an existing cluster
-  # eks_cluster_id = var.eks_cluster_id
+  # deploys AWS Distro for OpenTelemetry operator into the cluster
+  enable_amazon_eks_adot = true
+  # amazon_eks_adot_config = object(
+  #   enable_cert_manager = false
+  # )
 
   # # enable managed add-on for ADOT. Do we enforce this or let users
   # # have their own configs for OTEL operator
@@ -61,6 +62,10 @@ module "eks_observability_accelerator" {
 
   # # -- or using existing amg workspace. so we can use API for keys
   # managed_grafana_workspace_id = var.managed_grafana_workspace_id
+
+  tags = {
+    Env = "Test"
+  }
 
 }
 

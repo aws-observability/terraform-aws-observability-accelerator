@@ -36,6 +36,4 @@ locals {
   tags = {
     Source = "github.com/aws-ia/terraform-aws-observability-accelerator"
   }
-
-
 }

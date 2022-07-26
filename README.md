@@ -86,3 +86,11 @@ No inputs.
 
 No outputs.
 <!-- END_TF_DOCS -->
+
+
+
+### Design Questions
+
+1. fetching EKS auth as config map? and pass to module (version, etc) as object?
+2. automatically pass config option as objects? (aws adot add-on: enable cert-manager, cert-manager version?)
+3. Test case for every option possible? 

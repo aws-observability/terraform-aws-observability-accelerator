@@ -22,10 +22,9 @@ resource "kubernetes_namespace_v1" "adot" {
 data "aws_eks_addon_version" "this" {
   count = var.enable_amazon_eks_adot ? 1 : 0
 
-  addon_name = local.name
-  # Need to allow both config routes - for managed and self-managed configs
-  kubernetes_version = try(var.addon_config.kubernetes_version, var.helm_config.kubernetes_version)
-  most_recent        = try(var.addon_config.most_recent, var.helm_config.most_recent, true)
+  addon_name         = local.name
+  kubernetes_version = try(var.addon_config.kubernetes_version, var.kubernetes_version)
+  most_recent        = try(var.addon_config.most_recent, true)
 }
 
 resource "aws_eks_addon" "adot" {

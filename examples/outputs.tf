@@ -7,3 +7,7 @@ output "aws_region" {
   description = "AWS Region"
   value       = module.eks_observability_accelerator.aws_region
 }
+
+output "eks_cluster_version" {
+  value = module.eks_observability_accelerator.eks_cluster_version
+}

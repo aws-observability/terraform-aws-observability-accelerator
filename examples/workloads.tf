@@ -1,67 +1,73 @@
 
 
 module "eks_observability_accelerator" {
-  source = "aws-ia/aws-observability-accelerator/terraform/eks"
+  #source = "aws-ia/aws-observability-accelerator/terraform/eks"
+  source = "../"
 
-  # -- or use an existing cluster
+  aws_region = var.aws_region
+
   eks_cluster_id = var.eks_cluster_id
 
-  # enable managed add-on for ADOT. Do we enforce this or let users
-  # have their own configs for OTEL operator
-  enable_amazon_eks_adot = true
 
-  # -- or enable opentelemetry operator
-  enable_open_telemetry_operator = true
-  open_telemetry_operator_config = map() // custom config
+  # # -- or use an existing cluster
+  # eks_cluster_id = var.eks_cluster_id
 
-  # deploy selected workloads by count indexing
+  # # enable managed add-on for ADOT. Do we enforce this or let users
+  # # have their own configs for OTEL operator
+  # enable_amazon_eks_adot = true
 
-  # this creates a new AMP workspace
-  create_managed_prometheus_workspace = true
+  # # -- or enable opentelemetry operator
+  # enable_open_telemetry_operator = true
+  # open_telemetry_operator_config = map() // custom config
 
-  enable_haproxy = true
-  haproxy_config = {
-    amp_endpoint     = module / amp.endpoint
-    grafana_endpoint = module.grafana.endpoint
-  }
+  # # deploy selected workloads by count indexing
 
-  enable_java = true
-  java_config = {
-    amp_endpoint     = ""
-    grafana_endpoint = ""
-  }
+  # # this creates a new AMP workspace
+  # create_managed_prometheus_workspace = true
 
+  # enable_haproxy = true
+  # haproxy_config = {
+  #   amp_endpoint     = module / amp.endpoint
+  #   grafana_endpoint = module.grafana.endpoint
+  # }
 
-
-
-  # -- or use an existing one
-  # seems like https://github.com/terraform-aws-modules/terraform-aws-managed-service-prometheus
-  # supports importing
-  amp_workspace_alias = var.amp_alias
-
-  # enable rules and alerts
-  enable_alert_manager = true
-
-  # -- or provide custom alerts definition
-  prometheus_custom_alert_rule = var.prometheus_custom_alert_rule
+  # enable_java = true
+  # java_config = {
+  #   amp_endpoint     = ""
+  #   grafana_endpoint = ""
+  # }
 
 
-  # create grafana workspace, and customer to deal with authentication later
-  create_managed_grafana_workspace = true
-  grafana_auth_provider            = var.grafana_auth_provider       //SAML or AWS_SSO
-  grafana_account_access_type      = var.grafana_account_access_type // CURRENT_ACCOUNT or ORGANIZATION
-  grafana_permission_type          = var.grafana_permission_type     // SERVICE_MANAGED or CUSTOMER_MANAGED
-  grafana_permission_role_arn      = var.grafana_permission_role_arn // if CUSTOMER_MANAGED
 
-  # -- or using existing amg workspace. so we can use API for keys
-  managed_grafana_workspace_id = var.managed_grafana_workspace_id
 
-}
+  # # -- or use an existing one
+  # # seems like https://github.com/terraform-aws-modules/terraform-aws-managed-service-prometheus
+  # # supports importing
+  # amp_workspace_alias = var.amp_alias
 
-module "amp" {
+  # # enable rules and alerts
+  # enable_alert_manager = true
 
-}
+  # # -- or provide custom alerts definition
+  # prometheus_custom_alert_rule = var.prometheus_custom_alert_rule
 
-module "grafana" {
+
+  # # create grafana workspace, and customer to deal with authentication later
+  # create_managed_grafana_workspace = true
+  # grafana_auth_provider            = var.grafana_auth_provider       //SAML or AWS_SSO
+  # grafana_account_access_type      = var.grafana_account_access_type // CURRENT_ACCOUNT or ORGANIZATION
+  # grafana_permission_type          = var.grafana_permission_type     // SERVICE_MANAGED or CUSTOMER_MANAGED
+  # grafana_permission_role_arn      = var.grafana_permission_role_arn // if CUSTOMER_MANAGED
+
+  # # -- or using existing amg workspace. so we can use API for keys
+  # managed_grafana_workspace_id = var.managed_grafana_workspace_id
 
 }
+
+# module "amp" {
+
+# }
+
+# module "grafana" {
+
+# }

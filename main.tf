@@ -6,12 +6,5 @@
 #
 
 module "java" {
-  source = ""
-
-}
-
-
-module "haproxy" {
-  source = ""
-
+  source = "./modules/java"
 }

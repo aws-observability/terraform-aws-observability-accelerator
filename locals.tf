@@ -13,6 +13,11 @@ locals {
   eks_cluster_endpoint = data.aws_eks_cluster.eks_cluster.endpoint
   eks_cluster_version  = data.aws_eks_cluster.eks_cluster.version
 
+  # if region is not passed, we assume the current one
+  amp_ws_region   = coalesce(var.managed_prometheus_region, data.aws_region.current.name)
+  amp_ws_id       = var.create_managed_prometheus_workspace ? aws_prometheus_workspace.this[0].id : var.managed_prometheus_id
+  amp_ws_endpoint = "https://aps-workspaces.${local.amp_ws_region}.amazonaws.com/workspaces/${local.amp_ws_id}/"
+
   context = {
     aws_caller_identity_account_id = data.aws_caller_identity.current.account_id
     aws_caller_identity_arn        = data.aws_caller_identity.current.arn

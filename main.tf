@@ -34,17 +34,32 @@ resource "aws_prometheus_workspace" "this" {
 }
 
 
+resource "aws_prometheus_alert_manager_definition" "this" {
+  count = var.enable_alertmanager ? 1 : 0
+
+  workspace_id = local.amp_ws_id
+
+  # TODO: support custom alert manager config
+  definition = <<EOF
+alertmanager_config: |
+    route:
+      receiver: 'default'
+    receivers:
+      - name: 'default'
+EOF
+}
+
 module "java" {
   count  = var.enable_java ? 1 : 0
   source = "./modules/workloads/java"
 
   addon_context = local.context
 
-  amp_endpoint = var.create_managed_prometheus_workspace ? aws_prometheus_workspace.this[0].prometheus_endpoint : var.managed_prometheus_endpoint
-  amp_id       = var.create_managed_prometheus_workspace ? aws_prometheus_workspace.this[0].id : var.managed_prometheus_id
+  amp_endpoint = local.amp_ws_endpoint
+  amp_id       = local.amp_ws_id
+  amp_region   = local.amp_ws_region
 
-  # if region is not passed, we assume the current one
-  amp_region = try(var.managed_prometheus_region, local.context.aws_region_name)
+  enable_recording_rules = var.enable_java_recording_rules
 
   depends_on = [
     module.operator

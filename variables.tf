@@ -55,15 +55,16 @@ variable "managed_prometheus_id" {
   default     = ""
 }
 
-variable "managed_prometheus_endpoint" {
-  description = "AWS Managed Prometheus Workspace endpoint"
-  type        = string
-  default     = ""
-}
 variable "managed_prometheus_region" {
   description = "AWS Managed Prometheus Workspace Region"
   type        = string
   default     = null
+}
+
+variable "enable_alertmanager" {
+  description = "Create AMP AlertManager for all workloads"
+  type        = bool
+  default     = false
 }
 
 variable "enable_java" {
@@ -71,6 +72,20 @@ variable "enable_java" {
   type        = bool
   default     = false
 }
+
+variable "enable_java_recording_rules" {
+  description = "Enable AMP recording rules for Java"
+  type        = bool
+  default     = true
+}
+
+# variable "java_config" {
+#   description = "Input configuration Java workloads"
+#   type = object({
+#     enable_recording_rules = bool
+#   })
+# }
+
 
 variable "tags" {
   description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"

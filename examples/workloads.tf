@@ -21,12 +21,14 @@ module "eks_observability_accelerator" {
   create_managed_prometheus_workspace = false
 
   # reusing existing AMP -- needs data source for alerting rules
-  managed_prometheus_id       = var.managed_prometheus_id
-  managed_prometheus_endpoint = var.managed_prometheus_endpoint
-  managed_prometheus_region   = var.managed_prometheus_region
+  managed_prometheus_id     = var.managed_prometheus_id
+  managed_prometheus_region = null # defaults to the current region, useful for cross region scenarios
 
+  # sets up the AMP alert manager at the workspace level
+  enable_alertmanager = true
 
-  enable_java = true
+  enable_java                 = true
+  enable_java_recording_rules = true # defaults to true
 
   # enable_haproxy = true
   # haproxy_config = {

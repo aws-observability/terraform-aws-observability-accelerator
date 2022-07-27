@@ -1,8 +1,7 @@
-variable "java" {
-  default = {
-    a = ""
-    b = ""
-  }
+variable "enable_recording_rules" {
+  description = "Enable AMP recording rules"
+  type        = bool
+  default     = true
 }
 
 variable "amp_endpoint" {

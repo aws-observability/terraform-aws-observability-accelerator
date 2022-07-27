@@ -17,10 +17,8 @@ module "eks_observability_accelerator" {
   # enable_open_telemetry_operator = true
   # open_telemetry_operator_config = map() // custom config
 
-  # # deploy selected workloads by count indexing
-
-  # # this creates a new AMP workspace
-  # create_managed_prometheus_workspace = true
+  # creates a new AMP workspace, defaults to true
+  create_managed_prometheus_workspace = true
 
   # enable_haproxy = true
   # haproxy_config = {

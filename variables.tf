@@ -39,6 +39,29 @@ variable "enable_cert_manager" {
   default     = true
 }
 
+variable "enable_opentelemetry_operator" {
+  type    = bool
+  default = false
+}
+
+variable "create_managed_prometheus_workspace" {
+  type    = bool
+  default = true
+}
+
+
+variable "managed_prometheus_id" {
+  description = "AWS Managed Prometheus Workspace ID"
+  type        = string
+  default     = ""
+}
+
+variable "managed_prometheus_endpoint" {
+  description = "AWS Managed Prometheus Workspace endpoint"
+  type        = string
+  default     = ""
+}
+
 variable "tags" {
   description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
   type        = map(string)

@@ -26,16 +26,27 @@ module "operator" {
   addon_context      = local.context
 }
 
-module "java" {
-  source = "./modules/workloads/java"
-
-  amp_endpoint = var.create_managed_prometheus_workspace ? aws_prometheus_workspace.this[0].prometheus_endpoint : var.managed_prometheus_endpoint
-  amp_id       = var.create_managed_prometheus_workspace ? aws_prometheus_workspace.this[0].id : var.managed_prometheus_id
-}
-
 resource "aws_prometheus_workspace" "this" {
   count = var.create_managed_prometheus_workspace ? 1 : 0
 
   alias = local.name
   tags  = var.tags
+}
+
+
+module "java" {
+  count  = var.enable_java ? 1 : 0
+  source = "./modules/workloads/java"
+
+  addon_context = local.context
+
+  amp_endpoint = var.create_managed_prometheus_workspace ? aws_prometheus_workspace.this[0].prometheus_endpoint : var.managed_prometheus_endpoint
+  amp_id       = var.create_managed_prometheus_workspace ? aws_prometheus_workspace.this[0].id : var.managed_prometheus_id
+
+  # if region is not passed, we assume the current one
+  amp_region = try(var.managed_prometheus_region, local.context.aws_region_name)
+
+  depends_on = [
+    module.operator
+  ]
 }

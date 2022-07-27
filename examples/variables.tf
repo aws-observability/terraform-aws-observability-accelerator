@@ -14,3 +14,15 @@ variable "aws_region" {
   description = "AWS Region"
   type        = string
 }
+variable "managed_prometheus_id" {
+  type    = string
+  default = ""
+}
+variable "managed_prometheus_endpoint" {
+  type    = string
+  default = ""
+}
+variable "managed_prometheus_region" {
+  type    = string
+  default = ""
+}

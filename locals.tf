@@ -9,9 +9,6 @@ data "aws_eks_cluster" "eks_cluster" {
 }
 
 locals {
-  #   eks_oidc_issuer_url  = var.eks_oidc_provider != null ? var.eks_oidc_provider : replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")
-  #   eks_cluster_endpoint = var.eks_cluster_endpoint != null ? var.eks_cluster_endpoint : data.aws_eks_cluster.eks_cluster.endpoint
-  #   eks_cluster_version  = var.eks_cluster_version != null ? var.eks_cluster_version : data.aws_eks_cluster.eks_cluster.version
   eks_oidc_issuer_url  = replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")
   eks_cluster_endpoint = data.aws_eks_cluster.eks_cluster.endpoint
   eks_cluster_version  = data.aws_eks_cluster.eks_cluster.version
@@ -29,4 +26,6 @@ locals {
     irsa_iam_role_path             = var.irsa_iam_role_path
     irsa_iam_permissions_boundary  = var.irsa_iam_permissions_boundary
   }
+
+  name = "aws-observability-accelerator"
 }

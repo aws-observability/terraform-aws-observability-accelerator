@@ -49,7 +49,6 @@ variable "create_managed_prometheus_workspace" {
   default = true
 }
 
-
 variable "managed_prometheus_id" {
   description = "AWS Managed Prometheus Workspace ID"
   type        = string
@@ -60,6 +59,17 @@ variable "managed_prometheus_endpoint" {
   description = "AWS Managed Prometheus Workspace endpoint"
   type        = string
   default     = ""
+}
+variable "managed_prometheus_region" {
+  description = "AWS Managed Prometheus Workspace Region"
+  type        = string
+  default     = null
+}
+
+variable "enable_java" {
+  description = "Deploys a collector for JAVA/JMX based workloads, dashboards and alerting rules"
+  type        = bool
+  default     = false
 }
 
 variable "tags" {

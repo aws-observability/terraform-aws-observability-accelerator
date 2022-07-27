@@ -8,17 +8,25 @@ module "eks_observability_accelerator" {
   eks_cluster_id = var.eks_cluster_id
 
   # deploys AWS Distro for OpenTelemetry operator into the cluster
-  enable_amazon_eks_adot = true
+  enable_amazon_eks_adot = false
 
   # reusing existing certificate manager? defaults to true
   enable_cert_manager = false
 
   # # -- or enable opentelemetry operator
-  # enable_open_telemetry_operator = true
+  enable_opentelemetry_operator = false #-- true doesn't work for me, needs fix
   # open_telemetry_operator_config = map() // custom config
 
   # creates a new AMP workspace, defaults to true
-  create_managed_prometheus_workspace = true
+  create_managed_prometheus_workspace = false
+
+  # reusing existing AMP -- needs data source for alerting rules
+  managed_prometheus_id       = var.managed_prometheus_id
+  managed_prometheus_endpoint = var.managed_prometheus_endpoint
+  managed_prometheus_region   = var.managed_prometheus_region
+
+
+  enable_java = true
 
   # enable_haproxy = true
   # haproxy_config = {
@@ -26,7 +34,7 @@ module "eks_observability_accelerator" {
   #   grafana_endpoint = module.grafana.endpoint
   # }
 
-  # enable_java = true
+
   # java_config = {
   #   amp_endpoint     = ""
   #   grafana_endpoint = ""

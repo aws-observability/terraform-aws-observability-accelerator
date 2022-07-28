@@ -1,19 +1,3 @@
-
-# DONT create the resources
-# VPC and supporting resources
-# EKS and Managed node groups
-
-# locals {
-#   # if both adot and otel are enabled, just deploys adot
-#   enable_otel = (var.enable_amazon_eks_adot && var.enable_opentelemetry_operator) ? false : var.enable_opentelemetry_operator
-
-#   # if both adot and otel are disabled, just deploys adot
-#   enable_adot = (!var.enable_amazon_eks_adot && !var.enable_opentelemetry_operator) ? true : var.enable_amazon_eks_adot
-
-#   #possible side effects? maybe customer wants only dashboards?
-
-# }
-
 module "operator" {
   source = "./modules/core/opentelemetry-operator"
 
@@ -27,7 +11,7 @@ module "operator" {
 }
 
 resource "aws_prometheus_workspace" "this" {
-  count = var.create_managed_prometheus_workspace ? 1 : 0
+  count = var.enable_managed_prometheus ? 1 : 0
 
   alias = local.name
   tags  = var.tags
@@ -48,6 +32,40 @@ alertmanager_config: |
       - name: 'default'
 EOF
 }
+
+module "managed_grafana" {
+  count   = var.enable_managed_grafana ? 1 : 0
+  source  = "terraform-aws-modules/managed-service-grafana/aws"
+  version = "~> 1.3"
+
+  # Workspace
+  name              = local.name
+  stack_set_name    = local.name
+  data_sources      = ["PROMETHEUS"]
+  associate_license = false
+
+  tags = var.tags
+}
+
+# provider "grafana" {
+#   #url  = try(var.grafana_endpoint, "https://${module.managed_grafana.workspace_endpoint}")
+#   url  = local.grafana_endpoint
+#   auth = local.grafana_api_key
+# }
+
+
+# resource "grafana_data_source" "amp" {
+#   type       = "prometheus"
+#   name       = local.name
+#   is_default = true
+#   url        = local.amp_ws_endpoint
+#   json_data {
+#     http_method     = "GET"
+#     sigv4_auth      = true
+#     sigv4_auth_type = "workspace-iam-role"
+#     sigv4_region    = local.amp_ws_region
+#   }
+# }
 
 module "java" {
   count  = var.enable_java ? 1 : 0

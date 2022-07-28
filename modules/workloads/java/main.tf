@@ -4,8 +4,16 @@ locals {
   namespace = try(var.helm_config.namespace, local.name)
 }
 
-data "aws_partition" "current" {}
+terraform {
+  required_providers {
+    grafana = {
+      source  = "grafana/grafana"
+      version = "1.24.0"
+    }
+  }
+}
 
+data "aws_partition" "current" {}
 
 # deploys collector
 module "helm_addon" {
@@ -90,13 +98,12 @@ groups:
 EOF
 }
 
-# dashboard
+# dashboards
+resource "grafana_folder" "this" {
+  title = "Observability Accelerator Dashboards"
+}
 
-# resource "grafana_folder" "this" {
-#   title = "Observability Accelerator - Java"
-# }
-
-# resource "grafana_dashboard" "this" {
-#   folder      = grafana_folder.this.id
-#   config_json = file("${path.module}/dashboards/default.json")
-# }
+resource "grafana_dashboard" "this" {
+  folder      = grafana_folder.this.id
+  config_json = file("${path.module}/dashboards/default.json")
+}

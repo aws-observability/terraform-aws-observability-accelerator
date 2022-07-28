@@ -91,3 +91,12 @@ EOF
 }
 
 # dashboard
+
+# resource "grafana_folder" "this" {
+#   title = "Observability Accelerator - Java"
+# }
+
+# resource "grafana_dashboard" "this" {
+#   folder      = grafana_folder.this.id
+#   config_json = file("${path.module}/dashboards/default.json")
+# }

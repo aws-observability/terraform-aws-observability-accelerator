@@ -27,7 +27,6 @@ variable "irsa_iam_permissions_boundary" {
   default     = ""
 }
 
-
 variable "enable_amazon_eks_adot" {
   type    = bool
   default = true
@@ -44,7 +43,7 @@ variable "enable_opentelemetry_operator" {
   default = false
 }
 
-variable "create_managed_prometheus_workspace" {
+variable "enable_managed_prometheus" {
   type    = bool
   default = true
 }
@@ -65,6 +64,26 @@ variable "enable_alertmanager" {
   description = "Create AMP AlertManager for all workloads"
   type        = bool
   default     = false
+}
+
+variable "enable_managed_grafana" {
+  type    = bool
+  default = true
+}
+
+
+variable "managed_grafana_region" {
+  description = "AWS Managed Grafana Workspace Region"
+  type        = string
+  default     = null
+}
+variable "managed_grafana_workspace_id" {
+  type    = string
+  default = ""
+}
+variable "grafana_api_key" {
+  type    = string
+  default = null
 }
 
 variable "enable_java" {

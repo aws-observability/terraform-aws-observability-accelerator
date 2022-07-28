@@ -10,10 +10,10 @@ module "eks_observability_accelerator" {
   # TODO: create also a cluster, VPC -- check if enough VPCs
 
   # deploys AWS Distro for OpenTelemetry operator into the cluster
-  enable_amazon_eks_adot = false
+  enable_amazon_eks_adot = true
 
   # reusing existing certificate manager? defaults to true
-  enable_cert_manager = false
+  enable_cert_manager = true
 
   # # -- or enable opentelemetry operator
   enable_opentelemetry_operator = false #-- true doesn't work for me, needs fix
@@ -29,9 +29,10 @@ module "eks_observability_accelerator" {
   # sets up the AMP alert manager at the workspace level
   enable_alertmanager = true
 
-  # create a new Grafana workspace
-  enable_managed_grafana = true
-  #managed_grafana_workspace_id = "g-9790a4306b"
+  # create a new Grafana workspace - TODO review design
+  enable_managed_grafana       = false
+  managed_grafana_workspace_id = var.managed_grafana_workspace_id
+  grafana_api_key              = var.grafana_api_key
 
 
 

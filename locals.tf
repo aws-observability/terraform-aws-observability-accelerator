@@ -31,7 +31,6 @@ data "aws_grafana_workspace" "this" {
 # }
 
 
-
 locals {
   eks_oidc_issuer_url  = replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")
   eks_cluster_endpoint = data.aws_eks_cluster.eks_cluster.endpoint
@@ -47,7 +46,7 @@ locals {
 
   # if grafana_workspace_id is supplied, we infer the endpoint from
   # computed region, else we create a new workspace
-  amg_ws_endpoint = var.enable_managed_grafana ? "https://${module.managed_grafana[0].workspace_endpoint}" : "https://${var.managed_grafana_workspace_id}.grafana-workspace.${local.amg_ws_region}.amazonaws.com"
+  amg_ws_endpoint = var.managed_grafana_workspace_id == "" ? "https://${module.managed_grafana[0].workspace_endpoint}" : "https://${var.managed_grafana_workspace_id}.grafana-workspace.${local.amg_ws_region}.amazonaws.com"
 
   # TODO when tf resource for AMG api keys are supported
   # create a short-lived api key on the fly if api_key is not provided

@@ -24,6 +24,19 @@ provider "helm" {
   }
 }
 
+# provider "grafana" {
+#   url  = var.grafana_endpoint
+#   auth = var.grafana_api_key
+# }
+
+terraform {
+  required_providers {
+    grafana = {
+      source  = "grafana/grafana"
+      version = "1.24.0"
+    }
+  }
+}
 
 locals {
   name   = basename(path.cwd)

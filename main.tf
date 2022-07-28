@@ -47,25 +47,23 @@ module "managed_grafana" {
   tags = var.tags
 }
 
-# provider "grafana" {
-#   #url  = try(var.grafana_endpoint, "https://${module.managed_grafana.workspace_endpoint}")
-#   url  = local.grafana_endpoint
-#   auth = local.grafana_api_key
-# }
+provider "grafana" {
+  url  = local.amg_ws_endpoint
+  auth = var.grafana_api_key
+}
 
-
-# resource "grafana_data_source" "amp" {
-#   type       = "prometheus"
-#   name       = local.name
-#   is_default = true
-#   url        = local.amp_ws_endpoint
-#   json_data {
-#     http_method     = "GET"
-#     sigv4_auth      = true
-#     sigv4_auth_type = "workspace-iam-role"
-#     sigv4_region    = local.amp_ws_region
-#   }
-# }
+resource "grafana_data_source" "amp" {
+  type       = "prometheus"
+  name       = local.name
+  is_default = true
+  url        = local.amp_ws_endpoint
+  json_data {
+    http_method     = "GET"
+    sigv4_auth      = true
+    sigv4_auth_type = "workspace-iam-role"
+    sigv4_region    = local.amp_ws_region
+  }
+}
 
 module "java" {
   count  = var.enable_java ? 1 : 0

@@ -86,3 +86,12 @@ No inputs.
 
 No outputs.
 <!-- END_TF_DOCS -->
+
+
+
+### Design Questions
+
+1. fetching EKS auth as config map? and pass to module (version, etc) as object?
+2. automatically pass config option as objects? (aws adot add-on: enable cert-manager, cert-manager version?)
+3. Test case for every option possible? 
+4. Need data source for AMP - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_workspace, Bryant's module doesn't seem to support splitting usage (eg. using multiple alerting rules ONLY)

@@ -141,31 +141,9 @@ variable "infra_metrics_config" {
     ne_helm_repo_url      = string
     ne_helm_settings      = map(string)
     ne_helm_values        = map(any)
+
+    enable_dashboards = bool
   })
 
   default = null
-
-  # default = {
-  #   enable_kube_state_metrics = true
-  #   enable_node_exporter      = true
-  #   helm_config               = {}
-
-  #   kms_create_namespace   = true
-  #   ksm_helm_chart_name    = "kube-state-metrics"
-  #   ksm_helm_chart_version = "4.9.2"
-  #   ksm_helm_release_name  = "kube-state-metrics"
-  #   ksm_helm_repo_url      = "https://prometheus-community.github.io/helm-charts"
-  #   ksm_helm_settings      = {}
-  #   ksm_helm_values        = {}
-  #   ksm_k8s_namespace      = "kube-system"
-
-  #   ne_create_namespace   = true
-  #   ne_k8s_namespace      = "prometheus-node-exporter"
-  #   ne_helm_chart_name    = "prometheus-node-exporter"
-  #   ne_helm_chart_version = "2.0.3"
-  #   ne_helm_release_name  = "prometheus-node-exporter"
-  #   ne_helm_repo_url      = "https://prometheus-community.github.io/helm-charts"
-  #   ne_helm_settings      = {}
-  #   ne_helm_values        = {}
-  # }
 }

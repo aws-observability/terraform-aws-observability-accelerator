@@ -26,6 +26,10 @@ variable "amp_region" {
   default     = null
 }
 
+variable "dashboards_folder_id" {
+  type = string
+}
+
 variable "addon_context" {
   description = "Input configuration for the addon"
   type = object({

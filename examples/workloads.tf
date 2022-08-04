@@ -43,7 +43,7 @@ module "eks_observability_accelerator" {
   # }
 
   enable_infra_metrics = true
-  #infra_metrics_config = {}
+  # infra_metrics_config = {}
 
   tags = local.tags
 }

@@ -65,6 +65,12 @@ resource "grafana_data_source" "amp" {
   }
 }
 
+
+# dashboards
+resource "grafana_folder" "this" {
+  title = "Observability Accelerator Dashboards"
+}
+
 module "java" {
   count  = var.enable_java ? 1 : 0
   source = "./modules/workloads/java"
@@ -76,6 +82,8 @@ module "java" {
   amp_region   = local.amp_ws_region
 
   enable_recording_rules = var.enable_java_recording_rules
+
+  dashboards_folder_id = grafana_folder.this.id
 
   depends_on = [
     module.operator
@@ -91,28 +99,9 @@ module "infra" {
   amp_endpoint = local.amp_ws_endpoint
   amp_id       = local.amp_ws_id
   amp_region   = local.amp_ws_region
+  config       = var.infra_metrics_config
 
-  config = var.infra_metrics_config
-
-
-  # enable_kube_state_metrics = var.infra_metrics_config.enable_kube_state_metrics
-  # kms_create_namespace      = var.infra_metrics_config.kms_create_namespace
-  # ksm_k8s_namespace         = var.infra_metrics_config.ksm_k8s_namespace
-  # ksm_helm_chart_name       = var.infra_metrics_config.ksm_helm_chart_name
-  # ksm_helm_chart_version    = var.infra_metrics_config.ksm_helm_chart_version
-  # ksm_helm_release_name     = var.infra_metrics_config.ksm_helm_release_name
-  # ksm_helm_repo_url         = var.infra_metrics_config.ksm_helm_repo_url
-  # ksm_helm_settings         = var.infra_metrics_config.ksm_helm_settings
-  # ksm_helm_values           = var.infra_metrics_config.ksm_helm_values
-
-  # enable_node_exporter  = var.infra_metrics_config.enable_node_exporter
-  # ne_create_namespace   = var.infra_metrics_config.ne_create_namespace
-  # ne_helm_chart_name    = var.infra_metrics_config.ne_helm_chart_name
-  # ne_helm_chart_version = var.infra_metrics_config.ne_helm_chart_version
-  # ne_helm_release_name  = var.infra_metrics_config.ne_helm_release_name
-  # ne_helm_repo_url      = var.infra_metrics_config.ne_helm_repo_url
-  # ne_helm_settings      = var.infra_metrics_config.ksm_helm_settings
-  # ne_helm_values        = var.infra_metrics_config.ksm_helm_values
+  dashboards_folder_id = grafana_folder.this.id
 
   depends_on = [
     module.operator

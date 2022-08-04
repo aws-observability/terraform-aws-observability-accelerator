@@ -24,6 +24,10 @@ variable "amp_region" {
   default     = null
 }
 
+variable "dashboards_folder_id" {
+  type = string
+}
+
 variable "addon_context" {
   description = "Input configuration for the addon"
   type = object({
@@ -64,11 +68,14 @@ variable "config" {
     ne_helm_repo_url      = string
     ne_helm_settings      = map(string)
     ne_helm_values        = map(any)
+
+    enable_dashboards = bool
   })
 
   default = {
     enable_kube_state_metrics = true
     enable_node_exporter      = true
+    enable_dashboards         = true
     helm_config               = {}
 
     kms_create_namespace   = true

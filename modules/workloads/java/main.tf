@@ -98,12 +98,7 @@ groups:
 EOF
 }
 
-# dashboards
-resource "grafana_folder" "this" {
-  title = "Observability Accelerator Dashboards"
-}
-
 resource "grafana_dashboard" "this" {
-  folder      = grafana_folder.this.id
+  folder      = var.dashboards_folder_id
   config_json = file("${path.module}/dashboards/default.json")
 }

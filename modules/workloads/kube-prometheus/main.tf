@@ -2,6 +2,16 @@ locals {
   name      = "adot-collector-kubeprometheus"
   namespace = try(var.config.helm_config.namespace, local.name)
 }
+
+terraform {
+  required_providers {
+    grafana = {
+      source  = "grafana/grafana"
+      version = "1.24.0"
+    }
+  }
+}
+
 resource "helm_release" "kube_state_metrics" {
   count            = var.config.enable_kube_state_metrics ? 1 : 0
   chart            = var.config.ksm_helm_chart_name

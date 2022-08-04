@@ -24,11 +24,6 @@ provider "helm" {
   }
 }
 
-# provider "grafana" {
-#   url  = var.grafana_endpoint
-#   auth = var.grafana_api_key
-# }
-
 terraform {
   required_providers {
     grafana = {

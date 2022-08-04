@@ -11,10 +11,6 @@ resource "helm_release" "kube_state_metrics" {
   version          = var.config.ksm_helm_chart_version
   repository       = var.config.ksm_helm_repo_url
 
-  # values = [
-  #   var.config.ksm_helm_values
-  # ]
-
   dynamic "set" {
     for_each = var.config.ksm_helm_settings
     content {
@@ -32,10 +28,6 @@ resource "helm_release" "prometheus_node_exporter" {
   name             = var.config.ne_helm_release_name
   version          = var.config.ne_helm_chart_version
   repository       = var.config.ne_helm_repo_url
-
-  # values = [
-  #   var.config.ne_helm_values
-  # ]
 
   dynamic "set" {
     for_each = var.config.ne_helm_settings

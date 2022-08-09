@@ -28,7 +28,7 @@ terraform {
   required_providers {
     grafana = {
       source  = "grafana/grafana"
-      version = "1.24.0"
+      version = "1.25.0"
     }
   }
 }
@@ -78,6 +78,17 @@ module "eks_observability_accelerator" {
   tags = local.tags
 }
 
+# https://www.terraform.io/language/modules/develop/providers
+# A module intended to be called by one or more other modules must not contain
+# any provider blocks.
+# This allows forcing depedency between base and workloads module
+provider "grafana" {
+  url = module.eks_observability_accelerator.managed_grafana_workspace_endpoint
+
+  # TODO: manage with Secrets manager
+  auth = var.grafana_api_key
+}
+
 module "workloads_infra" {
   source = "../../workloads/infra"
   # source = "aws-ia/terrarom-aws-observability-accelerator/workloads/infra"
@@ -91,16 +102,10 @@ module "workloads_infra" {
   managed_prometheus_workspace_endpoint = module.eks_observability_accelerator.managed_prometheus_workspace_endpoint
   managed_prometheus_workspace_region   = module.eks_observability_accelerator.managed_prometheus_workspace_region
 
-
-  managed_grafana_workspace_endpoint = module.eks_observability_accelerator.managed_grafana_workspace_endpoint
-
-  # TODO: manage with Secrets manager
-  grafana_api_key = var.grafana_api_key
-
   # module custom configuration, check module documentation
   # config               = {}
 
-  # depends_on = [
-  #   module.eks_observability_accelerator
-  # ]
+  depends_on = [
+    module.eks_observability_accelerator
+  ]
 }

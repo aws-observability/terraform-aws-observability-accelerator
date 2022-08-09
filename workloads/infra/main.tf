@@ -3,14 +3,9 @@ terraform {
   required_providers {
     grafana = {
       source  = "grafana/grafana"
-      version = "1.24.0"
+      version = "1.25.0"
     }
   }
-}
-
-provider "grafana" {
-  url  = var.managed_grafana_workspace_endpoint
-  auth = var.grafana_api_key
 }
 
 resource "helm_release" "kube_state_metrics" {

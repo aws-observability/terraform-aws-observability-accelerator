@@ -3,7 +3,6 @@ variable "eks_cluster_id" {
   type        = string
 }
 
-
 variable "helm_config" {
   description = "Helm Config for Prometheus"
   type        = any
@@ -37,16 +36,6 @@ variable "managed_prometheus_workspace_region" {
   description = "Amazon Managed Prometheus Workspace's Region"
   type        = string
   default     = null
-}
-
-variable "managed_grafana_workspace_endpoint" {
-  type    = string
-  default = ""
-}
-
-variable "grafana_api_key" {
-  type    = string
-  default = null
 }
 
 variable "dashboards_folder_id" {

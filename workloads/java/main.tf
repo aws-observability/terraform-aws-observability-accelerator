@@ -1,4 +1,3 @@
-
 locals {
   name      = "adot-collector-java"
   namespace = try(var.helm_config.namespace, local.name)
@@ -8,7 +7,7 @@ terraform {
   required_providers {
     grafana = {
       source  = "grafana/grafana"
-      version = "1.24.0"
+      version = "1.25.0"
     }
   }
 }

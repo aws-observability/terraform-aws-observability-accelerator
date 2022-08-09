@@ -1,10 +1,3 @@
-variable "java" {
-  default = {
-    a = ""
-    b = ""
-  }
-}
-
 variable "eks_cluster_id" {
   description = "EKS Cluster Id"
   type        = string
@@ -48,13 +41,13 @@ variable "enable_managed_prometheus" {
   default = true
 }
 
-variable "managed_prometheus_id" {
+variable "managed_prometheus_workspace_id" {
   description = "AWS Managed Prometheus Workspace ID"
   type        = string
   default     = ""
 }
 
-variable "managed_prometheus_region" {
+variable "managed_prometheus_workspace_region" {
   description = "AWS Managed Prometheus Workspace Region"
   type        = string
   default     = null

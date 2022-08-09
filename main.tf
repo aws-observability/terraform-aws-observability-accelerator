@@ -1,13 +1,9 @@
 module "operator" {
-  source = "./modules/opentelemetry-operator"
+  source = "./modules/adot-operator"
 
   enable_cert_manager = var.enable_cert_manager
-
-  enable_amazon_eks_adot        = var.enable_amazon_eks_adot
-  enable_opentelemetry_operator = var.enable_opentelemetry_operator
-
-  kubernetes_version = local.eks_cluster_version
-  addon_context      = local.context
+  kubernetes_version  = local.eks_cluster_version
+  addon_context       = local.context
 }
 
 resource "aws_prometheus_workspace" "this" {

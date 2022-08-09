@@ -12,10 +12,22 @@ output "eks_cluster_version" {
   value = data.aws_eks_cluster.eks_cluster.version
 }
 
-output "prometheus_endpoint" {
-  value = [aws_prometheus_workspace.this.*.prometheus_endpoint]
+output "managed_prometheus_workspace_endpoint" {
+  value = local.amp_ws_endpoint
 }
 
-output "prometheus_id" {
-  value = [aws_prometheus_workspace.this.*.id]
+output "managed_prometheus_workspace_id" {
+  value = local.amp_ws_id
+}
+
+output "managed_prometheus_workspace_region" {
+  value = local.amp_ws_region
+}
+
+output "managed_grafana_workspace_endpoint" {
+  value = local.amg_ws_endpoint
+}
+
+output "grafana_dashboards_folder_id" {
+  value = grafana_folder.this.id
 }

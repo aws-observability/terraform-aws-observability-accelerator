@@ -1,48 +1,56 @@
+variable "eks_cluster_id" {
+  description = "EKS Cluster Id"
+  type        = string
+}
 
 
-# ADOT variable
 variable "helm_config" {
   description = "Helm Config for Prometheus"
   type        = any
   default     = {}
 }
 
-variable "amp_endpoint" {
+variable "irsa_iam_role_path" {
+  description = "IAM role path for IRSA roles"
+  type        = string
+  default     = "/"
+}
+
+variable "irsa_iam_permissions_boundary" {
+  description = "IAM permissions boundary for IRSA roles"
+  type        = string
+  default     = ""
+}
+
+variable "managed_prometheus_workspace_endpoint" {
   description = "Amazon Managed Prometheus Workspace Endpoint"
   type        = string
   default     = null
 }
-variable "amp_id" {
+variable "managed_prometheus_workspace_id" {
   description = "Amazon Managed Prometheus Workspace ID"
   type        = string
   default     = null
 }
 
-variable "amp_region" {
+variable "managed_prometheus_workspace_region" {
   description = "Amazon Managed Prometheus Workspace's Region"
   type        = string
   default     = null
 }
 
-variable "dashboards_folder_id" {
-  type = string
+variable "managed_grafana_workspace_endpoint" {
+  type    = string
+  default = ""
 }
 
-variable "addon_context" {
-  description = "Input configuration for the addon"
-  type = object({
-    aws_caller_identity_account_id = string
-    aws_caller_identity_arn        = string
-    aws_eks_cluster_endpoint       = string
-    aws_partition_id               = string
-    aws_region_name                = string
-    eks_cluster_id                 = string
-    eks_oidc_issuer_url            = string
-    eks_oidc_provider_arn          = string
-    irsa_iam_permissions_boundary  = string
-    irsa_iam_role_path             = string
-    tags                           = map(string)
-  })
+variable "grafana_api_key" {
+  type    = string
+  default = null
+}
+
+variable "dashboards_folder_id" {
+  type = string
 }
 
 variable "config" {
@@ -97,4 +105,10 @@ variable "config" {
     ne_helm_values        = {}
   }
   nullable = false
+}
+
+variable "tags" {
+  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
+  type        = map(string)
+  default     = {}
 }

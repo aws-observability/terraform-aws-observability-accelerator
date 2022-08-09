@@ -1,5 +1,5 @@
 module "operator" {
-  source = "./modules/core/opentelemetry-operator"
+  source = "./modules/opentelemetry-operator"
 
   enable_cert_manager = var.enable_cert_manager
 
@@ -16,7 +16,6 @@ resource "aws_prometheus_workspace" "this" {
   alias = local.name
   tags  = var.tags
 }
-
 
 resource "aws_prometheus_alert_manager_definition" "this" {
   count = var.enable_alertmanager ? 1 : 0
@@ -65,46 +64,45 @@ resource "grafana_data_source" "amp" {
   }
 }
 
-
 # dashboards
 resource "grafana_folder" "this" {
   title = "Observability Accelerator Dashboards"
 }
 
-module "java" {
-  count  = var.enable_java ? 1 : 0
-  source = "./modules/workloads/java"
+# module "java" {
+#   count  = var.enable_java ? 1 : 0
+#   source = "./modules/workloads/java"
 
-  addon_context = local.context
+#   addon_context = local.context
 
-  amp_endpoint = local.amp_ws_endpoint
-  amp_id       = local.amp_ws_id
-  amp_region   = local.amp_ws_region
+#   amp_endpoint = local.amp_ws_endpoint
+#   amp_id       = local.amp_ws_id
+#   amp_region   = local.amp_ws_region
 
-  enable_recording_rules = var.enable_java_recording_rules
+#   enable_recording_rules = var.enable_java_recording_rules
 
-  dashboards_folder_id = grafana_folder.this.id
+#   dashboards_folder_id = grafana_folder.this.id
 
-  depends_on = [
-    module.operator
-  ]
-}
+#   depends_on = [
+#     module.operator
+#   ]
+# }
 
-module "infra" {
-  count  = var.enable_infra_metrics ? 1 : 0
-  source = "./modules/workloads/kube-prometheus"
+# module "infra" {
+#   count  = var.enable_infra_metrics ? 1 : 0
+#   source = "./modules/workloads/kube-prometheus"
 
-  addon_context = local.context
+#   addon_context = local.context
 
-  amp_endpoint = local.amp_ws_endpoint
-  amp_id       = local.amp_ws_id
-  amp_region   = local.amp_ws_region
-  config       = var.infra_metrics_config
+#   amp_endpoint = local.amp_ws_endpoint
+#   amp_id       = local.amp_ws_id
+#   amp_region   = local.amp_ws_region
+#   config       = var.infra_metrics_config
 
-  dashboards_folder_id = grafana_folder.this.id
+#   dashboards_folder_id = grafana_folder.this.id
 
-  depends_on = [
-    module.operator
-  ]
+#   depends_on = [
+#     module.operator
+#   ]
 
-}
+# }

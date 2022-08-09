@@ -14,9 +14,9 @@ output "eks_cluster_version" {
 
 
 output "prometheus_endpoint" {
-  value = module.eks_observability_accelerator.prometheus_endpoint
+  value = module.eks_observability_accelerator.managed_prometheus_workspace_endpoint
 }
 
 output "prometheus_id" {
-  value = module.eks_observability_accelerator.prometheus_id
+  value = module.eks_observability_accelerator.managed_prometheus_workspace_id
 }

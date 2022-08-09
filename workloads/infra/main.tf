@@ -1,7 +1,3 @@
-locals {
-  name      = "adot-collector-kubeprometheus"
-  namespace = try(var.config.helm_config.namespace, local.name)
-}
 
 terraform {
   required_providers {
@@ -10,6 +6,11 @@ terraform {
       version = "1.24.0"
     }
   }
+}
+
+provider "grafana" {
+  url  = var.managed_grafana_workspace_endpoint
+  auth = var.grafana_api_key
 }
 
 resource "helm_release" "kube_state_metrics" {
@@ -47,7 +48,6 @@ resource "helm_release" "prometheus_node_exporter" {
     }
   }
 }
-data "aws_partition" "current" {}
 
 module "helm_addon" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints/modules/kubernetes-addons/helm-addon"
@@ -66,11 +66,11 @@ module "helm_addon" {
   set_values = [
     {
       name  = "ampurl"
-      value = "${var.amp_endpoint}api/v1/remote_write"
+      value = "${var.managed_prometheus_workspace_endpoint}api/v1/remote_write"
     },
     {
       name  = "region"
-      value = var.amp_region
+      value = var.managed_prometheus_workspace_region
     },
     {
       name  = "prometheusMetricsEndpoint"
@@ -102,5 +102,5 @@ module "helm_addon" {
     irsa_iam_policies                 = ["arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonPrometheusRemoteWriteAccess"]
   }
 
-  addon_context = var.addon_context
+  addon_context = local.context
 }

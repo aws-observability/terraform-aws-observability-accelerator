@@ -13,23 +13,6 @@ data "aws_grafana_workspace" "this" {
   workspace_id = var.managed_grafana_workspace_id
 }
 
-# resource "null_resource" "amg_api_key" {
-
-#   # Bootstrap script can run on any instance of the cluster
-#   # So we just choose the first in this case
-#   connection {
-#     host = element(aws_instance.cluster.*.public_ip, 0)
-#   }
-
-#   provisioner "remote-exec" {
-#     # requires aws-cli
-#     inline = [
-#       #"bootstrap-cluster.sh ${join(" ", aws_instance.cluster.*.private_ip)}",
-#       "aws grafana create-key",
-#     ]
-#   }
-# }
-
 
 locals {
   eks_oidc_issuer_url  = replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")
@@ -37,8 +20,8 @@ locals {
   eks_cluster_version  = data.aws_eks_cluster.eks_cluster.version
 
   # if region is not passed, we assume the current one
-  amp_ws_region   = coalesce(var.managed_prometheus_region, data.aws_region.current.name)
-  amp_ws_id       = var.enable_managed_prometheus ? aws_prometheus_workspace.this[0].id : var.managed_prometheus_id
+  amp_ws_region   = coalesce(var.managed_prometheus_workspace_region, data.aws_region.current.name)
+  amp_ws_id       = var.enable_managed_prometheus ? aws_prometheus_workspace.this[0].id : var.managed_prometheus_workspace_id
   amp_ws_endpoint = "https://aps-workspaces.${local.amp_ws_region}.amazonaws.com/workspaces/${local.amp_ws_id}/"
 
   # if region is not passed, we assume the current one
@@ -46,7 +29,8 @@ locals {
 
   # if grafana_workspace_id is supplied, we infer the endpoint from
   # computed region, else we create a new workspace
-  amg_ws_endpoint = var.managed_grafana_workspace_id == "" ? "https://${module.managed_grafana[0].workspace_endpoint}" : "https://${var.managed_grafana_workspace_id}.grafana-workspace.${local.amg_ws_region}.amazonaws.com"
+  amg_ws_endpoint = var.managed_grafana_workspace_id == "" ? "https://${module.managed_grafana[0].workspace_endpoint}" : "https://${data.aws_grafana_workspace.this[0].endpoint}"
+  amg_ws_id       = var.managed_grafana_workspace_id == "" ? module.managed_grafana[0].workspace_ : data.aws_grafana_workspace.this[0].endpoint
 
   # TODO when tf resource for AMG api keys are supported
   # create a short-lived api key on the fly if api_key is not provided

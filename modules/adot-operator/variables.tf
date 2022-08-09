@@ -34,15 +34,3 @@ variable "addon_config" {
   type        = any
   default     = {}
 }
-
-variable "enable_amazon_eks_adot" {
-  description = "Enable Amazon EKS ADOT add-on"
-  type        = bool
-  default     = true
-}
-
-variable "enable_opentelemetry_operator" {
-  description = "Enable opentelemetry operator addon"
-  type        = bool
-  default     = false
-}

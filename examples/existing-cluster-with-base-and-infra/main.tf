@@ -48,7 +48,7 @@ locals {
 
 # deploys the base module
 module "eks_observability_accelerator" {
-  # source = "aws-ia/terrarom-aws-observability-accelerator?ref=dev"
+  # source = "aws-ia/terrarom-aws-observability-accelerator"
   source = "../../"
 
   aws_region     = var.aws_region
@@ -60,21 +60,17 @@ module "eks_observability_accelerator" {
   # reusing existing certificate manager? defaults to true
   enable_cert_manager = true
 
-  # # -- or enable opentelemetry operator
-  enable_opentelemetry_operator = false
-  #open_telemetry_operator_config = map() // custom config
-
   # creates a new AMP workspace, defaults to true
   enable_managed_prometheus = false
 
   # reusing existing AMP -- needs data source for alerting rules
-  managed_prometheus_id     = var.managed_prometheus_workspace_id
-  managed_prometheus_region = null # defaults to the current region, useful for cross region scenarios (same account)
+  managed_prometheus_workspace_id     = var.managed_prometheus_workspace_id
+  managed_prometheus_workspace_region = null # defaults to the current region, useful for cross region scenarios (same account)
 
   # sets up the AMP alert manager at the workspace level
   enable_alertmanager = true
 
-  # create a new Grafana workspace - TODO review design
+  # reusing existing Amazon Managed Grafana workspace
   enable_managed_grafana       = false
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
   grafana_api_key              = var.grafana_api_key
@@ -84,9 +80,27 @@ module "eks_observability_accelerator" {
 
 module "workloads_infra" {
   source = "../../workloads/infra"
-  # source = "aws-ia/terrarom-aws-observability-accelerator/workloads/infra?ref=dev"
+  # source = "aws-ia/terrarom-aws-observability-accelerator/workloads/infra"
+
+  eks_cluster_id = module.eks_observability_accelerator.eks_cluster_id
+
+  dashboards_folder_id            = module.eks_observability_accelerator.grafana_dashboards_folder_id
+  managed_prometheus_workspace_id = module.eks_observability_accelerator.managed_prometheus_workspace_id
+
+  # TODO remove when Kevin's PR is live
+  managed_prometheus_workspace_endpoint = module.eks_observability_accelerator.managed_prometheus_workspace_endpoint
+  managed_prometheus_workspace_region   = module.eks_observability_accelerator.managed_prometheus_workspace_region
 
 
-  enable_infra_metrics = true
-  # infra_metrics_config = {}
+  managed_grafana_workspace_endpoint = module.eks_observability_accelerator.managed_grafana_workspace_endpoint
+
+  # TODO: manage with Secrets manager
+  grafana_api_key = var.grafana_api_key
+
+  # module custom configuration, check module documentation
+  # config               = {}
+
+  # depends_on = [
+  #   module.eks_observability_accelerator
+  # ]
 }

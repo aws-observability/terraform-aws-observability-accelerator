@@ -7,11 +7,10 @@ module "cert_manager" {
 }
 
 resource "kubernetes_namespace_v1" "adot" {
-  count = local.create_namespace ? 1 : 0
 
   metadata {
     # If using EKS addon, namespace must be "opentelemetry-operator-system"
-    name = var.enable_amazon_eks_adot ? local.addon_namespace : try(var.helm_config.namespace, local.addon_namespace)
+    name = local.addon_namespace
 
     labels = {
       # Prerequisite for EKS addon
@@ -21,19 +20,15 @@ resource "kubernetes_namespace_v1" "adot" {
 }
 
 data "aws_eks_addon_version" "this" {
-  count = var.enable_amazon_eks_adot ? 1 : 0
-
   addon_name         = local.name
   kubernetes_version = try(var.addon_config.kubernetes_version, var.kubernetes_version)
   most_recent        = try(var.addon_config.most_recent, true)
 }
 
 resource "aws_eks_addon" "adot" {
-  count = var.enable_amazon_eks_adot ? 1 : 0
-
   cluster_name             = var.addon_context.eks_cluster_id
   addon_name               = local.name
-  addon_version            = try(var.addon_config.addon_version, data.aws_eks_addon_version.this[0].version)
+  addon_version            = try(var.addon_config.addon_version, data.aws_eks_addon_version.this.version)
   resolve_conflicts        = try(var.addon_config.resolve_conflicts, "OVERWRITE")
   service_account_role_arn = try(var.addon_config.service_account_role_arn, null)
   preserve                 = try(var.addon_config.preserve, true)
@@ -43,8 +38,8 @@ resource "aws_eks_addon" "adot" {
     try(var.addon_config.tags, {}),
     # implicit dependency with roles
     {
-      RoleVersion        = try(kubernetes_role_v1.adot[0].metadata[0].resource_version, ""),
-      ClusterRoleVersion = try(kubernetes_cluster_role_v1.adot[0].metadata[0].resource_version, "")
+      RoleVersion        = try(kubernetes_role_v1.adot.metadata[0].resource_version, ""),
+      ClusterRoleVersion = try(kubernetes_cluster_role_v1.adot.metadata[0].resource_version, "")
     }
   )
 
@@ -52,11 +47,10 @@ resource "aws_eks_addon" "adot" {
 }
 
 resource "kubernetes_role_v1" "adot" {
-  count = var.enable_amazon_eks_adot ? 1 : 0
 
   metadata {
     name      = local.eks_addon_role_name
-    namespace = kubernetes_namespace_v1.adot[0].metadata[0].name
+    namespace = kubernetes_namespace_v1.adot.metadata[0].name
   }
 
   rule {
@@ -118,11 +112,10 @@ resource "kubernetes_role_v1" "adot" {
 }
 
 resource "kubernetes_role_binding_v1" "adot" {
-  count = var.enable_amazon_eks_adot ? 1 : 0
 
   metadata {
     name      = local.eks_addon_role_name
-    namespace = kubernetes_namespace_v1.adot[0].metadata[0].name
+    namespace = kubernetes_namespace_v1.adot.metadata[0].name
   }
 
   subject {
@@ -138,7 +131,6 @@ resource "kubernetes_role_binding_v1" "adot" {
 }
 
 resource "kubernetes_cluster_role_v1" "adot" {
-  count = var.enable_amazon_eks_adot ? 1 : 0
 
   metadata {
     name = local.eks_addon_clusterrole_name
@@ -153,7 +145,7 @@ resource "kubernetes_cluster_role_v1" "adot" {
   rule {
     api_groups     = [""]
     resources      = ["namespaces"]
-    resource_names = [kubernetes_namespace_v1.adot[0].metadata[0].name]
+    resource_names = [kubernetes_namespace_v1.adot.metadata[0].name]
     verbs          = ["create", "delete", "get", "list", "patch", "update", "watch"]
   }
   rule {
@@ -266,7 +258,6 @@ resource "kubernetes_cluster_role_v1" "adot" {
 }
 
 resource "kubernetes_cluster_role_binding_v1" "adot" {
-  count = var.enable_amazon_eks_adot ? 1 : 0
 
   metadata {
     name = local.eks_addon_clusterrole_name
@@ -282,16 +273,4 @@ resource "kubernetes_cluster_role_binding_v1" "adot" {
     name      = local.eks_addon_clusterrole_name
   }
 
-}
-
-
-module "helm_addon" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints/modules/kubernetes-addons/helm-addon"
-  count  = var.enable_opentelemetry_operator ? 1 : 0
-
-  helm_config   = local.helm_config
-  irsa_config   = null
-  addon_context = var.addon_context
-
-  depends_on = [module.cert_manager]
 }

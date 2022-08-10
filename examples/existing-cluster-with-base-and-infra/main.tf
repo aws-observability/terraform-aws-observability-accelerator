@@ -105,6 +105,8 @@ module "workloads_infra" {
   # module custom configuration, check module documentation
   # config               = {}
 
+  tags = local.tags
+
   depends_on = [
     module.eks_observability_accelerator
   ]

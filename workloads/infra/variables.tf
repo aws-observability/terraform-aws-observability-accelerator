@@ -67,13 +67,17 @@ variable "config" {
     ne_helm_values        = map(any)
 
     enable_dashboards = bool
+
+    enable_recording_rules = bool
   })
 
   default = {
     enable_kube_state_metrics = true
     enable_node_exporter      = true
     enable_dashboards         = true
-    helm_config               = {}
+    enable_recording_rules    = true
+
+    helm_config = {}
 
     kms_create_namespace   = true
     ksm_helm_chart_name    = "kube-state-metrics"

@@ -1,6 +1,31 @@
-# Existing Cluster
+# Existing Cluster with the AWS Observability accelerator base module and Infrastructure monitoring
 
 ---
+
+This example demonstrates how to use the AWS Observability Accelerator Terraform
+module with Infrastructure monitoring enabled.
+The current example deploys the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) for Amazon EKS with its requirements and make use of existing
+Managed Service for Prometheus and Amazon Managed Grafana workspaces.
+
+It also uses the `infrastructure monitoring`, one of our [workloads modules](../../modules/workloads/)
+to provide an existing EKS cluster with an OpenTelemetry collector,
+curated Grafana dashboards, Prometheus alerting and recording rules with multiple
+configuration options.
+
+#### ⚠️ Grafana API Key
+
+
+## Prerequisites
+
+1. EKS cluster
+2. Prometheus
+3. Grafana
+
+## Deploy
+
+```sh
+terraform apply
+```
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements

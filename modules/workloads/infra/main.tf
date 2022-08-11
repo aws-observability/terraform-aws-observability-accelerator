@@ -8,7 +8,7 @@ terraform {
 }
 
 resource "helm_release" "kube_state_metrics" {
-  count            = var.config.enable_kube_state_metrics ? 1 : 0
+  count            = var.enable_kube_state_metrics ? 1 : 0
   chart            = var.config.ksm_helm_chart_name
   create_namespace = var.config.kms_create_namespace
   namespace        = var.config.ksm_k8s_namespace
@@ -26,7 +26,7 @@ resource "helm_release" "kube_state_metrics" {
 }
 
 resource "helm_release" "prometheus_node_exporter" {
-  count            = var.config.enable_node_exporter ? 1 : 0
+  count            = var.enable_node_exporter ? 1 : 0
   chart            = var.config.ne_helm_chart_name
   create_namespace = var.config.ne_create_namespace
   namespace        = var.config.ne_k8s_namespace

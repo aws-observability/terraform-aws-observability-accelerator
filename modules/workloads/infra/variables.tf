@@ -42,21 +42,44 @@ variable "dashboards_folder_id" {
   type = string
 }
 
+variable "enable_recording_rules" {
+  type    = bool
+  default = true
+}
+
+variable "enable_alerting_rules" {
+  type    = bool
+  default = true
+}
+
+variable "enable_dashboards" {
+  type    = bool
+  default = true
+}
+
+variable "enable_kube_state_metrics" {
+  type    = bool
+  default = true
+}
+
+variable "enable_node_exporter" {
+  type    = bool
+  default = true
+}
+
 variable "config" {
   type = object({
     helm_config = map(any)
 
-    enable_kube_state_metrics = bool
-    kms_create_namespace      = bool
-    ksm_k8s_namespace         = string
-    ksm_helm_chart_name       = string
-    ksm_helm_chart_version    = string
-    ksm_helm_release_name     = string
-    ksm_helm_repo_url         = string
-    ksm_helm_settings         = map(string)
-    ksm_helm_values           = map(any)
+    kms_create_namespace   = bool
+    ksm_k8s_namespace      = string
+    ksm_helm_chart_name    = string
+    ksm_helm_chart_version = string
+    ksm_helm_release_name  = string
+    ksm_helm_repo_url      = string
+    ksm_helm_settings      = map(string)
+    ksm_helm_values        = map(any)
 
-    enable_node_exporter  = bool
     ne_create_namespace   = bool
     ne_k8s_namespace      = string
     ne_helm_chart_name    = string
@@ -66,16 +89,11 @@ variable "config" {
     ne_helm_settings      = map(string)
     ne_helm_values        = map(any)
 
-    enable_dashboards = bool
-
-    enable_recording_rules = bool
   })
 
   default = {
     enable_kube_state_metrics = true
     enable_node_exporter      = true
-    enable_dashboards         = true
-    enable_recording_rules    = true
 
     helm_config = {}
 

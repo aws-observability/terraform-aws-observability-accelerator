@@ -1,5 +1,5 @@
 module "operator" {
-  source = "./modules/adot-operator"
+  source = "./modules/add-ons/adot-operator"
 
   enable_cert_manager = var.enable_cert_manager
   kubernetes_version  = local.eks_cluster_version

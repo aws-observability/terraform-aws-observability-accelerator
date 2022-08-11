@@ -90,7 +90,7 @@ provider "grafana" {
 }
 
 module "workloads_infra" {
-  source = "../../workloads/infra"
+  source = "../../modules/workloads/infra"
   # source = "aws-ia/terrarom-aws-observability-accelerator/workloads/infra"
 
   eks_cluster_id = module.eks_observability_accelerator.eks_cluster_id

@@ -1,9 +1,3 @@
-resource "grafana_dashboard" "alertmanager" {
-  count       = var.enable_dashboards ? 1 : 0
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/alertmanager.json")
-}
-
 resource "grafana_dashboard" "workloads" {
   count       = var.enable_dashboards ? 1 : 0
   folder      = var.dashboards_folder_id
@@ -20,12 +14,6 @@ resource "grafana_dashboard" "proxy" {
   count       = var.enable_dashboards ? 1 : 0
   folder      = var.dashboards_folder_id
   config_json = file("${path.module}/dashboards/proxy.json")
-}
-
-resource "grafana_dashboard" "prometheus" {
-  count       = var.enable_dashboards ? 1 : 0
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/prometheus.json")
 }
 
 resource "grafana_dashboard" "podnetwork" {
@@ -100,22 +88,10 @@ resource "grafana_dashboard" "nsnw" {
   config_json = file("${path.module}/dashboards/namespace-networking.json")
 }
 
-resource "grafana_dashboard" "macos" {
-  count       = var.enable_dashboards ? 1 : 0
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/macos.json")
-}
-
 resource "grafana_dashboard" "kubelet" {
   count       = var.enable_dashboards ? 1 : 0
   folder      = var.dashboards_folder_id
   config_json = file("${path.module}/dashboards/kubelet.json")
-}
-
-resource "grafana_dashboard" "grafana" {
-  count       = var.enable_dashboards ? 1 : 0
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/grafana.json")
 }
 
 resource "grafana_dashboard" "etcd" {

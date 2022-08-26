@@ -20,7 +20,7 @@ body:
     attributes:
       label: Welcome to Amazon EKS Blueprints!
       options:
-        - label: Yes, I've searched similar issues on [GitHub](https://github.com/aws-ia/terraform-aws-observability-accelerator/issues) and didn't find any.
+        - label: Yes, I've searched similar issues on [GitHub](https://github.com/aws-observability/terraform-aws-observability-accelerator/issues) and didn't find any.
           required: true
 
   - type: input

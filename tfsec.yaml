@@ -1,5 +1,5 @@
 exclude:
-  - aws-iam-no-policy-wildcards # Wildcards required in addon IAM policies
+  - aws-observabilitym-no-policy-wildcards # Wildcards required in addon IAM policies
   - aws-vpc-no-excessive-port-access # VPC settings left up to user implementation for recommended practices
   - aws-vpc-no-public-ingress-acl # VPC settings left up to user implementation for recommended practices
   - aws-eks-no-public-cluster-access-to-cidr # Public access enabled for better example usability, users are recommended to disable if possible

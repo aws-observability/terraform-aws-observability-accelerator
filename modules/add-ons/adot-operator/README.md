@@ -41,7 +41,7 @@ the ADOT Operator.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_cert_manager"></a> [cert\_manager](#module\_cert\_manager) | github.com/aws-ia/terraform-aws-eks-blueprints/modules/kubernetes-addons/cert-manager | n/a |
+| <a name="module_cert_manager"></a> [cert\_manager](#module\_cert\_manager) | github.com/aws-observability/terraform-aws-eks-blueprints/modules/kubernetes-addons/cert-manager | n/a |
 
 ## Resources
 

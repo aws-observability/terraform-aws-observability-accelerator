@@ -1,6 +1,6 @@
 # AWS Observability Accelerator for Terraform
 
-![GitHub](https://img.shields.io/github/license/aws-ia/terraform-aws-observability-accelerator)
+![GitHub](https://img.shields.io/github/license/aws-observability/terraform-aws-observability-accelerator)
 
 Welcome to AWS Observability Accelerator for Terraform!
 

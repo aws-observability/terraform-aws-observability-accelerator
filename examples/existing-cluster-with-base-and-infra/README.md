@@ -38,7 +38,7 @@ terraform init
 To run this example, you need to provide your EKS cluster ID.
 If you don't have a cluster ready, visit [this example](../new-empty-eks-cluster) first to create a new one.
 
-Add `eks_cluster_id=xxx` to your `terraform.tfvars` or use an
+Create a `terraform.tfvars` file and add `eks_cluster_id=xxx` to your `terraform.tfvars` or
 environment variable `export TF_VAR_eks_cluster_id=xxx`.
 
 3. Amazon Managed Service for Prometheus workspace
@@ -75,7 +75,7 @@ If you don't specify anything a new workspace will be created for you.
 ## Deploy
 
 ```sh
-terraform apply -var terraform.tfvars
+terraform apply -var-file=terraform.tfvars
 ```
 
 or if you had setup environment variables

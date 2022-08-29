@@ -4,10 +4,9 @@
 # Recording rules ##############################################################################################################################
 ################################################################################################################################################
 
-resource "aws_prometheus_rule_group_namespace" "noderules" {
+resource "aws_prometheus_rule_group_namespace" "recording_rules" {
   count = var.enable_recording_rules ? 1 : 0
-
-  name         = "noderules-recording"
+  name         = "infra-recording-rules"
   workspace_id = var.managed_prometheus_workspace_id
   data         = <<EOF
 groups:
@@ -27,16 +26,6 @@ groups:
     rules:
       - record: cluster:node_cpu:ratio_rate5m
         expr: sum(rate(node_cpu_seconds_total{job="node-exporter",mode!="idle",mode!="iowait",mode!="steal"}[5m])) / count(sum by(cluster, instance, cpu) (node_cpu_seconds_total{job="node-exporter"}))
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "kubelet" {
-  count = var.enable_recording_rules ? 1 : 0
-
-  name         = "kubelet-rules"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: kubelet-01
     rules:
       - record: node_quantile:kubelet_pleg_relist_duration_seconds:histogram_quantile
@@ -55,17 +44,6 @@ groups:
         expr: histogram_quantile(0.5, sum by(cluster, instance, le) (rate(kubelet_pleg_relist_duration_seconds_bucket[5m])) * on(cluster, instance) group_left(node) kubelet_node_name{job="kubelet",metrics_path="/metrics"})
         labels:
           quantile: 0.5
-
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "ne" {
-  count = var.enable_recording_rules ? 1 : 0
-
-  name         = "ne-recording"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: nerules-01
     rules:
       - record: instance:node_num_cpu:sum
@@ -110,16 +88,6 @@ groups:
     rules:
       - record: instance:node_network_transmit_drop_excluding_lo:rate5m
         expr: sum without(device) (rate(node_network_transmit_drop_total{device!="lo",job="node-exporter"}[5m]))
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "kubescheduler" {
-  count = var.enable_recording_rules ? 1 : 0
-
-  name         = "kubescheduler-recording"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: kubeschdlr-01
     rules:
       - record: cluster_quantile:scheduler_e2e_scheduling_duration_seconds:histogram_quantile
@@ -174,16 +142,6 @@ groups:
         expr: histogram_quantile(0.5, sum without(instance, pod) (rate(scheduler_binding_duration_seconds_bucket{job="kube-scheduler"}[5m])))
         labels:
           quantile: 0.5
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "kubepromnr" {
-  count = var.enable_recording_rules ? 1 : 0
-
-  name         = "kubeprom-noderecording"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: kubepromnr-01
     rules:
       - record: instance:node_cpu:rate:sum
@@ -208,16 +166,6 @@ groups:
     rules:
       - record: cluster:node_cpu:ratio
         expr: cluster:node_cpu:sum_rate5m / count(sum by(instance, cpu) (node_cpu_seconds_total))
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "kubprom" {
-  count = var.enable_recording_rules ? 1 : 0
-
-  name         = "kube-prom"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: kubprom-01
     rules:
       - record: count:up1
@@ -226,17 +174,6 @@ groups:
     rules:
       - record: count:up0
         expr: count without(instance, pod, node) (up == 0)
-EOF
-}
-
-
-resource "aws_prometheus_rule_group_namespace" "apihg" {
-  count = var.enable_recording_rules ? 1 : 0
-
-  name         = "api-histogram"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: apihg-01
     rules:
       - record: cluster_quantile:apiserver_request_slo_duration_seconds:histogram_quantile
@@ -251,16 +188,6 @@ groups:
         labels:
           quantile: 0.99
           verb: write
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "apibr" {
-  count = var.enable_recording_rules ? 1 : 0
-
-  name         = "api-burnrate"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: apibr-01
     rules:
       - record: apiserver_request:burnrate1d
@@ -351,17 +278,6 @@ groups:
         expr: ((sum by(cluster) (rate(apiserver_request_slo_duration_seconds_count{job="apiserver",subresource!~"proxy|attach|log|exec|portforward",verb=~"POST|PUT|PATCH|DELETE"}[6h])) - sum by(cluster) (rate(apiserver_request_slo_duration_seconds_bucket{job="apiserver",le="1",subresource!~"proxy|attach|log|exec|portforward",verb=~"POST|PUT|PATCH|DELETE"}[6h]))) + sum by(cluster) (rate(apiserver_request_total{code=~"5..",job="apiserver",verb=~"POST|PUT|PATCH|DELETE"}[6h]))) / sum by(cluster) (rate(apiserver_request_total{job="apiserver",verb=~"POST|PUT|PATCH|DELETE"}[6h]))
         labels:
           verb: write
-EOF
-}
-
-
-resource "aws_prometheus_rule_group_namespace" "api-availability" {
-  count = var.enable_recording_rules ? 1 : 0
-
-  name         = "api-availability-recording"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: api-01
     rules:
       - record: code_verb:apiserver_request_total:increase30d
@@ -386,16 +302,6 @@ groups:
     rules:
       - record: cluster_verb_scope:apiserver_request_slo_duration_seconds_count:increase30d
         expr: sum by(cluster, verb, scope) (avg_over_time(cluster_verb_scope:apiserver_request_slo_duration_seconds_count:increase1h[30d]) * 24 * 30)
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "kubeprom-recording" {
-  count = var.enable_recording_rules ? 1 : 0
-
-  name         = "kubeprom-recording"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: k8s-01
     rules:
       - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate

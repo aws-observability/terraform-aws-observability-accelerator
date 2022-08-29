@@ -2,7 +2,7 @@
 # Alerting rules ###############################################################################################################################
 ################################################################################################################################################
 
-resource "aws_prometheus_rule_group_namespace" "nodenw" {
+resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
   count = var.enable_alerting_rules ? 1 : 0
 
   name         = "nodenw-rules"
@@ -19,18 +19,6 @@ groups:
         annotations:
           description: Network interface "{{ $labels.device }}" changing its up status often on node-exporter {{ $labels.namespace }}/{{ $labels.pod }}
           summary: Network interface is often changing its status
-EOF
-}
-
-
-
-resource "aws_prometheus_rule_group_namespace" "nodeexporter" {
-  count = var.enable_alerting_rules ? 1 : 0
-
-  name         = "nodeexporter-rules"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: nodeexp-01
     rules:
       - alert: NodeFilesystemSpaceFillingUp
@@ -208,16 +196,6 @@ groups:
         annotations:
           description: File descriptors limit at {{ $labels.instance }} is currently at {{ printf "%.2f" $value }}%.
           summary: Kernel is predicted to exhaust file descriptors limit soon.
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "kubesyschdlr" {
-  count = var.enable_alerting_rules ? 1 : 0
-
-  name         = "kubesyschdlr-rules"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: kubesysschdlr-01
     rules:
       - alert: KubeSchedulerDown
@@ -228,16 +206,6 @@ groups:
         annotations:
           description: KubeScheduler has disappeared from Prometheus target discovery.
           summary: Target disappeared from Prometheus target discovery.
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "kubesyskblt" {
-  count = var.enable_alerting_rules ? 1 : 0
-
-  name         = "kubesyskblt-rules"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: kubesyskblt-01
     rules:
       - alert: KubeNodeNotReady
@@ -364,17 +332,6 @@ groups:
         annotations:
           description: Kubelet has disappeared from Prometheus target discovery.
           summary: Target disappeared from Prometheus target discovery.
-
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "kubesyskbpxy" {
-  count = var.enable_alerting_rules ? 1 : 0
-
-  name         = "kubesyskbpxy-rules"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: kubesyspxy-01
     rules:
       - alert: KubeProxyDown
@@ -385,16 +342,6 @@ groups:
         annotations:
           description: KubeProxy has disappeared from Prometheus target discovery.
           summary: Target disappeared from Prometheus target discovery.
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "kubesys" {
-  count = var.enable_alerting_rules ? 1 : 0
-
-  name         = "kubesys-rules"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: kubesys-01
     rules:
       - alert: KubeVersionMismatch
@@ -415,17 +362,6 @@ groups:
         annotations:
           description: Kubernetes API server client '{{ $labels.job }}/{{ $labels.instance }}' is experiencing {{ $value | humanizePercentage }} errors.'
           summary: Kubernetes API server client is experiencing errors.
-
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "kubesyscm" {
-  count = var.enable_alerting_rules ? 1 : 0
-
-  name         = "kubesyscm-rules"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: kubesyscm-01
     rules:
       - alert: KubeControllerManagerDown
@@ -436,16 +372,6 @@ groups:
         annotations:
           description: KubeControllerManager has disappeared from Prometheus target discovery.
           summary: Target disappeared from Prometheus target discovery.
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "kubesysapi" {
-  count = var.enable_alerting_rules ? 1 : 0
-
-  name         = "kubesysapi-rules"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: kubesysapi-01
     rules:
       - alert: KubeClientCertificateExpiration
@@ -503,18 +429,6 @@ groups:
         annotations:
           description: The kubernetes apiserver has terminated {{ $value | humanizePercentage }} of its incoming requests.
           summary: The kubernetes apiserver has terminated {{ $value | humanizePercentage }} of its incoming requests.
-EOF
-}
-
-# Default limit of 10 needs to be raised
-
-resource "aws_prometheus_rule_group_namespace" "kubestorage" {
-  count = var.enable_alerting_rules ? 1 : 0
-
-  name         = "kubestorage-rules"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: kubestg-01
     rules:
       - alert: KubePersistentVolumeFillingUp
@@ -565,16 +479,6 @@ groups:
         annotations:
           description: The persistent volume {{ $labels.persistentvolume }} has status {{ $labels.phase }}.
           summary: PersistentVolume is having issues with provisioning.
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "kuberesources" {
-  count = var.enable_alerting_rules ? 1 : 0
-
-  name         = "kuberesources-rules"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: kuberes-01
     rules:
       - alert: KubeCPUOvercommit
@@ -655,16 +559,6 @@ groups:
         annotations:
           description: The {{ $value | humanizePercentage }} throttling of CPU in namespace {{ $labels.namespace }} for container {{ $labels.container }} in pod {{ $labels.pod }}.
           summary: Processes experience elevated CPU throttling.
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "kubeapps" {
-  count = var.enable_alerting_rules ? 1 : 0
-
-  name         = "kubeapps-rules"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: kubeapps-01
     rules:
       - alert: KubePodCrashLooping
@@ -814,18 +708,6 @@ groups:
         annotations:
           description: HPA {{ $labels.namespace }}/{{ $labels.horizontalpodautoscaler }} has been running at max replicas for longer than 15 minutes.
           summary: HPA is running at max replicas
-EOF
-}
-
-
-
-resource "aws_prometheus_rule_group_namespace" "kubestm" {
-  count = var.enable_alerting_rules ? 1 : 0
-
-  name         = "kubestm-rules"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: kubestm-01
     rules:
       - alert: KubeStateMetricsListErrors
@@ -866,16 +748,6 @@ groups:
         annotations:
           description: kube-state-metrics shards are missing, some Kubernetes objects are not being exposed.
           summary: kube-state-metrics shards are missing.
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "apislos" {
-  count = var.enable_alerting_rules ? 1 : 0
-
-  name         = "api-slos"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: apislos-01
     rules:
       - alert: KubeAPIErrorBudgetBurn
@@ -924,17 +796,6 @@ groups:
         annotations:
           description: The API server is burning too much error budget.
           summary: The API server is burning too much error budget.
-EOF
-}
-
-
-resource "aws_prometheus_rule_group_namespace" "generic" {
-  count = var.enable_alerting_rules ? 1 : 0
-
-  name         = "generic-rules"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: general-01
     rules:
       - alert: TargetDown
@@ -960,16 +821,6 @@ groups:
           severity: none
         annotations:
           description: This is an alert that is used to inhibit info alerts. By themselves, the info-level alerts are sometimes very noisy, but they are relevant when combined with other alerts. This alert fires whenever there's a severity="info" alert, and stops firing when another alert with a severity of 'warning' or 'critical' starts firing on the same namespace. This alert should be routed to a null receiver and configured to inhibit alerts with severity="info".
-EOF
-}
-
-resource "aws_prometheus_rule_group_namespace" "etcd" {
-  count = var.enable_alerting_rules ? 1 : 0
-
-  name         = "etcd-rules"
-  workspace_id = var.managed_prometheus_workspace_id
-  data         = <<EOF
-groups:
   - name: etcd-01
     rules:
       - alert: etcdInsufficientMembers

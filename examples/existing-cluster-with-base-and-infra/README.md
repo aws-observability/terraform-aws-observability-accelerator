@@ -18,8 +18,8 @@ configuration options on the cluster infrastructure.
 Ensure that you have the following tools installed locally:
 
 1. [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-1. [kubectl](https://kubernetes.io/docs/tasks/tools/)
-1. [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+2. [kubectl](https://kubernetes.io/docs/tasks/tools/)
+3. [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 
 
 ## Setup
@@ -33,7 +33,7 @@ on Amazon S3 for example, visit the [terraform remote states](https://www.terraf
 terraform init
 ```
 
-1. EKS Cluster
+2. EKS Cluster
 
 To run this example, you need to provide your EKS cluster ID.
 If you don't have a cluster ready, visit [this example](../new-empty-eks-cluster) first to create a new one.
@@ -41,7 +41,7 @@ If you don't have a cluster ready, visit [this example](../new-empty-eks-cluster
 Add `eks_cluster_id=xxx` to your `terraform.tfvars` or use an
 environment variable `export TF_VAR_eks_cluster_id=xxx`.
 
-1. Amazon Managed Service for Prometheus workspace
+3. Amazon Managed Service for Prometheus workspace
 
 If you have an existing workspace, add `managed_prometheus_workspace_id=ws-xxx`
 or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws-xxx`.
@@ -49,7 +49,7 @@ or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws
 If you don't specify anything a new workspace will be created for you.
 
 
-1. Amazon Managed Grafana workspace
+4. Amazon Managed Grafana workspace
 
 
 If you have an existing workspace, add `managed_grafana_workspace_id=g-xxx`
@@ -58,7 +58,7 @@ or use an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx
 If you don't specify anything a new workspace will be created for you.
 
 
-1. Grafana API Key
+6. Grafana API Key
 <!-- TODO: Remove section when CP Grafana API keys is supported by Terraform -->
 
 - Give admin access to the SSO user you set up when creating the Amazon Managed Grafana Workspace:
@@ -91,7 +91,7 @@ terraform apply
 If your existing Managed Prometheus workspace is in another AWS Region,
 add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws-xxx`.
 
-1. Cross-region Managed Grafana workspace
+2. Cross-region Managed Grafana workspace
 
 If your existing Managed Prometheus workspace is in another AWS Region,
 add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws-xxx`.

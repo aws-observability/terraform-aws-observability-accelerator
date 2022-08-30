@@ -31,8 +31,6 @@ locals {
   amg_ws_endpoint = var.managed_grafana_workspace_id == "" ? "https://${module.managed_grafana[0].workspace_endpoint}" : "https://${data.aws_grafana_workspace.this[0].endpoint}"
   amg_ws_id       = var.managed_grafana_workspace_id == "" ? module.managed_grafana[0].workspace_ : data.aws_grafana_workspace.this[0].endpoint
 
-  # TODO when tf resource for AMG api keys are supported
-  # create a short-lived api key on the fly if api_key is not provided
   amg_api_key = var.grafana_api_key
 
   context = {

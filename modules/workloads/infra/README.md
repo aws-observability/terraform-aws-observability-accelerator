@@ -1,7 +1,6 @@
-# Observability Pattern for Java/JMX
+# Infrastructure monitoring
 
-This module provides an automated experience around Observability for Nginx workloads.
-It provides the following resources:
+This module provides EKS cluster monitoring with the following resources:
 
 - AWS Distro For OpenTelemetry Operator and Collector
 - AWS Managed Grafana Dashboard and data source
@@ -26,47 +25,21 @@ It provides the following resources:
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_helm_addon"></a> [helm\_addon](#module\_helm\_addon) | github.com/aws-observability/terraform-aws-eks-blueprints/modules/kubernetes-addons/helm-addon | n/a |
+| <a name="module_helm_addon"></a> [helm\_addon](#module\_helm\_addon) | github.com/aws-ia/terraform-aws-eks-blueprints/modules/kubernetes-addons/helm-addon | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [aws_prometheus_rule_group_namespace.api-availability](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.apibr](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.apihg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.apislos](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.etcd](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.generic](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.kubeapps](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.kubelet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.kubeprom-recording](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.kubepromnr](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.kuberesources](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.kubescheduler](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.kubestm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.kubestorage](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.kubesys](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.kubesysapi](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.kubesyschdlr](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.kubesyscm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.kubesyskblt](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.kubesyskbpxy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.kubprom](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.ne](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.nodeexporter](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.nodenw](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.noderules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [grafana_dashboard.alertmanager](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
+| [aws_prometheus_rule_group_namespace.alerting_rules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
+| [aws_prometheus_rule_group_namespace.recording_rules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
 | [grafana_dashboard.apis](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
 | [grafana_dashboard.cluster](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
 | [grafana_dashboard.clusternw](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
 | [grafana_dashboard.controller](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
 | [grafana_dashboard.coredns](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
 | [grafana_dashboard.etcd](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
-| [grafana_dashboard.grafana](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
 | [grafana_dashboard.kubelet](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
-| [grafana_dashboard.macos](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
 | [grafana_dashboard.necluster](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
 | [grafana_dashboard.nenode](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
 | [grafana_dashboard.nenodeuse](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
@@ -78,7 +51,6 @@ It provides the following resources:
 | [grafana_dashboard.nwworload](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
 | [grafana_dashboard.podnetwork](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
 | [grafana_dashboard.pods](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
-| [grafana_dashboard.prometheus](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
 | [grafana_dashboard.proxy](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
 | [grafana_dashboard.pv](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
 | [grafana_dashboard.scheduler](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |

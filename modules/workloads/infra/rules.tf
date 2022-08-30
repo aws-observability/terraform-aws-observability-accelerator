@@ -5,7 +5,7 @@
 ################################################################################################################################################
 
 resource "aws_prometheus_rule_group_namespace" "recording_rules" {
-  count = var.enable_recording_rules ? 1 : 0
+  count        = var.enable_recording_rules ? 1 : 0
   name         = "infra-recording-rules"
   workspace_id = var.managed_prometheus_workspace_id
   data         = <<EOF

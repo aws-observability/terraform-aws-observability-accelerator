@@ -21,8 +21,9 @@ variable "irsa_iam_permissions_boundary" {
 }
 
 variable "enable_amazon_eks_adot" {
-  type    = bool
-  default = true
+  description = "Enables the ADOT Operator on the EKS Cluster"
+  type        = bool
+  default     = true
 }
 
 variable "enable_cert_manager" {
@@ -32,45 +33,49 @@ variable "enable_cert_manager" {
 }
 
 variable "enable_managed_prometheus" {
-  type    = bool
-  default = true
+  description = "Creates a new AMP workspace"
+  type        = bool
+  default     = true
 }
 
 variable "managed_prometheus_workspace_id" {
-  description = "AWS Managed Prometheus Workspace ID"
+  description = "AMP Workspace ID"
   type        = string
   default     = ""
 }
 
 variable "managed_prometheus_workspace_region" {
-  description = "AWS Managed Prometheus Workspace Region"
+  description = "Region where AMP is deployed"
   type        = string
   default     = null
 }
 
 variable "enable_alertmanager" {
-  description = "Create AMP AlertManager for all workloads"
+  description = "Creates AMP AlertManager for all workloads"
   type        = bool
   default     = false
 }
 
 variable "enable_managed_grafana" {
-  type    = bool
-  default = true
+  description = "Creates a new Amazon Managed Grafana (AMG) Workspace"
+  type        = bool
+  default     = true
 }
 
 variable "managed_grafana_region" {
-  description = "AWS Managed Grafana Workspace Region"
+  description = "Region where AMG is deployed"
   type        = string
   default     = null
 }
 variable "managed_grafana_workspace_id" {
-  type    = string
-  default = ""
+  description = "AMG Workspace ID"
+  type        = string
+  default     = ""
 }
 variable "grafana_api_key" {
-  type    = string
-  default = null
+  description = "Grafana API key for the AMG workspace"
+  type        = string
+  default     = null
 }
 
 variable "tags" {

@@ -81,11 +81,9 @@ module "eks_observability_accelerator" {
 # https://www.terraform.io/language/modules/develop/providers
 # A module intended to be called by one or more other modules must not contain
 # any provider blocks.
-# This allows forcing depedency between base and workloads module
+# This allows forcing dependency between base and workloads module
 provider "grafana" {
-  url = module.eks_observability_accelerator.managed_grafana_workspace_endpoint
-
-  # TODO: manage with Secrets manager
+  url  = module.eks_observability_accelerator.managed_grafana_workspace_endpoint
   auth = var.grafana_api_key
 }
 
@@ -98,13 +96,10 @@ module "workloads_infra" {
   dashboards_folder_id            = module.eks_observability_accelerator.grafana_dashboards_folder_id
   managed_prometheus_workspace_id = module.eks_observability_accelerator.managed_prometheus_workspace_id
 
-  # TODO remove when Kevin's PR is live
   managed_prometheus_workspace_endpoint = module.eks_observability_accelerator.managed_prometheus_workspace_endpoint
   managed_prometheus_workspace_region   = module.eks_observability_accelerator.managed_prometheus_workspace_region
 
   enable_alerting_rules = false
-  # module custom configuration, check module documentation
-  # config               = {}
 
   tags = local.tags
 

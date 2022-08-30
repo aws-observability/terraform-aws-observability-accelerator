@@ -59,7 +59,6 @@ If you don't specify anything a new workspace will be created for you.
 
 
 5. Grafana API Key
-<!-- TODO: Remove section when CP Grafana API keys is supported by Terraform -->
 
 - Give admin access to the SSO user you set up when creating the Amazon Managed Grafana Workspace:
 - In the AWS Console, navigate to Amazon Grafana. In the left navigation bar, click **All workspaces**, then click on the workspace name you are using for this example.
@@ -131,11 +130,11 @@ add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS Region | `string` | n/a | yes |
 | <a name="input_eks_cluster_id"></a> [eks\_cluster\_id](#input\_eks\_cluster\_id) | EKS Cluster Id | `string` | n/a | yes |
 | <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | API key for authorizing the Grafana provider to make changes to Amazon Managed Grafana | `string` | `""` | no |
-| <a name="input_grafana_endpoint"></a> [grafana\_endpoint](#input\_grafana\_endpoint) | Grafana endpoint | `string` | `null` | no |
-| <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | n/a | `string` | `""` | no |
-| <a name="input_managed_prometheus_endpoint"></a> [managed\_prometheus\_endpoint](#input\_managed\_prometheus\_endpoint) | n/a | `string` | `""` | no |
-| <a name="input_managed_prometheus_region"></a> [managed\_prometheus\_region](#input\_managed\_prometheus\_region) | n/a | `string` | `""` | no |
-| <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | n/a | `string` | `""` | no |
+| <a name="input_grafana_endpoint"></a> [grafana\_endpoint](#input\_grafana\_endpoint) | AMG endpoint | `string` | `null` | no |
+| <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana (AMG) workspace ID | `string` | `""` | no |
+| <a name="input_managed_prometheus_endpoint"></a> [managed\_prometheus\_endpoint](#input\_managed\_prometheus\_endpoint) | AMP workspace ID | `string` | `""` | no |
+| <a name="input_managed_prometheus_region"></a> [managed\_prometheus\_region](#input\_managed\_prometheus\_region) | Region where AMP is deployed | `string` | `""` | no |
+| <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Service for Prometheus (AMP) workspace ID | `string` | `""` | no |
 
 ## Outputs
 

@@ -2,25 +2,100 @@
 
 Welcome to AWS Observability Accelerator for Terraform!
 
+We will be leveraging EKS Blueprints (https://github.com/aws-ia/terraform-aws-eks-blueprints) repository to deploy the solution. EKS Blueprints is a collection of Terraform modules that aim to make it easier and faster for customers to adopt Amazon EKS and start deploying typical workloads. This repository has examples on how to use the existing EKS cluster, Managed Service for Prometheus and Amazon Managed Grafana workspaces as well as creating the brand new environment with all new resources with monitoring enabled right out of the box.
+
 ## Getting Started
+
+## Prerequisites:
+First, ensure that you have installed the following tools locally.
+
+* Install Terraform (https://learn.hashicorp.com/tutorials/terraform/install-cli)
+* Install Kubectl (https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
+* Install docker (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/create-container-image.html#:~:text=the%20Docker%20CLI.-,Installing%20Docker%20on%20Amazon%20Linux%202,-Create%20a%20Docker)
+* AWS Command Line Interface (AWS CLI) version 2 (https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
+*  jq (https://stedolan.github.io/jq/download/)
+* An AWS Account (https://aws.amazon.com/)
+* Configure the credentials in AWS CLI (https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html#:~:text=refreshes%20the%20credentials.-,Set%20and%20view%20configuration%20settings,-There%20are%20several)
+* An existing Amazon Managed Grafana Workspace (https://aws.amazon.com/blogs/mt/amazon-managed-grafana-getting-started/)
+
+## Deployment Steps
+Clone the repository that contains the EKS blueprints:
+
+`git clone https://github.com/aws-observability/terraform-aws-eks-blueprints.git`
+
+
+# Generate Grafana API Key
+
+* Give admin access to the SSO user you set up when creating the Amazon Managed Grafana Workspace:
+* In the AWS Console, navigate to Amazon Grafana. In the left navigation bar, click **All workspaces**, then click on the workspace name you are using for this example.
+* Under **Authentication** within **AWS Single Sign-On (SSO)**, click **Configure users and user groups**
+* Check the box next to the SSO user you created and click **Make admin**
+* From the workspace in the AWS console, click on the `Grafana workspace` URL to open the workspace
+* If you don't see the gear icon in the left navigation bar, log out and log back in.
+* Click on the gear icon, then click on the **API keys** tab.
+* Click **Add API key**, fill in the *Key name* field and select *Admin* as the Role.
+* Copy your API key 
 
 
 ## Documentation
 
+For complete project documentation, please visit our documentation (https://aws-ia.github.io/terraform-aws-eks-blueprints/) site.
 
 ## Examples
 
+To view examples for how you can leverage EKS Blueprints, please see the examples (https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples) directory.
 
 ## Usage
+
+The below demonstrates how you can leverage AWS Observability Accelerator to enable monitoring to an existing EKS cluster, Managed Service for Prometheus and Amazon Managed Grafana workspaces. Configure the environment variables like below
+
+Change the directory 
+
+`cd terraform-aws-observability-accelerator/examples/existing-cluster-with-base-and-infra/`
+
+Initialize terraform
+
+`terraform init`
+
+`
+export TF_VAR_eks_cluster_id=xxx
+export TF_VAR_managed_prometheus_workspace_id=ws-xxx  #existing workspace id otherwise new workspace will be created
+export TF_VAR_managed_grafana_workspace_id=g-xxx  #existing workspace id otherwise new workspace will be created
+export TF_VAR_grafana_api_key="xxx"  #refer getting started section which shows the steps to create Grafana api key
+`
+
+Deploy
+
+`terraform apply`
+
+
+The code above will provision the following:
+
+* Enables the AWS EKS Add-on for ADOT operator (https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) to the existing Amazon EKS Cluster (specified in the environment variable) and deploys the ADOT collector with appropriate scrape configuration to ingest metrics to Amazon Managed Service for Prometheus
+* Deploys kube-state-metrics (https://github.com/kubernetes/kube-state-metrics) to generate Prometheus format metrics based on the current state of the Kubernetes native resource
+* Deploys Node_exporter (https://github.com/prometheus/node_exporter) to collect infrastructure metrics like CPU, Memory and Disk size etc
+* Deploys rule files in the Amazon Managed Service for Prometheus Workspace(specified in the terraform variable file) containing rule groups with over 200 rules to gather metrics about Kubernetes native objects
+* Configures the Amazon Managed Service for Prometheus workspace as a datasource in the Amazon Managed Grafana workspace
+* Creates an Observability folder within the Amazon Managed Grafana workspace(specified in the terraform variable file) and deploys 25 grafana dashboards which visually transforms the metrics collected by Amazon Managed Service for Prometheus
 
 
 ## Submodules
 
+The root module calls into several submodules which provides support for deploying and integrating a number of external AWS services that can be used in concert with Amazon EKS. This includes Amazon Managed Prometheus, AWS OpenTelemetry Operator etc..,
 
 ## Motivation
 
+Kubernetes is a powerful and extensible container orchestration technology that allows you to deploy and manage containerized applications at scale. The extensible nature of Kubernetes also allows you to use a wide range of popular open-source tools, commonly referred to as add-ons, in Kubernetes clusters. With such a large number of tooling and design choices available however, building a tailored EKS cluster that meets your application’s specific needs can take a significant amount of time. It involves integrating a wide range of open-source tools and AWS services and requires deep expertise in AWS and Kubernetes.
+
+AWS customers have asked for examples that demonstrate how to integrate the landscape of Kubernetes tools and make it easy for them to provision complete, opinionated EKS clusters that meet specific application requirements. Customers can use AWS Observability Accelerator to configure and deploy purpose built EKS clusters, and start onboarding workloads in days, rather than months.
 
 ## Support & Feedback
+
+AWS Oservability Accelerator for Terraform is maintained by AWS Solution Architects. It is not part of an AWS service and support is provided best-effort by the EKS Blueprints community.
+
+To post feedback, submit feature ideas, or report bugs, please use the Issues (https://github.com/aws-observability/terraform-aws-observability-accelerator/issues) section of this GitHub repo.
+
+If you are interested in contributing to EKS Blueprints, see the Contribution (https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/CONTRIBUTING.md) guide.
 
 ---
 

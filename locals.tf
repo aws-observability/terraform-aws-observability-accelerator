@@ -13,7 +13,6 @@ data "aws_grafana_workspace" "this" {
   workspace_id = var.managed_grafana_workspace_id
 }
 
-
 locals {
   eks_oidc_issuer_url  = replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")
   eks_cluster_endpoint = data.aws_eks_cluster.eks_cluster.endpoint

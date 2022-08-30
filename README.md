@@ -45,22 +45,86 @@ To view examples for how you can leverage AWS Observability accelerator, please 
 
 The below demonstrates how you can leverage AWS Observability Accelerator to enable monitoring to an existing EKS cluster, Managed Service for Prometheus and Amazon Managed Grafana workspaces. Configure the environment variables like below
 
-Change the directory 
+### Base Module Snippet
+
+This base module allows you to customize whether you would like to use the existing Managed Service for Prometheus and Amazon Managed Grafana workspaces or you can update to create new workspaces.
+
+`
+# deploys the base module
+module "eks_observability_accelerator" {
+  # source = "aws-observability/terrarom-aws-observability-accelerator"
+  source = "../../"
+
+  aws_region     = var.aws_region
+  eks_cluster_id = var.eks_cluster_id
+
+  # deploys AWS Distro for OpenTelemetry operator into the cluster
+  enable_amazon_eks_adot = true
+
+  # reusing existing certificate manager? defaults to true
+  enable_cert_manager = true
+
+  # creates a new AMP workspace, defaults to true
+  enable_managed_prometheus = false
+
+  # reusing existing AMP -- needs data source for alerting rules
+  managed_prometheus_workspace_id     = var.managed_prometheus_workspace_id
+  managed_prometheus_workspace_region = null # defaults to the current region, useful for cross region scenarios (same account)
+
+  # sets up the AMP alert manager at the workspace level
+  enable_alertmanager = true
+
+  # reusing existing Amazon Managed Grafana workspace
+  enable_managed_grafana       = false
+  managed_grafana_workspace_id = var.managed_grafana_workspace_id
+  grafana_api_key              = var.grafana_api_key
+
+  tags = local.tags
+}
+`
+
+The values being passed either via environment variables or files would be used here to refer to the existing EKS cluster and its region.
+
+`
+  aws_region     = var.aws_region
+  eks_cluster_id = var.eks_cluster_id
+`
+
+By default, it tries to use the existing Managed Service for Prometheus and Amazon Managed Grafana workspaces however, you can customize them by toggling the below variables.
+
+`
+# creates a new AMP workspace, defaults to true
+  enable_managed_prometheus = false
+
+...
+
+# reusing existing Amazon Managed Grafana workspace
+  enable_managed_grafana       = false
+
+`
+
+You need to turn on `enable_managed_prometheus` and `enable_managed_grafana` variables to create a new managed workspaces for both Prometheus and Grafana.
+
+### Example on how to enable monitoring using existing EKS Cluster, Managed Service for Prometheus and Amazon Managed Grafana workspaces by setting up the necessary environment variables. 
+
+1. Make sure to complete the prerequisites and clone the repository. 
+
+2. Change the directory 
 
 `cd terraform-aws-observability-accelerator/examples/existing-cluster-with-base-and-infra/`
 
-Initialize terraform
+3. Initialize terraform
 
 `terraform init`
 
 `
-export TF_VAR_eks_cluster_id=xxx
-export TF_VAR_managed_prometheus_workspace_id=ws-xxx  #existing workspace id otherwise new workspace will be created
-export TF_VAR_managed_grafana_workspace_id=g-xxx  #existing workspace id otherwise new workspace will be created
-export TF_VAR_grafana_api_key="xxx"  #refer getting started section which shows the steps to create Grafana api key
+export TF_VAR_eks_cluster_id=xxx                        # existing EKS clusterid
+export TF_VAR_managed_prometheus_workspace_id=ws-xxx    #existing workspace id otherwise new workspace will be created
+export TF_VAR_managed_grafana_workspace_id=g-xxx        #existing workspace id otherwise new workspace will be created
+export TF_VAR_grafana_api_key="xxx"                     #refer getting started section which shows the steps to create Grafana api key
 `
 
-Deploy
+4. Deploy using environment variables
 
 `terraform apply`
 
@@ -74,10 +138,6 @@ The code above will provision the following:
 * Configures the Amazon Managed Service for Prometheus workspace as a datasource in the Amazon Managed Grafana workspace
 * Creates an Observability folder within the Amazon Managed Grafana workspace(specified in the terraform variable file) and deploys 25 grafana dashboards which visually displays the metrics collected by Amazon Managed Service for Prometheus
 
-
-## Submodules
-
-The root module calls into several submodules which provides support for deploying and integrating a number of external AWS services that can be used in concert with Amazon EKS. This includes Amazon Managed Prometheus, AWS OpenTelemetry Operator etc..,
 
 ## Motivation
 

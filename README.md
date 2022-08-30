@@ -76,7 +76,7 @@ The code above will provision the following:
 * Deploys Node_exporter (https://github.com/prometheus/node_exporter) to collect infrastructure metrics like CPU, Memory and Disk size etc
 * Deploys rule files in the Amazon Managed Service for Prometheus Workspace(specified in the terraform variable file) containing rule groups with over 200 rules to gather metrics about Kubernetes native objects
 * Configures the Amazon Managed Service for Prometheus workspace as a datasource in the Amazon Managed Grafana workspace
-* Creates an Observability folder within the Amazon Managed Grafana workspace(specified in the terraform variable file) and deploys 25 grafana dashboards which visually transforms the metrics collected by Amazon Managed Service for Prometheus
+* Creates an Observability folder within the Amazon Managed Grafana workspace(specified in the terraform variable file) and deploys 25 grafana dashboards which visually displays the metrics collected by Amazon Managed Service for Prometheus
 
 
 ## Submodules

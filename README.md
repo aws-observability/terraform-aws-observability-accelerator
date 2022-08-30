@@ -2,21 +2,17 @@
 
 Welcome to AWS Observability Accelerator for Terraform!
 
-We will be leveraging EKS Blueprints (https://github.com/aws-ia/terraform-aws-eks-blueprints) repository to deploy the solution. EKS Blueprints is a collection of Terraform modules that aim to make it easier and faster for customers to adopt Amazon EKS and start deploying typical workloads. This repository has examples on how to use the existing EKS cluster, Managed Service for Prometheus and Amazon Managed Grafana workspaces as well as creating the brand new environment with all new resources with monitoring enabled right out of the box.
+The AWS Observability accelerator for Terraform is a set of modules to help you configure Observability for your Amazon EKS clusters with AWS Observability services.
+
+This project proposes a core module to bootstrap your cluster with the AWS Distro for OpenTelemetry (ADOT) Operator for EKS, Amazon Managed Service for Prometheus (AMP), Amazon Managed Grafana (AMG). Additionally we have a set of workloads modules to leverage curated ADOT collector configurations, Grafana dashboards, Prometheus rules and alerts.
+
+You can check our examples (https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples) for different end-to-end integrations scenarios.
+
+We will be leveraging EKS Blueprints (https://github.com/aws-ia/terraform-aws-eks-blueprints) repository to deploy the solution.
 
 ## Getting Started
 
-## Prerequisites:
-First, ensure that you have installed the following tools locally.
-
-* Install Terraform (https://learn.hashicorp.com/tutorials/terraform/install-cli)
-* Install Kubectl (https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
-* Install docker (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/create-container-image.html#:~:text=the%20Docker%20CLI.-,Installing%20Docker%20on%20Amazon%20Linux%202,-Create%20a%20Docker)
-* AWS Command Line Interface (AWS CLI) version 2 (https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
-*  jq (https://stedolan.github.io/jq/download/)
-* An AWS Account (https://aws.amazon.com/)
-* Configure the credentials in AWS CLI (https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html#:~:text=refreshes%20the%20credentials.-,Set%20and%20view%20configuration%20settings,-There%20are%20several)
-* An existing Amazon Managed Grafana Workspace (https://aws.amazon.com/blogs/mt/amazon-managed-grafana-getting-started/)
+Prerequisites for each of the examples are covered with in the examples directory.
 
 ## Deployment Steps
 Clone the repository that contains the EKS blueprints:
@@ -39,11 +35,11 @@ Clone the repository that contains the EKS blueprints:
 
 ## Documentation
 
-For complete project documentation, please visit our documentation (https://aws-ia.github.io/terraform-aws-eks-blueprints/) site.
+For complete project documentation, please visit our documentation (https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/docs) site.
 
 ## Examples
 
-To view examples for how you can leverage EKS Blueprints, please see the examples (https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples) directory.
+To view examples for how you can leverage AWS Observability accelerator, please see the examples (https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples) directory.
 
 ## Usage
 
@@ -91,7 +87,7 @@ AWS customers have asked for examples that demonstrate how to integrate the land
 
 ## Support & Feedback
 
-AWS Oservability Accelerator for Terraform is maintained by AWS Solution Architects. It is not part of an AWS service and support is provided best-effort by the EKS Blueprints community.
+AWS Oservability Accelerator for Terraform is maintained by AWS Solution Architects. It is not part of an AWS service and support is provided best-effort by the AWS Oservability Accelerator community.
 
 To post feedback, submit feature ideas, or report bugs, please use the Issues (https://github.com/aws-observability/terraform-aws-observability-accelerator/issues) section of this GitHub repo.
 

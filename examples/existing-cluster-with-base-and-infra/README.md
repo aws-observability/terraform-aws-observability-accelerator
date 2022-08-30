@@ -85,17 +85,27 @@ terraform apply
 
 ## Visualization
 
-1. Grafana dashboards
+1. Prometheus datasource on Grafana
+
+Open your Grafana workspace and under Configuration -> Data sources, you should see `aws-observability-accelerator`. Open and click `Save & test`. You should see a notification confirming that the AMP workspace is ready to be used on Grafana.
+
+2. Grafana dashboards
 
 Go to the Dashboards panel of your Grafana workspace. You should see a list of dashboards under the `Observability Accelerator Dashboards`
 
 <img width="1703" alt="image" src="https://user-images.githubusercontent.com/10175027/187510588-d095f69f-d3b0-4753-85b7-d20465312d35.png">
 
+Open a specific dashboard and you should be able to view its visualization
+
+<img width="1721" alt="Screenshot 2022-08-30 at 20 01 32" src="https://user-images.githubusercontent.com/10175027/187515925-67864dd1-2b35-4be0-a15e-1e36805e8b29.png">
 
 2. Amazon Managed Service for Prometheus (AMP) rules and alerts
 
 Open the AMP console and view the details of your workspace. Under the `Rules management` tab, you should find new rules deployed.
 
+<img width="1311" alt="Screenshot 2022-08-30 at 20 22 27" src="https://user-images.githubusercontent.com/10175027/187514450-0f70b5ce-b2ee-4712-850c-c2b32db1d8d6.png">
+
+To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
 
 ## Advanced configuration
 

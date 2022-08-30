@@ -12,7 +12,9 @@ spec:
         config:
           global:
             scrape_interval: {{ .Values.scrapeInterval }}
-            scrape_timeout: {{ .Values.scrapeTimeout }}
+            scrape_timeout: {{ .Values.scrapeTimeout }}       
+            external_labels:
+              cluster: eksworkshop-eksctl  
           scrape_configs:
             - job_name: 'kubernetes-kubelet'
               scheme: https
@@ -32,7 +34,6 @@ spec:
                 target_label: __metrics_path__
                 replacement: /api/v1/nodes/$${1}/proxy/metrics
             - job_name: 'kubelet'
-              metrics_path: /metrics/cadvisor
               scheme: https
               tls_config:
                 ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -48,13 +49,7 @@ spec:
               - source_labels: [__meta_kubernetes_node_name]
                 regex: (.+)
                 target_label: __metrics_path__
-                replacement: /api/v1/nodes/$${1}/proxy/metrics/cadvisor
-              - source_labels: [__metrics_path__]
-                separator: ;
-                regex: (.*)
-                target_label: metrics_path
-                replacement: $$1
-                action: replace
+                replacement: /api/v1/nodes/$${1}/proxy/metrics/cadvisor    
             - job_name: serviceMonitor/default/kube-prometheus-stack-prometheus-node-exporter/0
               honor_timestamps: true
               scrape_interval: 30s
@@ -158,7 +153,7 @@ spec:
                   namespaces:
                     own_namespace: false
                     names:
-                    - default
+                    - default          
             - job_name: serviceMonitor/default/kube-prometheus-stack-prometheus/0
               honor_timestamps: true
               scrape_interval: 30s
@@ -261,7 +256,7 @@ spec:
                   namespaces:
                     own_namespace: false
                     names:
-                    - default
+                    - default          
             - job_name: serviceMonitor/default/kube-prometheus-stack-operator/0
               honor_labels: true
               honor_timestamps: true
@@ -364,7 +359,7 @@ spec:
                   namespaces:
                     own_namespace: false
                     names:
-                    - default
+                    - default          
             - job_name: serviceMonitor/default/kube-prometheus-stack-kubelet/2
               honor_labels: true
               honor_timestamps: true
@@ -481,7 +476,7 @@ spec:
                   namespaces:
                     own_namespace: false
                     names:
-                    - kube-system
+                    - kube-system          
             - job_name: serviceMonitor/default/kube-prometheus-stack-kubelet/1
               honor_labels: true
               honor_timestamps: true
@@ -716,7 +711,7 @@ spec:
                   namespaces:
                     own_namespace: false
                     names:
-                    - kube-system
+                    - kube-system          
             - job_name: serviceMonitor/default/kube-prometheus-stack-kube-state-metrics/0
               honor_labels: true
               honor_timestamps: true
@@ -821,7 +816,7 @@ spec:
                   namespaces:
                     own_namespace: false
                     names:
-                    - default
+                    - default          
             - job_name: serviceMonitor/default/kube-prometheus-stack-kube-scheduler/0
               honor_timestamps: true
               scrape_interval: 30s
@@ -928,7 +923,7 @@ spec:
                   namespaces:
                     own_namespace: false
                     names:
-                    - kube-system
+                    - kube-system            
             - job_name: serviceMonitor/default/kube-prometheus-stack-kube-proxy/0
               honor_timestamps: true
               scrape_interval: 30s
@@ -1035,7 +1030,7 @@ spec:
                   namespaces:
                     own_namespace: false
                     names:
-                    - kube-system
+                    - kube-system          
             - job_name: serviceMonitor/default/kube-prometheus-stack-kube-etcd/0
               honor_timestamps: true
               scrape_interval: 30s
@@ -1354,7 +1349,7 @@ spec:
                   namespaces:
                     own_namespace: false
                     names:
-                    - kube-system
+                    - kube-system                           
 
             - job_name: serviceMonitor/default/kube-prometheus-stack-apiserver/0
               honor_timestamps: true
@@ -1367,7 +1362,7 @@ spec:
                 credentials_file: /var/run/secrets/kubernetes.io/serviceaccount/token
               tls_config:
                 ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-                server_name: kubernetes
+                server_name: kubernetes  
               follow_redirects: true
               enable_http2: true
               relabel_configs:
@@ -1439,7 +1434,7 @@ spec:
                 regex: (.*)
                 target_label: endpoint
                 replacement: https
-                action: replace
+                action: replace  
               - source_labels: [__address__]
                 separator: ;
                 regex: (.*)
@@ -1460,7 +1455,7 @@ spec:
                   namespaces:
                     own_namespace: false
                     names:
-                    - default
+                    - default    
             - job_name: serviceMonitor/default/kube-prometheus-stack-alertmanager/0
               honor_timestamps: true
               scrape_interval: 30s
@@ -1563,7 +1558,7 @@ spec:
                   namespaces:
                     own_namespace: false
                     names:
-                    - default
+                    - default                   
             - job_name: 'kube-state-metrics'
               static_configs:
                 - targets: ['kube-state-metrics.kube-system.svc.cluster.local:8080']

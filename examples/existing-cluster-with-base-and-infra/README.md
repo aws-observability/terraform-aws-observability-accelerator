@@ -83,6 +83,20 @@ or if you had setup environment variables
 terraform apply
 ```
 
+## Visualization
+
+1. Grafana dashboards
+
+Go to the Dashboards panel of your Grafana workspace. You should see a list of dashboards under the `Observability Accelerator Dashboards`
+
+<img width="1703" alt="image" src="https://user-images.githubusercontent.com/10175027/187510588-d095f69f-d3b0-4753-85b7-d20465312d35.png">
+
+
+2. Amazon Managed Service for Prometheus (AMP) rules and alerts
+
+Open the AMP console and view the details of your workspace. Under the `Rules management` tab, you should find new rules deployed.
+
+
 ## Advanced configuration
 
 1. Cross-region Managed Prometheus workspace

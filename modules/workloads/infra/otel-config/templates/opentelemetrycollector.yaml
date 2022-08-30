@@ -14,7 +14,7 @@ spec:
             scrape_interval: {{ .Values.scrapeInterval }}
             scrape_timeout: {{ .Values.scrapeTimeout }}       
             external_labels:
-              cluster: eksworkshop-eksctl  
+              cluster: {{ .Values.ekscluster }}
           scrape_configs:
             - job_name: 'kubernetes-kubelet'
               scheme: https

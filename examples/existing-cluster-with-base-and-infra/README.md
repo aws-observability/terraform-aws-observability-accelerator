@@ -35,11 +35,12 @@ terraform init
 
 2. EKS Cluster
 
-To run this example, you need to provide your EKS cluster ID.
-If you don't have a cluster ready, visit [this example](../new-empty-eks-cluster) first to create a new one.
+To run this example, you need to provide your EKS cluster name.
+If you don't have a cluster ready, visit [this example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/eks-cluster-with-new-vpc)
+first to create a new one.
 
-Create a `terraform.tfvars` file and add `eks_cluster_id=xxx` to your `terraform.tfvars` or
-environment variable `export TF_VAR_eks_cluster_id=xxx`.
+Add `eks_cluster_id=xxx` to your `terraform.tfvars` or use an environment variable `export TF_VAR_eks_cluster_id=xxx`.
+
 
 3. Amazon Managed Service for Prometheus workspace
 
@@ -47,7 +48,6 @@ If you have an existing workspace, add `managed_prometheus_workspace_id=ws-xxx`
 or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws-xxx`.
 
 If you don't specify anything a new workspace will be created for you.
-
 
 4. Amazon Managed Grafana workspace
 
@@ -58,7 +58,7 @@ or use an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx
 If you don't specify anything a new workspace will be created for you.
 
 
-6. Grafana API Key
+5. Grafana API Key
 <!-- TODO: Remove section when CP Grafana API keys is supported by Terraform -->
 
 - Give admin access to the SSO user you set up when creating the Amazon Managed Grafana Workspace:

@@ -63,7 +63,7 @@ View all the configuration options in the module documentation below.
 
 ### Workload modules
 
-We provide also workloads modules which essentially provide curated
+Workload modules are provided, which essentially provide curated
 metrics collection, alerting rule and Grafana dashboards.
 
 
@@ -85,7 +85,7 @@ module "workloads_infra" {
 }
 ```
 
-Grafana dashboards
+Grafana Dashboards
 
 <img width="1719" alt="image" src="https://user-images.githubusercontent.com/10175027/187661363-608cdfcf-ed13-4ddd-a198-e761b78d2291.png">
 
@@ -95,7 +95,7 @@ To quickstart with a complete workflow and view other dashboards, visit the [exi
 
 ## Motivation
 
-Kubernetes is a powerful and extensible container orchestration technology that allows you to deploy and manage containerized applications at scale. The extensible nature of Kubernetes also allows you to use a wide range of popular open-source tools, commonly referred to as add-ons, in Kubernetes clusters. With such a large number of tooling and design choices available however, building a tailored EKS cluster that meets your application’s specific needs can take a significant amount of time. It involves integrating a wide range of open-source tools and AWS services and requires deep expertise in AWS and Kubernetes.
+Kubernetes is a powerful and extensible container orchestration technology that allows you to deploy and manage containerized applications at scale. The extensible nature of Kubernetes also allows you to use a wide range of popular open-source tools, commonly referred to as add-ons, in Kubernetes clusters. With such a large number of tools and design choices available, building a tailored EKS cluster that meets your application’s specific needs can take a significant amount of time. It involves integrating a wide range of open-source tools and AWS services and requires deep expertise in AWS and Kubernetes.
 
 AWS customers have asked for examples that demonstrate how to integrate the landscape of Kubernetes tools and make it easy for them to provision complete, opinionated EKS clusters that meet specific application requirements. Customers can use AWS Observability Accelerator to configure and deploy purpose built EKS clusters, and start onboarding workloads in days, rather than months.
 

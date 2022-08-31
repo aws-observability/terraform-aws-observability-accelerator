@@ -85,8 +85,9 @@ module "workloads_infra" {
 }
 ```
 
-Grafana dashboard
+Grafana dashboards
 
+<img width="1719" alt="image" src="https://user-images.githubusercontent.com/10175027/187661363-608cdfcf-ed13-4ddd-a198-e761b78d2291.png">
 
 
 To quickstart with a complete workflow, visit the [existing cluster with base and module example](./examples/existing-cluster-with-base-and-infra/)

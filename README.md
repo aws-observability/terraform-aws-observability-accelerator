@@ -1,26 +1,110 @@
 # AWS Observability Accelerator for Terraform
 
-Welcome to AWS Observability Accelerator for Terraform!
+Welcome to the AWS Observability Accelerator for Terraform!
 
-## Getting Started
+The AWS Observability accelerator for Terraform is a set of modules to help you
+configure Observability for your Amazon EKS clusters with AWS Observability services.
+This project proposes a core module to bootstrap your cluster with the AWS Distro for
+OpenTelemetry (ADOT) Operator for EKS, Amazon Managed Service for Prometheus (AMP),
+Amazon Managed Grafana (AMG). Additionally we have a set of workloads modules to
+leverage curated ADOT collector configurations, Grafana dashboards,
+Prometheus recording rules and alerts.
+
+You can check our [examples](./examples) for different end-to-end integrations scenarios.
+
+We will be leveraging [EKS Blueprints](https://github.com/aws-ia/terraform-aws-eks-blueprints)
+repository to deploy the solution.
+
+## Example Usage
+
+The sections below demonstrate how you can leverage AWS Observability Accelerator
+to enable monitoring to an existing EKS cluster.
+
+### Base Module
+
+The base module allows you to configure the AWS Observability services for your cluster and
+the AWS Distro for OpenTelemetry (ADOT) Operator as the signals collection mechanism.
+
+This is the minimum configuration to have a new Managed Grafana Workspace, Amazon Managed
+Service for Prometheus Workspace, ADOT Operator deployed for you and ready to receive your
+data.
+
+```hcl
+module "eks_observability_accelerator" {
+  source = "aws-observability/terrarom-aws-observability-accelerator"
+  aws_region = "eu-west-1"
+  eks_cluster_id = "my-eks-cluster"
+}
+```
+
+You can optionally reuse existing Workspaces:
+
+```hcl
+module "eks_observability_accelerator" {
+  source = "aws-observability/terrarom-aws-observability-accelerator"
+  aws_region = "eu-west-1"
+  eks_cluster_id = "my-eks-cluster"
+
+  # prevents creation of a new AMP workspace
+  enable_managed_prometheus = false
+
+  # reusing existing AMP
+  managed_prometheus_workspace_id     = "ws-abcd123..."
+
+  # prevents creation of a new AMG workspace
+  enable_managed_grafana       = false
+
+  managed_grafana_workspace_id = 'g-abcdef123'
+  grafana_api_key              = var.grafana_api_key
+}
+```
+
+View all the configuration options in the module documentation below.
+
+### Workload modules
+
+We provide also workloads modules which essentially provide curated
+metrics collection, alerting rule and Grafana dashboards.
 
 
-## Documentation
+#### Infrastructure monitoring
 
 
-## Examples
+
+```hcl
+module "workloads_infra" {
+  source = "aws-observability/terrarom-aws-observability-accelerator/workloads/infra"
+
+  eks_cluster_id = module.eks_observability_accelerator.eks_cluster_id
+
+  dashboards_folder_id            = module.eks_observability_accelerator.grafana_dashboards_folder_id
+  managed_prometheus_workspace_id = module.eks_observability_accelerator.managed_prometheus_workspace_id
+
+  managed_prometheus_workspace_endpoint = module.eks_observability_accelerator.managed_prometheus_workspace_endpoint
+  managed_prometheus_workspace_region   = module.eks_observability_accelerator.managed_prometheus_workspace_region
+}
+```
+
+Grafana dashboard
 
 
-## Usage
 
-
-## Submodules
+To quickstart with a complete workflow, visit the [existing cluster with base and module example](./examples/existing-cluster-with-base-and-infra/)
 
 
 ## Motivation
 
+Kubernetes is a powerful and extensible container orchestration technology that allows you to deploy and manage containerized applications at scale. The extensible nature of Kubernetes also allows you to use a wide range of popular open-source tools, commonly referred to as add-ons, in Kubernetes clusters. With such a large number of tooling and design choices available however, building a tailored EKS cluster that meets your application’s specific needs can take a significant amount of time. It involves integrating a wide range of open-source tools and AWS services and requires deep expertise in AWS and Kubernetes.
+
+AWS customers have asked for examples that demonstrate how to integrate the landscape of Kubernetes tools and make it easy for them to provision complete, opinionated EKS clusters that meet specific application requirements. Customers can use AWS Observability Accelerator to configure and deploy purpose built EKS clusters, and start onboarding workloads in days, rather than months.
 
 ## Support & Feedback
+
+AWS Oservability Accelerator for Terraform is maintained by AWS Solution Architects. It is not part of an AWS service and support is provided best-effort by the AWS Oservability Accelerator community.
+
+To post feedback, submit feature ideas, or report bugs, please use the Issues (https://github.com/aws-observability/terraform-aws-observability-accelerator/issues) section of this GitHub repo.
+
+If you are interested in contributing to EKS Blueprints, see the Contribution (https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/CONTRIBUTING.md) guide.
 
 ---
 
@@ -96,7 +180,7 @@ Welcome to AWS Observability Accelerator for Terraform!
 | <a name="output_managed_prometheus_workspace_region"></a> [managed\_prometheus\_workspace\_region](#output\_managed\_prometheus\_workspace\_region) | n/a |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
-## Security
+## Contributing
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
 

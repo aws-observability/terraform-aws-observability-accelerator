@@ -5,7 +5,7 @@
 resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
   count = var.enable_alerting_rules ? 1 : 0
 
-  name         = "nodenw-rules"
+  name         = "accelerator-infra-alerting"
   workspace_id = var.managed_prometheus_workspace_id
   data         = <<EOF
 groups:

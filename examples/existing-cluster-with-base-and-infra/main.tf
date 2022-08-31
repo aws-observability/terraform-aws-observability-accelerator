@@ -99,8 +99,6 @@ module "workloads_infra" {
   managed_prometheus_workspace_endpoint = module.eks_observability_accelerator.managed_prometheus_workspace_endpoint
   managed_prometheus_workspace_region   = module.eks_observability_accelerator.managed_prometheus_workspace_region
 
-  enable_alerting_rules = false
-
   tags = local.tags
 
   depends_on = [

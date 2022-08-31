@@ -1,142 +1,95 @@
 # AWS Observability Accelerator for Terraform
 
-Welcome to AWS Observability Accelerator for Terraform!
+Welcome to the AWS Observability Accelerator for Terraform!
 
-The AWS Observability accelerator for Terraform is a set of modules to help you configure Observability for your Amazon EKS clusters with AWS Observability services.
+The AWS Observability accelerator for Terraform is a set of modules to help you
+configure Observability for your Amazon EKS clusters with AWS Observability services.
+This project proposes a core module to bootstrap your cluster with the AWS Distro for
+OpenTelemetry (ADOT) Operator for EKS, Amazon Managed Service for Prometheus (AMP),
+Amazon Managed Grafana (AMG). Additionally we have a set of workloads modules to
+leverage curated ADOT collector configurations, Grafana dashboards,
+Prometheus recording rules and alerts.
 
-This project proposes a core module to bootstrap your cluster with the AWS Distro for OpenTelemetry (ADOT) Operator for EKS, Amazon Managed Service for Prometheus (AMP), Amazon Managed Grafana (AMG). Additionally we have a set of workloads modules to leverage curated ADOT collector configurations, Grafana dashboards, Prometheus rules and alerts.
+You can check our [examples](./examples) for different end-to-end integrations scenarios.
 
-You can check our examples (https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples) for different end-to-end integrations scenarios.
+We will be leveraging [EKS Blueprints](https://github.com/aws-ia/terraform-aws-eks-blueprints)
+repository to deploy the solution.
 
-We will be leveraging EKS Blueprints (https://github.com/aws-ia/terraform-aws-eks-blueprints) repository to deploy the solution.
+## Example Usage
 
-## Getting Started
+The sections below demonstrate how you can leverage AWS Observability Accelerator
+to enable monitoring to an existing EKS cluster.
 
-Prerequisites for each of the examples are covered with in the examples directory.
+### Base Module
 
-## Deployment Steps
-Clone the repository that contains the EKS blueprints:
+The base module allows you to configure the AWS Observability services for your cluster and
+the AWS Distro for OpenTelemetry (ADOT) Operator as the signals collection mechanism.
 
-`git clone https://github.com/aws-observability/terraform-aws-eks-blueprints.git`
+This is the minimum configuration to have a new Managed Grafana Workspace, Amazon Managed
+Service for Prometheus Workspace, ADOT Operator deployed for you and ready to receive your
+data.
 
-
-# Generate Grafana API Key
-
-* Give admin access to the SSO user you set up when creating the Amazon Managed Grafana Workspace:
-* In the AWS Console, navigate to Amazon Grafana. In the left navigation bar, click **All workspaces**, then click on the workspace name you are using for this example.
-* Under **Authentication** within **AWS Single Sign-On (SSO)**, click **Configure users and user groups**
-* Check the box next to the SSO user you created and click **Make admin**
-* From the workspace in the AWS console, click on the `Grafana workspace` URL to open the workspace
-* If you don't see the gear icon in the left navigation bar, log out and log back in.
-* Click on the gear icon, then click on the **API keys** tab.
-* Click **Add API key**, fill in the *Key name* field and select *Admin* as the Role.
-* Copy your API key 
-
-
-## Documentation
-
-For complete project documentation, please visit our documentation (https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/docs) site.
-
-## Examples
-
-To view examples for how you can leverage AWS Observability accelerator, please see the examples (https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples) directory.
-
-## Usage
-
-The below demonstrates how you can leverage AWS Observability Accelerator to enable monitoring to an existing EKS cluster, Managed Service for Prometheus and Amazon Managed Grafana workspaces. Configure the environment variables like below
-
-### Base Module Snippet
-
-This base module allows you to customize whether you would like to use the existing Managed Service for Prometheus and Amazon Managed Grafana workspaces or you can update to create new workspaces.
-
-`
-# deploys the base module
+```hcl
 module "eks_observability_accelerator" {
-  # source = "aws-observability/terrarom-aws-observability-accelerator"
-  source = "../../"
-
-  aws_region     = var.aws_region
-  eks_cluster_id = var.eks_cluster_id
-
-  # deploys AWS Distro for OpenTelemetry operator into the cluster
-  enable_amazon_eks_adot = true
-
-  # reusing existing certificate manager? defaults to true
-  enable_cert_manager = true
-
-  # creates a new AMP workspace, defaults to true
-  enable_managed_prometheus = false
-
-  # reusing existing AMP -- needs data source for alerting rules
-  managed_prometheus_workspace_id     = var.managed_prometheus_workspace_id
-  managed_prometheus_workspace_region = null # defaults to the current region, useful for cross region scenarios (same account)
-
-  # sets up the AMP alert manager at the workspace level
-  enable_alertmanager = true
-
-  # reusing existing Amazon Managed Grafana workspace
-  enable_managed_grafana       = false
-  managed_grafana_workspace_id = var.managed_grafana_workspace_id
-  grafana_api_key              = var.grafana_api_key
-
-  tags = local.tags
+  source = "aws-observability/terrarom-aws-observability-accelerator"
+  aws_region = "eu-west-1"
+  eks_cluster_id = "my-eks-cluster"
 }
-`
+```
 
-The values being passed either via environment variables or files would be used here to refer to the existing EKS cluster and its region.
+You can optionally reuse existing Workspaces:
 
-`
-  aws_region     = var.aws_region
-  eks_cluster_id = var.eks_cluster_id
-`
+```hcl
+module "eks_observability_accelerator" {
+  source = "aws-observability/terrarom-aws-observability-accelerator"
+  aws_region = "eu-west-1"
+  eks_cluster_id = "my-eks-cluster"
 
-By default, it tries to use the existing Managed Service for Prometheus and Amazon Managed Grafana workspaces however, you can customize them by toggling the below variables.
-
-`
-# creates a new AMP workspace, defaults to true
+  # prevents creation of a new AMP workspace
   enable_managed_prometheus = false
 
-...
+  # reusing existing AMP
+  managed_prometheus_workspace_id     = "ws-abcd123..."
 
-# reusing existing Amazon Managed Grafana workspace
+  # prevents creation of a new AMG workspace
   enable_managed_grafana       = false
 
-`
+  managed_grafana_workspace_id = 'g-abcdef123'
+  grafana_api_key              = var.grafana_api_key
+}
+```
 
-You need to turn on `enable_managed_prometheus` and `enable_managed_grafana` variables to create a new managed workspaces for both Prometheus and Grafana.
+View all the configuration options in the module documentation below.
 
-### Example on how to enable monitoring using existing EKS Cluster, Managed Service for Prometheus and Amazon Managed Grafana workspaces by setting up the necessary environment variables. 
+### Workload modules
 
-1. Make sure to complete the prerequisites and clone the repository. 
-
-2. Change the directory 
-
-`cd terraform-aws-observability-accelerator/examples/existing-cluster-with-base-and-infra/`
-
-3. Initialize terraform
-
-`terraform init`
-
-`
-export TF_VAR_eks_cluster_id=xxx                        # existing EKS clusterid
-export TF_VAR_managed_prometheus_workspace_id=ws-xxx    #existing workspace id otherwise new workspace will be created
-export TF_VAR_managed_grafana_workspace_id=g-xxx        #existing workspace id otherwise new workspace will be created
-export TF_VAR_grafana_api_key="xxx"                     #refer getting started section which shows the steps to create Grafana api key
-`
-
-4. Deploy using environment variables
-
-`terraform apply`
+We provide also workloads modules which essentially provide curated
+metrics collection, alerting rule and Grafana dashboards.
 
 
-The code above will provision the following:
+#### Infrastructure monitoring
 
-* Enables the AWS EKS Add-on for ADOT operator (https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) to the existing Amazon EKS Cluster (specified in the environment variable) and deploys the ADOT collector with appropriate scrape configuration to ingest metrics to Amazon Managed Service for Prometheus
-* Deploys kube-state-metrics (https://github.com/kubernetes/kube-state-metrics) to generate Prometheus format metrics based on the current state of the Kubernetes native resource
-* Deploys Node_exporter (https://github.com/prometheus/node_exporter) to collect infrastructure metrics like CPU, Memory and Disk size etc
-* Deploys rule files in the Amazon Managed Service for Prometheus Workspace(specified in the terraform variable file) containing rule groups with over 200 rules to gather metrics about Kubernetes native objects
-* Configures the Amazon Managed Service for Prometheus workspace as a datasource in the Amazon Managed Grafana workspace
-* Creates an Observability folder within the Amazon Managed Grafana workspace(specified in the terraform variable file) and deploys 25 grafana dashboards which visually displays the metrics collected by Amazon Managed Service for Prometheus
+
+
+```hcl
+module "workloads_infra" {
+  source = "aws-observability/terrarom-aws-observability-accelerator/workloads/infra"
+
+  eks_cluster_id = module.eks_observability_accelerator.eks_cluster_id
+
+  dashboards_folder_id            = module.eks_observability_accelerator.grafana_dashboards_folder_id
+  managed_prometheus_workspace_id = module.eks_observability_accelerator.managed_prometheus_workspace_id
+
+  managed_prometheus_workspace_endpoint = module.eks_observability_accelerator.managed_prometheus_workspace_endpoint
+  managed_prometheus_workspace_region   = module.eks_observability_accelerator.managed_prometheus_workspace_region
+}
+```
+
+Grafana dashboard
+
+
+
+To quickstart with a complete workflow, visit the [existing cluster with base and module example](./examples/existing-cluster-with-base-and-infra/)
 
 
 ## Motivation
@@ -227,7 +180,7 @@ If you are interested in contributing to EKS Blueprints, see the Contribution (h
 | <a name="output_managed_prometheus_workspace_region"></a> [managed\_prometheus\_workspace\_region](#output\_managed\_prometheus\_workspace\_region) | n/a |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
-## Security
+## Contributing
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
 

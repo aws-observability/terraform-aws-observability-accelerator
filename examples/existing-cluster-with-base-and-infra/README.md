@@ -52,7 +52,7 @@ first to create a new one.
 
 Add your cluster name for `eks_cluster_id="..."` to the `terraform.tfvars` or use an environment variable `export TF_VAR_eks_cluster_id=xxx`.
 
-5. Amazon Managed Service for Prometheus workspace
+5. Amazon Managed Service for Prometheus workspace (optional)
 
 If you have an existing workspace, add `managed_prometheus_workspace_id=ws-xxx`
 or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws-xxx`.

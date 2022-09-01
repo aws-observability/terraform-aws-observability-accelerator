@@ -54,7 +54,7 @@ module "eks_observability_accelerator" {
   # prevents creation of a new AMG workspace
   enable_managed_grafana       = false
 
-  managed_grafana_workspace_id = 'g-abcdef123'
+  managed_grafana_workspace_id = "g-abcdef123"
   grafana_api_key              = var.grafana_api_key
 }
 ```

@@ -27,38 +27,44 @@ Ensure that you have the following tools installed locally:
 This example uses a local terraform state. If you need states to be saved remotely,
 on Amazon S3 for example, visit the [terraform remote states](https://www.terraform.io/language/state/remote) documentation
 
-1. Initialize terraform
+1. Clone the repo using the command below
+
+```
+git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
+```
+
+2. Initialize terraform
 
 ```console
+cd examples/existing-cluster-with-base-and-infra
 terraform init
 ```
 
-2. EKS Cluster
+3. AWS Region
+
+Specify the AWS Region where the resources will be deployed. Edit the `terraform.tfvars` file and add `aws_region="..."`. You can also use environement variables `export TF_VAR_aws_region=xxx`.
+
+4. EKS Cluster
 
 To run this example, you need to provide your EKS cluster name.
 If you don't have a cluster ready, visit [this example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/eks-cluster-with-new-vpc)
 first to create a new one.
 
-Add `eks_cluster_id=xxx` to your `terraform.tfvars` or use an environment variable `export TF_VAR_eks_cluster_id=xxx`.
+Add your cluster name for `eks_cluster_id="..."` to the `terraform.tfvars` or use an environment variable `export TF_VAR_eks_cluster_id=xxx`.
 
-
-3. Amazon Managed Service for Prometheus workspace
+5. Amazon Managed Service for Prometheus workspace
 
 If you have an existing workspace, add `managed_prometheus_workspace_id=ws-xxx`
 or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws-xxx`.
 
 If you don't specify anything a new workspace will be created for you.
 
-4. Amazon Managed Grafana workspace
-
+6. Amazon Managed Grafana workspace
 
 If you have an existing workspace, add `managed_grafana_workspace_id=g-xxx`
 or use an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx`.
 
-If you don't specify anything a new workspace will be created for you.
-
-
-5. Grafana API Key
+7. Grafana API Key
 
 - Give admin access to the SSO user you set up when creating the Amazon Managed Grafana Workspace:
 - In the AWS Console, navigate to Amazon Grafana. In the left navigation bar, click **All workspaces**, then click on the workspace name you are using for this example.
@@ -77,7 +83,7 @@ If you don't specify anything a new workspace will be created for you.
 terraform apply -var-file=terraform.tfvars
 ```
 
-or if you had setup environment variables
+or if you had setup environment variables, run
 
 ```sh
 terraform apply

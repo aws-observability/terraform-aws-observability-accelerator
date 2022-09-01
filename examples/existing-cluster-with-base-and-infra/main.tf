@@ -28,7 +28,7 @@ terraform {
   required_providers {
     grafana = {
       source  = "grafana/grafana"
-      version = "1.25.0"
+      version = ">= 1.25.0"
     }
   }
 }
@@ -40,6 +40,8 @@ locals {
   eks_oidc_issuer_url  = replace(data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")
   eks_cluster_endpoint = data.aws_eks_cluster.this.endpoint
   eks_cluster_version  = data.aws_eks_cluster.this.version
+
+  create_new_workspace = var.managed_prometheus_workspace_id == "" ? true : false
 
   tags = {
     Source = "github.com/aws-observability/terraform-aws-observability-accelerator"
@@ -61,9 +63,9 @@ module "eks_observability_accelerator" {
   enable_cert_manager = true
 
   # creates a new AMP workspace, defaults to true
-  enable_managed_prometheus = false
+  enable_managed_prometheus = local.create_new_workspace
 
-  # reusing existing AMP -- needs data source for alerting rules
+  # reusing existing AMP if specified
   managed_prometheus_workspace_id     = var.managed_prometheus_workspace_id
   managed_prometheus_workspace_region = null # defaults to the current region, useful for cross region scenarios (same account)
 

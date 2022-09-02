@@ -3,7 +3,7 @@ kind: OpenTelemetryCollector
 metadata:
   name: adot
 spec:
-  image: public.ecr.aws/aws-observability/aws-otel-collector:latest
+  image: public.ecr.aws/aws-observability/aws-otel-collector:v0.20.0
   mode: deployment
   serviceAccount: adot-collector-kubeprometheus
   config: |
@@ -1565,24 +1565,25 @@ spec:
             - job_name: 'node-exporter'
               kubernetes_sd_configs:
                 - role: endpoints
-
     exporters:
-      awsprometheusremotewrite:
+      prometheusremotewrite:
         endpoint: {{ .Values.ampurl }}
-        aws_auth:
-          region: {{ .Values.region }}
-          service: "aps"
+        auth:
+          authenticator: sigv4auth
       logging:
         loglevel: info
     extensions:
+      sigv4auth:
+        region: {{ .Values.region }}
+        service: aps
       health_check:
       pprof:
         endpoint: :1888
       zpages:
         endpoint: :55679
     service:
-      extensions: [pprof, zpages, health_check]
+      extensions: [pprof, zpages, health_check, sigv4auth]
       pipelines:
         metrics:
           receivers: [prometheus]
-          exporters: [logging, awsprometheusremotewrite]
+          exporters: [logging, prometheusremotewrite]

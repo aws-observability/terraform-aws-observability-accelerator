@@ -85,7 +85,12 @@ module "helm_addon" {
     {
       name  = "scrapeSampleLimit"
       value = 1000
-    }
+    },
+    {
+      name  = "ekscluster"
+      value = local.context.eks_cluster_id
+    },
+
   ]
 
   irsa_config = {

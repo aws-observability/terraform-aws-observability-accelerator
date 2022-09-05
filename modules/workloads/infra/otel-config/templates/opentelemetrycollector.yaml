@@ -3,7 +3,7 @@ kind: OpenTelemetryCollector
 metadata:
   name: adot
 spec:
-  image: public.ecr.aws/aws-observability/aws-otel-collector:v0.20.0
+  image: public.ecr.aws/aws-observability/aws-otel-collector:v0.21.0
   mode: deployment
   serviceAccount: adot-collector-kubeprometheus
   config: |
@@ -18,10 +18,6 @@ spec:
           scrape_configs:
             - job_name: 'kubernetes-kubelet'
               scheme: https
-              tls_config:
-                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-                insecure_skip_verify: true
-              bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
               kubernetes_sd_configs:
               - role: node
               relabel_configs:
@@ -35,10 +31,6 @@ spec:
                 replacement: /api/v1/nodes/$${1}/proxy/metrics
             - job_name: 'kubelet'
               scheme: https
-              tls_config:
-                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-                insecure_skip_verify: true
-              bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
               kubernetes_sd_configs:
               - role: node
               relabel_configs:
@@ -1562,10 +1554,6 @@ spec:
             - job_name: 'node-exporter'
               kubernetes_sd_configs:
                 - role: endpoints
-              tls_config:
-                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-                insecure_skip_verify: true
-
     exporters:
       prometheusremotewrite:
         endpoint: {{ .Values.ampurl }}

@@ -1205,7 +1205,8 @@
   "schemaVersion": 36,
   "style": "dark",
   "tags": [
-    "kubernetes-mixin"
+    "infrastructure",
+    "networking"
   ],
   "templating": {
     "list": [

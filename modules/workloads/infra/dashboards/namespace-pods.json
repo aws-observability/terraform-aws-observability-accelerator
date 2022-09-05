@@ -2601,7 +2601,7 @@
   "schemaVersion": 36,
   "style": "dark",
   "tags": [
-    "kubernetes-mixin"
+    "infrastructure"
   ],
   "templating": {
     "list": [

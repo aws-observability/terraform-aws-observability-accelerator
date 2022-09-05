@@ -1407,7 +1407,8 @@
   "schemaVersion": 36,
   "style": "dark",
   "tags": [
-    "kubernetes-mixin"
+    "networking",
+    "workload"
   ],
   "templating": {
     "list": [

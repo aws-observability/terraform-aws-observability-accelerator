@@ -89,7 +89,6 @@ provider "grafana" {
   auth = var.grafana_api_key
 }
 
-//*
 module "workloads_infra" {
   source = "../../modules/workloads/infra"
   # source = "aws-observability/terrarom-aws-observability-accelerator/workloads/infra"
@@ -108,4 +107,3 @@ module "workloads_infra" {
     module.eks_observability_accelerator
   ]
 }
-//*/

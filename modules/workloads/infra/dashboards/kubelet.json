@@ -73,7 +73,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(kubelet_node_name{cluster=\"$cluster\", job=\"kubelet\"})",
+          "expr": "sum(kubelet_node_name{cluster=\"$cluster\", job=\"kubernetes-kubelet\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -127,7 +127,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(kubelet_running_pods{cluster=\"$cluster\", job=\"kubelet\", instance=~\"$instance\"}) OR sum(kubelet_running_pod_count{cluster=\"$cluster\", job=\"kubelet\", instance=~\"$instance\"})",
+          "expr": "sum(kubelet_running_pods{cluster=\"$cluster\", job=\"kubernetes-kubelet\", instance=~\"$instance\"}) OR sum(kubelet_running_pod_count{cluster=\"$cluster\", job=\"kubernetes-kubelet\", instance=~\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -181,7 +181,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(kubelet_running_containers{cluster=\"$cluster\", job=\"kubelet\", instance=~\"$instance\"}) OR sum(kubelet_running_container_count{cluster=\"$cluster\", job=\"kubelet\", instance=~\"$instance\"})",
+          "expr": "sum(kubelet_running_containers{cluster=\"$cluster\", job=\"kubernetes-kubelet\", instance=~\"$instance\"}) OR sum(kubelet_running_container_count{cluster=\"$cluster\", job=\"kubernetes-kubelet\", instance=~\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -235,7 +235,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(volume_manager_total_volumes{cluster=\"$cluster\", job=\"kubelet\", instance=~\"$instance\", state=\"actual_state_of_world\"})",
+          "expr": "sum(volume_manager_total_volumes{cluster=\"$cluster\", job=\"kubernetes-kubelet\", instance=~\"$instance\", state=\"actual_state_of_world\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -289,7 +289,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(volume_manager_total_volumes{cluster=\"$cluster\", job=\"kubelet\", instance=~\"$instance\",state=\"desired_state_of_world\"})",
+          "expr": "sum(volume_manager_total_volumes{cluster=\"$cluster\", job=\"kubernetes-kubelet\", instance=~\"$instance\",state=\"desired_state_of_world\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -343,7 +343,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(rate(kubelet_node_config_error{cluster=\"$cluster\", job=\"kubelet\", instance=~\"$instance\"}[$__rate_interval]))",
+          "expr": "sum(rate(kubelet_node_config_error{cluster=\"$cluster\", job=\"kubernetes-kubelet\", instance=~\"$instance\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -403,7 +403,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(rate(kubelet_runtime_operations_total{cluster=\"$cluster\",job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (operation_type, instance)",
+          "expr": "sum(rate(kubelet_runtime_operations_total{cluster=\"$cluster\",job=\"kubernetes-kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (operation_type, instance)",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}} {{operation_type}}",
@@ -490,7 +490,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(rate(kubelet_runtime_operations_errors_total{cluster=\"$cluster\",job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_type)",
+          "expr": "sum(rate(kubelet_runtime_operations_errors_total{cluster=\"$cluster\",job=\"kubernetes-kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_type)",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}} {{operation_type}}",
@@ -577,7 +577,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "histogram_quantile(0.99, sum(rate(kubelet_runtime_operations_duration_seconds_bucket{cluster=\"$cluster\",job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_type, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(kubelet_runtime_operations_duration_seconds_bucket{cluster=\"$cluster\",job=\"kubernetes-kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_type, le))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}} {{operation_type}}",
@@ -664,7 +664,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(rate(kubelet_pod_start_duration_seconds_count{cluster=\"$cluster\",job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance)",
+          "expr": "sum(rate(kubelet_pod_start_duration_seconds_count{cluster=\"$cluster\",job=\"kubernetes-kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance)",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}} pod",
@@ -674,7 +674,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(rate(kubelet_pod_worker_duration_seconds_count{cluster=\"$cluster\",job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance)",
+          "expr": "sum(rate(kubelet_pod_worker_duration_seconds_count{cluster=\"$cluster\",job=\"kubernetes-kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance)",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}} worker",
@@ -761,7 +761,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pod_start_duration_seconds_count{cluster=\"$cluster\",job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pod_start_duration_seconds_count{cluster=\"$cluster\",job=\"kubernetes-kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, le))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}} pod",
@@ -771,7 +771,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pod_worker_duration_seconds_bucket{cluster=\"$cluster\",job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pod_worker_duration_seconds_bucket{cluster=\"$cluster\",job=\"kubernetes-kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, le))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}} worker",
@@ -855,7 +855,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(rate(storage_operation_duration_seconds_count{cluster=\"$cluster\",job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_name, volume_plugin)",
+          "expr": "sum(rate(storage_operation_duration_seconds_count{cluster=\"$cluster\",job=\"kubernetes-kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_name, volume_plugin)",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}} {{operation_name}} {{volume_plugin}}",
@@ -935,7 +935,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(rate(storage_operation_errors_total{cluster=\"$cluster\",job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_name, volume_plugin)",
+          "expr": "sum(rate(storage_operation_errors_total{cluster=\"$cluster\",job=\"kubernetes-kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_name, volume_plugin)",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}} {{operation_name}} {{volume_plugin}}",
@@ -1015,7 +1015,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "histogram_quantile(0.99, sum(rate(storage_operation_duration_seconds_bucket{cluster=\"$cluster\", job=\"kubelet\", instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_name, volume_plugin, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(storage_operation_duration_seconds_bucket{cluster=\"$cluster\", job=\"kubernetes-kubelet\", instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_name, volume_plugin, le))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}} {{operation_name}} {{volume_plugin}}",
@@ -1093,7 +1093,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(rate(kubelet_cgroup_manager_duration_seconds_count{cluster=\"$cluster\", job=\"kubelet\", instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_type)",
+          "expr": "sum(rate(kubelet_cgroup_manager_duration_seconds_count{cluster=\"$cluster\", job=\"kubernetes-kubelet\", instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_type)",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{operation_type}}",
@@ -1171,7 +1171,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "histogram_quantile(0.99, sum(rate(kubelet_cgroup_manager_duration_seconds_bucket{cluster=\"$cluster\", job=\"kubelet\", instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_type, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(kubelet_cgroup_manager_duration_seconds_bucket{cluster=\"$cluster\", job=\"kubernetes-kubelet\", instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_type, le))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}} {{operation_type}}",
@@ -1250,7 +1250,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(rate(kubelet_pleg_relist_duration_seconds_count{cluster=\"$cluster\", job=\"kubelet\", instance=~\"$instance\"}[$__rate_interval])) by (instance)",
+          "expr": "sum(rate(kubelet_pleg_relist_duration_seconds_count{cluster=\"$cluster\", job=\"kubernetes-kubelet\", instance=~\"$instance\"}[$__rate_interval])) by (instance)",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -1328,7 +1328,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pleg_relist_interval_seconds_bucket{cluster=\"$cluster\",job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pleg_relist_interval_seconds_bucket{cluster=\"$cluster\",job=\"kubernetes-kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, le))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -1406,7 +1406,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pleg_relist_duration_seconds_bucket{cluster=\"$cluster\",job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pleg_relist_duration_seconds_bucket{cluster=\"$cluster\",job=\"kubernetes-kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, le))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -1484,7 +1484,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(rate(rest_client_requests_total{cluster=\"$cluster\",job=\"kubelet\", instance=~\"$instance\",code=~\"2..\"}[$__rate_interval]))",
+          "expr": "sum(rate(rest_client_requests_total{cluster=\"$cluster\",job=\"kubernetes-kubelet\", instance=~\"$instance\",code=~\"2..\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "2xx",
@@ -1494,7 +1494,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(rate(rest_client_requests_total{cluster=\"$cluster\",job=\"kubelet\", instance=~\"$instance\",code=~\"3..\"}[$__rate_interval]))",
+          "expr": "sum(rate(rest_client_requests_total{cluster=\"$cluster\",job=\"kubernetes-kubelet\", instance=~\"$instance\",code=~\"3..\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "3xx",
@@ -1504,7 +1504,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(rate(rest_client_requests_total{cluster=\"$cluster\",job=\"kubelet\", instance=~\"$instance\",code=~\"4..\"}[$__rate_interval]))",
+          "expr": "sum(rate(rest_client_requests_total{cluster=\"$cluster\",job=\"kubernetes-kubelet\", instance=~\"$instance\",code=~\"4..\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "4xx",
@@ -1514,7 +1514,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(rate(rest_client_requests_total{cluster=\"$cluster\",job=\"kubelet\", instance=~\"$instance\",code=~\"5..\"}[$__rate_interval]))",
+          "expr": "sum(rate(rest_client_requests_total{cluster=\"$cluster\",job=\"kubernetes-kubelet\", instance=~\"$instance\",code=~\"5..\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "5xx",
@@ -1592,7 +1592,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "histogram_quantile(0.99, sum(rate(rest_client_request_duration_seconds_bucket{cluster=\"$cluster\",job=\"kubelet\", instance=~\"$instance\"}[$__rate_interval])) by (instance, verb, url, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(rest_client_request_duration_seconds_bucket{cluster=\"$cluster\",job=\"kubernetes-kubelet\", instance=~\"$instance\"}[$__rate_interval])) by (instance, verb, url, le))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}} {{verb}} {{url}}",
@@ -1670,7 +1670,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "process_resident_memory_bytes{cluster=\"$cluster\",job=\"kubelet\",instance=~\"$instance\"}",
+          "expr": "process_resident_memory_bytes{cluster=\"$cluster\",job=\"kubernetes-kubelet\",instance=~\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -1748,7 +1748,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "rate(process_cpu_seconds_total{cluster=\"$cluster\",job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])",
+          "expr": "rate(process_cpu_seconds_total{cluster=\"$cluster\",job=\"kubernetes-kubelet\",instance=~\"$instance\"}[$__rate_interval])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -1826,7 +1826,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "go_goroutines{cluster=\"$cluster\",job=\"kubelet\",instance=~\"$instance\"}",
+          "expr": "go_goroutines{cluster=\"$cluster\",job=\"kubernetes-kubelet\",instance=~\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -1905,7 +1905,7 @@
         "name": "cluster",
         "options": [],
         "query": {
-          "query": "label_values(up{job=\"kubelet\"}, cluster)",
+          "query": "label_values(up{job=\"kubernetes-kubelet\"}, cluster)",
           "refId": "Prometheus-cluster-Variable-Query"
         },
         "refresh": 2,
@@ -1935,7 +1935,7 @@
         "name": "instance",
         "options": [],
         "query": {
-          "query": "label_values(up{job=\"kubelet\",cluster=\"$cluster\"}, instance)",
+          "query": "label_values(up{job=\"kubernetes-kubelet\",cluster=\"$cluster\"}, instance)",
           "refId": "Prometheus-instance-Variable-Query"
         },
         "refresh": 2,

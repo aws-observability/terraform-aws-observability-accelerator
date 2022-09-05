@@ -46,8 +46,6 @@ resource "helm_release" "prometheus_node_exporter" {
 module "helm_addon" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints/modules/kubernetes-addons/helm-addon"
 
-  count = 1
-
   helm_config = merge(
     {
       name        = local.name

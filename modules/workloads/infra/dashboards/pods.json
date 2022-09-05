@@ -2337,7 +2337,7 @@
   "schemaVersion": 36,
   "style": "dark",
   "tags": [
-    "kubernetes-mixin"
+    "workload"
   ],
   "templating": {
     "list": [

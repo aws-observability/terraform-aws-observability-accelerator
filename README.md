@@ -5,17 +5,19 @@ Welcome to the AWS Observability Accelerator for Terraform!
 The AWS Observability accelerator for Terraform is a set of modules to help you
 configure Observability for your Amazon EKS clusters with AWS Observability services.
 This project proposes a core module to bootstrap your cluster with the AWS Distro for
-OpenTelemetry (ADOT) Operator for EKS, Amazon Managed Service for Prometheus (AMP),
-Amazon Managed Grafana (AMG). Additionally we have a set of workloads modules to
+OpenTelemetry (ADOT) Operator for EKS, Amazon Managed Service for Prometheus,
+Amazon Managed Grafana. Additionally we have a set of workloads modules to
 leverage curated ADOT collector configurations, Grafana dashboards,
 Prometheus recording rules and alerts.
-
-You can check our [examples](./examples) for different end-to-end integrations scenarios.
 
 We will be leveraging [EKS Blueprints](https://github.com/aws-ia/terraform-aws-eks-blueprints)
 repository to deploy the solution.
 
-## Example Usage
+## Getting started
+
+To quickstart with a complete workflow and view Aamzon EKS infrastructure dashboards, visit the [existing cluster with base and module example](./examples/existing-cluster-with-base-and-infra/)
+
+## How it works
 
 The sections below demonstrate how you can leverage AWS Observability Accelerator
 to enable monitoring to an existing EKS cluster.
@@ -89,9 +91,7 @@ Grafana Dashboards
 
 <img width="1719" alt="image" src="https://user-images.githubusercontent.com/10175027/187661363-608cdfcf-ed13-4ddd-a198-e761b78d2291.png">
 
-
-To quickstart with a complete workflow and view other dashboards, visit the [existing cluster with base and module example](./examples/existing-cluster-with-base-and-infra/)
-
+Check the the [complete example](./examples/existing-cluster-with-base-and-infra/)
 
 ## Motivation
 
@@ -101,7 +101,7 @@ AWS customers have asked for examples that demonstrate how to integrate the land
 
 ## Support & Feedback
 
-AWS Oservability Accelerator for Terraform is maintained by AWS Solution Architects. It is not part of an AWS service and support is provided best-effort by the AWS Oservability Accelerator community.
+AWS Observability Accelerator for Terraform is maintained by AWS Solution Architects. It is not part of an AWS service and support is provided best-effort by the AWS Observability Accelerator community.
 
 To post feedback, submit feature ideas, or report bugs, please use the Issues (https://github.com/aws-observability/terraform-aws-observability-accelerator/issues) section of this GitHub repo.
 

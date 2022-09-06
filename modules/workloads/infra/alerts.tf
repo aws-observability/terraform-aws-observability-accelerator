@@ -211,7 +211,7 @@ groups:
           description: The Kubelet Pod Lifecycle Event Generator has a 99th percentile duration of {{ $value }} seconds on node {{ $labels.node }}.
           summary: Kubelet Pod Lifecycle Event Generator is taking too long to relist.
       - alert: KubeletPodStartUpLatencyHigh
-        expr: histogram_quantile(0.99, sum by(cluster, instance, le) (rate(kubelet_pod_worker_duration_seconds_bucket{job="kubelet",metrics_path="/metrics"}[5m]))) * on(cluster, instance) group_left(node) kubelet_node_name{job="kubelet",metrics_path="/metrics"} > 60
+        expr: histogram_quantile(0.99, sum by(cluster, instance, le) (rate(kubelet_pod_worker_duration_seconds_bucket{job="kubelet"}[5m]))) * on(cluster, instance) group_left(node) kubelet_node_name{job="kubelet"} > 60
         for: 15m
         labels:
           severity: warning
@@ -263,7 +263,7 @@ groups:
           description: Kubelet on node {{ $labels.node }} has failed to renew its server certificate ({{ $value | humanize }} errors in the last 5 minutes).
           summary: Kubelet has failed to renew its server certificate.
       - alert: KubeletDown
-        expr: absent(up{job="kubelet",metrics_path="/metrics"} == 1)
+        expr: absent(up{job="kubelet"} == 1)
         for: 15m
         labels:
           severity: critical
@@ -350,7 +350,7 @@ groups:
           description: The kubernetes apiserver has terminated {{ $value | humanizePercentage }} of its incoming requests.
           summary: The kubernetes apiserver has terminated {{ $value | humanizePercentage }} of its incoming requests.
       - alert: KubePersistentVolumeFillingUp
-        expr: (kubelet_volume_stats_available_bytes{job="kubelet",metrics_path="/metrics",namespace=~".*"} / kubelet_volume_stats_capacity_bytes{job="kubelet",metrics_path="/metrics",namespace=~".*"}) < 0.03 and kubelet_volume_stats_used_bytes{job="kubelet",metrics_path="/metrics",namespace=~".*"} > 0 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_access_mode{access_mode="ReadOnlyMany"} == 1 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
+        expr: (kubelet_volume_stats_available_bytes{job="kubelet",namespace=~".*"} / kubelet_volume_stats_capacity_bytes{job="kubelet",namespace=~".*"}) < 0.03 and kubelet_volume_stats_used_bytes{job="kubelet",namespace=~".*"} > 0 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_access_mode{access_mode="ReadOnlyMany"} == 1 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
         for: 1m
         labels:
           severity: critical
@@ -358,7 +358,7 @@ groups:
           description: The PersistentVolume claimed by {{ $labels.persistentvolumeclaim }} in Namespace {{ $labels.namespace }} is only {{ $value | humanizePercentage }} free.
           summary: PersistentVolume is filling up.
       - alert: KubePersistentVolumeFillingUp
-        expr: (kubelet_volume_stats_available_bytes{job="kubelet",metrics_path="/metrics",namespace=~".*"} / kubelet_volume_stats_capacity_bytes{job="kubelet",metrics_path="/metrics",namespace=~".*"}) < 0.15 and kubelet_volume_stats_used_bytes{job="kubelet",metrics_path="/metrics",namespace=~".*"} > 0 and predict_linear(kubelet_volume_stats_available_bytes{job="kubelet",metrics_path="/metrics",namespace=~".*"}[6h], 4 * 24 * 3600) < 0 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_access_mode{access_mode="ReadOnlyMany"} == 1 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
+        expr: (kubelet_volume_stats_available_bytes{job="kubelet",namespace=~".*"} / kubelet_volume_stats_capacity_bytes{job="kubelet",namespace=~".*"}) < 0.15 and kubelet_volume_stats_used_bytes{job="kubelet",namespace=~".*"} > 0 and predict_linear(kubelet_volume_stats_available_bytes{job="kubelet",namespace=~".*"}[6h], 4 * 24 * 3600) < 0 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_access_mode{access_mode="ReadOnlyMany"} == 1 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
         for: 1h
         labels:
           severity: warning
@@ -366,7 +366,7 @@ groups:
           description: Based on recent sampling, the PersistentVolume claimed by {{ $labels.persistentvolumeclaim }} in Namespace {{ $labels.namespace }} is expected to fill up within four days.
           summary: PersistentVolume is filling up.
       - alert: KubePersistentVolumeInodesFillingUp
-        expr: (kubelet_volume_stats_inodes_free{job="kubelet",metrics_path="/metrics",namespace=~".*"} / kubelet_volume_stats_inodes{job="kubelet",metrics_path="/metrics",namespace=~".*"}) < 0.03 and kubelet_volume_stats_inodes_used{job="kubelet",metrics_path="/metrics",namespace=~".*"} > 0 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_access_mode{access_mode="ReadOnlyMany"} == 1 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
+        expr: (kubelet_volume_stats_inodes_free{job="kubelet",namespace=~".*"} / kubelet_volume_stats_inodes{job="kubelet",namespace=~".*"}) < 0.03 and kubelet_volume_stats_inodes_used{job="kubelet",namespace=~".*"} > 0 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_access_mode{access_mode="ReadOnlyMany"} == 1 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
         for: 1m
         labels:
           severity: critical
@@ -374,7 +374,7 @@ groups:
           description: The PersistentVolume claimed by {{ $labels.persistentvolumeclaim }} in Namespace {{ $labels.namespace }} only has {{ $value | humanizePercentage }} free inodes.
           summary: PersistentVolumeInodes is filling up.
       - alert: KubePersistentVolumeInodesFillingUp
-        expr: (kubelet_volume_stats_inodes_free{job="kubelet",metrics_path="/metrics",namespace=~".*"} / kubelet_volume_stats_inodes{job="kubelet",metrics_path="/metrics",namespace=~".*"}) < 0.15 and kubelet_volume_stats_inodes_used{job="kubelet",metrics_path="/metrics",namespace=~".*"} > 0 and predict_linear(kubelet_volume_stats_inodes_free{job="kubelet",metrics_path="/metrics",namespace=~".*"}[6h], 4 * 24 * 3600) < 0 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_access_mode{access_mode="ReadOnlyMany"} == 1 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
+        expr: (kubelet_volume_stats_inodes_free{job="kubelet",namespace=~".*"} / kubelet_volume_stats_inodes{job="kubelet",namespace=~".*"}) < 0.15 and kubelet_volume_stats_inodes_used{job="kubelet",namespace=~".*"} > 0 and predict_linear(kubelet_volume_stats_inodes_free{job="kubelet",namespace=~".*"}[6h], 4 * 24 * 3600) < 0 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_access_mode{access_mode="ReadOnlyMany"} == 1 unless on(namespace, persistentvolumeclaim) kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
         for: 1h
         labels:
           severity: warning

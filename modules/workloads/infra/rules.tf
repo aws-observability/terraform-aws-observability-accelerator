@@ -19,17 +19,17 @@ groups:
       - record: :node_memory_MemAvailable_bytes:sum
         expr: sum by(cluster) (node_memory_MemAvailable_bytes{job="node-exporter"} or (node_memory_Buffers_bytes{job="node-exporter"} + node_memory_Cached_bytes{job="node-exporter"} + node_memory_MemFree_bytes{job="node-exporter"} + node_memory_Slab_bytes{job="node-exporter"}))
       - record: cluster:node_cpu:ratio_rate5m
-        expr: sum(rate(node_cpu_seconds_total{job="node-exporter",mode!="idle",mode!="iowait",mode!="steal"}[5m])) / count(sum by(cluster, instance, cpu) (node_cpu_seconds_total{job="node-exporter"}))
+        expr: sum by (cluster) (rate(node_cpu_seconds_total{job="node-exporter",mode!="idle",mode!="iowait",mode!="steal"}[5m])) / count by (cluster) (sum by(cluster, instance, cpu) (node_cpu_seconds_total{job="node-exporter"}))
       - record: node_quantile:kubelet_pleg_relist_duration_seconds:histogram_quantile
-        expr: histogram_quantile(0.99, sum by(cluster, instance, le) (rate(kubelet_pleg_relist_duration_seconds_bucket[5m])) * on(cluster, instance) group_left(node) kubelet_node_name{job="kubelet",metrics_path="/metrics"})
+        expr: histogram_quantile(0.99, sum by(cluster, instance, le) (rate(kubelet_pleg_relist_duration_seconds_bucket[5m])) * on(cluster, instance) group_left(node) kubelet_node_name{job="kubelet"})
         labels:
           quantile: 0.99
       - record: node_quantile:kubelet_pleg_relist_duration_seconds:histogram_quantile
-        expr: histogram_quantile(0.9, sum by(cluster, instance, le) (rate(kubelet_pleg_relist_duration_seconds_bucket[5m])) * on(cluster, instance) group_left(node) kubelet_node_name{job="kubelet",metrics_path="/metrics"})
+        expr: histogram_quantile(0.9, sum by(cluster, instance, le) (rate(kubelet_pleg_relist_duration_seconds_bucket[5m])) * on(cluster, instance) group_left(node) kubelet_node_name{job="kubelet"})
         labels:
           quantile: 0.9
       - record: node_quantile:kubelet_pleg_relist_duration_seconds:histogram_quantile
-        expr: histogram_quantile(0.5, sum by(cluster, instance, le) (rate(kubelet_pleg_relist_duration_seconds_bucket[5m])) * on(cluster, instance) group_left(node) kubelet_node_name{job="kubelet",metrics_path="/metrics"})
+        expr: histogram_quantile(0.5, sum by(cluster, instance, le) (rate(kubelet_pleg_relist_duration_seconds_bucket[5m])) * on(cluster, instance) group_left(node) kubelet_node_name{job="kubelet"})
         labels:
           quantile: 0.5
       - record: instance:node_num_cpu:sum
@@ -43,9 +43,9 @@ groups:
       - record: instance:node_vmstat_pgmajfault:rate5m
         expr: rate(node_vmstat_pgmajfault{job="node-exporter"}[5m])
       - record: instance_device:node_disk_io_time_seconds:rate5m
-        expr: rate(node_disk_io_time_seconds_total{device=~"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job="node-exporter"}[5m])
+        expr: rate(node_disk_io_time_seconds_total{device=~"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job="node-exporter"}[5m])
       - record: instance_device:node_disk_io_time_weighted_seconds:rate5m
-        expr: rate(node_disk_io_time_weighted_seconds_total{device=~"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job="node-exporter"}[5m])
+        expr: rate(node_disk_io_time_weighted_seconds_total{device=~"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job="node-exporter"}[5m])
       - record: instance:node_network_receive_bytes_excluding_lo:rate5m
         expr: sum without(device) (rate(node_network_receive_bytes_total{device!="lo",job="node-exporter"}[5m]))
       - record: instance:node_network_transmit_bytes_excluding_lo:rate5m
@@ -195,17 +195,17 @@ groups:
       - record: cluster_verb_scope:apiserver_request_slo_duration_seconds_count:increase30d
         expr: sum by(cluster, verb, scope) (avg_over_time(cluster_verb_scope:apiserver_request_slo_duration_seconds_count:increase1h[30d]) * 24 * 30)
       - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate
-        expr: sum by(cluster, namespace, pod, container) (irate(container_cpu_usage_seconds_total{image!="",job="kubelet",metrics_path=~".*/metrics/cadvisor"}[5m])) * on(cluster, namespace, pod) group_left(node) topk by(cluster, namespace, pod) (1, max by(cluster, namespace, pod, node) (kube_pod_info{node!=""}))
+        expr: sum by(cluster, namespace, pod, container) (irate(container_cpu_usage_seconds_total{image!="",job="kubelet"}[5m])) * on(cluster, namespace, pod) group_left(node) topk by(cluster, namespace, pod) (1, max by(cluster, namespace, pod, node) (kube_pod_info{node!=""}))
       - record: node_namespace_pod_container:container_memory_working_set_bytes
-        expr: container_memory_working_set_bytes{image!="",job="kubelet",metrics_path=~".*/metrics/cadvisor"} * on(namespace, pod) group_left(node) topk by(namespace, pod) (1, max by(namespace, pod, node) (kube_pod_info{node!=""}))
+        expr: container_memory_working_set_bytes{image!="",job="kubelet"} * on(namespace, pod) group_left(node) topk by(namespace, pod) (1, max by(namespace, pod, node) (kube_pod_info{node!=""}))
       - record: node_namespace_pod_container:container_memory_rss
-        expr: container_memory_rss{image!="",job="kubelet",metrics_path=~".*/metrics/cadvisor"} * on(namespace, pod) group_left(node) topk by(namespace, pod) (1, max by(namespace, pod, node) (kube_pod_info{node!=""}))
+        expr: container_memory_rss{image!="",job="kubelet"} * on(namespace, pod) group_left(node) topk by(namespace, pod) (1, max by(namespace, pod, node) (kube_pod_info{node!=""}))
   - name: infra-rules-04
     rules:
       - record: node_namespace_pod_container:container_memory_cache
-        expr: container_memory_cache{image!="",job="kubelet",metrics_path=~".*/metrics/cadvisor"} * on(namespace, pod) group_left(node) topk by(namespace, pod) (1, max by(namespace, pod, node) (kube_pod_info{node!=""}))
+        expr: container_memory_cache{image!="",job="kubelet"} * on(namespace, pod) group_left(node) topk by(namespace, pod) (1, max by(namespace, pod, node) (kube_pod_info{node!=""}))
       - record: node_namespace_pod_container:container_memory_swap
-        expr: container_memory_swap{image!="",job="kubelet",metrics_path=~".*/metrics/cadvisor"} * on(namespace, pod) group_left(node) topk by(namespace, pod) (1, max by(namespace, pod, node) (kube_pod_info{node!=""}))
+        expr: container_memory_swap{image!="",job="kubelet"} * on(namespace, pod) group_left(node) topk by(namespace, pod) (1, max by(namespace, pod, node) (kube_pod_info{node!=""}))
       - record: cluster:namespace:pod_memory:active:kube_pod_container_resource_requests
         expr: kube_pod_container_resource_requests{job="kube-state-metrics",resource="memory"} * on(namespace, pod, cluster) group_left() max by(namespace, pod, cluster) ((kube_pod_status_phase{phase=~"Pending|Running"} == 1))
       - record: namespace_memory:kube_pod_container_resource_requests:sum

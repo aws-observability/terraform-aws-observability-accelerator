@@ -3,7 +3,7 @@ kind: OpenTelemetryCollector
 metadata:
   name: adot
 spec:
-  image: public.ecr.aws/aws-observability/aws-otel-collector:latest
+  image: public.ecr.aws/aws-observability/aws-otel-collector:v0.21.0
   mode: deployment
   serviceAccount: adot-collector-kubeprometheus
   config: |
@@ -265,9 +265,8 @@ spec:
               metrics_path: /metrics
               scheme: https
               tls_config:
-                ca_file: /etc/prometheus/certs/secret_default_kube-prometheus-stack-admission_ca
-                server_name: kube-prometheus-stack-operator
-                insecure_skip_verify: false
+                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                insecure_skip_verify: true
               follow_redirects: true
               enable_http2: true
               relabel_configs:
@@ -594,7 +593,6 @@ spec:
                     own_namespace: false
                     names:
                     - kube-system
-
             - job_name: serviceMonitor/default/kube-prometheus-stack-kubelet/0
               honor_labels: true
               honor_timestamps: true
@@ -1350,7 +1348,6 @@ spec:
                     own_namespace: false
                     names:
                     - kube-system
-
             - job_name: serviceMonitor/default/kube-prometheus-stack-apiserver/0
               honor_timestamps: true
               scrape_interval: 30s
@@ -1565,24 +1562,25 @@ spec:
             - job_name: 'node-exporter'
               kubernetes_sd_configs:
                 - role: endpoints
-
     exporters:
-      awsprometheusremotewrite:
+      prometheusremotewrite:
         endpoint: {{ .Values.ampurl }}
-        aws_auth:
-          region: {{ .Values.region }}
-          service: "aps"
+        auth:
+          authenticator: sigv4auth
       logging:
         loglevel: info
     extensions:
+      sigv4auth:
+        region: {{ .Values.region }}
+        service: aps
       health_check:
       pprof:
         endpoint: :1888
       zpages:
         endpoint: :55679
     service:
-      extensions: [pprof, zpages, health_check]
+      extensions: [pprof, zpages, health_check, sigv4auth]
       pipelines:
         metrics:
           receivers: [prometheus]
-          exporters: [logging, awsprometheusremotewrite]
+          exporters: [logging, prometheusremotewrite]

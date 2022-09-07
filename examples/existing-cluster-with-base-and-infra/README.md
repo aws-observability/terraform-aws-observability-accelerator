@@ -42,7 +42,7 @@ terraform init
 
 3. AWS Region
 
-Specify the AWS Region where the resources will be deployed. Edit the `terraform.tfvars` file and add `aws_region="..."`. You can also use environement variables `export TF_VAR_aws_region=xxx`.
+Specify the AWS Region where the resources will be deployed. Edit the `terraform.tfvars` file and modify `aws_region="..."`. You can also use environement variables `export TF_VAR_aws_region=xxx`.
 
 4. EKS Cluster
 
@@ -93,7 +93,7 @@ terraform apply
 
 1. Prometheus datasource on Grafana
 
-Open your Grafana workspace and under Configuration -> Data sources, you should see `aws-observability-accelerator`. Open and click `Save & test`. You should see a notification confirming that the AMP workspace is ready to be used on Grafana.
+Open your Grafana workspace and under Configuration -> Data sources, you should see `aws-observability-accelerator`. Open and click `Save & test`. You should see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
 
 2. Grafana dashboards
 
@@ -105,9 +105,9 @@ Open a specific dashboard and you should be able to view its visualization
 
 <img width="1721" alt="Screenshot 2022-08-30 at 20 01 32" src="https://user-images.githubusercontent.com/10175027/187515925-67864dd1-2b35-4be0-a15e-1e36805e8b29.png">
 
-2. Amazon Managed Service for Prometheus (AMP) rules and alerts
+2. Amazon Managed Service for Prometheus rules and alerts
 
-Open the AMP console and view the details of your workspace. Under the `Rules management` tab, you should find new rules deployed.
+Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you should find new rules deployed.
 
 <img width="1311" alt="Screenshot 2022-08-30 at 20 22 27" src="https://user-images.githubusercontent.com/10175027/187514450-0f70b5ce-b2ee-4712-850c-c2b32db1d8d6.png">
 
@@ -158,10 +158,9 @@ add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS Region | `string` | n/a | yes |
-| <a name="input_eks_cluster_id"></a> [eks\_cluster\_id](#input\_eks\_cluster\_id) | EKS Cluster Id | `string` | n/a | yes |
+| <a name="input_eks_cluster_id"></a> [eks\_cluster\_id](#input\_eks\_cluster\_id) | Name of the EKS cluster | `string` | n/a | yes |
 | <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | API key for authorizing the Grafana provider to make changes to Amazon Managed Grafana | `string` | `""` | no |
 | <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana Workspace ID | `string` | `""` | no |
-| <a name="input_managed_prometheus_endpoint"></a> [managed\_prometheus\_endpoint](#input\_managed\_prometheus\_endpoint) | Amazon Managed Service for Prometheus Workspace ID | `string` | `""` | no |
 | <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Service for Prometheus Workspace ID | `string` | `""` | no |
 
 ## Outputs

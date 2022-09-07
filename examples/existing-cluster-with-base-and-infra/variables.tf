@@ -1,5 +1,5 @@
 variable "eks_cluster_id" {
-  description = "EKS Cluster Id"
+  description = "Name of the EKS cluster"
   type        = string
 }
 variable "aws_region" {
@@ -7,11 +7,6 @@ variable "aws_region" {
   type        = string
 }
 variable "managed_prometheus_workspace_id" {
-  description = "Amazon Managed Service for Prometheus Workspace ID"
-  type        = string
-  default     = ""
-}
-variable "managed_prometheus_endpoint" {
   description = "Amazon Managed Service for Prometheus Workspace ID"
   type        = string
   default     = ""

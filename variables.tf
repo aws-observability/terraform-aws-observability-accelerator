@@ -1,5 +1,5 @@
 variable "eks_cluster_id" {
-  description = "EKS Cluster Id"
+  description = "Name of the EKS cluster"
   type        = string
 }
 

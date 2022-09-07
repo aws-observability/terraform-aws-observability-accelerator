@@ -43,7 +43,7 @@ terraform init
 
 Specify the AWS Region where the resources will be deployed. Edit the `terraform.tfvars` file and add `aws_region="..."`. You can also use environement variables `export TF_VAR_aws_region=xxx`.
 
-4. EKS Cluster
+4. Amazon EKS Cluster
 
 To run this example, you need to provide your EKS cluster name.
 If you don't have a cluster ready, visit [this example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/eks-cluster-with-new-vpc)

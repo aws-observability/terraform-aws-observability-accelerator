@@ -23,7 +23,7 @@ data "aws_eks_cluster_auth" "this" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  name = basename(path.cwd)
+  name         = basename(path.cwd)
   cluster_name = coalesce(var.cluster_name, local.name)
   region       = var.aws_region
 

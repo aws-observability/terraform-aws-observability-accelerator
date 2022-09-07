@@ -23,15 +23,9 @@ locals {
   amp_ws_id       = var.enable_managed_prometheus ? aws_prometheus_workspace.this[0].id : var.managed_prometheus_workspace_id
   amp_ws_endpoint = "https://aps-workspaces.${local.amp_ws_region}.amazonaws.com/workspaces/${local.amp_ws_id}/"
 
-  # if region is not passed, we assume the current one
-  amg_ws_region = coalesce(var.managed_grafana_region, data.aws_region.current.name)
-
   # if grafana_workspace_id is supplied, we infer the endpoint from
   # computed region, else we create a new workspace
   amg_ws_endpoint = var.managed_grafana_workspace_id == "" ? "https://${module.managed_grafana[0].workspace_endpoint}" : "https://${data.aws_grafana_workspace.this[0].endpoint}"
-  amg_ws_id       = var.managed_grafana_workspace_id == "" ? module.managed_grafana[0].workspace_ : data.aws_grafana_workspace.this[0].endpoint
-
-  amg_api_key = var.grafana_api_key
 
   context = {
     aws_caller_identity_account_id = data.aws_caller_identity.current.account_id

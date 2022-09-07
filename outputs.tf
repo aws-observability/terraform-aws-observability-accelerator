@@ -9,25 +9,31 @@ output "aws_region" {
 }
 
 output "eks_cluster_version" {
-  value = data.aws_eks_cluster.eks_cluster.version
+  description = "EKS Cluster version"
+  value       = data.aws_eks_cluster.eks_cluster.version
 }
 
 output "managed_prometheus_workspace_endpoint" {
-  value = local.amp_ws_endpoint
+  description = "Amazon Managed Prometheus workspace endpoint"
+  value       = local.amp_ws_endpoint
 }
 
 output "managed_prometheus_workspace_id" {
-  value = local.amp_ws_id
+  description = "Amazon Managed Prometheus workspace ID"
+  value       = local.amp_ws_id
 }
 
 output "managed_prometheus_workspace_region" {
-  value = local.amp_ws_region
+  description = "Amazon Managed Prometheus workspace region"
+  value       = local.amp_ws_region
 }
 
 output "managed_grafana_workspace_endpoint" {
-  value = local.amg_ws_endpoint
+  description = "Amazon Managed Grafana workspace endpoint"
+  value       = local.amg_ws_endpoint
 }
 
 output "grafana_dashboards_folder_id" {
-  value = grafana_folder.this.id
+  description = "Grafana folder ID for automatic dashboards. Required by workload modules"
+  value       = grafana_folder.this.id
 }

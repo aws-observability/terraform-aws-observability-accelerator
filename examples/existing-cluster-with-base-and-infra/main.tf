@@ -34,15 +34,9 @@ terraform {
 }
 
 locals {
-  name   = basename(path.cwd)
-  region = var.aws_region
-
-  eks_oidc_issuer_url  = replace(data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")
+  region               = var.aws_region
   eks_cluster_endpoint = data.aws_eks_cluster.this.endpoint
-  eks_cluster_version  = data.aws_eks_cluster.this.version
-
   create_new_workspace = var.managed_prometheus_workspace_id == "" ? true : false
-
   tags = {
     Source = "github.com/aws-observability/terraform-aws-observability-accelerator"
   }
@@ -62,14 +56,14 @@ module "eks_observability_accelerator" {
   # reusing existing certificate manager? defaults to true
   enable_cert_manager = true
 
-  # creates a new AMP workspace, defaults to true
+  # creates a new Amazon Managed Prometheus workspace, defaults to true
   enable_managed_prometheus = local.create_new_workspace
 
-  # reusing existing AMP if specified
+  # reusing existing Amazon Managed Prometheus if specified
   managed_prometheus_workspace_id     = var.managed_prometheus_workspace_id
   managed_prometheus_workspace_region = null # defaults to the current region, useful for cross region scenarios (same account)
 
-  # sets up the AMP alert manager at the workspace level
+  # sets up the Amazon Managed Prometheus alert manager at the workspace level
   enable_alertmanager = true
 
   # reusing existing Amazon Managed Grafana workspace

@@ -33,47 +33,42 @@ variable "enable_cert_manager" {
 }
 
 variable "enable_managed_prometheus" {
-  description = "Creates a new AMP workspace"
+  description = "Creates a new Amazon Managed Service for Prometheus Workspace"
   type        = bool
   default     = true
 }
 
 variable "managed_prometheus_workspace_id" {
-  description = "AMP Workspace ID"
+  description = "Amazon Managed Service for Prometheus Workspace ID"
   type        = string
   default     = ""
 }
 
 variable "managed_prometheus_workspace_region" {
-  description = "Region where AMP is deployed"
+  description = "Region where Amazon Managed Service for Prometheus is deployed"
   type        = string
   default     = null
 }
 
 variable "enable_alertmanager" {
-  description = "Creates AMP AlertManager for all workloads"
+  description = "Creates Amazon Managed Service for Prometheus AlertManager for all workloads"
   type        = bool
   default     = false
 }
 
 variable "enable_managed_grafana" {
-  description = "Creates a new Amazon Managed Grafana (AMG) Workspace"
+  description = "Creates a new Amazon Managed Grafana Workspace"
   type        = bool
   default     = true
 }
 
-variable "managed_grafana_region" {
-  description = "Region where AMG is deployed"
-  type        = string
-  default     = null
-}
 variable "managed_grafana_workspace_id" {
-  description = "AMG Workspace ID"
+  description = "Amazon Managed Grafana Workspace ID"
   type        = string
   default     = ""
 }
 variable "grafana_api_key" {
-  description = "Grafana API key for the AMG workspace"
+  description = "Grafana API key for the Amazon Managed Grafana workspace"
   type        = string
   default     = null
 }

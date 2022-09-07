@@ -1,7 +1,7 @@
 variable "helm_config" {
   description = "Helm provider config for ADOT Operator AddOn"
   type        = any
-  default     = {}
+  default     = { version = "v1.8.2" }
 }
 
 variable "addon_context" {
@@ -21,12 +21,14 @@ variable "addon_context" {
 }
 
 variable "enable_cert_manager" {
-  type    = bool
-  default = true
+  description = "Enable cert-manager, a requirement for ADOT Operator"
+  type        = bool
+  default     = true
 }
 
 variable "kubernetes_version" {
-  type = string
+  description = "EKS Cluster version"
+  type        = string
 }
 
 variable "addon_config" {

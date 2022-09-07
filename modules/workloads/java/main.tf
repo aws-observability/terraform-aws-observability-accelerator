@@ -3,15 +3,6 @@ locals {
   namespace = try(var.helm_config.namespace, local.name)
 }
 
-terraform {
-  required_providers {
-    grafana = {
-      source  = "grafana/grafana"
-      version = "~> 1.25.0"
-    }
-  }
-}
-
 data "aws_partition" "current" {}
 
 # deploys collector

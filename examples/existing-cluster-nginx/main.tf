@@ -24,16 +24,30 @@ provider "helm" {
   }
 }
 
+terraform {
+  required_providers {
+    grafana = {
+      source  = "grafana/grafana"
+      version = ">= 1.25.0"
+    }
+  }
+}
+
 locals {
-  region               = var.aws_region
+  name   = basename(path.cwd)
+  region = var.aws_region
+
+  eks_oidc_issuer_url  = replace(data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")
   eks_cluster_endpoint = data.aws_eks_cluster.this.endpoint
+  eks_cluster_version  = data.aws_eks_cluster.this.version
+
   create_new_workspace = var.managed_prometheus_workspace_id == "" ? true : false
+
   tags = {
     Source = "github.com/aws-observability/terraform-aws-observability-accelerator"
   }
 }
 
-# deploys the base module
 module "eks_observability_accelerator" {
   # source = "aws-observability/terrarom-aws-observability-accelerator"
   source = "../../"
@@ -47,14 +61,14 @@ module "eks_observability_accelerator" {
   # reusing existing certificate manager? defaults to true
   enable_cert_manager = true
 
-  # creates a new Amazon Managed Prometheus workspace, defaults to true
+  # creates a new AMP workspace, defaults to true
   enable_managed_prometheus = local.create_new_workspace
 
-  # reusing existing Amazon Managed Prometheus if specified
+  # reusing existing AMP if specified
   managed_prometheus_workspace_id     = var.managed_prometheus_workspace_id
   managed_prometheus_workspace_region = null # defaults to the current region, useful for cross region scenarios (same account)
 
-  # sets up the Amazon Managed Prometheus alert manager at the workspace level
+  # sets up the AMP alert manager at the workspace level
   enable_alertmanager = true
 
   # reusing existing Amazon Managed Grafana workspace
@@ -65,17 +79,13 @@ module "eks_observability_accelerator" {
   tags = local.tags
 }
 
-# https://www.terraform.io/language/modules/develop/providers
-# A module intended to be called by one or more other modules must not contain
-# any provider blocks.
-# This allows forcing dependency between base and workloads module
 provider "grafana" {
   url  = module.eks_observability_accelerator.managed_grafana_workspace_endpoint
   auth = var.grafana_api_key
 }
 
-module "workloads_infra" {
-  source = "../../modules/workloads/infra"
+module "workloads_nginx" {
+  source = "../../modules/workloads/nginx"
 
   eks_cluster_id = module.eks_observability_accelerator.eks_cluster_id
 
@@ -86,7 +96,7 @@ module "workloads_infra" {
   managed_prometheus_workspace_region   = module.eks_observability_accelerator.managed_prometheus_workspace_region
 
   tags = local.tags
-  
+
   depends_on = [
     module.eks_observability_accelerator
   ]

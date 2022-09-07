@@ -1,9 +1,3 @@
-locals {
-  name      = "adot-collector-nginx"
-  namespace = try(var.helm_config.namespace, local.name)
-}
-
-data "aws_partition" "current" {}
 
 module "helm_addon" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints/modules/kubernetes-addons/helm-addon"
@@ -22,11 +16,11 @@ module "helm_addon" {
   set_values = [
     {
       name  = "ampurl"
-      value = "${var.amazon_prometheus_workspace_endpoint}api/v1/remote_write"
+      value = "${var.managed_prometheus_workspace_endpoint}api/v1/remote_write"
     },
     {
       name  = "region"
-      value = var.amazon_prometheus_workspace_region
+      value = var.managed_prometheus_workspace_region
     },
     {
       name  = "prometheusMetricsEndpoint"
@@ -58,5 +52,5 @@ module "helm_addon" {
     irsa_iam_policies                 = ["arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonPrometheusRemoteWriteAccess"]
   }
 
-  addon_context = var.addon_context
+  addon_context = local.context
 }

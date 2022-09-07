@@ -1,6 +1,5 @@
 # Existing Cluster with the AWS Observability accelerator base module and Infrastructure monitoring
 
----
 
 This example demonstrates how to use the AWS Observability Accelerator Terraform
 module with Infrastructure monitoring enabled.

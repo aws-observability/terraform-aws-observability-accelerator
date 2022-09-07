@@ -115,14 +115,14 @@ To setup your alert receiver, with Amazon SNS, follow [this documentation](https
 
 ## Advanced configuration
 
-1. Cross-region Managed Prometheus workspace
+1. Cross-region Amazon Managed Prometheus workspace
 
-If your existing Managed Prometheus workspace is in another AWS Region,
+If your existing Amazon Managed Prometheus workspace is in another AWS Region,
 add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws-xxx`.
 
-2. Cross-region Managed Grafana workspace
+2. Cross-region Amazon Managed Grafana workspace
 
-If your existing Managed Prometheus workspace is in another AWS Region,
+If your existing Amazon Managed Prometheus workspace is in another AWS Region,
 add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws-xxx`.
 
 

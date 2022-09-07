@@ -11,15 +11,20 @@ This module provides EKS cluster monitoring with the following resources:
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | 1.25.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0 |
+| <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | >= 1.25.0 |
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.4.1 |
+| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >= 1.14 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.10 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
-| <a name="provider_grafana"></a> [grafana](#provider\_grafana) | 1.25.0 |
-| <a name="provider_helm"></a> [helm](#provider\_helm) | n/a |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0.0 |
+| <a name="provider_grafana"></a> [grafana](#provider\_grafana) | >= 1.25.0 |
+| <a name="provider_helm"></a> [helm](#provider\_helm) | >= 2.4.1 |
 
 ## Modules
 
@@ -33,18 +38,18 @@ This module provides EKS cluster monitoring with the following resources:
 |------|------|
 | [aws_prometheus_rule_group_namespace.alerting_rules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
 | [aws_prometheus_rule_group_namespace.recording_rules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [grafana_dashboard.cluster](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
-| [grafana_dashboard.clusternw](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
-| [grafana_dashboard.kubelet](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
-| [grafana_dashboard.nodes](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
-| [grafana_dashboard.nsnw](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
-| [grafana_dashboard.nsnwworkload](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
-| [grafana_dashboard.nspods](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
-| [grafana_dashboard.nsworkload](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
-| [grafana_dashboard.nwworload](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
-| [grafana_dashboard.podnetwork](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
-| [grafana_dashboard.pods](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
-| [grafana_dashboard.workloads](https://registry.terraform.io/providers/grafana/grafana/1.25.0/docs/resources/dashboard) | resource |
+| [grafana_dashboard.cluster](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
+| [grafana_dashboard.clusternw](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
+| [grafana_dashboard.kubelet](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
+| [grafana_dashboard.nodes](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
+| [grafana_dashboard.nsnw](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
+| [grafana_dashboard.nsnwworkload](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
+| [grafana_dashboard.nspods](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
+| [grafana_dashboard.nsworkload](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
+| [grafana_dashboard.nwworload](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
+| [grafana_dashboard.podnetwork](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
+| [grafana_dashboard.pods](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
+| [grafana_dashboard.workloads](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
 | [helm_release.kube_state_metrics](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.prometheus_node_exporter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |

@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    grafana = {
-      source  = "grafana/grafana"
-      version = "1.25.0"
-    }
-  }
-}
-
 resource "helm_release" "kube_state_metrics" {
   count            = var.enable_kube_state_metrics ? 1 : 0
   chart            = var.ksm_config.helm_chart_name

@@ -24,15 +24,6 @@ provider "helm" {
   }
 }
 
-terraform {
-  required_providers {
-    grafana = {
-      source  = "grafana/grafana"
-      version = ">= 1.25.0"
-    }
-  }
-}
-
 locals {
   region               = var.aws_region
   eks_cluster_endpoint = data.aws_eks_cluster.this.endpoint

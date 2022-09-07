@@ -27,7 +27,8 @@ variable "amp_region" {
 }
 
 variable "dashboards_folder_id" {
-  type = string
+  description = "Grafana folder ID for automatic dashboards"
+  type        = string
 }
 
 variable "addon_context" {

@@ -42,7 +42,7 @@ This module provides monitoring for Java based workloads with the following reso
 | <a name="input_amp_endpoint"></a> [amp\_endpoint](#input\_amp\_endpoint) | Amazon Managed Prometheus endpoint | `string` | n/a | yes |
 | <a name="input_amp_id"></a> [amp\_id](#input\_amp\_id) | Managed Prometheus workspace id | `string` | n/a | yes |
 | <a name="input_amp_region"></a> [amp\_region](#input\_amp\_region) | Amazon Managed Prometheus Workspace's Region | `string` | `null` | no |
-| <a name="input_dashboards_folder_id"></a> [dashboards\_folder\_id](#input\_dashboards\_folder\_id) | n/a | `string` | n/a | yes |
+| <a name="input_dashboards_folder_id"></a> [dashboards\_folder\_id](#input\_dashboards\_folder\_id) | Grafana folder ID for automatic dashboards | `string` | n/a | yes |
 | <a name="input_enable_recording_rules"></a> [enable\_recording\_rules](#input\_enable\_recording\_rules) | Enable AMP recording rules | `bool` | `true` | no |
 | <a name="input_helm_config"></a> [helm\_config](#input\_helm\_config) | Helm Config for Prometheus | `any` | `{}` | no |
 

@@ -39,30 +39,36 @@ variable "managed_prometheus_workspace_region" {
 }
 
 variable "dashboards_folder_id" {
-  type = string
+  description = "Grafana folder ID for automatic dashboards"
+  type        = string
 }
 
 variable "enable_recording_rules" {
-  type    = bool
-  default = true
+  description = "Enables or disables Managed Prometheus recording rules. Disabling this might affect some data in the dashboards"
+  type        = bool
+  default     = true
 }
 
 variable "enable_alerting_rules" {
-  type    = bool
-  default = true
+  description = "Enables or disables Managed Prometheus alerting rules"
+  type        = bool
+  default     = true
 }
 
 variable "enable_dashboards" {
-  type    = bool
-  default = true
+  description = "Enables or disables curated dashboards"
+  type        = bool
+  default     = true
 }
 
 variable "enable_kube_state_metrics" {
-  type    = bool
-  default = true
+  description = "Enables or disables Kube State metrics exporter. Disabling this might affect some data in the dashboards"
+  type        = bool
+  default     = true
 }
 
 variable "ksm_config" {
+  description = "Kube State metrics configuration"
   type = object({
     create_namespace   = bool
     k8s_namespace      = string
@@ -88,10 +94,13 @@ variable "ksm_config" {
 }
 
 variable "enable_node_exporter" {
-  type    = bool
-  default = true
+  description = "Enables or disables Node exporter. Disabling this might affect some data in the dashboards"
+  type        = bool
+  default     = true
 }
+
 variable "ne_config" {
+  description = "Node exporter configuration"
   type = object({
     create_namespace   = bool
     k8s_namespace      = string

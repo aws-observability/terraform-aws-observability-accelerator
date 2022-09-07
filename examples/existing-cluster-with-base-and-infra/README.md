@@ -4,7 +4,7 @@
 This example demonstrates how to use the AWS Observability Accelerator Terraform
 module with Infrastructure monitoring enabled.
 The current example deploys the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) for Amazon EKS with its requirements and make use of existing
-Managed Service for Prometheus and Amazon Managed Grafana workspaces.
+Amazon Managed Service for Prometheus and Amazon Managed Grafana workspaces.
 
 It is based on the `infrastructure monitoring`, one of our [workloads modules](../../modules/workloads/)
 to provide an existing EKS cluster with an OpenTelemetry collector,

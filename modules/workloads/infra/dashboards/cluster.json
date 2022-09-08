@@ -24,8 +24,8 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
-  "iteration": 1656211531163,
+  "id": 212,
+  "iteration": 1662655036228,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -105,7 +105,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.0.1",
+      "pluginVersion": "8.4.7",
       "targets": [
         {
           "datasource": {
@@ -171,7 +171,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.0.1",
+      "pluginVersion": "8.4.7",
       "targets": [
         {
           "datasource": {
@@ -237,7 +237,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.0.1",
+      "pluginVersion": "8.4.7",
       "targets": [
         {
           "datasource": {
@@ -303,7 +303,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.0.1",
+      "pluginVersion": "8.4.7",
       "targets": [
         {
           "datasource": {
@@ -369,7 +369,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.0.1",
+      "pluginVersion": "8.4.7",
       "targets": [
         {
           "datasource": {
@@ -435,7 +435,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.0.1",
+      "pluginVersion": "8.4.7",
       "targets": [
         {
           "datasource": {
@@ -515,7 +515,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "9.0.1",
+      "pluginVersion": "8.4.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -657,7 +657,7 @@
           "link": true,
           "linkTargetBlank": false,
           "linkTooltip": "Drill down to pods",
-          "linkUrl": "/d/85a562078cdf77779eaa1add43ccec1e/k8s-resources-namespace?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1",
+          "linkUrl": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1",
           "pattern": "Value #A",
           "thresholds": [],
           "type": "number",
@@ -672,7 +672,7 @@
           "link": true,
           "linkTargetBlank": false,
           "linkTooltip": "Drill down to workloads",
-          "linkUrl": "/d/a87fb0d919ec0ea5f6543124e16c42a5/k8s-resources-workloads-namespace?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1",
+          "linkUrl": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1",
           "pattern": "Value #B",
           "thresholds": [],
           "type": "number",
@@ -762,7 +762,7 @@
           "link": true,
           "linkTargetBlank": false,
           "linkTooltip": "Drill down to pods",
-          "linkUrl": "/d/85a562078cdf77779eaa1add43ccec1e/k8s-resources-namespace?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell",
+          "linkUrl": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1",
           "pattern": "namespace",
           "thresholds": [],
           "type": "number",
@@ -958,7 +958,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "9.0.1",
+      "pluginVersion": "8.4.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1039,12 +1039,14 @@
     {
       "aliasColors": {},
       "bars": false,
+      "columns": [],
       "dashLength": 10,
       "dashes": false,
       "datasource": {
         "uid": "$datasource"
       },
       "fill": 1,
+      "fontSize": "100%",
       "gridPos": {
         "h": 7,
         "w": 24,
@@ -1073,6 +1075,11 @@
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [],
+      "showHeader": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
@@ -1093,7 +1100,7 @@
           "link": true,
           "linkTargetBlank": false,
           "linkTooltip": "Drill down to pods",
-          "linkUrl": "/d/85a562078cdf77779eaa1add43ccec1e/k8s-resources-namespace?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1",
+          "linkUrl": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1",
           "pattern": "Value #A",
           "thresholds": [],
           "type": "number",
@@ -1108,7 +1115,7 @@
           "link": true,
           "linkTargetBlank": false,
           "linkTooltip": "Drill down to workloads",
-          "linkUrl": "/d/a87fb0d919ec0ea5f6543124e16c42a5/k8s-resources-workloads-namespace?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1",
+          "linkUrl": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1",
           "pattern": "Value #B",
           "thresholds": [],
           "type": "number",
@@ -1198,7 +1205,7 @@
           "link": true,
           "linkTargetBlank": false,
           "linkTooltip": "Drill down to pods",
-          "linkUrl": "/d/85a562078cdf77779eaa1add43ccec1e/k8s-resources-namespace?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell",
+          "linkUrl": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1",
           "pattern": "namespace",
           "thresholds": [],
           "type": "number",
@@ -1359,12 +1366,15 @@
     {
       "aliasColors": {},
       "bars": false,
+      "columns": [],
       "dashLength": 10,
       "dashes": false,
       "datasource": {
+        "type": "prometheus",
         "uid": "$datasource"
       },
       "fill": 1,
+      "fontSize": "100%",
       "gridPos": {
         "h": 7,
         "w": 24,
@@ -1393,6 +1403,11 @@
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [],
+      "showHeader": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
@@ -1503,7 +1518,7 @@
           "link": true,
           "linkTargetBlank": false,
           "linkTooltip": "Drill down to pods",
-          "linkUrl": "/d/85a562078cdf77779eaa1add43ccec1e/k8s-resources-namespace?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell",
+          "linkUrl": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1",
           "pattern": "namespace",
           "thresholds": [],
           "type": "number",
@@ -1526,9 +1541,11 @@
           "datasource": {
             "uid": "$datasource"
           },
+          "exemplar": false,
           "expr": "sum(irate(container_network_receive_bytes_total{job=\"kubelet\", cluster=\"$cluster\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
           "format": "table",
           "instant": true,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "A",
@@ -1538,9 +1555,11 @@
           "datasource": {
             "uid": "$datasource"
           },
+          "exemplar": false,
           "expr": "sum(irate(container_network_transmit_bytes_total{job=\"kubelet\", cluster=\"$cluster\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
           "format": "table",
           "instant": true,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "B",
@@ -1550,9 +1569,11 @@
           "datasource": {
             "uid": "$datasource"
           },
+          "exemplar": false,
           "expr": "sum(irate(container_network_receive_packets_total{job=\"kubelet\", cluster=\"$cluster\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
           "format": "table",
           "instant": true,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "C",
@@ -1562,9 +1583,11 @@
           "datasource": {
             "uid": "$datasource"
           },
+          "exemplar": false,
           "expr": "sum(irate(container_network_transmit_packets_total{job=\"kubelet\", cluster=\"$cluster\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
           "format": "table",
           "instant": true,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "D",
@@ -1574,9 +1597,11 @@
           "datasource": {
             "uid": "$datasource"
           },
+          "exemplar": false,
           "expr": "sum(irate(container_network_receive_packets_dropped_total{job=\"kubelet\", cluster=\"$cluster\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
           "format": "table",
           "instant": true,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "E",
@@ -1586,9 +1611,11 @@
           "datasource": {
             "uid": "$datasource"
           },
+          "exemplar": false,
           "expr": "sum(irate(container_network_transmit_packets_dropped_total{job=\"kubelet\", cluster=\"$cluster\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
           "format": "table",
           "instant": true,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "F",
@@ -1646,7 +1673,7 @@
           "refId": "A"
         }
       ],
-      "title": "Bandwidth",
+      "title": "Bandwidth by Namespace",
       "type": "row"
     },
     {
@@ -1658,12 +1685,14 @@
         "uid": "$datasource"
       },
       "fill": 10,
+      "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 12,
         "x": 0,
         "y": 45
       },
+      "hiddenSeries": false,
       "id": 12,
       "interval": "1m",
       "legend": {
@@ -1681,7 +1710,11 @@
       "linewidth": 0,
       "links": [],
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "8.4.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1703,6 +1736,7 @@
         }
       ],
       "thresholds": [],
+      "timeRegions": [],
       "title": "Receive Bandwidth",
       "tooltip": {
         "shared": false,
@@ -1727,7 +1761,10 @@
           "logBase": 1,
           "show": false
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false
+      }
     },
     {
       "aliasColors": {},
@@ -1738,12 +1775,14 @@
         "uid": "$datasource"
       },
       "fill": 10,
+      "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 12,
         "x": 12,
         "y": 45
       },
+      "hiddenSeries": false,
       "id": 13,
       "interval": "1m",
       "legend": {
@@ -1761,7 +1800,11 @@
       "linewidth": 0,
       "links": [],
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "8.4.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1783,6 +1826,7 @@
         }
       ],
       "thresholds": [],
+      "timeRegions": [],
       "title": "Transmit Bandwidth",
       "tooltip": {
         "shared": false,
@@ -1807,7 +1851,10 @@
           "logBase": 1,
           "show": false
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false
+      }
     },
     {
       "collapsed": false,
@@ -1832,7 +1879,7 @@
           "refId": "A"
         }
       ],
-      "title": "Average Container Bandwidth by Namespace",
+      "title": "Bandwidth by Node",
       "type": "row"
     },
     {
@@ -1841,15 +1888,18 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": {
+        "type": "prometheus",
         "uid": "$datasource"
       },
       "fill": 10,
+      "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 12,
         "x": 0,
         "y": 53
       },
+      "hiddenSeries": false,
       "id": 14,
       "interval": "1m",
       "legend": {
@@ -1867,7 +1917,11 @@
       "linewidth": 0,
       "links": [],
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "8.4.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1880,8 +1934,10 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "avg(irate(container_network_receive_bytes_total{job=\"kubelet\", cluster=\"$cluster\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
+          "exemplar": true,
+          "expr": "avg(irate(container_network_receive_bytes_total{cluster=\"$cluster\"}[$__rate_interval])) by (instance)",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "{{namespace}}",
           "refId": "A",
@@ -1889,7 +1945,8 @@
         }
       ],
       "thresholds": [],
-      "title": "Average Container Bandwidth by Namespace: Received",
+      "timeRegions": [],
+      "title": "Average Node Bytes Bandwidth: Received",
       "tooltip": {
         "shared": false,
         "sort": 2,
@@ -1913,7 +1970,10 @@
           "logBase": 1,
           "show": false
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false
+      }
     },
     {
       "aliasColors": {},
@@ -1921,15 +1981,18 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": {
+        "type": "prometheus",
         "uid": "$datasource"
       },
       "fill": 10,
+      "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 12,
         "x": 12,
         "y": 53
       },
+      "hiddenSeries": false,
       "id": 15,
       "interval": "1m",
       "legend": {
@@ -1947,7 +2010,11 @@
       "linewidth": 0,
       "links": [],
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "8.4.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1960,8 +2027,10 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "avg(irate(container_network_transmit_bytes_total{job=\"kubelet\", cluster=\"$cluster\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
+          "exemplar": true,
+          "expr": "sum(irate(container_network_transmit_bytes_total{cluster=\"$cluster\"}[$__rate_interval])) by (instance)",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "{{namespace}}",
           "refId": "A",
@@ -1969,7 +2038,8 @@
         }
       ],
       "thresholds": [],
-      "title": "Average Container Bandwidth by Namespace: Transmitted",
+      "timeRegions": [],
+      "title": "Average Node Bandwidth: Transmitted",
       "tooltip": {
         "shared": false,
         "sort": 2,
@@ -1993,7 +2063,10 @@
           "logBase": 1,
           "show": false
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false
+      }
     },
     {
       "collapsed": false,
@@ -2006,192 +2079,6 @@
         "w": 24,
         "x": 0,
         "y": 60
-      },
-      "id": 31,
-      "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "refId": "A"
-        }
-      ],
-      "title": "Rate of Packets",
-      "type": "row"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "uid": "$datasource"
-      },
-      "fill": 10,
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 0,
-        "y": 61
-      },
-      "id": 16,
-      "interval": "1m",
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 0,
-      "links": [],
-      "nullPointMode": "null as zero",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": true,
-      "steppedLine": false,
-      "targets": [
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "expr": "sum(irate(container_network_receive_packets_total{job=\"kubelet\", cluster=\"$cluster\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
-          "format": "time_series",
-          "intervalFactor": 2,
-          "legendFormat": "{{namespace}}",
-          "refId": "A",
-          "step": 10
-        }
-      ],
-      "thresholds": [],
-      "title": "Rate of Received Packets",
-      "tooltip": {
-        "shared": false,
-        "sort": 2,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "pps",
-          "logBase": 1,
-          "min": 0,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": false
-        }
-      ]
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "uid": "$datasource"
-      },
-      "fill": 10,
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 12,
-        "y": 61
-      },
-      "id": 17,
-      "interval": "1m",
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 0,
-      "links": [],
-      "nullPointMode": "null as zero",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": true,
-      "steppedLine": false,
-      "targets": [
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "expr": "sum(irate(container_network_transmit_packets_total{job=\"kubelet\", cluster=\"$cluster\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
-          "format": "time_series",
-          "intervalFactor": 2,
-          "legendFormat": "{{namespace}}",
-          "refId": "A",
-          "step": 10
-        }
-      ],
-      "thresholds": [],
-      "title": "Rate of Transmitted Packets",
-      "tooltip": {
-        "shared": false,
-        "sort": 2,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "pps",
-          "logBase": 1,
-          "min": 0,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": false
-        }
-      ]
-    },
-    {
-      "collapsed": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 68
       },
       "id": 32,
       "panels": [],
@@ -2216,12 +2103,14 @@
         "uid": "$datasource"
       },
       "fill": 10,
+      "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 69
+        "y": 61
       },
+      "hiddenSeries": false,
       "id": 18,
       "interval": "1m",
       "legend": {
@@ -2239,7 +2128,11 @@
       "linewidth": 0,
       "links": [],
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "8.4.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2261,6 +2154,7 @@
         }
       ],
       "thresholds": [],
+      "timeRegions": [],
       "title": "Rate of Received Packets Dropped",
       "tooltip": {
         "shared": false,
@@ -2285,7 +2179,10 @@
           "logBase": 1,
           "show": false
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false
+      }
     },
     {
       "aliasColors": {},
@@ -2296,12 +2193,14 @@
         "uid": "$datasource"
       },
       "fill": 10,
+      "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 69
+        "y": 61
       },
+      "hiddenSeries": false,
       "id": 19,
       "interval": "1m",
       "legend": {
@@ -2319,7 +2218,11 @@
       "linewidth": 0,
       "links": [],
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "8.4.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2341,6 +2244,7 @@
         }
       ],
       "thresholds": [],
+      "timeRegions": [],
       "title": "Rate of Transmitted Packets Dropped",
       "tooltip": {
         "shared": false,
@@ -2365,7 +2269,10 @@
           "logBase": 1,
           "show": false
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false
+      }
     },
     {
       "collapsed": false,
@@ -2377,7 +2284,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 76
+        "y": 68
       },
       "id": 33,
       "panels": [],
@@ -2403,12 +2310,14 @@
       },
       "decimals": -1,
       "fill": 10,
+      "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 77
+        "y": 69
       },
+      "hiddenSeries": false,
       "id": 20,
       "interval": "1m",
       "legend": {
@@ -2426,7 +2335,11 @@
       "linewidth": 0,
       "links": [],
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "8.4.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2448,6 +2361,7 @@
         }
       ],
       "thresholds": [],
+      "timeRegions": [],
       "title": "IOPS(Reads+Writes)",
       "tooltip": {
         "shared": false,
@@ -2472,7 +2386,10 @@
           "logBase": 1,
           "show": false
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false
+      }
     },
     {
       "aliasColors": {},
@@ -2483,12 +2400,14 @@
         "uid": "$datasource"
       },
       "fill": 10,
+      "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 77
+        "y": 69
       },
+      "hiddenSeries": false,
       "id": 21,
       "interval": "1m",
       "legend": {
@@ -2506,7 +2425,11 @@
       "linewidth": 0,
       "links": [],
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "8.4.7",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2528,6 +2451,7 @@
         }
       ],
       "thresholds": [],
+      "timeRegions": [],
       "title": "ThroughPut(Read+Write)",
       "tooltip": {
         "shared": false,
@@ -2552,7 +2476,10 @@
           "logBase": 1,
           "show": false
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false
+      }
     },
     {
       "collapsed": false,
@@ -2564,7 +2491,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 84
+        "y": 76
       },
       "id": 34,
       "panels": [],
@@ -2583,17 +2510,19 @@
     {
       "aliasColors": {},
       "bars": false,
+      "columns": [],
       "dashLength": 10,
       "dashes": false,
       "datasource": {
         "uid": "$datasource"
       },
       "fill": 1,
+      "fontSize": "100%",
       "gridPos": {
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 85
+        "y": 77
       },
       "id": 22,
       "interval": "1m",
@@ -2617,6 +2546,7 @@
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [],
+      "showHeader": true,
       "sort": {
         "col": 4,
         "desc": true
@@ -2731,7 +2661,7 @@
           "link": true,
           "linkTargetBlank": false,
           "linkTooltip": "Drill down to pods",
-          "linkUrl": "/d/85a562078cdf77779eaa1add43ccec1e/k8s-resources-namespace?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell",
+          "linkUrl": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1",
           "pattern": "namespace",
           "thresholds": [],
           "type": "number",
@@ -2853,7 +2783,7 @@
     }
   ],
   "refresh": "10s",
-  "schemaVersion": 36,
+  "schemaVersion": 35,
   "style": "dark",
   "tags": [
     "infrastructure"
@@ -2880,10 +2810,9 @@
       },
       {
         "current": {
-          "isNone": true,
           "selected": false,
-          "text": "None",
-          "value": ""
+          "text": "adot-amp-grafana-for-java",
+          "value": "adot-amp-grafana-for-java"
         },
         "datasource": {
           "type": "prometheus",
@@ -2942,6 +2871,6 @@
   "timezone": "utc",
   "title": "Kubernetes / Compute Resources / Cluster",
   "uid": "efa86fd1d0c121a26444b636a3f509a8",
-  "version": 1,
+  "version": 9,
   "weekStart": ""
 }

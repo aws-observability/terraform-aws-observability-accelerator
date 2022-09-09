@@ -6,7 +6,7 @@
 
 resource "aws_prometheus_rule_group_namespace" "recording_rules" {
   count        = var.enable_recording_rules ? 1 : 0
-  name         = "acclerator-infra-rules"
+  name         = "accelerator-infra-rules"
   workspace_id = var.managed_prometheus_workspace_id
   data         = <<EOF
 groups:

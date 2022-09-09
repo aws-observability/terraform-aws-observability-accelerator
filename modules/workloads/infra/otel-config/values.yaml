@@ -1,0 +1,8 @@
+ampurl: ${amp_url}
+region: ${region}
+prometheusMetricsEndpoint: ${prometheus_metrics_endpoint}
+prometheusMetricsPort: ${prometheus_metrics_port}
+scrapeInterval: ${scrape_interval}
+scrapeTimeout: ${scrape_timeout}
+scrapeSampleLimit: ${scrape_sample_limit}
+ekscluster: ${eks_cluster}

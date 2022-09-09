@@ -2,7 +2,7 @@
 
 
 This example demonstrates how to use the AWS Observability Accelerator Terraform
-module with Infrastructure monitoring enabled.
+modules with Infrastructure monitoring enabled.
 The current example deploys the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) for Amazon EKS with its requirements and make use of existing
 Amazon Managed Service for Prometheus and Amazon Managed Grafana workspaces.
 
@@ -109,7 +109,8 @@ Open a specific dashboard and you should be able to view its visualization
 
 Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you should find new rules deployed.
 
-<img width="1311" alt="Screenshot 2022-08-30 at 20 22 27" src="https://user-images.githubusercontent.com/10175027/187514450-0f70b5ce-b2ee-4712-850c-c2b32db1d8d6.png">
+<img width="1629" alt="image" src="https://user-images.githubusercontent.com/10175027/189301297-4865e75d-2d71-434f-b5d0-9750b3533632.png">
+
 
 To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
 

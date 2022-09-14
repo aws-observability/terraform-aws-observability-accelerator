@@ -9,7 +9,7 @@ data "aws_eks_cluster" "eks_cluster" {
 }
 
 locals {
-  name      = "adot-collector-kubeprometheus"
+  name      = "adot-collector-nginx"
   namespace = try(var.config.helm_config.namespace, local.name)
 
   eks_oidc_issuer_url  = replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")

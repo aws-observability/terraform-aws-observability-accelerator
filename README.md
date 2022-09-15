@@ -15,7 +15,7 @@ repository to deploy the solution.
 
 ## Getting started
 
-To quickstart with a complete workflow and view Aamzon EKS infrastructure dashboards, visit the [existing cluster with base and module example](./examples/existing-cluster-with-base-and-infra/)
+To quickstart with a complete workflow and view Amazon EKS infrastructure dashboards, visit the [existing cluster with base and module example](./examples/existing-cluster-with-base-and-infra/)
 
 ## How it works
 

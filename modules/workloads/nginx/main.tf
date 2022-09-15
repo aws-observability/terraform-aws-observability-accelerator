@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    grafana = {
-      source  = "grafana/grafana"
-      version = "1.25.0"
-    }
-  }
-}
-
 module "helm_addon" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints/modules/kubernetes-addons/helm-addon"
 

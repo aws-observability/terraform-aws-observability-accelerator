@@ -84,6 +84,7 @@ provider "grafana" {
   auth = var.grafana_api_key
 }
 
+//*
 module "workloads_nginx" {
   source = "../../modules/workloads/nginx"
 
@@ -101,3 +102,4 @@ module "workloads_nginx" {
     module.eks_observability_accelerator
   ]
 }
+//*/

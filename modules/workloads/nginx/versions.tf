@@ -10,5 +10,9 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = ">= 2.10"
     }
+    grafana = {
+      source  = "grafana/grafana"
+      version = ">= 1.25.0"
+    }
   }
 }

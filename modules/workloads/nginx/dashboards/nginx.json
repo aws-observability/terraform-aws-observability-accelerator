@@ -1434,8 +1434,8 @@
     ]
   },
   "timezone": "browser",
-  "title": "Nginx grafana import",
-  "uid": "nginx-grafana-test",
+  "title": "NGINX",
+  "uid": "nginx",
   "version": 5,
   "weekStart": ""
 }

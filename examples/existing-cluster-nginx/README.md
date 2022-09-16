@@ -98,22 +98,22 @@ Open your Grafana workspace and under Configuration -> Data sources, you should 
 
 Go to the Dashboards panel of your Grafana workspace. You should see a list of dashboards under the `Observability Accelerator Dashboards`
 
-<img width="1540" alt="image" src="https://user-images.githubusercontent.com/10175027/190000716-29e16698-7c90-49d6-8c37-79ca1790e2cc.png">
+<img width="1208" alt="image" src="https://user-images.githubusercontent.com/97046295/190665211-60faef71-d83d-4d59-ac80-bf4309d8c082.png">
 
-Open a specific dashboard and you should be able to view its visualization
+Open the NGINX dashboard and you should be able to view its visualization
 
-<img width="1721" alt="Screenshot 2022-08-30 at 20 01 32" src="https://user-images.githubusercontent.com/10175027/187515925-67864dd1-2b35-4be0-a15e-1e36805e8b29.png">
+<img width="895" alt="image" src="https://user-images.githubusercontent.com/97046295/190665477-6660a6cf-3b29-4209-8387-6d4fc61aca5a.png">
 
 2. Amazon Managed Service for Prometheus rules and alerts
 
 Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you should find new rules deployed.
 
-<img width="1629" alt="image" src="https://user-images.githubusercontent.com/10175027/189301297-4865e75d-2d71-434f-b5d0-9750b3533632.png">
+<img width="1054" alt="image" src="https://user-images.githubusercontent.com/97046295/190665728-ae8bb709-ad93-4629-b845-85c158dd1925.png">
 
 
 To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
 
-## Deploy an Example Application to Vizualize
+## Deploy an Example Application to Visualize
 
 In this section we will deploy sample application and extract metrics using AWS OpenTelemetry collector
 
@@ -165,16 +165,12 @@ kubectl get pods -n nginx-ingress-sample
 
 Log back into your Managed Grafana Workspace and navigate to the dashboard side panel, click on `Observability Accelerator Dashboards` Folder and open the `NGINX` Dashboard.
 
-<img width="1468" alt="Nginx-dashboard" src="https://github.com/awsdabra/amg-dashboard-examples/blob/d4275d2e0251963b8783dcc03fd475d6f8783cc7/nginx_grafana_dashboard.png">
-
 ## Destroy
 
 To teardown and remove the resources created in this example:
 
 ```sh
-terraform destroy -target=module.eks_blueprints_kubernetes_addons -auto-approve
-terraform destroy -target=module.eks_blueprints -auto-approve
-terraform destroy -auto-approve
+terraform destroy
 ```
 
 ## Advanced configuration

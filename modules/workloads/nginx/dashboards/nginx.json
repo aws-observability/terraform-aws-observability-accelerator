@@ -1256,7 +1256,8 @@
   "schemaVersion": 35,
   "style": "dark",
   "tags": [
-    "nginx"
+    "nginx",
+    "workloads"
   ],
   "templating": {
     "list": [
@@ -1333,7 +1334,7 @@
           "type": "prometheus",
           "uid": "$datasource"
         },
-        "definition": "",
+        "definition": "label_values(nginx_ingress_controller_config_hash{namespace=~\"$namespace\",controller_class=~\"$controller_class\"}, controller_pod) ",
         "hide": 0,
         "includeAll": true,
         "label": "Controller",
@@ -1364,7 +1365,7 @@
           "type": "prometheus",
           "uid": "$datasource"
         },
-        "definition": "",
+        "definition": "label_values(nginx_ingress_controller_requests{namespace=~\"$namespace\",controller_class=~\"$controller_class\",controller_pod=~\"$controller\"}, ingress) ",
         "hide": 0,
         "includeAll": true,
         "label": "Ingress",
@@ -1372,8 +1373,8 @@
         "name": "ingress",
         "options": [],
         "query": {
-          "query": "label_values(nginx_ingress_controller_requests{namespace=~\"$namespace\",controller_class=~\"$controller_class\",controller=~\"$controller\"}, ingress) ",
-          "refId": "aws-observability-accelerator-ingress-Variable-Query"
+          "query": "label_values(nginx_ingress_controller_requests{namespace=~\"$namespace\",controller_class=~\"$controller_class\",controller_pod=~\"$controller\"}, ingress) ",
+          "refId": "StandardVariableQuery"
         },
         "refresh": 1,
         "regex": "",

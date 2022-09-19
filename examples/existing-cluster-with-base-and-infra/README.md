@@ -62,14 +62,14 @@ If you don't specify anything a new workspace will be created for you.
 
 If you have an existing workspace, create an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx`.
 
-7. Grafana API Key
+7. <a name="apikey"></a> Grafana API Key
 
 Amazon Managed Service for Grafana provides a control plane API for generating Grafana API keys. We will provide to Terraform
 a short lived API key to run the `apply` or `destroy` command.
 Ensure you have necessary IAM permissions (`CreateWorkspaceApiKey, DeleteWorkspaceApiKey`)
 
 ```sh
-export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 72000 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
+export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 1200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
 ```
 
 ## Deploy
@@ -120,6 +120,15 @@ add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws
 
 If your existing Amazon Managed Prometheus workspace is in another AWS Region,
 add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws-xxx`.
+
+## Destroy resources
+
+If you leave this stack running, you will incur charges. To remove all resources
+created by Terraform, [refresh your Grafana API key](#apikey) and run:
+
+```sh
+terraform destroy -var-file=terraform.tfvars
+```
 
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

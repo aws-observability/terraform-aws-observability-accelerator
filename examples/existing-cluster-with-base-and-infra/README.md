@@ -16,7 +16,7 @@ configuration options on the cluster infrastructure.
 
 Ensure that you have the following tools installed locally:
 
-1. [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+1. [aws cli v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 2. [kubectl](https://kubernetes.io/docs/tasks/tools/)
 3. [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 
@@ -60,21 +60,17 @@ If you don't specify anything a new workspace will be created for you.
 
 6. Amazon Managed Grafana workspace
 
-If you have an existing workspace, add `managed_grafana_workspace_id=g-xxx`
-or use an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx`.
+If you have an existing workspace, create an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx`.
 
 7. Grafana API Key
 
-- Give admin access to the SSO user you set up when creating the Amazon Managed Grafana Workspace:
-- In the AWS Console, navigate to Amazon Grafana. In the left navigation bar, click **All workspaces**, then click on the workspace name you are using for this example.
-- Under **Authentication** within **AWS Single Sign-On (SSO)**, click **Configure users and user groups**
-- Check the box next to the SSO user you created and click **Make admin**
-- From the workspace in the AWS console, click on the `Grafana workspace URL` to open the workspace
-- If you don't see the gear icon in the left navigation bar, log out and log back in.
-- Click on the gear icon, then click on the **API keys** tab.
-- Click **Add API key**, fill in the _Key name_ field and select _Admin_ as the Role.
-- Copy your API key into `terraform.tfvars` under the `grafana_api_key` variable (`grafana_api_key="xxx"`) or set as an environment variable on your CLI (`export TF_VAR_grafana_api_key="xxx"`)
+Amazon Managed Service for Grafana provides a control plane API for generating Grafana API keys. We will provide to Terraform
+a short lived API key to run the `apply` or `destroy` command.
+Ensure you have necessary IAM permissions (`CreateWorkspaceApiKey, DeleteWorkspaceApiKey`)
 
+```sh
+export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 72000 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
+```
 
 ## Deploy
 
@@ -82,7 +78,7 @@ or use an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx
 terraform apply -var-file=terraform.tfvars
 ```
 
-or if you had setup environment variables, run
+or if you had only setup environment variables, run
 
 ```sh
 terraform apply

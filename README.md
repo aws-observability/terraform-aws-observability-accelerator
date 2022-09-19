@@ -168,7 +168,7 @@ If you are interested in contributing to EKS Blueprints, see the [Contribution g
 
 | Name | Description |
 |------|-------------|
-| <a name="output_aws_region"></a> [aws\_region](#output\_aws\_region) | EKS Cluster Id |
+| <a name="output_aws_region"></a> [aws\_region](#output\_aws\_region) | AWS Region |
 | <a name="output_eks_cluster_id"></a> [eks\_cluster\_id](#output\_eks\_cluster\_id) | EKS Cluster Id |
 | <a name="output_eks_cluster_version"></a> [eks\_cluster\_version](#output\_eks\_cluster\_version) | EKS Cluster version |
 | <a name="output_grafana_dashboards_folder_id"></a> [grafana\_dashboards\_folder\_id](#output\_grafana\_dashboards\_folder\_id) | Grafana folder ID for automatic dashboards. Required by workload modules |

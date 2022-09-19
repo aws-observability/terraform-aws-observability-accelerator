@@ -4,7 +4,7 @@ output "eks_cluster_id" {
 }
 
 output "aws_region" {
-  description = "EKS Cluster Id"
+  description = "AWS Region"
   value       = var.aws_region
 }
 

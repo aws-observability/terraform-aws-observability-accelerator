@@ -1,7 +1,7 @@
 # AWS Observability Accelerator for Terraform
 
-<!-- [![pre-commit](https://github.com/aws-observability/terraform-aws-observability-accelerator/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/aws-observability/terraform-aws-observability-accelerator/actions/workflows/pre-commit.yaml)
- -->
+[![pre-commit](https://github.com/aws-observability/terraform-aws-observability-accelerator/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/aws-observability/terraform-aws-observability-accelerator/actions/workflows/pre-commit.yaml)
+
 Welcome to the AWS Observability Accelerator for Terraform!
 
 The AWS Observability accelerator for Terraform is a set of modules to help you

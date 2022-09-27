@@ -86,7 +86,7 @@ module "workloads_infra" {
   managed_prometheus_workspace_region   = module.eks_observability_accelerator.managed_prometheus_workspace_region
 
   tags = local.tags
-  
+
   depends_on = [
     module.eks_observability_accelerator
   ]

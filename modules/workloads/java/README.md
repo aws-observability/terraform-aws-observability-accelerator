@@ -29,7 +29,7 @@ This module provides monitoring for Java based workloads with the following reso
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_helm_addon"></a> [helm\_addon](#module\_helm\_addon) | github.com/aws-ia/terraform-aws-eks-blueprints/modules/kubernetes-addons/helm-addon | n/a |
+| <a name="module_helm_addon"></a> [helm\_addon](#module\_helm\_addon) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon | v4.8.1 |
 
 ## Resources
 

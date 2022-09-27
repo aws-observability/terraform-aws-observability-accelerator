@@ -3,7 +3,7 @@ kind: OpenTelemetryCollector
 metadata:
   name: adot
 spec:
-  image: public.ecr.aws/aws-observability/aws-otel-collector:latest
+  image: public.ecr.aws/aws-observability/aws-otel-collector:v0.21.1
   mode: deployment
   serviceAccount: adot-collector-nginx
   config: |
@@ -13,55 +13,56 @@ spec:
           global:
             scrape_interval: {{ .Values.scrapeInterval }}
             scrape_timeout: {{ .Values.scrapeTimeout }}
-
           scrape_configs:
-            - job_name: 'kubernetes-pod-nginx'
-              sample_limit: {{ .Values.scrapeSampleLimit }}
-              metrics_path: /{{ .Values.prometheusMetricsEndpoint }}
-              kubernetes_sd_configs:
-                - role: pod
-              relabel_configs:
-                - source_labels: [ __address__ ]
-                  action: keep
-                  regex: '.*:9404$'
-                - action: labelmap
-                  regex: __meta_kubernetes_pod_label_(.+)
-                - action: replace
-                  source_labels: [ __meta_kubernetes_namespace ]
-                  target_label: Namespace
-                - source_labels: [ __meta_kubernetes_pod_name ]
-                  action: replace
-                  target_label: pod_name
-                - action: replace
-                  source_labels: [ __meta_kubernetes_pod_container_name ]
-                  target_label: container_name
-                - action: replace
-                  source_labels: [ __meta_kubernetes_pod_controller_kind ]
-                  target_label: pod_controller_kind
-                - action: replace
-                  source_labels: [ __meta_kubernetes_pod_phase ]
-                  target_label: pod_controller_phase
-              metric_relabel_configs:
-                - source_labels: [ __name__ ]
-                  regex: 'jvm_gc_collection_seconds.*'
-                  action: drop
+          - job_name: 'kubernetes-pod-nginx'
+            sample_limit: {{ .Values.scrapeSampleLimit }}
+            metrics_path: /{{ .Values.prometheusMetricsEndpoint }}
+            kubernetes_sd_configs:
+              - role: pod
+            relabel_configs:
+              - source_labels: [ __address__ ]
+                action: keep
+                regex: '.*:10254$'
+              - source_labels: [__meta_kubernetes_pod_container_name]
+                target_label: container
+                action: replace
+              - source_labels: [__meta_kubernetes_pod_node_name]
+                target_label: host
+                action: replace
+              - source_labels: [__meta_kubernetes_namespace]
+                target_label: namespace
+                action: replace
+            metric_relabel_configs:
+              - source_labels: [__name__]
+                regex: 'go_memstats.*'
+                action: drop
+              - source_labels: [__name__]
+                regex: 'go_gc.*'
+                action: drop
+              - source_labels: [__name__]
+                regex: 'go_threads'
+                action: drop
+              - regex: exported_host
+                action: labeldrop
     exporters:
-      awsprometheusremotewrite:
+      prometheusremotewrite:
         endpoint: {{ .Values.ampurl }}
-        aws_auth:
-          region: {{ .Values.region }}
-          service: "aps"
+        auth:
+          authenticator: sigv4auth
       logging:
-        loglevel: info
+          loglevel: debug
     extensions:
+      sigv4auth:
+        region: {{ .Values.region }}
+        service: "aps"
       health_check:
       pprof:
         endpoint: :1888
       zpages:
         endpoint: :55679
     service:
-      extensions: [pprof, zpages, health_check]
+      extensions: [pprof, zpages, health_check, sigv4auth]
       pipelines:
         metrics:
           receivers: [prometheus]
-          exporters: [logging, awsprometheusremotewrite]
+          exporters: [logging, prometheusremotewrite]

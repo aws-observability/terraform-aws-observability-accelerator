@@ -44,12 +44,6 @@ variable "dashboards_folder_id" {
   description = "Grafana folder ID for automatic dashboards"
 }
 
-variable "enable_recording_rules" {
-  type        = bool
-  default     = true
-  description = "Enables or disables Managed Prometheus recording rules. Disabling this might affect some data in the dashboards"
-}
-
 variable "enable_alerting_rules" {
   type        = bool
   default     = true

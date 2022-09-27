@@ -1,12 +1,11 @@
-# Prioritize recording rules over alerting rules for limits (10)
-
 ################################################################################################################################################
-# Recording rules ##############################################################################################################################
+# Alerting rules ###############################################################################################################################
 ################################################################################################################################################
 
-resource "aws_prometheus_rule_group_namespace" "recording_rules" {
-  count        = var.enable_recording_rules ? 1 : 0
-  name         = "acclerator-nginx-rules"
+resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
+  count = var.enable_alerting_rules ? 1 : 0
+
+  name         = "accelerator-nginx-alerting"
   workspace_id = var.managed_prometheus_workspace_id
   data         = <<EOF
 groups:

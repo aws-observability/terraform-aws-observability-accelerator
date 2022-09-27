@@ -24,23 +24,10 @@ provider "helm" {
   }
 }
 
-terraform {
-  required_providers {
-    grafana = {
-      source  = "grafana/grafana"
-      version = ">= 1.25.0"
-    }
-  }
-}
-
 locals {
-  name   = basename(path.cwd)
   region = var.aws_region
 
-  eks_oidc_issuer_url  = replace(data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")
   eks_cluster_endpoint = data.aws_eks_cluster.this.endpoint
-  eks_cluster_version  = data.aws_eks_cluster.this.version
-
   create_new_workspace = var.managed_prometheus_workspace_id == "" ? true : false
 
   tags = {
@@ -84,7 +71,6 @@ provider "grafana" {
   auth = var.grafana_api_key
 }
 
-//*
 module "workloads_nginx" {
   source = "../../modules/workloads/nginx"
 
@@ -102,4 +88,3 @@ module "workloads_nginx" {
     module.eks_observability_accelerator
   ]
 }
-//*/

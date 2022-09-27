@@ -80,20 +80,20 @@ jobs:
         with:
           directory: ${{ matrix.directory }}
 
-      - name: Pre-commit Terraform ${{ steps.minMax.outputs.minVersion }}
+      - name: Pre-commit Terraform 1.1.0 #${{ steps.minMax.outputs.minVersion }}
         uses: clowdhaus/terraform-composite-actions/pre-commit@v1.6.0
         # Run only validate pre-commit check on min version supported
         if: ${{ matrix.directory !=  '.' && steps.changes.outputs.src== 'true' }}
         with:
-          terraform-version: ${{ steps.minMax.outputs.minVersion }}
+          terraform-version: 1.1.0 # ${{ steps.minMax.outputs.minVersion }}
           args: 'terraform_validate --color=always --show-diff-on-failure --files ${{ matrix.directory }}/*'
 
-      - name: Pre-commit Terraform ${{ steps.minMax.outputs.minVersion }}
+      - name: Pre-commit Terraform 1.1.0 #${{ steps.minMax.outputs.minVersion }}
         uses: clowdhaus/terraform-composite-actions/pre-commit@v1.6.0
         # Run only validate pre-commit check on min version supported
         if: ${{ matrix.directory ==  '.' && steps.changes.outputs.src== 'true' }}
         with:
-          terraform-version: ${{ steps.minMax.outputs.minVersion }}
+          terraform-version: 1.1.0 #${{ steps.minMax.outputs.minVersion }}
           args: 'terraform_validate --color=always --show-diff-on-failure --files $(ls *.tf)'
 
       - if: steps.changes.outputs.src== 'true'

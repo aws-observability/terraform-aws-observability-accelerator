@@ -41,6 +41,13 @@ jobs:
       matrix:
         directory: ${{ fromJson(needs.collectInputs.outputs.directories) }}
     steps:
+      - name: Remove default Terraform
+        run: rm -rf $(which terraform)
+
+      - name: Should fail
+        continue-on-error: true
+        run: terraform version
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -88,6 +95,9 @@ jobs:
         with:
           terraform-version: ${{ steps.minMax.outputs.minVersion }}
           args: 'terraform_validate --color=always --show-diff-on-failure --files $(ls *.tf)'
+
+      - if: steps.changes.outputs.src== 'true'
+        run: terraform version
 
   preCommitMaxVersion:
     name: Max TF pre-commit

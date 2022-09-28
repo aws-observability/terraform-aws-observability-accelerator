@@ -60,5 +60,7 @@ It provides the following resources:
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_grafana_dashboard_urls"></a> [grafana\_dashboard\_urls](#output\_grafana\_dashboard\_urls) | URLs for dashboards created |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

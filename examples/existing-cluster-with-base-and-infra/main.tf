@@ -85,6 +85,13 @@ module "workloads_infra" {
   managed_prometheus_workspace_endpoint = module.eks_observability_accelerator.managed_prometheus_workspace_endpoint
   managed_prometheus_workspace_region   = module.eks_observability_accelerator.managed_prometheus_workspace_region
 
+  # optional, defaults to 60s interval and 15s timeout
+  prometheus_config = {
+    global_scrape_interval = "10s"
+    global_scrape_timeout = "10s"
+    global_scrape_sample_limit = 2000
+  }
+
   tags = local.tags
 
   depends_on = [

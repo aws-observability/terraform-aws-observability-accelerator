@@ -9,7 +9,6 @@ data "aws_partition" "current" {}
 module "helm_addon" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.8.1"
 
-
   helm_config = merge(
     {
       name        = local.name

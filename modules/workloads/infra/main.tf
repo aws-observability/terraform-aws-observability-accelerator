@@ -58,30 +58,24 @@ module "helm_addon" {
       value = var.managed_prometheus_workspace_region
     },
     {
-      name  = "prometheusMetricsEndpoint"
-      value = "metrics"
-    },
-    {
-      name  = "prometheusMetricsPort"
-      value = 8888
-    },
-    {
-      name  = "scrapeInterval"
-      value = "15s"
-    },
-    {
-      name  = "scrapeTimeout"
-      value = "10s"
-    },
-    {
-      name  = "scrapeSampleLimit"
-      value = 1000
-    },
-    {
       name  = "ekscluster"
       value = local.context.eks_cluster_id
     },
+    {
+      name  = "global_scrape_sample_limit"
+      value = var.prometheus_config.global_scrape_sample_limit
+    },
+    {
+      name  = "global_scrape_interval"
+      value = var.prometheus_config.global_scrape_interval
+    },
+    {
+      name  = "global_scrape_timeout"
+      value = var.prometheus_config.global_scrape_interval
+    },
   ]
+
+    // TODO: dynamic set here for job-level scrape interval/timeout config
 
   irsa_config = {
     create_kubernetes_namespace       = true

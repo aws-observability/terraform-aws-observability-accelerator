@@ -78,6 +78,9 @@ variable "ksm_config" {
     helm_repo_url      = string
     helm_settings      = map(string)
     helm_values        = map(any)
+
+    scrape_interval =  string
+    scrape_timeout =  string
   })
 
   default = {
@@ -89,6 +92,9 @@ variable "ksm_config" {
     helm_settings      = {}
     helm_values        = {}
     k8s_namespace      = "kube-system"
+
+    scrape_interval =  "60s"
+    scrape_timeout =  "15s"
   }
   nullable = false
 }
@@ -110,6 +116,9 @@ variable "ne_config" {
     helm_repo_url      = string
     helm_settings      = map(string)
     helm_values        = map(any)
+
+    scrape_interval =  string
+    scrape_timeout =  string
   })
 
   default = {
@@ -121,11 +130,32 @@ variable "ne_config" {
     helm_settings      = {}
     helm_values        = {}
     k8s_namespace      = "prometheus-node-exporter"
+
+    scrape_interval =  "60s"
+    scrape_timeout =  "60s"
   }
   nullable = false
 }
+
 variable "tags" {
   description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
   type        = map(string)
   default     = {}
+}
+
+variable "prometheus_config" {
+  description = "Controls default values such as scrape interval, timeouts and ports globally"
+  type = object({
+    metrics_port = string
+    global_scrape_interval =  string
+    global_scrape_sample_limit = number
+    global_scrape_timeout =  string
+  })
+
+  default = {
+    scrape_interval =  "60s"
+    scrape_sample_limit = "1000" //TODO: evaluate from cloudwatch number of metrics
+    scrape_timeout =  "15s"
+  }
+  nullable = false
 }

@@ -13,14 +13,12 @@ spec:
           global:
             scrape_interval: {{ .Values.globalScrapeInterval }}
             scrape_timeout: {{ .Values.globalScrapeTimeout }}
-            # TODO : add sample limit here
-            # scrape_sample_limit: {{ .Values.globalScrapeSampleLimit }}
             external_labels:
               cluster: {{ .Values.ekscluster }}
           scrape_configs:
             - job_name: 'kubernetes-kubelet'
-              scrape_interval: {{ .Values.kubeletScrapeInterval }}
-              scrape_timeout: {{ .Values.kubeletScrapeTimeout }}
+              scrape_interval: {{ .Values.globalScrapeInterval }}
+              scrape_timeout: {{ .Values.globalScrapeTimeout }}
               scheme: https
               tls_config:
                 ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -56,8 +54,8 @@ spec:
                 replacement: /api/v1/nodes/$${1}/proxy/metrics/cadvisor
             - job_name: serviceMonitor/default/kube-prometheus-stack-prometheus-node-exporter/0
               honor_timestamps: true
-              scrape_interval: {{ .Values.nodeExporterScrapeInterval }}
-              scrape_timeout: {{ .Values.nodeExporterScrapeTimeout }}
+              scrape_interval: {{ .Values.globalScrapeInterval }}
+              scrape_timeout: {{ .Values.globalScrapeInterval }}
               scheme: http
               follow_redirects: true
               enable_http2: true
@@ -262,8 +260,8 @@ spec:
             - job_name: serviceMonitor/default/kube-prometheus-stack-operator/0
               honor_labels: true
               honor_timestamps: true
-              scrape_interval: {{ .Values.operatorScrapeInterval }}
-              scrape_timeout: {{ .Values.operatorScrapeTimeout }}
+              scrape_interval: {{ .Values.globalScrapeInterval }}
+              scrape_timeout: {{ .Values.globalScrapeTimeout }}
               scheme: https
               tls_config:
                 ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -363,8 +361,8 @@ spec:
             - job_name: serviceMonitor/default/kube-prometheus-stack-kubelet/2
               honor_labels: true
               honor_timestamps: true
-              scrape_interval: {{ .Values.kubeletScrapeInterval }}
-              scrape_timeout: {{ .Values.kubeletScrapeTimeout }}
+              scrape_interval: {{ .Values.globalScrapeInterval }}
+              scrape_timeout: {{ .Values.globalScrapeTimeout }}
               metrics_path: /metrics/probes
               scheme: https
               authorization:
@@ -480,8 +478,8 @@ spec:
             - job_name: serviceMonitor/default/kube-prometheus-stack-kubelet/1
               honor_labels: true
               honor_timestamps: true
-              scrape_interval: {{ .Values.kubeletScrapeInterval }}
-              scrape_timeout: {{ .Values.kubeletScrapeTimeout }}
+              scrape_interval: {{ .Values.globalScrapeInterval }}
+              scrape_timeout: {{ .Values.globalScrapeTimeout }}
               metrics_path: /metrics/cadvisor
               scheme: https
               authorization:
@@ -597,8 +595,8 @@ spec:
             - job_name: serviceMonitor/default/kube-prometheus-stack-kubelet/0
               honor_labels: true
               honor_timestamps: true
-              scrape_interval: {{ .Values.kubeletScrapeInterval }}
-              scrape_timeout: {{ .Values.kubeletScrapeTimeout }}
+              scrape_interval: {{ .Values.globalScrapeInterval }}
+              scrape_timeout: {{ .Values.globalScrapeTimeout }}
               scheme: https
               authorization:
                 type: Bearer
@@ -713,8 +711,8 @@ spec:
             - job_name: serviceMonitor/default/kube-prometheus-stack-kube-state-metrics/0
               honor_labels: true
               honor_timestamps: true
-              scrape_interval: {{ .Values.ksmScrapeInterval }}
-              scrape_timeout: {{ .Values.ksmScrapeTimeout }}
+              scrape_interval: {{ .Values.globalScrapeInterval }}
+              scrape_timeout: {{ .Values.globalScrapeTimeout }}
               scheme: http
               follow_redirects: true
               enable_http2: true
@@ -816,8 +814,8 @@ spec:
                     - default
             - job_name: serviceMonitor/default/kube-prometheus-stack-kube-scheduler/0
               honor_timestamps: true
-              scrape_interval: {{ .Values.schedulerScrapeInterval }}
-              scrape_timeout: {{ .Values.schedulerScrapeTimeout }}
+              scrape_interval: {{ .Values.globalScrapeInterval }}
+              scrape_timeout: {{ .Values.globalScrapeTimeout }}
               scheme: http
               authorization:
                 type: Bearer
@@ -922,8 +920,8 @@ spec:
                     - kube-system
             - job_name: serviceMonitor/default/kube-prometheus-stack-kube-proxy/0
               honor_timestamps: true
-              scrape_interval: {{ .Values.proxyScrapeInterval }}
-              scrape_timeout: {{ .Values.proxyscrapeTimeout }}
+              scrape_interval: {{ .Values.globalScrapeInterval }}
+              scrape_timeout: {{ .Values.globalScrapeTimeout }}
               scheme: http
               authorization:
                 type: Bearer
@@ -1028,8 +1026,8 @@ spec:
                     - kube-system
             - job_name: serviceMonitor/default/kube-prometheus-stack-kube-etcd/0
               honor_timestamps: true
-              scrape_interval: {{ .Values.etcdScrapeInterval }}
-              scrape_timeout: {{ .Values.etcdScrapeTimeout }}
+              scrape_interval: {{ .Values.globalScrapeInterval }}
+              scrape_timeout: {{ .Values.globalScrapeTimeout }}
               scheme: http
               authorization:
                 type: Bearer
@@ -1134,8 +1132,8 @@ spec:
                     - kube-system
             - job_name: serviceMonitor/default/kube-prometheus-stack-kube-controller-manager/0
               honor_timestamps: true
-              scrape_interval: {{ .Values.controllerManagerScrapeInterval }}
-              scrape_timeout: {{ .Values.controllerManagerScrapeTimeout }}
+              scrape_interval: {{ .Values.globalScrapeInterval }}
+              scrape_timeout: {{ .Values.globalScrapeTimeout }}
               scheme: http
               authorization:
                 type: Bearer
@@ -1240,8 +1238,8 @@ spec:
                     - kube-system
             - job_name: serviceMonitor/default/kube-prometheus-stack-coredns/0
               honor_timestamps: true
-              scrape_interval: {{ .Values.corednsScrapeInterval }}
-              scrape_timeout: {{ .Values.corednsScrapeTimeout }}
+              scrape_interval: {{ .Values.globalScrapeInterval }}
+              scrape_timeout: {{ .Values.globalScrapeTimeout }}
               scheme: http
               authorization:
                 type: Bearer
@@ -1344,8 +1342,8 @@ spec:
                     - kube-system
             - job_name: serviceMonitor/default/kube-prometheus-stack-apiserver/0
               honor_timestamps: true
-              scrape_interval: {{ .Values.apiserverScrapeInterval }}
-              scrape_timeout: {{ .Values.apiserverScrapeTimeout }}
+              scrape_interval: {{ .Values.globalScrapeInterval }}
+              scrape_timeout: {{ .Values.globalScrapeTimeout }}
               scheme: https
               authorization:
                 type: Bearer
@@ -1448,8 +1446,8 @@ spec:
                     - default
             - job_name: serviceMonitor/default/kube-prometheus-stack-alertmanager/0
               honor_timestamps: true
-              scrape_interval: {{ .Values.alertmanagerScrapeInterval }}
-              scrape_timeout: {{ .Values.alertmanagerScrapeTimeout }}
+              scrape_interval: {{ .Values.globalScrapeInterval }}
+              scrape_timeout: {{ .Values.globalScrapeTimeout }}
               scheme: http
               follow_redirects: true
               enable_http2: true

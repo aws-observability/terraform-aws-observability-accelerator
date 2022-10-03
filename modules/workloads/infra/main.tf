@@ -41,7 +41,7 @@ module "helm_addon" {
     {
       name        = local.name
       chart       = "${path.module}/otel-config"
-      version     = "0.2.0"
+      version     = "0.3.0"
       namespace   = local.namespace
       description = "ADOT helm Chart deployment configuration"
     },
@@ -62,20 +62,14 @@ module "helm_addon" {
       value = local.context.eks_cluster_id
     },
     {
-      name  = "global_scrape_sample_limit"
-      value = var.prometheus_config.global_scrape_sample_limit
-    },
-    {
-      name  = "global_scrape_interval"
+      name  = "globalScrapeInterval"
       value = var.prometheus_config.global_scrape_interval
     },
     {
-      name  = "global_scrape_timeout"
-      value = var.prometheus_config.global_scrape_interval
+      name  = "globalScrapeTimeout"
+      value = var.prometheus_config.global_scrape_timeout
     },
   ]
-
-    // TODO: dynamic set here for job-level scrape interval/timeout config
 
   irsa_config = {
     create_kubernetes_namespace       = true

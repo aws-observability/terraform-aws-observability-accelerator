@@ -2,47 +2,8 @@ ampurl: ${amp_url}
 region: ${region}
 ekscluster: ${eks_cluster}
 
-globalScrapeInterval: ${global_scrape_interval}
 globalScrapeTimeout: ${global_scrape_timeout}
 globalScrapeSampleLimit: ${global_scrape_sample_limit}
-
-nodeExporterScrapeInterval: ${global_scrape_interval}
-nodeExporterScrapeTimeout: ${global_scrape_timeout}
-
-kubeletScrapeInterval: ${kubelet_scrape_interval}
-kubeletScrapeTimeout: ${global_scrape_timeout}
-
-operatorScrapeInterval: ${global_scrape_interval}
-operatorScrapeTimeout: ${global_scrape_timeout}
-
-kubeletScrapeInterval: ${global_scrape_interval}
-kubeletScrapeTimeout: ${global_scrape_timeout}
-
-ksmScrapeInterval: ${global_scrape_interval}
-ksmScrapeTimeout: ${global_scrape_timeout}
-
-schedulerScrapeInterval: ${global_scrape_interval}
-schedulerScrapeTimeout: ${global_scrape_timeout}
-
-proxyScrapeInterval: ${global_scrape_interval}
-proxyScrapeTimeout: ${global_scrape_timeout}
-
-etcdScrapeInterval: ${global_scrape_interval}
-etcdScrapeTimeout: ${global_scrape_timeout}
-
-controllerManagerScrapeInterval:  ${global_scrape_interval}
-controllerManagerScrapeTimeout:  ${global_scrape_timeout}
-
-corednsScrapeInterval:  ${global_scrape_interval}
-corednsScrapeTimeout:  ${global_scrape_timeout}
-
-apiserverScrapeInterval:  ${global_scrape_interval}
-apiserverScrapeTimeout:  ${global_scrape_timeout}
-
-alertmanagerScrapeInterval:  ${global_scrape_interval}
-alertmanagerScrapeTimeout:  ${global_scrape_timeout}
-
-
 # TODO: enable after terraform 1.3 as defaults will be optional
 
 #nodeExporterScrapeInterval: ${node_exporter_scrape_interval}
@@ -50,7 +11,6 @@ alertmanagerScrapeTimeout:  ${global_scrape_timeout}
 
 #kubeletScrapeInterval: ${kubelet_scrape_interval}
 #kubeletScrapeTimeout: ${kubelet_scrape_timeout}
-
 
 #operatorScrapeInterval: ${operator_scrape_interval}
 #operatorScrapeTimeout: ${operator_scrape_timeout}

@@ -41,7 +41,7 @@ module "helm_addon" {
     {
       name        = local.name
       chart       = "${path.module}/otel-config"
-      version     = "0.2.0"
+      version     = "0.3.0"
       namespace   = local.namespace
       description = "ADOT helm Chart deployment configuration"
     },
@@ -58,28 +58,16 @@ module "helm_addon" {
       value = var.managed_prometheus_workspace_region
     },
     {
-      name  = "prometheusMetricsEndpoint"
-      value = "metrics"
-    },
-    {
-      name  = "prometheusMetricsPort"
-      value = 8888
-    },
-    {
-      name  = "scrapeInterval"
-      value = "15s"
-    },
-    {
-      name  = "scrapeTimeout"
-      value = "10s"
-    },
-    {
-      name  = "scrapeSampleLimit"
-      value = 1000
-    },
-    {
       name  = "ekscluster"
       value = local.context.eks_cluster_id
+    },
+    {
+      name  = "globalScrapeInterval"
+      value = var.prometheus_config.global_scrape_interval
+    },
+    {
+      name  = "globalScrapeTimeout"
+      value = var.prometheus_config.global_scrape_timeout
     },
   ]
 

@@ -12,6 +12,9 @@ Amazon Managed Grafana. Additionally we have a set of workloads modules to
 leverage curated ADOT collector configurations, Grafana dashboards,
 Prometheus recording rules and alerts.
 
+<img width="1501" alt="image" src="https://user-images.githubusercontent.com/10175027/193913383-94aaf4e2-58c6-4779-935b-e40528e86c03.png">
+
+
 We will be leveraging [EKS Blueprints](https://github.com/aws-ia/terraform-aws-eks-blueprints)
 repository to deploy the solution.
 

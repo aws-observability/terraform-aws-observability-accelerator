@@ -78,7 +78,7 @@ metrics collection, alerting rule and Grafana dashboards.
 
 ```hcl
 module "workloads_infra" {
-  source = "aws-observability/terrarom-aws-observability-accelerator/workloads/infra"
+  source = "aws-observability/terraform-aws-observability-accelerator/workloads/infra"
 
   eks_cluster_id = module.eks_observability_accelerator.eks_cluster_id
 

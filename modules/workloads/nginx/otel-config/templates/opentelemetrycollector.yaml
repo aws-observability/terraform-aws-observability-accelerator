@@ -50,7 +50,7 @@ spec:
         auth:
           authenticator: sigv4auth
       logging:
-          loglevel: debug
+          loglevel: info
     extensions:
       sigv4auth:
         region: {{ .Values.region }}

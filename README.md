@@ -38,7 +38,7 @@ data.
 
 ```hcl
 module "eks_observability_accelerator" {
-  source = "aws-observability/terrarom-aws-observability-accelerator"
+  source = "aws-observability/terraform-aws-observability-accelerator"
   aws_region = "eu-west-1"
   eks_cluster_id = "my-eks-cluster"
 }
@@ -48,7 +48,7 @@ You can optionally reuse existing Workspaces:
 
 ```hcl
 module "eks_observability_accelerator" {
-  source = "aws-observability/terrarom-aws-observability-accelerator"
+  source = "aws-observability/terraform-aws-observability-accelerator"
   aws_region = "eu-west-1"
   eks_cluster_id = "my-eks-cluster"
 

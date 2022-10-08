@@ -65,8 +65,8 @@ To run this example you need an Amazon Managed Grafana workspace. If you have an
 To create a new one, within this example's Terraform state (sharing the same lifecycle with all the other resources):
 
 - Edit main.tf and set `enable_managed_grafana = true`
-- Run `terraform apply -var-file=dev.tfvars -target "module.eks_observability_accelerator.module.managed_grafana[0].aws_grafana_workspace.this[0]"`.
-- Run `export TF_VAR_managed_grafana_workspace_id=$(terraform output managed_grafana_workspace_id)`.
+- Run `terraform apply -target "module.eks_observability_accelerator.module.managed_grafana[0].aws_grafana_workspace.this[0]"`.
+- Run `export TF_VAR_managed_grafana_workspace_id=$(terraform output --raw managed_grafana_workspace_id)`.
 
 7. <a name="apikey"></a> Grafana API Key
 

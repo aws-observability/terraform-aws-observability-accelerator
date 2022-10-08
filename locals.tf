@@ -26,6 +26,7 @@ locals {
   # if grafana_workspace_id is supplied, we infer the endpoint from
   # computed region, else we create a new workspace
   amg_ws_endpoint = var.managed_grafana_workspace_id == "" ? "https://${module.managed_grafana[0].workspace_endpoint}" : "https://${data.aws_grafana_workspace.this[0].endpoint}"
+  amg_ws_id       = var.managed_grafana_workspace_id == "" ? split(".", module.managed_grafana[0].workspace_endpoint)[0] : var.managed_grafana_workspace_id
 
   context = {
     aws_caller_identity_account_id = data.aws_caller_identity.current.account_id

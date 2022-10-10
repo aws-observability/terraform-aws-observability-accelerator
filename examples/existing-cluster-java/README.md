@@ -98,7 +98,8 @@ Go to the Dashboards panel of your Grafana workspace. You should see a list of d
 
 Open a specific dashboard and you should be able to view its visualization
 
-<img width="869" alt="image" src="https://user-images.githubusercontent.com/97046295/194903778-0c370a5d-d884-461f-a7c9-1f2603d109cf.png">
+<img width="874" alt="image" src="https://user-images.githubusercontent.com/97046295/194922672-d037c0e5-851d-4d8b-bd2e-066cd1e2d118.png">
+
 
 2. Amazon Managed Service for Prometheus rules and alerts
 
@@ -108,6 +109,58 @@ Open the Amazon Managed Service for Prometheus console and view the details of y
 
 
 To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
+
+
+## Deploy an Example Java Application
+
+In this section we will reuse an example from the AWS OpenTelemetry collector [repository](https://github.com/aws-observability/aws-otel-collector/blob/main/docs/developers/container-insights-eks-jmx.md). For convenience, the steps can be found below.
+
+1. Clone [this repository](https://github.com/aws-observability/aws-otel-test-framework) and navigate to the `sample-apps/jmx/` directory.
+
+2. Authenticate to Amazon ECR
+
+```sh
+export AWS_ACCOUNT_ID=`aws sts get-caller-identity --query Account --output text`
+export AWS_REGION={region}
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+```
+
+3. Create an Amazon ECR repository
+
+```sh
+aws ecr create-repository --repository-name prometheus-sample-tomcat-jmx \
+ --image-scanning-configuration scanOnPush=true \
+ --region $AWS_REGION
+```
+
+4. Build Docker image and push to ECR.
+
+```sh
+docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/prometheus-sample-tomcat-jmx:latest .
+docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/prometheus-sample-tomcat-jmx:latest
+```
+
+5. Install sample application
+
+```sh
+export SAMPLE_TRAFFIC_NAMESPACE=javajmx-sample
+curl https://raw.githubusercontent.com/aws-observability/aws-otel-test-framework/terraform/sample-apps/jmx/examples/prometheus-metrics-sample.yaml > metrics-sample.yaml
+sed -i "s/{{aws_account_id}}/$AWS_ACCOUNT_ID/g" metrics-sample.yaml
+sed -i "s/{{region}}/$AWS_REGION/g" metrics-sample.yaml
+sed -i "s/{{namespace}}/$SAMPLE_TRAFFIC_NAMESPACE/g" metrics-sample.yaml
+kubectl apply -f metrics-sample.yaml
+```
+
+Verify that the sample application is running:
+
+```sh
+kubectl get pods -n $SAMPLE_TRAFFIC_NAMESPACE
+
+NAME                              READY   STATUS              RESTARTS   AGE
+tomcat-bad-traffic-generator      1/1     Running             0          11s
+tomcat-example-7958666589-2q755   0/1     ContainerCreating   0          11s
+tomcat-traffic-generator          1/1     Running             0          11s
+```
 
 ## Advanced configuration
 

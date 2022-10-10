@@ -23,6 +23,11 @@ output "managed_prometheus_workspace_id" {
   value       = module.eks_observability_accelerator.managed_prometheus_workspace_id
 }
 
+output "managed_grafana_workspace_id" {
+  description = "Amazon Managed Grafana workspace ID"
+  value       = module.eks_observability_accelerator.managed_grafana_workspace_id
+}
+
 output "grafana_dashboard_urls" {
   description = "URLs for dashboards created"
   value       = module.workloads_infra.grafana_dashboard_urls

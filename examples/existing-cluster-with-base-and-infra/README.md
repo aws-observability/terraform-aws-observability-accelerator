@@ -60,7 +60,13 @@ If you don't specify anything a new workspace will be created for you.
 
 6. Amazon Managed Grafana workspace
 
-If you have an existing workspace, create an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx`.
+To run this example you need an Amazon Managed Grafana workspace. If you have an existing workspace, create an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx`.
+
+To create a new one, within this example's Terraform state (sharing the same lifecycle with all the other resources):
+
+- Edit main.tf and set `enable_managed_grafana = true`
+- Run `terraform apply -target "module.eks_observability_accelerator.module.managed_grafana[0].aws_grafana_workspace.this[0]"`.
+- Run `export TF_VAR_managed_grafana_workspace_id=$(terraform output --raw managed_grafana_workspace_id)`.
 
 7. <a name="apikey"></a> Grafana API Key
 
@@ -181,6 +187,7 @@ terraform destroy -var-file=terraform.tfvars
 | <a name="output_eks_cluster_id"></a> [eks\_cluster\_id](#output\_eks\_cluster\_id) | EKS Cluster Id |
 | <a name="output_eks_cluster_version"></a> [eks\_cluster\_version](#output\_eks\_cluster\_version) | EKS Cluster version |
 | <a name="output_grafana_dashboard_urls"></a> [grafana\_dashboard\_urls](#output\_grafana\_dashboard\_urls) | URLs for dashboards created |
+| <a name="output_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#output\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana workspace ID |
 | <a name="output_managed_prometheus_workspace_endpoint"></a> [managed\_prometheus\_workspace\_endpoint](#output\_managed\_prometheus\_workspace\_endpoint) | Amazon Managed Prometheus workspace endpoint |
 | <a name="output_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#output\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus workspace ID |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

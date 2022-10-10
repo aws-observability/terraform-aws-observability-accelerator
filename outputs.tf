@@ -33,6 +33,11 @@ output "managed_grafana_workspace_endpoint" {
   value       = local.amg_ws_endpoint
 }
 
+output "managed_grafana_workspace_id" {
+  description = "Amazon Managed Grafana workspace ID"
+  value       = local.amg_ws_id
+}
+
 output "grafana_dashboards_folder_id" {
   description = "Grafana folder ID for automatic dashboards. Required by workload modules"
   value       = grafana_folder.this.id

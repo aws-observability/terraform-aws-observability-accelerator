@@ -1,12 +1,12 @@
-# Existing Cluster with the AWS Observability accelerator base module and Infrastructure monitoring
+# Existing Cluster with the AWS Observability accelerator base module and Java monitoring
 
 
 This example demonstrates how to use the AWS Observability Accelerator Terraform
-modules with Infrastructure monitoring enabled.
+modules with Java monitoring enabled.
 The current example deploys the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) for Amazon EKS with its requirements and make use of existing
 Amazon Managed Service for Prometheus and Amazon Managed Grafana workspaces.
 
-It is based on the `infrastructure monitoring`, one of our [workloads modules](../../modules/workloads/)
+It is based on the `java module`, one of our [workloads modules](../../modules/workloads/)
 to provide an existing EKS cluster with an OpenTelemetry collector,
 curated Grafana dashboards, Prometheus alerting and recording rules with multiple
 configuration options on the cluster infrastructure.
@@ -35,7 +35,7 @@ git clone https://github.com/aws-observability/terraform-aws-observability-accel
 2. Initialize terraform
 
 ```console
-cd examples/existing-cluster-with-base-and-infra
+cd examples/existing-cluster-java
 terraform init
 ```
 
@@ -94,17 +94,17 @@ Open your Grafana workspace and under Configuration -> Data sources, you should 
 
 Go to the Dashboards panel of your Grafana workspace. You should see a list of dashboards under the `Observability Accelerator Dashboards`
 
-<img width="1540" alt="image" src="https://user-images.githubusercontent.com/10175027/190000716-29e16698-7c90-49d6-8c37-79ca1790e2cc.png">
+<img width="832" alt="image" src="https://user-images.githubusercontent.com/97046295/194903648-57c55d30-6f90-4b03-9eb6-577aaba7dc22.png">
 
 Open a specific dashboard and you should be able to view its visualization
 
-<img width="1721" alt="Screenshot 2022-08-30 at 20 01 32" src="https://user-images.githubusercontent.com/10175027/187515925-67864dd1-2b35-4be0-a15e-1e36805e8b29.png">
+<img width="869" alt="image" src="https://user-images.githubusercontent.com/97046295/194903778-0c370a5d-d884-461f-a7c9-1f2603d109cf.png">
 
 2. Amazon Managed Service for Prometheus rules and alerts
 
 Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you should find new rules deployed.
 
-<img width="1629" alt="image" src="https://user-images.githubusercontent.com/10175027/189301297-4865e75d-2d71-434f-b5d0-9750b3533632.png">
+<img width="1314" alt="image" src="https://user-images.githubusercontent.com/97046295/194904104-09a28577-d149-478e-b0a1-dc21cb7effc1.png">
 
 
 To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)

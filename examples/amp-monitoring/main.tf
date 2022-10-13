@@ -3,54 +3,53 @@ provider "aws" {
 }
 
 provider "grafana" {
-  url  = module.eks_observability_accelerator.managed_grafana_workspace_endpoint
+  url  = local.amg_ws_endpoint
   auth = var.grafana_api_key
+}
+
+data "aws_grafana_workspace" "this" {
+  count        = var.managed_grafana_workspace_id == "" ? 0 : 1
+  workspace_id = var.managed_grafana_workspace_id
 }
 
 locals {
     region = var.aws_region
-
+    amg_ws_endpoint = var.managed_grafana_workspace_id == "" ? "https://${module.managed_grafana[0].workspace_endpoint}" : "https://${data.aws_grafana_workspace.this[0].endpoint}"
+    amg_ws_id       = var.managed_grafana_workspace_id == "" ? split(".", module.managed_grafana[0].workspace_endpoint)[0] : var.managed_grafana_workspace_id
     tags = {
         Source = "github.com/aws-observability/terraform-aws-observability-accelerator"
     }
+    name = "aws-observability-accelerator"
 }
 
-module "eks_observability_accelerator" {
-  # source = "aws-observability/terrarom-aws-observability-accelerator"
-  source = "../../"
+module "managed_grafana" {
+  count   = var.enable_managed_grafana ? 1 : 0
+  source  = "terraform-aws-modules/managed-service-grafana/aws"
+  version = "~> 1.3"
 
-  aws_region     = var.aws_region
-  eks_cluster_id = var.eks_cluster_id
-
-  # deploys AWS Distro for OpenTelemetry operator into the cluster
-  enable_amazon_eks_adot = false
-
-  # reusing existing certificate manager? defaults to true
-  enable_cert_manager = false
-
-  # creates a new AMP workspace, defaults to true
-  enable_managed_prometheus = false
-
-  # reusing existing AMP if specified
-  managed_prometheus_workspace_id     = var.managed_prometheus_workspace_id
-  managed_prometheus_workspace_region = null # defaults to the current region, useful for cross region scenarios (same account)
-
-  # sets up the AMP alert manager at the workspace level
-  enable_alertmanager = false
-
-  # reusing existing Amazon Managed Grafana workspace
-  enable_managed_grafana       = false
-  managed_grafana_workspace_id = var.managed_grafana_workspace_id
-  grafana_api_key              = var.grafana_api_key
+  # Workspace
+  name              = local.name
+  stack_set_name    = local.name
+  data_sources      = ["CLOUDWATCH"]
+  associate_license = false
 
   tags = local.tags
 }
 
+resource "grafana_folder" "this" {
+  title = "AMP Monitoring Dashboards"
+}
+
+output "grafana_dashboards_folder_id" {
+  description = "Grafana folder ID for automatic dashboards. Required by workload modules"
+  value       = grafana_folder.this.id
+}
+
 module "amp_monitor" {
     source = "../../modules/workloads/amp-monitoring"
-    dashboards_folder_id = module.eks_observability_accelerator.grafana_dashboards_folder_id
+    dashboards_folder_id = resource.grafana_folder.this.id
     depends_on = [
-    module.eks_observability_accelerator
+    resource.grafana_folder.this
     ]
 }
 

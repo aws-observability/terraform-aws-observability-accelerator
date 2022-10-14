@@ -88,22 +88,21 @@ terraform apply
 
 1. Prometheus datasource on Grafana
 
-Open your Grafana workspace and under Configuration -> Data sources, you should see `aws-observability-accelerator`. Open and click `Save & test`. You should see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
+Open your Grafana workspace and under Configuration -> Data sources, you will see `aws-observability-accelerator`. Open and click `Save & test`. You will then see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
 
 2. Grafana dashboards
 
-Go to the Dashboards panel of your Grafana workspace. You should see a list of dashboards under the `Observability Accelerator Dashboards`
+Go to the Dashboards panel of your Grafana workspace. There will be a folder called `Observability Accelerator Dashboards`
 
 <img width="832" alt="image" src="https://user-images.githubusercontent.com/97046295/194903648-57c55d30-6f90-4b03-9eb6-577aaba7dc22.png">
 
-Open a specific dashboard and you should be able to view its visualization
+Open the "Java/JMX" dashboard to view its visualization
 
-<img width="874" alt="image" src="https://user-images.githubusercontent.com/97046295/194922672-d037c0e5-851d-4d8b-bd2e-066cd1e2d118.png">
-
+<img width="1366" alt="image" src="https://user-images.githubusercontent.com/97046295/195877332-3bf13525-ac5c-481a-ac6f-32a9e88ce8bd.png">
 
 2. Amazon Managed Service for Prometheus rules and alerts
 
-Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you should find new rules deployed.
+Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you will find new rules deployed.
 
 <img width="1314" alt="image" src="https://user-images.githubusercontent.com/97046295/194904104-09a28577-d149-478e-b0a1-dc21cb7effc1.png">
 

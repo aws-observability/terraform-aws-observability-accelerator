@@ -3,7 +3,7 @@ kind: OpenTelemetryCollector
 metadata:
   name: adot
 spec:
-  image: public.ecr.aws/aws-observability/aws-otel-collector:latest
+  image: public.ecr.aws/aws-observability/aws-otel-collector:v0.22.0
   mode: deployment
   serviceAccount: adot-collector-java
   config: |
@@ -11,13 +11,15 @@ spec:
       prometheus:
         config:
           global:
-            scrape_interval: {{ .Values.scrapeInterval }}
-            scrape_timeout: {{ .Values.scrapeTimeout }}
-
+            scrape_interval: {{ .Values.globalScrapeInterval }}
+            scrape_timeout: {{ .Values.globalScrapeTimeout }}
+            external_labels:
+              cluster: {{ .Values.ekscluster }}
+              account_id: {{ .Values.accountId }}
+              region: {{ .Values.region }}
           scrape_configs:
             - job_name: 'kubernetes-pod-jmx'
               sample_limit: {{ .Values.scrapeSampleLimit }}
-              metrics_path: /{{ .Values.prometheusMetricsEndpoint }}
               kubernetes_sd_configs:
                 - role: pod
               relabel_configs:
@@ -46,22 +48,24 @@ spec:
                   regex: 'jvm_gc_collection_seconds.*'
                   action: drop
     exporters:
-      awsprometheusremotewrite:
+      prometheusremotewrite:
         endpoint: {{ .Values.ampurl }}
-        aws_auth:
-          region: {{ .Values.region }}
-          service: "aps"
+        auth:
+          authenticator: sigv4auth
       logging:
-        loglevel: info
+          loglevel: info
     extensions:
+      sigv4auth:
+        region: {{ .Values.region }}
+        service: "aps"
       health_check:
       pprof:
         endpoint: :1888
       zpages:
         endpoint: :55679
     service:
-      extensions: [pprof, zpages, health_check]
+      extensions: [pprof, zpages, health_check, sigv4auth]
       pipelines:
         metrics:
           receivers: [prometheus]
-          exporters: [logging, awsprometheusremotewrite]
+          exporters: [logging, prometheusremotewrite]

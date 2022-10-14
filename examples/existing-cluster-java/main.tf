@@ -89,7 +89,7 @@ module "workloads_java" {
   prometheus_config = {
     global_scrape_interval = "60s"
     global_scrape_timeout  = "15s"
-    scrape_sample_limit = 2000
+    scrape_sample_limit    = 2000
   }
 
   tags = local.tags

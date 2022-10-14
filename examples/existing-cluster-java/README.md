@@ -207,7 +207,7 @@ terraform destroy -var-file=terraform.tfvars
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_eks_observability_accelerator"></a> [eks\_observability\_accelerator](#module\_eks\_observability\_accelerator) | ../../ | n/a |
-| <a name="module_workloads_infra"></a> [workloads\_infra](#module\_workloads\_infra) | ../../modules/workloads/infra | n/a |
+| <a name="module_workloads_java"></a> [workloads\_java](#module\_workloads\_java) | ../../modules/workloads/java | n/a |
 
 ## Resources
 

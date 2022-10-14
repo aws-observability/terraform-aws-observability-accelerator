@@ -98,7 +98,9 @@ Go to the Dashboards panel of your Grafana workspace. There will be a folder cal
 
 Open the "Java/JMX" dashboard to view its visualization
 
-<img width="1366" alt="image" src="https://user-images.githubusercontent.com/97046295/195877332-3bf13525-ac5c-481a-ac6f-32a9e88ce8bd.png">
+
+![image](https://user-images.githubusercontent.com/10175027/195903211-c47a5746-daa7-41f2-a6ea-bfe13f630c63.png)
+
 
 2. Amazon Managed Service for Prometheus rules and alerts
 
@@ -175,7 +177,7 @@ add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws
 
 ## Destroy resources
 
-If you leave this stack running, you will incur charges. To remove all resources
+If you leave this stack running, you will continue to incur charges. To remove all resources
 created by Terraform, [refresh your Grafana API key](#apikey) and run:
 
 ```sh

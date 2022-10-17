@@ -102,7 +102,7 @@ Go to the Dashboards panel of your Grafana workspace. You should see a list of d
 
 Open the NGINX dashboard and you should be able to view its visualization
 
-<img width="895" alt="image" src="https://user-images.githubusercontent.com/97046295/190665477-6660a6cf-3b29-4209-8387-6d4fc61aca5a.png">
+<img width="1850" alt="image" src="https://user-images.githubusercontent.com/97046295/196226043-e49afeb9-7828-467f-9199-5707cdc69aa9.png">
 
 2. Amazon Managed Service for Prometheus rules and alerts
 

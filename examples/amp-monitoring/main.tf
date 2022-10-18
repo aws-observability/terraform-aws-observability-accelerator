@@ -48,6 +48,7 @@ output "grafana_dashboards_folder_id" {
 module "amp_monitor" {
     source = "../../modules/workloads/amp-monitoring"
     dashboards_folder_id = resource.grafana_folder.this.id
+    aws_region = local.region
     depends_on = [
     resource.grafana_folder.this
     ]

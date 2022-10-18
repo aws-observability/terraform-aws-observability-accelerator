@@ -10,6 +10,11 @@ variable "aws_region" {
   type        = string
 }
 
+variable "managed_prometheus_workspace_id" {
+  description = "Amazon Managed Service for Prometheus Workspace ID to create Alarms for"
+  type        = string
+}
+
 variable "managed_grafana_workspace_id" {
   description = "Amazon Managed Grafana (AMG) workspace ID"
   type        = string

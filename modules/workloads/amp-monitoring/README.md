@@ -4,6 +4,9 @@ This module provides an automated experience around Observability for AMP (Amazo
 It provides the following resources:
 
 - AWS Managed Grafana Dashboard and  Cloudwatch data source to monitor AMP usage and alert metrics.
+
+Note: The Billing widget of the dashboard requires [CloudWatch Billing Alerts](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/monitor_estimated_charges_with_cloudwatch.html) to be enabled.
+
 - CloudWatch alarms for AMP service quotas.
 
 <!-- BEGIN_TF_DOCS -->

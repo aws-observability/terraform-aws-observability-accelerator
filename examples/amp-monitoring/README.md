@@ -36,7 +36,7 @@ terraform init
 
 Specify the AWS Region where the resources will be deployed. Edit the `terraform.tfvars` file and modify `aws_region="..."`. You can also use environement variables `export TF_VAR_aws_region=xxx`.
 
-1. Amazon Managed Service for Prometheus workspace
+4. Amazon Managed Service for Prometheus workspace
 
 If you have an existing workspace, add `managed_prometheus_workspace_id=ws-xxx`
 or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws-xxx`.
@@ -46,7 +46,7 @@ or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws
 Use an existing workspace, add `managed_grafana_workspace_id=g-xxx`
 or use an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx`.
 
-1. <a name="apikey"></a> Grafana API Key
+6. <a name="apikey"></a> Grafana API Key
 
 Amazon Managed Service for Grafana provides a control plane API for generating Grafana API keys. We will provide to Terraform
 a short lived API key to run the `apply` or `destroy` command.
@@ -80,9 +80,14 @@ Go to the Dashboards panel of your Grafana workspace. You should see a list of d
 
 Open the `AMP Accelerator Dashboard` to see a visualization of the AMP workspace.
 
+<img width="1786" alt="Screen Shot 2022-10-11 at 2 16 17 PM" src="https://user-images.githubusercontent.com/97046295/196742772-fba1a5fb-dd38-445c-88a9-607f38994713.png">
+
 3. Amazon Managed Service for Prometheus CloudWatch Alarms.
 
 Open the CloudWatch console and click `Alarms` > `All Alarms` to review the service limit alarms.
+
+<img width="1525" alt="image" src="https://user-images.githubusercontent.com/97046295/196742923-876e3b1c-6f2a-419d-ad39-9c057a0f7650.png">
+
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements

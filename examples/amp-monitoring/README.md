@@ -88,6 +88,11 @@ Open the CloudWatch console and click `Alarms` > `All Alarms` to review the serv
 
 <img width="1525" alt="image" src="https://user-images.githubusercontent.com/97046295/196742923-876e3b1c-6f2a-419d-ad39-9c057a0f7650.png">
 
+In us-east-1 region an alarm is created for billing. This alarm utilizes anomaly detection to detect anomalies in the Estimated Charges billing metric.
+
+<img width="1346" alt="image" src="https://user-images.githubusercontent.com/97046295/197042518-a98d69df-8f53-4a4a-afb8-f424d91da56f.png">
+
+
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements

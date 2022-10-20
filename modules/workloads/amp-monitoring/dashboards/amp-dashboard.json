@@ -22,333 +22,21 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 21,
-  "iteration": 1665600257378,
+  "id": 51,
+  "iteration": 1666292684202,
   "links": [],
   "liveNow": false,
   "panels": [
     {
       "gridPos": {
-        "h": 9,
-        "w": 5,
-        "x": 0,
-        "y": 0
-      },
-      "id": 14,
-      "options": {
-        "content": "# Alarm Metrics\n\nMetrics associated with Alertmanager Alarms",
-        "mode": "markdown"
-      },
-      "pluginVersion": "8.4.7",
-      "title": "Alerts",
-      "type": "text"
-    },
-    {
-      "datasource": {
-        "type": "cloudwatch",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 1
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 4,
-        "x": 5,
-        "y": 0
-      },
-      "id": 4,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.4.7",
-      "targets": [
-        {
-          "alias": "",
-          "datasource": {
-            "type": "cloudwatch",
-            "uid": "$datasource"
-          },
-          "dimensions": {},
-          "expression": "SELECT AVG(ResourceCount) FROM SCHEMA(\"AWS/Usage\", Class,Resource,ResourceId,Service,Type) WHERE Type = 'Resource' AND ResourceId = '$WorkspaceID' AND Resource = 'ActiveAlerts' AND Service = 'Prometheus' AND Class = 'None'",
-          "id": "",
-          "matchExact": true,
-          "metricEditorMode": 1,
-          "metricName": "",
-          "metricQueryType": 0,
-          "namespace": "",
-          "period": "",
-          "queryMode": "Metrics",
-          "refId": "A",
-          "region": "default",
-          "sqlExpression": "",
-          "statistic": "Average"
-        }
-      ],
-      "title": "Active Alerts",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "cloudwatch",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 1
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 5,
-        "x": 9,
-        "y": 0
-      },
-      "id": 12,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.4.7",
-      "targets": [
-        {
-          "alias": "",
-          "datasource": {
-            "type": "cloudwatch",
-            "uid": "$datasource"
-          },
-          "dimensions": {},
-          "expression": "SELECT AVG(AlertManagerNotificationsFailed) FROM SCHEMA(\"AWS/Prometheus\", Workspace) WHERE Workspace = '$WorkspaceID'",
-          "id": "",
-          "matchExact": true,
-          "metricEditorMode": 1,
-          "metricName": "",
-          "metricQueryType": 0,
-          "namespace": "",
-          "period": "",
-          "queryMode": "Metrics",
-          "refId": "A",
-          "region": "default",
-          "sqlExpression": "",
-          "statistic": "Average"
-        }
-      ],
-      "title": "Alert Manager Notifications Failed",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "cloudwatch",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 4,
-        "x": 14,
-        "y": 0
-      },
-      "id": 10,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.4.7",
-      "targets": [
-        {
-          "alias": "",
-          "datasource": {
-            "type": "cloudwatch",
-            "uid": "$datasource"
-          },
-          "dimensions": {},
-          "expression": "SELECT AVG(AlertManagerAlertsReceived) FROM SCHEMA(\"AWS/Prometheus\", Workspace) WHERE Workspace = '$WorkspaceID'",
-          "id": "",
-          "matchExact": true,
-          "metricEditorMode": 1,
-          "metricName": "",
-          "metricQueryType": 0,
-          "namespace": "",
-          "period": "",
-          "queryMode": "Metrics",
-          "refId": "A",
-          "region": "default",
-          "sqlExpression": "",
-          "statistic": "Average"
-        }
-      ],
-      "title": "Alert Manager Alerts Received",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "cloudwatch",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 5,
-        "x": 18,
-        "y": 0
-      },
-      "id": 8,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.4.7",
-      "targets": [
-        {
-          "alias": "",
-          "datasource": {
-            "type": "cloudwatch",
-            "uid": "$datasource"
-          },
-          "dimensions": {},
-          "expression": "SELECT AVG(ResourceCount) FROM SCHEMA(\"AWS/Usage\", Class,Resource,ResourceId,Service,Type) WHERE Type = 'Resource' AND ResourceId = '$WorkspaceID' AND Resource = 'SizeOfAlerts' AND Service = 'Prometheus' AND Class = 'None'",
-          "id": "",
-          "matchExact": true,
-          "metricEditorMode": 1,
-          "metricName": "",
-          "metricQueryType": 0,
-          "namespace": "",
-          "period": "",
-          "queryMode": "Metrics",
-          "refId": "A",
-          "region": "default",
-          "sqlExpression": "",
-          "statistic": "Average"
-        }
-      ],
-      "title": "Size of Alerts",
-      "type": "stat"
-    },
-    {
-      "gridPos": {
         "h": 7,
         "w": 5,
         "x": 0,
-        "y": 9
+        "y": 0
       },
       "id": 16,
       "options": {
-        "content": "# Usage Metrics\n\nMetrics relating to usage of the AMP service",
+        "content": "# Ingestion Usage Metrics\n\nMetrics relating to ingestion usage of the AMP service",
         "mode": "markdown"
       },
       "pluginVersion": "8.4.7",
@@ -414,7 +102,7 @@
         "h": 7,
         "w": 9,
         "x": 5,
-        "y": 9
+        "y": 0
       },
       "id": 6,
       "options": {
@@ -513,7 +201,7 @@
         "h": 7,
         "w": 9,
         "x": 14,
-        "y": 9
+        "y": 0
       },
       "id": 2,
       "options": {
@@ -555,71 +243,10 @@
     },
     {
       "gridPos": {
-        "h": 7,
-        "w": 5,
-        "x": 0,
-        "y": 16
-      },
-      "id": 20,
-      "options": {
-        "content": "# AMP Vended Logs\n\nLast 25 log events from AMP Vended Logs for alert and rule evaluation",
-        "mode": "markdown"
-      },
-      "pluginVersion": "8.4.7",
-      "title": "AMP Logs",
-      "type": "text"
-    },
-    {
-      "datasource": {
-        "type": "cloudwatch",
-        "uid": "$datasource"
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 18,
-        "x": 5,
-        "y": 16
-      },
-      "id": 18,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": false,
-        "sortOrder": "Descending",
-        "wrapLogMessage": false
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "cloudwatch",
-            "uid": "$datasource"
-          },
-          "expression": "fields @timestamp, @message\n| sort @timestamp desc\n| limit 25",
-          "id": "",
-          "logGroupNames": [
-            "/aws/vendedlogs/amp"
-          ],
-          "namespace": "",
-          "queryMode": "Logs",
-          "refId": "A",
-          "region": "default",
-          "statsGroups": []
-        }
-      ],
-      "timeFrom": "6h",
-      "timeShift": "6h",
-      "title": "AMP Vended Logs",
-      "type": "logs"
-    },
-    {
-      "gridPos": {
         "h": 8,
         "w": 5,
         "x": 0,
-        "y": 23
+        "y": 7
       },
       "id": 22,
       "options": {
@@ -689,7 +316,7 @@
         "h": 8,
         "w": 18,
         "x": 5,
-        "y": 23
+        "y": 7
       },
       "id": 24,
       "options": {
@@ -728,6 +355,379 @@
       ],
       "title": "Sum of Estimated AMP Charges (total)",
       "type": "timeseries"
+    },
+    {
+      "gridPos": {
+        "h": 9,
+        "w": 5,
+        "x": 0,
+        "y": 15
+      },
+      "id": 14,
+      "options": {
+        "content": "# Alert Usage Metrics\n\nMetrics associated with Alertmanager Alert Usage",
+        "mode": "markdown"
+      },
+      "pluginVersion": "8.4.7",
+      "title": "Alerts",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 4,
+        "x": 5,
+        "y": 15
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.4.7",
+      "targets": [
+        {
+          "alias": "",
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "$datasource"
+          },
+          "dimensions": {},
+          "expression": "SELECT AVG(ResourceCount) FROM SCHEMA(\"AWS/Usage\", Class,Resource,ResourceId,Service,Type) WHERE Type = 'Resource' AND ResourceId = '$WorkspaceID' AND Resource = 'ActiveAlerts' AND Service = 'Prometheus' AND Class = 'None'",
+          "id": "",
+          "matchExact": true,
+          "metricEditorMode": 1,
+          "metricName": "",
+          "metricQueryType": 0,
+          "namespace": "",
+          "period": "",
+          "queryMode": "Metrics",
+          "refId": "A",
+          "region": "default",
+          "sqlExpression": "",
+          "statistic": "Average"
+        }
+      ],
+      "title": "Active Alerts",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 5,
+        "x": 9,
+        "y": 15
+      },
+      "id": 12,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.4.7",
+      "targets": [
+        {
+          "alias": "",
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "$datasource"
+          },
+          "dimensions": {},
+          "expression": "SELECT AVG(AlertManagerNotificationsFailed) FROM SCHEMA(\"AWS/Prometheus\", Workspace) WHERE Workspace = '$WorkspaceID'",
+          "id": "",
+          "matchExact": true,
+          "metricEditorMode": 1,
+          "metricName": "",
+          "metricQueryType": 0,
+          "namespace": "",
+          "period": "",
+          "queryMode": "Metrics",
+          "refId": "A",
+          "region": "default",
+          "sqlExpression": "",
+          "statistic": "Average"
+        }
+      ],
+      "title": "Alert Manager Notifications Failed",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 4,
+        "x": 14,
+        "y": 15
+      },
+      "id": 10,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.4.7",
+      "targets": [
+        {
+          "alias": "",
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "$datasource"
+          },
+          "dimensions": {},
+          "expression": "SELECT AVG(AlertManagerAlertsReceived) FROM SCHEMA(\"AWS/Prometheus\", Workspace) WHERE Workspace = '$WorkspaceID'",
+          "id": "",
+          "matchExact": true,
+          "metricEditorMode": 1,
+          "metricName": "",
+          "metricQueryType": 0,
+          "namespace": "",
+          "period": "",
+          "queryMode": "Metrics",
+          "refId": "A",
+          "region": "default",
+          "sqlExpression": "",
+          "statistic": "Average"
+        }
+      ],
+      "title": "Alert Manager Alerts Received",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 5,
+        "x": 18,
+        "y": 15
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.4.7",
+      "targets": [
+        {
+          "alias": "",
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "$datasource"
+          },
+          "dimensions": {},
+          "expression": "SELECT AVG(ResourceCount) FROM SCHEMA(\"AWS/Usage\", Class,Resource,ResourceId,Service,Type) WHERE Type = 'Resource' AND ResourceId = '$WorkspaceID' AND Resource = 'SizeOfAlerts' AND Service = 'Prometheus' AND Class = 'None'",
+          "id": "",
+          "matchExact": true,
+          "metricEditorMode": 1,
+          "metricName": "",
+          "metricQueryType": 0,
+          "namespace": "",
+          "period": "",
+          "queryMode": "Metrics",
+          "refId": "A",
+          "region": "default",
+          "sqlExpression": "",
+          "statistic": "Average"
+        }
+      ],
+      "title": "Size of Alerts",
+      "type": "stat"
+    },
+    {
+      "gridPos": {
+        "h": 7,
+        "w": 5,
+        "x": 0,
+        "y": 24
+      },
+      "id": 20,
+      "options": {
+        "content": "# AMP Vended Logs\n\nLast 25 log events from AMP Vended Logs for alert and rule evaluation",
+        "mode": "markdown"
+      },
+      "pluginVersion": "8.4.7",
+      "title": "AMP Logs",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "$datasource"
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 18,
+        "x": 5,
+        "y": 24
+      },
+      "id": 18,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "$datasource"
+          },
+          "expression": "fields @timestamp, @message\n| sort @timestamp desc\n| limit 25",
+          "id": "",
+          "logGroupNames": [
+            "/aws/vendedlogs/amp"
+          ],
+          "namespace": "",
+          "queryMode": "Logs",
+          "refId": "A",
+          "region": "default",
+          "statsGroups": []
+        }
+      ],
+      "timeFrom": "6h",
+      "timeShift": "6h",
+      "title": "AMP Vended Logs",
+      "type": "logs"
     }
   ],
   "refresh": "",
@@ -738,9 +738,13 @@
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "",
-          "value": ""
+          "selected": true,
+          "text": [
+            "ws-e8b003eb-0528-4208-b31c-edf4598d5f66"
+          ],
+          "value": [
+            "ws-e8b003eb-0528-4208-b31c-edf4598d5f66"
+          ]
         },
         "datasource": {
           "type": "cloudwatch",
@@ -786,6 +790,6 @@
   "timezone": "",
   "title": "AMP Accelerator Dashboard",
   "uid": "",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }

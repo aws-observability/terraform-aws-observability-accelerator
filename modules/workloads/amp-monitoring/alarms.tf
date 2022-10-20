@@ -7,7 +7,7 @@ resource "aws_cloudwatch_metric_alarm" "active-series-metrics" {
   alarm_description         = "This metric monitors AMP active series metrics"
   insufficient_data_actions = []
   metric_query {
-    id          = "m1"
+    id = "m1"
     return_data = true
     metric {
       metric_name = "ResourceCount"
@@ -17,11 +17,11 @@ resource "aws_cloudwatch_metric_alarm" "active-series-metrics" {
       unit        = "None"
 
       dimensions = {
-        Type       = "Resource"
+        Type = "Resource"
         ResourceId = var.managed_prometheus_workspace_id
-        Resource   = "ActiveSeries"
-        Service    = "Prometheus"
-        Class      = "None"
+        Resource = "ActiveSeries"
+        Service = "Prometheus"
+        Class = "None"
       }
     }
   }
@@ -35,7 +35,7 @@ resource "aws_cloudwatch_metric_alarm" "ingestion_rate" {
   alarm_description         = "This metric monitors AMP ingestion rate"
   insufficient_data_actions = []
   metric_query {
-    id          = "m1"
+    id = "m1"
     return_data = true
 
     metric {
@@ -46,12 +46,13 @@ resource "aws_cloudwatch_metric_alarm" "ingestion_rate" {
       unit        = "None"
 
       dimensions = {
-        Type       = "Resource"
+        Type = "Resource"
         ResourceId = var.managed_prometheus_workspace_id
-        Resource   = "IngestionRate"
-        Service    = "Prometheus"
-        Class      = "None"
+        Resource = "IngestionRate"
+        Service = "Prometheus"
+        Class = "None"
       }
     }
   }
 }
+

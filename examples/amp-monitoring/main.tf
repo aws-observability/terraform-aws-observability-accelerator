@@ -2,6 +2,11 @@ provider "aws" {
     region = local.region
 }
 
+provider "aws" {
+  region = "us-east-1"
+  alias = "billing_region"
+}
+
 provider "grafana" {
   url  = local.amg_ws_endpoint
   auth = var.grafana_api_key
@@ -53,5 +58,12 @@ module "amp_monitor" {
     depends_on = [
     resource.grafana_folder.this
     ]
+}
+
+module "billing" {
+  source = "../../modules/Billing"
+  providers = {
+    aws = aws.billing_region
+   }
 }
 

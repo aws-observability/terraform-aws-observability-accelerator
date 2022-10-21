@@ -1552,6 +1552,14 @@ spec:
             - job_name: 'node-exporter'
               kubernetes_sd_configs:
                 - role: endpoints
+              ec2_sd_configs:
+              relabel_configs:
+                - source_labels: [ __address__ ]
+                  action: keep
+                  regex: '.*:9100$'
+                - action: replace
+                  source_labels: [__meta_kubernetes_endpoint_node_name]
+                  target_label: nodename
     exporters:
       prometheusremotewrite:
         endpoint: {{ .Values.ampurl }}

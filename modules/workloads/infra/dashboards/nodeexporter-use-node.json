@@ -114,7 +114,7 @@
         ],
         "thresholds": [],
         "timeRegions": [],
-        "title": "CPU Utilization",
+        "title": "CPU Utilisation",
         "tooltip": {
           "shared": true,
           "sort": 2,
@@ -314,7 +314,7 @@
         ],
         "thresholds": [],
         "timeRegions": [],
-        "title": "Memory Utilization",
+        "title": "Memory Utilisation",
         "tooltip": {
           "shared": true,
           "sort": 2,
@@ -534,7 +534,7 @@
         ],
         "thresholds": [],
         "timeRegions": [],
-        "title": "Network Utilization (Bytes Receive/Transmit)",
+        "title": "Network Utilisation (Bytes Receive/Transmit)",
         "tooltip": {
           "shared": true,
           "sort": 2,
@@ -748,7 +748,7 @@
           }
         ],
         "thresholds": [],
-        "title": "Disk IO Utilization",
+        "title": "Disk IO Utilisation",
         "tooltip": {
           "shared": true,
           "sort": 2,
@@ -930,7 +930,7 @@
           }
         ],
         "thresholds": [],
-        "title": "Disk Space Utilization",
+        "title": "Disk Space Utilisation",
         "tooltip": {
           "shared": true,
           "sort": 2,

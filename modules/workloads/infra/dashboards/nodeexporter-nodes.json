@@ -24,8 +24,8 @@
     "editable": false,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 1,
-    "id": 4,
-    "iteration": 1656212790985,
+    "id": 12,
+    "iteration": 1656212699541,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -41,7 +41,7 @@
           "x": 0,
           "y": 0
         },
-        "id": 11,
+        "id": 10,
         "panels": [],
         "targets": [
           {
@@ -63,7 +63,7 @@
         "datasource": {
           "uid": "$datasource"
         },
-        "fill": 10,
+        "fill": 1,
         "fillGradient": 0,
         "gridPos": {
           "h": 7,
@@ -80,7 +80,7 @@
           "max": false,
           "min": false,
           "rightSide": false,
-          "show": false,
+          "show": true,
           "total": false,
           "values": false
         },
@@ -105,19 +105,19 @@
             "datasource": {
               "uid": "$datasource"
             },
-            "expr": "((\n  instance:node_cpu_utilisation:rate5m{job=\"node-exporter\", cluster=\"$cluster\"}\n  *\n  instance:node_num_cpu:sum{job=\"node-exporter\", cluster=\"$cluster\"}\n) != 0 )\n/ scalar(sum(instance:node_num_cpu:sum{job=\"node-exporter\", cluster=\"$cluster\"}))\n",
+            "expr": "(\n  (1 - sum without (mode) (rate(node_cpu_seconds_total{job=\"node-exporter\", mode=~\"idle|iowait|steal\", instance=\"$instance\"}[$__rate_interval])))\n/ ignoring(cpu) group_left\n  count without (cpu, mode) (node_cpu_seconds_total{job=\"node-exporter\", mode=\"idle\", instance=\"$instance\"})\n)\n",
             "format": "time_series",
-            "intervalFactor": 2,
-            "legendFormat": "{{ instance }}",
+            "intervalFactor": 5,
+            "legendFormat": "{{cpu}}",
             "refId": "A"
           }
         ],
         "thresholds": [],
         "timeRegions": [],
-        "title": "CPU Utilisation",
+        "title": "CPU Usage",
         "tooltip": {
           "shared": true,
-          "sort": 2,
+          "sort": 0,
           "value_type": "individual"
         },
         "type": "graph",
@@ -130,11 +130,15 @@
           {
             "format": "percentunit",
             "logBase": 1,
+            "max": 1,
+            "min": 0,
             "show": true
           },
           {
             "format": "percentunit",
             "logBase": 1,
+            "max": 1,
+            "min": 0,
             "show": true
           }
         ],
@@ -150,7 +154,7 @@
         "datasource": {
           "uid": "$datasource"
         },
-        "fill": 10,
+        "fill": 0,
         "fillGradient": 0,
         "gridPos": {
           "h": 7,
@@ -167,7 +171,7 @@
           "max": false,
           "min": false,
           "rightSide": false,
-          "show": false,
+          "show": true,
           "total": false,
           "values": false
         },
@@ -185,26 +189,56 @@
         "renderer": "flot",
         "seriesOverrides": [],
         "spaceLength": 10,
-        "stack": true,
+        "stack": false,
         "steppedLine": false,
         "targets": [
           {
             "datasource": {
               "uid": "$datasource"
             },
-            "expr": "(\n  instance:node_load1_per_cpu:ratio{job=\"node-exporter\", cluster=\"$cluster\"}\n  / scalar(count(instance:node_load1_per_cpu:ratio{job=\"node-exporter\", cluster=\"$cluster\"}))\n)  != 0\n",
+            "expr": "node_load1{job=\"node-exporter\", instance=\"$instance\"}",
             "format": "time_series",
             "intervalFactor": 2,
-            "legendFormat": "{{instance}}",
+            "legendFormat": "1m load average",
             "refId": "A"
+          },
+          {
+            "datasource": {
+              "uid": "$datasource"
+            },
+            "expr": "node_load5{job=\"node-exporter\", instance=\"$instance\"}",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "5m load average",
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "uid": "$datasource"
+            },
+            "expr": "node_load15{job=\"node-exporter\", instance=\"$instance\"}",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "15m load average",
+            "refId": "C"
+          },
+          {
+            "datasource": {
+              "uid": "$datasource"
+            },
+            "expr": "count(node_cpu_seconds_total{job=\"node-exporter\", instance=\"$instance\", mode=\"idle\"})",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "logical cores",
+            "refId": "D"
           }
         ],
         "thresholds": [],
         "timeRegions": [],
-        "title": "CPU Saturation (Load1 per CPU)",
+        "title": "Load Average",
         "tooltip": {
           "shared": true,
-          "sort": 2,
+          "sort": 0,
           "value_type": "individual"
         },
         "type": "graph",
@@ -215,13 +249,15 @@
         },
         "yaxes": [
           {
-            "format": "percentunit",
+            "format": "short",
             "logBase": 1,
+            "min": 0,
             "show": true
           },
           {
-            "format": "percentunit",
+            "format": "short",
             "logBase": 1,
+            "min": 0,
             "show": true
           }
         ],
@@ -241,7 +277,7 @@
           "x": 0,
           "y": 8
         },
-        "id": 12,
+        "id": 11,
         "panels": [],
         "targets": [
           {
@@ -263,11 +299,11 @@
         "datasource": {
           "uid": "$datasource"
         },
-        "fill": 10,
+        "fill": 1,
         "fillGradient": 0,
         "gridPos": {
           "h": 7,
-          "w": 12,
+          "w": 18,
           "x": 0,
           "y": 9
         },
@@ -280,7 +316,7 @@
           "max": false,
           "min": false,
           "rightSide": false,
-          "show": false,
+          "show": true,
           "total": false,
           "values": false
         },
@@ -305,19 +341,49 @@
             "datasource": {
               "uid": "$datasource"
             },
-            "expr": "(\n  instance:node_memory_utilisation:ratio{job=\"node-exporter\", cluster=\"$cluster\"}\n  / scalar(count(instance:node_memory_utilisation:ratio{job=\"node-exporter\", cluster=\"$cluster\"}))\n) != 0\n",
+            "expr": "(\n  node_memory_MemTotal_bytes{job=\"node-exporter\", instance=\"$instance\"}\n-\n  node_memory_MemFree_bytes{job=\"node-exporter\", instance=\"$instance\"}\n-\n  node_memory_Buffers_bytes{job=\"node-exporter\", instance=\"$instance\"}\n-\n  node_memory_Cached_bytes{job=\"node-exporter\", instance=\"$instance\"}\n)\n",
             "format": "time_series",
             "intervalFactor": 2,
-            "legendFormat": "{{instance}}",
+            "legendFormat": "memory used",
             "refId": "A"
+          },
+          {
+            "datasource": {
+              "uid": "$datasource"
+            },
+            "expr": "node_memory_Buffers_bytes{job=\"node-exporter\", instance=\"$instance\"}",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "memory buffers",
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "uid": "$datasource"
+            },
+            "expr": "node_memory_Cached_bytes{job=\"node-exporter\", instance=\"$instance\"}",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "memory cached",
+            "refId": "C"
+          },
+          {
+            "datasource": {
+              "uid": "$datasource"
+            },
+            "expr": "node_memory_MemFree_bytes{job=\"node-exporter\", instance=\"$instance\"}",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "memory free",
+            "refId": "D"
           }
         ],
         "thresholds": [],
         "timeRegions": [],
-        "title": "Memory Utilisation",
+        "title": "Memory Usage",
         "tooltip": {
           "shared": true,
-          "sort": 2,
+          "sort": 0,
           "value_type": "individual"
         },
         "type": "graph",
@@ -328,12 +394,221 @@
         },
         "yaxes": [
           {
-            "format": "percentunit",
+            "format": "bytes",
+            "logBase": 1,
+            "min": 0,
+            "show": true
+          },
+          {
+            "format": "bytes",
+            "logBase": 1,
+            "min": 0,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "datasource": {
+          "uid": "$datasource"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [],
+            "max": 100,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "rgba(50, 172, 45, 0.97)",
+                  "value": null
+                },
+                {
+                  "color": "rgba(237, 129, 40, 0.89)",
+                  "value": 80
+                },
+                {
+                  "color": "rgba(245, 54, 54, 0.9)",
+                  "value": 90
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 6,
+          "x": 18,
+          "y": 9
+        },
+        "id": 5,
+        "options": {
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true
+        },
+        "pluginVersion": "9.0.1",
+        "targets": [
+          {
+            "datasource": {
+              "uid": "$datasource"
+            },
+            "expr": "100 -\n(\n  avg(node_memory_MemAvailable_bytes{job=\"node-exporter\", instance=\"$instance\"}) /\n  avg(node_memory_MemTotal_bytes{job=\"node-exporter\", instance=\"$instance\"})\n* 100\n)\n",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "Memory Usage",
+        "type": "gauge"
+      },
+      {
+        "collapsed": false,
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 16
+        },
+        "id": 12,
+        "panels": [],
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "refId": "A"
+          }
+        ],
+        "title": "Disk",
+        "type": "row"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": {
+          "uid": "$datasource"
+        },
+        "fill": 0,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 0,
+          "y": 17
+        },
+        "hiddenSeries": false,
+        "id": 6,
+        "legend": {
+          "alignAsTable": false,
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "9.0.1",
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [
+          {
+            "alias": "/ read| written/",
+            "yaxis": 1
+          },
+          {
+            "alias": "/ io time/",
+            "yaxis": 2
+          }
+        ],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "datasource": {
+              "uid": "$datasource"
+            },
+            "expr": "rate(node_disk_read_bytes_total{job=\"node-exporter\", instance=\"$instance\", device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\"}[$__rate_interval])",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "{{device}} read",
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "uid": "$datasource"
+            },
+            "expr": "rate(node_disk_written_bytes_total{job=\"node-exporter\", instance=\"$instance\", device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\"}[$__rate_interval])",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "{{device}} written",
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "uid": "$datasource"
+            },
+            "expr": "rate(node_disk_io_time_seconds_total{job=\"node-exporter\", instance=\"$instance\", device=~\"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\"}[$__rate_interval])",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "{{device}} io time",
+            "refId": "C"
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "Disk I/O",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "bytes",
             "logBase": 1,
             "show": true
           },
           {
-            "format": "percentunit",
+            "format": "s",
             "logBase": 1,
             "show": true
           }
@@ -350,16 +625,16 @@
         "datasource": {
           "uid": "$datasource"
         },
-        "fill": 10,
+        "fill": 1,
         "fillGradient": 0,
         "gridPos": {
           "h": 7,
           "w": 12,
           "x": 12,
-          "y": 9
+          "y": 17
         },
         "hiddenSeries": false,
-        "id": 5,
+        "id": 7,
         "legend": {
           "alignAsTable": false,
           "avg": false,
@@ -367,7 +642,7 @@
           "max": false,
           "min": false,
           "rightSide": false,
-          "show": false,
+          "show": true,
           "total": false,
           "values": false
         },
@@ -383,7 +658,16 @@
         "pointradius": 5,
         "points": false,
         "renderer": "flot",
-        "seriesOverrides": [],
+        "seriesOverrides": [
+          {
+            "alias": "used",
+            "color": "#E0B400"
+          },
+          {
+            "alias": "available",
+            "color": "#73BF69"
+          }
+        ],
         "spaceLength": 10,
         "stack": true,
         "steppedLine": false,
@@ -392,19 +676,29 @@
             "datasource": {
               "uid": "$datasource"
             },
-            "expr": "instance:node_vmstat_pgmajfault:rate5m{job=\"node-exporter\", cluster=\"$cluster\"}",
+            "expr": "sum(\n  max by (device) (\n    node_filesystem_size_bytes{job=\"node-exporter\", instance=\"$instance\", fstype!=\"\"}\n  -\n    node_filesystem_avail_bytes{job=\"node-exporter\", instance=\"$instance\", fstype!=\"\"}\n  )\n)\n",
             "format": "time_series",
             "intervalFactor": 2,
-            "legendFormat": "{{instance}}",
+            "legendFormat": "used",
             "refId": "A"
+          },
+          {
+            "datasource": {
+              "uid": "$datasource"
+            },
+            "expr": "sum(\n  max by (device) (\n    node_filesystem_avail_bytes{job=\"node-exporter\", instance=\"$instance\", fstype!=\"\"}\n  )\n)\n",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "available",
+            "refId": "B"
           }
         ],
         "thresholds": [],
         "timeRegions": [],
-        "title": "Memory Saturation (Major Page Faults)",
+        "title": "Disk Space Usage",
         "tooltip": {
           "shared": true,
-          "sort": 2,
+          "sort": 0,
           "value_type": "individual"
         },
         "type": "graph",
@@ -415,13 +709,15 @@
         },
         "yaxes": [
           {
-            "format": "rds",
+            "format": "bytes",
             "logBase": 1,
+            "min": 0,
             "show": true
           },
           {
-            "format": "rds",
+            "format": "bytes",
             "logBase": 1,
+            "min": 0,
             "show": true
           }
         ],
@@ -439,7 +735,7 @@
           "h": 1,
           "w": 24,
           "x": 0,
-          "y": 16
+          "y": 24
         },
         "id": 13,
         "panels": [],
@@ -463,247 +759,7 @@
         "datasource": {
           "uid": "$datasource"
         },
-        "fill": 10,
-        "fillGradient": 0,
-        "gridPos": {
-          "h": 7,
-          "w": 12,
-          "x": 0,
-          "y": 17
-        },
-        "hiddenSeries": false,
-        "id": 6,
-        "legend": {
-          "alignAsTable": false,
-          "avg": false,
-          "current": false,
-          "max": false,
-          "min": false,
-          "rightSide": false,
-          "show": false,
-          "total": false,
-          "values": false
-        },
-        "lines": true,
-        "linewidth": 1,
-        "links": [],
-        "nullPointMode": "null",
-        "options": {
-          "alertThreshold": true
-        },
-        "percentage": false,
-        "pluginVersion": "9.0.1",
-        "pointradius": 5,
-        "points": false,
-        "renderer": "flot",
-        "seriesOverrides": [
-          {
-            "alias": "/Receive/",
-            "stack": "A"
-          },
-          {
-            "alias": "/Transmit/",
-            "stack": "B",
-            "transform": "negative-Y"
-          }
-        ],
-        "spaceLength": 10,
-        "stack": true,
-        "steppedLine": false,
-        "targets": [
-          {
-            "datasource": {
-              "uid": "$datasource"
-            },
-            "expr": "instance:node_network_receive_bytes_excluding_lo:rate5m{job=\"node-exporter\", cluster=\"$cluster\"} != 0",
-            "format": "time_series",
-            "intervalFactor": 2,
-            "legendFormat": "{{instance}} Receive",
-            "refId": "A"
-          },
-          {
-            "datasource": {
-              "uid": "$datasource"
-            },
-            "expr": "instance:node_network_transmit_bytes_excluding_lo:rate5m{job=\"node-exporter\", cluster=\"$cluster\"} != 0",
-            "format": "time_series",
-            "intervalFactor": 2,
-            "legendFormat": "{{instance}} Transmit",
-            "refId": "B"
-          }
-        ],
-        "thresholds": [],
-        "timeRegions": [],
-        "title": "Network Utilisation (Bytes Receive/Transmit)",
-        "tooltip": {
-          "shared": true,
-          "sort": 2,
-          "value_type": "individual"
-        },
-        "type": "graph",
-        "xaxis": {
-          "mode": "time",
-          "show": true,
-          "values": []
-        },
-        "yaxes": [
-          {
-            "format": "Bps",
-            "logBase": 1,
-            "show": true
-          },
-          {
-            "format": "Bps",
-            "logBase": 1,
-            "show": true
-          }
-        ],
-        "yaxis": {
-          "align": false
-        }
-      },
-      {
-        "aliasColors": {},
-        "bars": false,
-        "dashLength": 10,
-        "dashes": false,
-        "datasource": {
-          "uid": "$datasource"
-        },
-        "fill": 10,
-        "fillGradient": 0,
-        "gridPos": {
-          "h": 7,
-          "w": 12,
-          "x": 12,
-          "y": 17
-        },
-        "hiddenSeries": false,
-        "id": 7,
-        "legend": {
-          "alignAsTable": false,
-          "avg": false,
-          "current": false,
-          "max": false,
-          "min": false,
-          "rightSide": false,
-          "show": false,
-          "total": false,
-          "values": false
-        },
-        "lines": true,
-        "linewidth": 1,
-        "links": [],
-        "nullPointMode": "null",
-        "options": {
-          "alertThreshold": true
-        },
-        "percentage": false,
-        "pluginVersion": "9.0.1",
-        "pointradius": 5,
-        "points": false,
-        "renderer": "flot",
-        "seriesOverrides": [
-          {
-            "alias": "/ Receive/",
-            "stack": "A"
-          },
-          {
-            "alias": "/ Transmit/",
-            "stack": "B",
-            "transform": "negative-Y"
-          }
-        ],
-        "spaceLength": 10,
-        "stack": true,
-        "steppedLine": false,
-        "targets": [
-          {
-            "datasource": {
-              "uid": "$datasource"
-            },
-            "expr": "instance:node_network_receive_drop_excluding_lo:rate5m{job=\"node-exporter\", cluster=\"$cluster\"} != 0",
-            "format": "time_series",
-            "intervalFactor": 2,
-            "legendFormat": "{{instance}} Receive",
-            "refId": "A"
-          },
-          {
-            "datasource": {
-              "uid": "$datasource"
-            },
-            "expr": "instance:node_network_transmit_drop_excluding_lo:rate5m{job=\"node-exporter\", cluster=\"$cluster\"} != 0",
-            "format": "time_series",
-            "intervalFactor": 2,
-            "legendFormat": "{{instance}} Transmit",
-            "refId": "B"
-          }
-        ],
-        "thresholds": [],
-        "timeRegions": [],
-        "title": "Network Saturation (Drops Receive/Transmit)",
-        "tooltip": {
-          "shared": true,
-          "sort": 2,
-          "value_type": "individual"
-        },
-        "type": "graph",
-        "xaxis": {
-          "mode": "time",
-          "show": true,
-          "values": []
-        },
-        "yaxes": [
-          {
-            "format": "Bps",
-            "logBase": 1,
-            "show": true
-          },
-          {
-            "format": "Bps",
-            "logBase": 1,
-            "show": true
-          }
-        ],
-        "yaxis": {
-          "align": false
-        }
-      },
-      {
-        "collapsed": false,
-        "datasource": {
-          "type": "prometheus",
-          "uid": "prometheus"
-        },
-        "gridPos": {
-          "h": 1,
-          "w": 24,
-          "x": 0,
-          "y": 24
-        },
-        "id": 14,
-        "panels": [],
-        "targets": [
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "prometheus"
-            },
-            "refId": "A"
-          }
-        ],
-        "title": "Disk IO",
-        "type": "row"
-      },
-      {
-        "aliasColors": {},
-        "bars": false,
-        "dashLength": 10,
-        "dashes": false,
-        "datasource": {
-          "uid": "$datasource"
-        },
-        "fill": 10,
+        "fill": 0,
         "fillGradient": 0,
         "gridPos": {
           "h": 7,
@@ -711,7 +767,6 @@
           "x": 0,
           "y": 25
         },
-        "hiddenSeries": false,
         "id": 8,
         "legend": {
           "alignAsTable": false,
@@ -720,7 +775,7 @@
           "max": false,
           "min": false,
           "rightSide": false,
-          "show": false,
+          "show": true,
           "total": false,
           "values": false
         },
@@ -728,36 +783,31 @@
         "linewidth": 1,
         "links": [],
         "nullPointMode": "null",
-        "options": {
-          "alertThreshold": true
-        },
         "percentage": false,
-        "pluginVersion": "9.0.1",
         "pointradius": 5,
         "points": false,
         "renderer": "flot",
         "seriesOverrides": [],
         "spaceLength": 10,
-        "stack": true,
+        "stack": false,
         "steppedLine": false,
         "targets": [
           {
             "datasource": {
               "uid": "$datasource"
             },
-            "expr": "(\n  instance_device:node_disk_io_time_seconds:rate5m{job=\"node-exporter\", cluster=\"$cluster\"}\n  / scalar(count(instance_device:node_disk_io_time_seconds:rate5m{job=\"node-exporter\", cluster=\"$cluster\"}))\n) != 0\n",
+            "expr": "rate(node_network_receive_bytes_total{job=\"node-exporter\", instance=\"$instance\", device!=\"lo\"}[$__rate_interval])",
             "format": "time_series",
             "intervalFactor": 2,
-            "legendFormat": "{{instance}} {{device}}",
+            "legendFormat": "{{device}}",
             "refId": "A"
           }
         ],
         "thresholds": [],
-        "timeRegions": [],
-        "title": "Disk IO Utilisation",
+        "title": "Network Received",
         "tooltip": {
           "shared": true,
-          "sort": 2,
+          "sort": 0,
           "value_type": "individual"
         },
         "type": "graph",
@@ -768,19 +818,18 @@
         },
         "yaxes": [
           {
-            "format": "percentunit",
+            "format": "bytes",
             "logBase": 1,
+            "min": 0,
             "show": true
           },
           {
-            "format": "percentunit",
+            "format": "bytes",
             "logBase": 1,
+            "min": 0,
             "show": true
           }
-        ],
-        "yaxis": {
-          "align": false
-        }
+        ]
       },
       {
         "aliasColors": {},
@@ -790,7 +839,7 @@
         "datasource": {
           "uid": "$datasource"
         },
-        "fill": 10,
+        "fill": 0,
         "fillGradient": 0,
         "gridPos": {
           "h": 7,
@@ -798,7 +847,6 @@
           "x": 12,
           "y": 25
         },
-        "hiddenSeries": false,
         "id": 9,
         "legend": {
           "alignAsTable": false,
@@ -807,7 +855,7 @@
           "max": false,
           "min": false,
           "rightSide": false,
-          "show": false,
+          "show": true,
           "total": false,
           "values": false
         },
@@ -815,36 +863,31 @@
         "linewidth": 1,
         "links": [],
         "nullPointMode": "null",
-        "options": {
-          "alertThreshold": true
-        },
         "percentage": false,
-        "pluginVersion": "9.0.1",
         "pointradius": 5,
         "points": false,
         "renderer": "flot",
         "seriesOverrides": [],
         "spaceLength": 10,
-        "stack": true,
+        "stack": false,
         "steppedLine": false,
         "targets": [
           {
             "datasource": {
               "uid": "$datasource"
             },
-            "expr": "(\n  instance_device:node_disk_io_time_weighted_seconds:rate5m{job=\"node-exporter\", cluster=\"$cluster\"}\n  / scalar(count(instance_device:node_disk_io_time_weighted_seconds:rate5m{job=\"node-exporter\", cluster=\"$cluster\"}))\n) != 0\n",
+            "expr": "rate(node_network_transmit_bytes_total{job=\"node-exporter\", instance=\"$instance\", device!=\"lo\"}[$__rate_interval])",
             "format": "time_series",
             "intervalFactor": 2,
-            "legendFormat": "{{instance}} {{device}}",
+            "legendFormat": "{{device}}",
             "refId": "A"
           }
         ],
         "thresholds": [],
-        "timeRegions": [],
-        "title": "Disk IO Saturation",
+        "title": "Network Transmitted",
         "tooltip": {
           "shared": true,
-          "sort": 2,
+          "sort": 0,
           "value_type": "individual"
         },
         "type": "graph",
@@ -855,132 +898,18 @@
         },
         "yaxes": [
           {
-            "format": "percentunit",
+            "format": "bytes",
             "logBase": 1,
+            "min": 0,
             "show": true
           },
           {
-            "format": "percentunit",
+            "format": "bytes",
             "logBase": 1,
+            "min": 0,
             "show": true
           }
-        ],
-        "yaxis": {
-          "align": false
-        }
-      },
-      {
-        "collapsed": false,
-        "datasource": {
-          "type": "prometheus",
-          "uid": "prometheus"
-        },
-        "gridPos": {
-          "h": 1,
-          "w": 24,
-          "x": 0,
-          "y": 32
-        },
-        "id": 15,
-        "panels": [],
-        "targets": [
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "prometheus"
-            },
-            "refId": "A"
-          }
-        ],
-        "title": "Disk Space",
-        "type": "row"
-      },
-      {
-        "aliasColors": {},
-        "bars": false,
-        "dashLength": 10,
-        "dashes": false,
-        "datasource": {
-          "uid": "$datasource"
-        },
-        "fill": 10,
-        "fillGradient": 0,
-        "gridPos": {
-          "h": 7,
-          "w": 24,
-          "x": 0,
-          "y": 33
-        },
-        "hiddenSeries": false,
-        "id": 10,
-        "legend": {
-          "alignAsTable": false,
-          "avg": false,
-          "current": false,
-          "max": false,
-          "min": false,
-          "rightSide": false,
-          "show": false,
-          "total": false,
-          "values": false
-        },
-        "lines": true,
-        "linewidth": 1,
-        "links": [],
-        "nullPointMode": "null",
-        "options": {
-          "alertThreshold": true
-        },
-        "percentage": false,
-        "pluginVersion": "9.0.1",
-        "pointradius": 5,
-        "points": false,
-        "renderer": "flot",
-        "seriesOverrides": [],
-        "spaceLength": 10,
-        "stack": true,
-        "steppedLine": false,
-        "targets": [
-          {
-            "datasource": {
-              "uid": "$datasource"
-            },
-            "expr": "sum without (device) (\n  max without (fstype, mountpoint) ((\n    node_filesystem_size_bytes{job=\"node-exporter\", fstype!=\"\", cluster=\"$cluster\"}\n    -\n    node_filesystem_avail_bytes{job=\"node-exporter\", fstype!=\"\", cluster=\"$cluster\"}\n  ) != 0)\n)\n/ scalar(sum(max without (fstype, mountpoint) (node_filesystem_size_bytes{job=\"node-exporter\", fstype!=\"\", cluster=\"$cluster\"})))\n",
-            "format": "time_series",
-            "intervalFactor": 2,
-            "legendFormat": "{{instance}}",
-            "refId": "A"
-          }
-        ],
-        "thresholds": [],
-        "timeRegions": [],
-        "title": "Disk Space Utilisation",
-        "tooltip": {
-          "shared": true,
-          "sort": 2,
-          "value_type": "individual"
-        },
-        "type": "graph",
-        "xaxis": {
-          "mode": "time",
-          "show": true,
-          "values": []
-        },
-        "yaxes": [
-          {
-            "format": "percentunit",
-            "logBase": 1,
-            "show": true
-          },
-          {
-            "format": "percentunit",
-            "logBase": 1,
-            "show": true
-          }
-        ],
-        "yaxis": {
-          "align": false
-        }
+        ]
       }
     ],
     "refresh": "30s",
@@ -1011,29 +940,29 @@
         },
         {
           "current": {
-            "isNone": true,
             "selected": false,
-            "text": "None",
-            "value": ""
+            "text": "192.168.15.60:9100",
+            "value": "192.168.15.60:9100"
           },
           "datasource": {
             "type": "prometheus",
             "uid": "$datasource"
           },
           "definition": "",
-          "hide": 2,
+          "hide": 0,
           "includeAll": false,
+          "label": "Instance",
           "multi": false,
-          "name": "cluster",
+          "name": "instance",
           "options": [],
           "query": {
-            "query": "label_values(node_time_seconds, cluster)",
-            "refId": "Prometheus-cluster-Variable-Query"
+            "query": "label_values(node_uname_info{job=\"node-exporter\", sysname!=\"Darwin\"}, instance)",
+            "refId": "Prometheus-instance-Variable-Query"
           },
           "refresh": 2,
           "regex": "",
           "skipUrlSync": false,
-          "sort": 1,
+          "sort": 0,
           "tagValuesQuery": "",
           "tagsQuery": "",
           "type": "query",
@@ -1071,8 +1000,8 @@
       ]
     },
     "timezone": "utc",
-    "title": "Node Exporter / USE Method / Cluster",
-    "uid": "h-sDLJ37z",
+    "title": "Node Exporter / Nodes",
+    "uid": "v8yDYJqnz",
     "version": 1,
     "weekStart": ""
   }

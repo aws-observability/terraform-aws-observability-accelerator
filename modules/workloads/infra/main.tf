@@ -69,6 +69,10 @@ module "helm_addon" {
       name  = "globalScrapeTimeout"
       value = var.prometheus_config.global_scrape_timeout
     },
+     {
+      name  = "accountId"
+      value = local.context.aws_caller_identity_account_id
+    },
   ]
 
   irsa_config = {

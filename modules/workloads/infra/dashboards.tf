@@ -30,16 +30,14 @@ resource "grafana_dashboard" "cluster" {
 }
 
 
-resource "grafana_dashboard" "nodeexp-use-node" {
+resource "grafana_dashboard" "nodeexp_use_node" {
   count       = var.enable_dashboards ? 1 : 0
   folder      = var.dashboards_folder_id
   config_json = file("${path.module}/dashboards/nodeexporter-use-node.json")
 }
 
-resource "grafana_dashboard" "nodeexp-use-cluster" {
+resource "grafana_dashboard" "nodeexp_use_cluster" {
   count       = var.enable_dashboards ? 1 : 0
   folder      = var.dashboards_folder_id
   config_json = file("${path.module}/dashboards/nodeexporter-use-cluster.json")
 }
-
-

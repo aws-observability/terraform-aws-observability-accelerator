@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  group: "${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
   cancel-in-progress: true
 
 jobs:
@@ -87,7 +87,7 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         if: steps.changes.outputs.src== 'true'
         with:
-          terraform_version: 1.0.0
+          terraform_version: 1.2.9
 
       - if: steps.changes.outputs.src== 'true'
         run: terraform version

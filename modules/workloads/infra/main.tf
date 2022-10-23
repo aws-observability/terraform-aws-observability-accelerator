@@ -33,7 +33,7 @@ resource "helm_release" "prometheus_node_exporter" {
     }
   }
 }
-//*
+
 module "helm_addon" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.8.1"
 
@@ -69,7 +69,7 @@ module "helm_addon" {
       name  = "globalScrapeTimeout"
       value = var.prometheus_config.global_scrape_timeout
     },
-     {
+    {
       name  = "accountId"
       value = local.context.aws_caller_identity_account_id
     },
@@ -85,4 +85,3 @@ module "helm_addon" {
 
   addon_context = local.context
 }
-//*/

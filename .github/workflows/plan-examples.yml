@@ -87,7 +87,7 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         if: steps.changes.outputs.src== 'true'
         with:
-          terraform_version: 1.2.9
+          terraform_version: 1.1.8
 
       - if: steps.changes.outputs.src== 'true'
         run: terraform version

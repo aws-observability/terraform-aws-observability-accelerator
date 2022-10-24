@@ -191,7 +191,7 @@ add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0, < 1.3.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0 |
 | <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | >= 1.25.0 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.4.1 |

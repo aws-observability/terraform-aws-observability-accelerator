@@ -1,5 +1,5 @@
 module "cert_manager" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/cert-manager?ref=v4.8.1"
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/cert-manager?ref=v4.13.1"
   count  = var.enable_cert_manager ? 1 : 0
 
   helm_config   = var.helm_config

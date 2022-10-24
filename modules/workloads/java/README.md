@@ -11,7 +11,7 @@ This module provides monitoring for Java based workloads with the following reso
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0, < 1.3.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0 |
 | <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | >= 1.25.0 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.4.1 |
@@ -29,7 +29,7 @@ This module provides monitoring for Java based workloads with the following reso
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_helm_addon"></a> [helm\_addon](#module\_helm\_addon) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon | v4.12.1 |
+| <a name="module_helm_addon"></a> [helm\_addon](#module\_helm\_addon) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon | v4.13.1 |
 
 ## Resources
 

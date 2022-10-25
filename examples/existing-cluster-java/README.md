@@ -1,12 +1,12 @@
-# Existing Cluster with the AWS Observability accelerator base module and Infrastructure monitoring
+# Existing Cluster with the AWS Observability accelerator base module and Java monitoring
 
 
 This example demonstrates how to use the AWS Observability Accelerator Terraform
-modules with Infrastructure monitoring enabled.
+modules with Java monitoring enabled.
 The current example deploys the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) for Amazon EKS with its requirements and make use of existing
 Amazon Managed Service for Prometheus and Amazon Managed Grafana workspaces.
 
-It is based on the `infrastructure monitoring`, one of our [workloads modules](../../modules/workloads/)
+It is based on the `java module`, one of our [workloads modules](../../modules/workloads/)
 to provide an existing EKS cluster with an OpenTelemetry collector,
 curated Grafana dashboards, Prometheus alerting and recording rules with multiple
 configuration options on the cluster infrastructure.
@@ -35,7 +35,7 @@ git clone https://github.com/aws-observability/terraform-aws-observability-accel
 2. Initialize terraform
 
 ```console
-cd examples/existing-cluster-with-base-and-infra
+cd examples/existing-cluster-java
 terraform init
 ```
 
@@ -60,13 +60,7 @@ If you don't specify anything a new workspace will be created for you.
 
 6. Amazon Managed Grafana workspace
 
-To run this example you need an Amazon Managed Grafana workspace. If you have an existing workspace, create an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx`.
-
-To create a new one, within this example's Terraform state (sharing the same lifecycle with all the other resources):
-
-- Edit main.tf and set `enable_managed_grafana = true`
-- Run `terraform apply -target "module.eks_observability_accelerator.module.managed_grafana[0].aws_grafana_workspace.this[0]"`.
-- Run `export TF_VAR_managed_grafana_workspace_id=$(terraform output --raw managed_grafana_workspace_id)`.
+If you have an existing workspace, create an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx`.
 
 7. <a name="apikey"></a> Grafana API Key
 
@@ -94,26 +88,80 @@ terraform apply
 
 1. Prometheus datasource on Grafana
 
-Open your Grafana workspace and under Configuration -> Data sources, you should see `aws-observability-accelerator`. Open and click `Save & test`. You should see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
+Open your Grafana workspace and under Configuration -> Data sources, you will see `aws-observability-accelerator`. Open and click `Save & test`. You will then see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
 
 2. Grafana dashboards
 
-Go to the Dashboards panel of your Grafana workspace. You should see a list of dashboards under the `Observability Accelerator Dashboards`
+Go to the Dashboards panel of your Grafana workspace. There will be a folder called `Observability Accelerator Dashboards`
 
-<img width="1540" alt="image" src="https://user-images.githubusercontent.com/10175027/190000716-29e16698-7c90-49d6-8c37-79ca1790e2cc.png">
+<img width="832" alt="image" src="https://user-images.githubusercontent.com/97046295/194903648-57c55d30-6f90-4b03-9eb6-577aaba7dc22.png">
 
-Open a specific dashboard and you should be able to view its visualization
+Open the "Java/JMX" dashboard to view its visualization
 
-<img width="1721" alt="Screenshot 2022-08-30 at 20 01 32" src="https://user-images.githubusercontent.com/10175027/187515925-67864dd1-2b35-4be0-a15e-1e36805e8b29.png">
+
+![image](https://user-images.githubusercontent.com/10175027/195903211-c47a5746-daa7-41f2-a6ea-bfe13f630c63.png)
+
 
 2. Amazon Managed Service for Prometheus rules and alerts
 
-Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you should find new rules deployed.
+Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you will find new rules deployed.
 
-<img width="1629" alt="image" src="https://user-images.githubusercontent.com/10175027/189301297-4865e75d-2d71-434f-b5d0-9750b3533632.png">
+<img width="1314" alt="image" src="https://user-images.githubusercontent.com/97046295/194904104-09a28577-d149-478e-b0a1-dc21cb7effc1.png">
 
 
 To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
+
+
+## Deploy an Example Java Application
+
+In this section we will reuse an example from the AWS OpenTelemetry collector [repository](https://github.com/aws-observability/aws-otel-collector/blob/main/docs/developers/container-insights-eks-jmx.md). For convenience, the steps can be found below.
+
+1. Clone [this repository](https://github.com/aws-observability/aws-otel-test-framework) and navigate to the `sample-apps/jmx/` directory.
+
+2. Authenticate to Amazon ECR
+
+```sh
+export AWS_ACCOUNT_ID=`aws sts get-caller-identity --query Account --output text`
+export AWS_REGION={region}
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+```
+
+3. Create an Amazon ECR repository
+
+```sh
+aws ecr create-repository --repository-name prometheus-sample-tomcat-jmx \
+ --image-scanning-configuration scanOnPush=true \
+ --region $AWS_REGION
+```
+
+4. Build Docker image and push to ECR.
+
+```sh
+docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/prometheus-sample-tomcat-jmx:latest .
+docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/prometheus-sample-tomcat-jmx:latest
+```
+
+5. Install sample application
+
+```sh
+export SAMPLE_TRAFFIC_NAMESPACE=javajmx-sample
+curl https://raw.githubusercontent.com/aws-observability/aws-otel-test-framework/terraform/sample-apps/jmx/examples/prometheus-metrics-sample.yaml > metrics-sample.yaml
+sed -i "s/{{aws_account_id}}/$AWS_ACCOUNT_ID/g" metrics-sample.yaml
+sed -i "s/{{region}}/$AWS_REGION/g" metrics-sample.yaml
+sed -i "s/{{namespace}}/$SAMPLE_TRAFFIC_NAMESPACE/g" metrics-sample.yaml
+kubectl apply -f metrics-sample.yaml
+```
+
+Verify that the sample application is running:
+
+```sh
+kubectl get pods -n $SAMPLE_TRAFFIC_NAMESPACE
+
+NAME                              READY   STATUS              RESTARTS   AGE
+tomcat-bad-traffic-generator      1/1     Running             0          11s
+tomcat-example-7958666589-2q755   0/1     ContainerCreating   0          11s
+tomcat-traffic-generator          1/1     Running             0          11s
+```
 
 ## Advanced configuration
 
@@ -129,7 +177,7 @@ add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws
 
 ## Destroy resources
 
-If you leave this stack running, you will incur charges. To remove all resources
+If you leave this stack running, you will continue to incur charges. To remove all resources
 created by Terraform, [refresh your Grafana API key](#apikey) and run:
 
 ```sh
@@ -160,7 +208,7 @@ terraform destroy -var-file=terraform.tfvars
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_eks_observability_accelerator"></a> [eks\_observability\_accelerator](#module\_eks\_observability\_accelerator) | ../../ | n/a |
-| <a name="module_workloads_infra"></a> [workloads\_infra](#module\_workloads\_infra) | ../../modules/workloads/infra | n/a |
+| <a name="module_workloads_java"></a> [workloads\_java](#module\_workloads\_java) | ../../modules/workloads/java | n/a |
 
 ## Resources
 
@@ -187,7 +235,6 @@ terraform destroy -var-file=terraform.tfvars
 | <a name="output_eks_cluster_id"></a> [eks\_cluster\_id](#output\_eks\_cluster\_id) | EKS Cluster Id |
 | <a name="output_eks_cluster_version"></a> [eks\_cluster\_version](#output\_eks\_cluster\_version) | EKS Cluster version |
 | <a name="output_grafana_dashboard_urls"></a> [grafana\_dashboard\_urls](#output\_grafana\_dashboard\_urls) | URLs for dashboards created |
-| <a name="output_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#output\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana workspace ID |
 | <a name="output_managed_prometheus_workspace_endpoint"></a> [managed\_prometheus\_workspace\_endpoint](#output\_managed\_prometheus\_workspace\_endpoint) | Amazon Managed Prometheus workspace endpoint |
 | <a name="output_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#output\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus workspace ID |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

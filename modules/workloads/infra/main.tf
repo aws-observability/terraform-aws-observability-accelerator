@@ -35,13 +35,13 @@ resource "helm_release" "prometheus_node_exporter" {
 }
 
 module "helm_addon" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.8.1"
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.13.1"
 
   helm_config = merge(
     {
       name        = local.name
       chart       = "${path.module}/otel-config"
-      version     = "0.3.0"
+      version     = "0.3.1"
       namespace   = local.namespace
       description = "ADOT helm Chart deployment configuration"
     },
@@ -68,6 +68,10 @@ module "helm_addon" {
     {
       name  = "globalScrapeTimeout"
       value = var.prometheus_config.global_scrape_timeout
+    },
+    {
+      name  = "accountId"
+      value = local.context.aws_caller_identity_account_id
     },
   ]
 

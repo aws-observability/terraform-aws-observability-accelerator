@@ -3,6 +3,7 @@ resource "grafana_data_source" "cloudwatch" {
   name       = local.name
   is_default = true
   json_data {
+    default_region = var.aws_region
     sigv4_auth      = true
     sigv4_auth_type = "workspace-iam-role"
     sigv4_region    = var.aws_region

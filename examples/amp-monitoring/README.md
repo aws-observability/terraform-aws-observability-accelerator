@@ -107,15 +107,15 @@ In us-east-1 region an alarm is created for billing. This alarm utilizes anomaly
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.34.0 |
-| <a name="provider_grafana"></a> [grafana](#provider\_grafana) | 1.25.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.36.1 |
+| <a name="provider_grafana"></a> [grafana](#provider\_grafana) | 1.30.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_amp_monitor"></a> [amp\_monitor](#module\_amp\_monitor) | ../../modules/workloads/amp-monitoring | n/a |
-| <a name="module_managed_grafana"></a> [managed\_grafana](#module\_managed\_grafana) | terraform-aws-modules/managed-service-grafana/aws | ~> 1.3 |
+| <a name="module_billing"></a> [billing](#module\_billing) | ../../modules/Billing | n/a |
 
 ## Resources
 
@@ -129,9 +129,8 @@ In us-east-1 region an alarm is created for billing. This alarm utilizes anomaly
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS Region | `string` | n/a | yes |
-| <a name="input_enable_managed_grafana"></a> [enable\_managed\_grafana](#input\_enable\_managed\_grafana) | Creates a new Amazon Managed Grafana Workspace | `bool` | `true` | no |
-| <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | API key for authorizing the Grafana provider to make changes to Amazon Managed Grafana | `string` | `""` | no |
-| <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana (AMG) workspace ID | `string` | `""` | no |
+| <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | API key for authorizing the Grafana provider to make changes to Amazon Managed Grafana | `string` | n/a | yes |
+| <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana (AMG) workspace ID | `string` | n/a | yes |
 | <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Service for Prometheus Workspace ID to create Alarms for | `string` | n/a | yes |
 
 ## Outputs

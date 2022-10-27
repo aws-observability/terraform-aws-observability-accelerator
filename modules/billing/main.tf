@@ -25,7 +25,7 @@ resource "aws_cloudwatch_metric_alarm" "amp_billing_anomaly_detection" {
 
       dimensions = {
         ServiceName = "Prometheus"
-        Currencty = "USD"
+        Currencty   = "USD"
       }
     }
   }

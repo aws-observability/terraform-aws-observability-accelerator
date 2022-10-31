@@ -92,7 +92,8 @@ module "workloads_infra" {
 
 Grafana Dashboards
 
-<img width="1719" alt="image" src="https://user-images.githubusercontent.com/10175027/187661363-608cdfcf-ed13-4ddd-a198-e761b78d2291.png">
+<img width="2056" alt="image" src="https://user-images.githubusercontent.com/10175027/199110753-9bc7a9b7-1b45-4598-89d3-32980154080e.png">
+
 
 Check the the [complete example](./examples/existing-cluster-with-base-and-infra/)
 

@@ -2164,11 +2164,6 @@
         "type": "datasource"
       },
       {
-        "current": {
-          "selected": false,
-          "text": "eks-cluster-with-vpc",
-          "value": "eks-cluster-with-vpc"
-        },
         "datasource": {
           "type": "prometheus",
           "uid": "$datasource"
@@ -2193,11 +2188,6 @@
         "useTags": false
       },
       {
-        "current": {
-          "selected": false,
-          "text": "rust-api-example",
-          "value": "rust-api-example"
-        },
         "datasource": {
           "type": "prometheus",
           "uid": "$datasource"
@@ -2222,11 +2212,6 @@
         "useTags": false
       },
       {
-        "current": {
-          "selected": false,
-          "text": "deployment",
-          "value": "deployment"
-        },
         "datasource": {
           "type": "prometheus",
           "uid": "$datasource"
@@ -2251,11 +2236,6 @@
         "useTags": false
       },
       {
-        "current": {
-          "selected": false,
-          "text": "rust-api-example",
-          "value": "rust-api-example"
-        },
         "datasource": {
           "type": "prometheus",
           "uid": "$datasource"

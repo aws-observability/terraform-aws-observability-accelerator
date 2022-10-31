@@ -1397,11 +1397,6 @@
         "type": "datasource"
       },
       {
-        "current": {
-          "selected": false,
-          "text": "eks-cluster-with-vpc",
-          "value": "eks-cluster-with-vpc"
-        },
         "datasource": {
           "type": "prometheus",
           "uid": "$datasource"
@@ -1426,15 +1421,6 @@
         "useTags": false
       },
       {
-        "current": {
-          "selected": true,
-          "text": [
-            "ip-10-0-10-140.eu-central-1.compute.internal"
-          ],
-          "value": [
-            "ip-10-0-10-140.eu-central-1.compute.internal"
-          ]
-        },
         "datasource": {
           "type": "prometheus",
           "uid": "$datasource"

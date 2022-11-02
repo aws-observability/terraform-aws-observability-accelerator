@@ -24,8 +24,8 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": 265,
-  "iteration": 1666555993222,
+  "id": 284,
+  "iteration": 1667228305223,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -70,7 +70,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 10,
+            "fillOpacity": 5,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -166,7 +166,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 2,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -545,7 +545,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 2,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -652,7 +652,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 2,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -759,7 +759,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 2,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -1008,7 +1008,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 2,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -1104,7 +1104,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 2,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -1226,7 +1226,7 @@
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "default",
           "value": "default"
         },
@@ -1277,6 +1277,6 @@
   "timezone": "utc",
   "title": "Node Exporter / Nodes",
   "uid": "v8yDYJqnz",
-  "version": 41,
+  "version": 18,
   "weekStart": ""
 }

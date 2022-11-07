@@ -12,7 +12,7 @@ Ensure that you have the following tools installed locally:
 1. [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 2. [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 
-It is also required to have existing AMP and Grafana workspaces. These could be created through the other example modules in this repository.
+It is also required to have existing AMP and Grafana workspaces. These could be created through the [other example modules](../) in this repository.
 
 ## Setup
 

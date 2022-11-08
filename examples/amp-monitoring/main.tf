@@ -20,11 +20,6 @@ data "aws_grafana_workspace" "this" {
 locals {
   region          = var.aws_region
   amg_ws_endpoint = "https://${data.aws_grafana_workspace.this[0].endpoint}"
-  amg_ws_id       = var.managed_grafana_workspace_id
-  tags = {
-    Source = "github.com/aws-observability/terraform-aws-observability-accelerator"
-  }
-  name = "aws-observability-accelerator"
 }
 
 resource "grafana_folder" "this" {
@@ -47,7 +42,7 @@ module "amp_monitor" {
 }
 
 module "billing" {
-  source = "../../modules/Billing"
+  source = "../../modules/billing"
   providers = {
     aws = aws.billing_region
   }

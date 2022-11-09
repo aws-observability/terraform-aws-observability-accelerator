@@ -73,6 +73,10 @@ module "helm_addon" {
       name  = "accountId"
       value = local.context.aws_caller_identity_account_id
     },
+    {
+      name  = "enableTracing"
+      value = var.enable_tracing
+    },
   ]
 
   irsa_config = {

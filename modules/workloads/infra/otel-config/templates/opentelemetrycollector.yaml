@@ -7,7 +7,15 @@ spec:
   mode: deployment
   serviceAccount: adot-collector-kubeprometheus
   config: |
+    {{ if .Values.enableTracing }}
     receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: {{ .Values.xRayGrpcEndpoint }}
+          http:
+            endpoint: {{ .Values.xRayHttpEndpoint }}
+    {{ end }}
       prometheus:
         config:
           global:
@@ -1563,6 +1571,8 @@ spec:
                   source_labels: [__meta_kubernetes_endpoint_node_name]
                   target_label: nodename
     exporters:
+       awsxray:
+        region: {{ .Values.region }}
       prometheusremotewrite:
         endpoint: {{ .Values.ampurl }}
         auth:
@@ -1578,9 +1588,25 @@ spec:
         endpoint: :1888
       zpages:
         endpoint: :55679
+    # processors:
+    #   resourcedetection:
+    #     detectors:
+    #       - env
+    #       - system
+    #       - ecs
+    #       - ec2
+    #   batch/traces:
+    #     timeout: 1s
+    #     send_batch_size: 50
     service:
       extensions: [pprof, zpages, health_check, sigv4auth]
       pipelines:
         metrics:
           receivers: [prometheus]
           exporters: [logging, prometheusremotewrite]
+        {{ if .Values.enableTracing }}
+        traces:
+          receivers: [otlp]
+          # processors: [resourcedetection, batch/traces]
+          exporters: [awsxray]
+        {{ end }}

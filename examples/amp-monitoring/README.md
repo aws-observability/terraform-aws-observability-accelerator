@@ -19,24 +19,24 @@ It is also required to have existing AMP and Grafana workspaces. These could be 
 This example uses a local terraform state. If you need states to be saved remotely,
 on Amazon S3 for example, visit the [terraform remote states](https://www.terraform.io/language/state/remote) documentation
 
-1. Clone the repo using the command below
+1. **Clone the repo using the command below**
 
-```
+```sh
 git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
 ```
 
-2. Initialize terraform
+2. **Initialize terraform**
 
-```console
+```sh
 cd examples/amp-monitoring
 terraform init
 ```
 
-3. AWS Region
+3. **AWS Region**
 
 Specify the AWS Region where the resources will be deployed. Edit the `terraform.tfvars` file and modify `aws_region="..."`. You can also use environement variables `export TF_VAR_aws_region=xxx`.
 
-4. Amazon Managed Service for Prometheus workspace
+4. **Amazon Managed Service for Prometheus workspace**
 
 If you have an existing workspace, add `managed_prometheus_workspace_id=ws-xxx`
 or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws-xxx`.
@@ -47,14 +47,16 @@ If you would like to create CloudWatch alarms for multiple workspaces in a regio
 
 You can use the following export command to create alarms for all of the workspaces in a region.
 
-`export TF_VAR_managed_prometheus_workspace_id=$(aws amp list-workspaces --query 'workspaces[].workspaceId' --output text |  sed -E 's/\t/,/g')`
+```sh
+export TF_VAR_managed_prometheus_workspace_id=$(aws amp list-workspaces --query 'workspaces[].workspaceId' --output text |  sed -E 's/\t/,/g')
+```
 
-5. Amazon Managed Grafana workspace
+5. **Amazon Managed Grafana workspace**
 
 Use an existing workspace, add `managed_grafana_workspace_id=g-xxx`
 or use an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx`.
 
-6. <a name="apikey"></a> Grafana API Key
+6. <a name="apikey"></a> **Grafana API Key**
 
 Amazon Managed Service for Grafana provides a control plane API for generating Grafana API keys. We will provide to Terraform
 a short lived API key to run the `apply` or `destroy` command.
@@ -78,11 +80,11 @@ terraform apply
 
 ## Visualization
 
-1. Cloudwatch datasource on Grafana
+1. **Cloudwatch datasource on Grafana**
 
 Open your Grafana workspace and under Configuration -> Data sources, you should see `aws-observability-accelerator-cloudwatch`. Open and click `Save & test`. You should see a notification confirming that the CloudWatch datasource is ready to be used on Grafana.
 
-2. Grafana dashboards
+2. **Grafana dashboards**
 
 Go to the Dashboards panel of your Grafana workspace. You should see a list of dashboards under the `AMP Monitoring Dashboards` folder.
 
@@ -90,7 +92,7 @@ Open the `AMP Accelerator Dashboard` to see a visualization of the AMP workspace
 
 <img width="1786" alt="Screen Shot 2022-10-11 at 2 16 17 PM" src="https://user-images.githubusercontent.com/97046295/196742772-fba1a5fb-dd38-445c-88a9-607f38994713.png">
 
-3. Amazon Managed Service for Prometheus CloudWatch Alarms.
+3. **Amazon Managed Service for Prometheus CloudWatch Alarms.**
 
 Open the CloudWatch console and click `Alarms` > `All Alarms` to review the service limit alarms.
 

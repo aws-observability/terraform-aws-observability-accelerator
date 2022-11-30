@@ -41,6 +41,14 @@ Specify the AWS Region where the resources will be deployed. Edit the `terraform
 If you have an existing workspace, add `managed_prometheus_workspace_id=ws-xxx`
 or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws-xxx`.
 
+If you would like to create CloudWatch alarms for multiple workspaces in a region you can pass them in a comma seperated string.
+
+`managed_prometheus_workspace_id = "ws-xxx,ws-xxx"`
+
+You can use the following export command to create alarms for all of the workspaces in a region.
+
+`export TF_VAR_managed_prometheus_workspace_id=$(aws amp list-workspaces --query 'workspaces[].workspaceId' --output text |  sed -E 's/\t/,/g')`
+
 5. Amazon Managed Grafana workspace
 
 Use an existing workspace, add `managed_grafana_workspace_id=g-xxx`

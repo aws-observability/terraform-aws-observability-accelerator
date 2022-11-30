@@ -1,5 +1,6 @@
 #CloudWatch Alerts on AMP Usage
 resource "aws_cloudwatch_metric_alarm" "active-series-metrics" {
+  for_each = local.amp_list
   alarm_name                = "active-series-metrics"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "2"
@@ -18,7 +19,7 @@ resource "aws_cloudwatch_metric_alarm" "active-series-metrics" {
 
       dimensions = {
         Type       = "Resource"
-        ResourceId = var.managed_prometheus_workspace_id
+        ResourceId = each.key
         Resource   = "ActiveSeries"
         Service    = "Prometheus"
         Class      = "None"
@@ -28,6 +29,7 @@ resource "aws_cloudwatch_metric_alarm" "active-series-metrics" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "ingestion_rate" {
+  for_each = local.amp_list
   alarm_name                = "ingestion_rate"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "2"
@@ -47,7 +49,7 @@ resource "aws_cloudwatch_metric_alarm" "ingestion_rate" {
 
       dimensions = {
         Type       = "Resource"
-        ResourceId = var.managed_prometheus_workspace_id
+        ResourceId = each.key
         Resource   = "IngestionRate"
         Service    = "Prometheus"
         Class      = "None"

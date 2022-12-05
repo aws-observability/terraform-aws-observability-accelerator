@@ -1,0 +1,49 @@
+site_name: AWS Observability Accelerator for Terraform
+docs_dir: 'docs'
+copyright: 'Copyright &copy; Amazon 2022'
+site_author: 'AWS'
+site_url: 'https://aws-observability.github.io/terraform-aws-observability-accelerator/'
+repo_name: 'aws-observability/terraform-aws-observability-accelerator'
+repo_url: 'https://github.com/aws-observability/terraform-aws-observability-accelerator'
+
+theme:
+  logo: ../images/aws-logo.png
+  favicon: ../images/aws-logo.png
+  name: material
+  font:
+    text: ember
+  #custom_dir: overrides
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+
+  palette:
+    primary: orange
+    accent: deep orange
+
+nav:
+  - Home: index.md
+  - Examples:
+    - EKS Cluster with VPC: Examples/eks-cluster.md
+    - Java: Examples/java.md
+    - Nginx: Examples/nginx.md
+    - Infrastructure: Examples/infra.md
+  - Modules:
+    - Amazon Distro For Open Telemetry Operator: Modules/adot-mod.md
+    - Infrastructure: Modules/infra-mod.md
+    - Java: Modules/java-mod.md
+    - Nginx: Modules/nginx-mod.md
+  - Contributors: contributors.md
+
+markdown_extensions:
+    - toc:
+        permalink: true
+    - admonition
+    - codehilite
+    - footnotes
+    - pymdownx.critic    
+
+plugins:
+    - search

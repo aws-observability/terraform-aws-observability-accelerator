@@ -23,7 +23,7 @@ locals {
 }
 
 resource "grafana_folder" "this" {
-  title = "AMP Monitoring Dashboards"
+  title = "Managed Prometheus Monitoring Dashboards"
 }
 
 output "grafana_dashboards_folder_id" {
@@ -31,11 +31,11 @@ output "grafana_dashboards_folder_id" {
   value       = grafana_folder.this.id
 }
 
-module "amp_monitor" {
-  source                          = "../../modules/workloads/amp-monitoring"
+module "managed-prometheus-monitoring" {
+  source                          = "../../modules/workloads/managed-prometheus-monitoring"
   dashboards_folder_id            = resource.grafana_folder.this.id
   aws_region                      = local.region
-  managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+  managed_prometheus_workspace_ids = var.managed_prometheus_workspace_ids
   depends_on = [
     resource.grafana_folder.this
   ]

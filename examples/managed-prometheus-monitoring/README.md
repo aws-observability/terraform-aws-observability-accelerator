@@ -1,4 +1,4 @@
-# Existing AMP Workspace Observability Pattern
+# Existing Managed Prometheus Workspace Observability Pattern
 
 This example demonstrates how to use the AWS Observability Accelerator Terraform
 modules with Amazon Managed Prometheus (AMP) workspace monitoring enabled.

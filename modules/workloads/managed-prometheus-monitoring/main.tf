@@ -1,3 +1,8 @@
+provider "aws" {
+  region = "us-east-1"
+  alias  = "billing_region"
+}
+
 resource "grafana_data_source" "cloudwatch" {
   type       = "cloudwatch"
   name       = local.name
@@ -13,4 +18,11 @@ resource "grafana_data_source" "cloudwatch" {
 resource "grafana_dashboard" "this" {
   folder      = var.dashboards_folder_id
   config_json = file("${path.module}/dashboards/amp-dashboard.json")
+}
+
+module "billing" {
+  source = "../../workloads/managed-prometheus-monitoring/billing"
+  providers = {
+    aws = aws.billing_region
+  }
 }

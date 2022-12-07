@@ -2,11 +2,6 @@ provider "aws" {
   region = local.region
 }
 
-provider "aws" {
-  region = "us-east-1"
-  alias  = "billing_region"
-}
-
 provider "grafana" {
   url  = local.amg_ws_endpoint
   auth = var.grafana_api_key
@@ -36,14 +31,4 @@ module "managed-prometheus-monitoring" {
   dashboards_folder_id            = resource.grafana_folder.this.id
   aws_region                      = local.region
   managed_prometheus_workspace_ids = var.managed_prometheus_workspace_ids
-  depends_on = [
-    resource.grafana_folder.this
-  ]
-}
-
-module "billing" {
-  source = "../../modules/billing"
-  providers = {
-    aws = aws.billing_region
-  }
 }

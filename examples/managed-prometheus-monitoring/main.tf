@@ -18,17 +18,12 @@ locals {
 }
 
 resource "grafana_folder" "this" {
-  title = "Managed Prometheus Monitoring Dashboards"
+  title = "Amazon Managed Prometheus monitoring dashboards"
 }
 
-output "grafana_dashboards_folder_id" {
-  description = "Grafana folder ID for automatic dashboards. Required by workload modules"
-  value       = grafana_folder.this.id
-}
-
-module "managed-prometheus-monitoring" {
-  source                          = "../../modules/workloads/managed-prometheus-monitoring"
-  dashboards_folder_id            = resource.grafana_folder.this.id
-  aws_region                      = local.region
+module "managed_prometheus_monitoring" {
+  source                           = "../../modules/workloads/managed-prometheus-monitoring"
+  dashboards_folder_id             = resource.grafana_folder.this.id
+  aws_region                       = local.region
   managed_prometheus_workspace_ids = var.managed_prometheus_workspace_ids
 }

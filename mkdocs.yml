@@ -16,12 +16,11 @@ theme:
   icon:
     repo: fontawesome/brands/github
   features:
-    - navigation.tabs
     - navigation.tabs.sticky
 
   palette:
-    primary: orange
-    accent: deep orange
+    primary: indigo
+    accent: grey
 
 nav:
   - Home: index.md
@@ -43,7 +42,7 @@ markdown_extensions:
     - admonition
     - codehilite
     - footnotes
-    - pymdownx.critic    
+    - pymdownx.critic   
 
 plugins:
     - search

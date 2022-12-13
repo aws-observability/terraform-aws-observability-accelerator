@@ -22,11 +22,14 @@ dashboards and alerts for monitoring:
 - Java/JMX workloads (running on Amazon EKS)
 - Amazon Managed Service for Prometheus workspaces with Amazon CloudWatch
 
-
 These modules can be directly configured in your exisiting Terraform configurations or ready
 to be deployed in our packaged
 [examples](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples)
 
+We have supporting examples for quick setup such as:
+
+- Creating an empty Amazon EKS cluster and a VPC
+- Creating and configure an Amazon Managed Grafana workspace with SSO
 
 ## Motivation
 

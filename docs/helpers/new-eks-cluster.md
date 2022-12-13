@@ -2,17 +2,19 @@
 
 Note: This example is a subset from [this EKS Blueprint example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/eks-cluster-with-new-vpc)
 
-This example deploys the following Basic EKS Cluster with VPC
+This example deploys the following:
 
-- Creates a new sample VPC, 3 Private Subnets and 3 Public Subnets
-- Creates Internet gateway for Public Subnets and NAT Gateway for Private Subnets
-- Creates EKS Cluster Control plane with one managed node group
+- New sample VPC, 3 Private Subnets and 3 Public Subnets
+- Internet gateway for Public Subnets and NAT Gateway for Private Subnets
+- EKS Cluster Control plane with one managed node group
 
 ## How to Deploy
 
+Visit the [prerequisites](section) for the minimum required to run this example
+
 ### Prerequisites
 
-Ensure that you have installed the following tools in your Mac or Windows Laptop before start working with this module and run Terraform Plan and Apply
+Ensure that you have installed the following tools in your Mac or Windows Laptop before start working with this module and run `terraform plan` and `apply`
 
 1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
 2. [Kubectl](https://Kubernetes.io/docs/tasks/tools/)
@@ -97,3 +99,4 @@ Finally, destroy any additional resources that are not in the above modules
 ```sh
 terraform destroy -auto-approve
 ```
+

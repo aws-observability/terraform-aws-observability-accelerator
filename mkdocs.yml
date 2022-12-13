@@ -8,11 +8,11 @@ repo_url: 'https://github.com/aws-observability/terraform-aws-observability-acce
 
 theme:
   logo: ../images/aws-logo.png
-  favicon: ../images/aws-logo.png
+  favicon: ../images/aws-favicon.png
   name: material
   font:
     text: ember
-  #custom_dir: overrides
+  custom_dir: docs/overrides
   icon:
     repo: fontawesome/brands/github
   features:

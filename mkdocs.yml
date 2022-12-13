@@ -26,13 +26,15 @@ nav:
   - Home: index.md
   - Examples:
     - EKS Cluster with VPC: Examples/eks-cluster.md
-    - Java: Examples/java.md
-    - Nginx: Examples/nginx.md
     - Infrastructure: Examples/infra.md
+    - Java: Examples/java.md
+    - Managed Prometheus: Examples/managed-prometheus.md
+    - Nginx: Examples/nginx.md
   - Modules:
     - Amazon Distro For Open Telemetry Operator: Modules/adot-mod.md
     - Infrastructure: Modules/infra-mod.md
     - Java: Modules/java-mod.md
+    - Managed Prometheus: Modules/managed-prometheus.md
     - Nginx: Modules/nginx-mod.md
   - Contributors: contributors.md
 

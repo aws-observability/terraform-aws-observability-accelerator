@@ -1,5 +1,5 @@
 variable "helm_config" {
-  description = "Helm provider config for ADOT Operator AddOn"
+  description = "Helm provider config for cert-manager"
   type        = any
   default     = { version = "v1.8.2" }
 }

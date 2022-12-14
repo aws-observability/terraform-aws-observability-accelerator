@@ -167,6 +167,11 @@ resource "kubernetes_cluster_role_v1" "adot" {
     verbs          = ["create", "delete", "get", "list", "patch", "update", "watch"]
   }
   rule {
+    api_groups = ["networking.k8s.io"]
+    resources  = ["ingresses"]
+    verbs      = ["create", "delete", "get", "list", "patch", "update", "watch"]
+  }
+  rule {
     non_resource_urls = ["/metrics"]
     verbs             = ["get"]
   }

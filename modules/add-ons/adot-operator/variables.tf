@@ -1,5 +1,5 @@
 variable "helm_config" {
-  description = "Helm provider config for ADOT Operator AddOn"
+  description = "Helm provider config for cert-manager"
   type        = any
   default     = { version = "v1.8.2" }
 }
@@ -33,7 +33,7 @@ variable "kubernetes_version" {
 }
 
 variable "addon_config" {
-  description = "Amazon EKS Managed CoreDNS Add-on config"
+  description = "Amazon EKS Managed ADOT Add-on config"
   type        = any
   default     = {}
 }

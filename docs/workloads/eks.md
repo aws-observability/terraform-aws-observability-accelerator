@@ -126,7 +126,7 @@ Go to the Dashboards panel of your Grafana workspace. You should see a list of d
 
 Open a specific dashboard and you should be able to view its visualization
 
-<img width="1721" alt="Screenshot 2022-08-30 at 20 01 32" src="https://user-images.githubusercontent.com/10175027/187515925-67864dd1-2b35-4be0-a15e-1e36805e8b29.png">
+<img width="2056" alt="cluster headlines" src="https://user-images.githubusercontent.com/10175027/199110753-9bc7a9b7-1b45-4598-89d3-32980154080e.png">
 
 2. Amazon Managed Service for Prometheus rules and alerts
 

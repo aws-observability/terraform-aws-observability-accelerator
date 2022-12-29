@@ -1,7 +1,4 @@
-# Existing Cluster with the AWS Observability accelerator base module and Java monitoring
-
-
-This example focuses on monitoring Java/JMX workloads running on Amazon EKS clusters.
+# Monitor Java/JMX applications running on Amazon EKS
 
 The current example deploys the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) for Amazon EKS with its requirements and make use of existing
 Amazon Managed Service for Prometheus and Amazon Managed Grafana workspaces.
@@ -11,20 +8,15 @@ to provide to an existing EKS cluster with an OpenTelemetry collector,
 curated Grafana dashboards, Prometheus alerting and recording rules with multiple
 configuration options on the cluster infrastructure.
 
-
 ## Prerequisites
 
-Ensure that you have the following tools installed locally:
-
-1. [aws cli v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-2. [kubectl](https://kubernetes.io/docs/tasks/tools/)
-3. [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
-
+Make sure to complete the [prerequisites section](/terraform-aws-observability-accelerator/concepts/#prerequisites)
+before proceeding.
 
 ## Setup
 
 This example uses a local terraform state. If you need states to be saved remotely,
-on Amazon S3 for example, visit the [terraform remote states](https://www.terraform.io/language/state/remote) documentation
+on Amazon S3 for example, visit the [terraform remote states](https://www.terraform.io/language/state/remote) documentation.
 
 Here we use terraform supported environment variables, but you can also edit the `terraform.tfvars` file directly and deploy
 with `terraform apply -var-file=terraform.tfvars`. Terraform tfvars file can be useful if
@@ -40,7 +32,11 @@ terraform init
 
 ### 2. AWS Region
 
-Specify the AWS Region where the resources will be deployed. Edit the `terraform.tfvars` file and modify `aws_region="..."`. You can also use environement variables `export TF_VAR_aws_region=xxx`.
+Specify the AWS Region where the resources will be deployed:
+
+```bash
+export TF_VAR_aws_region=xxx
+```
 
 ### 3. Amazon EKS Cluster
 
@@ -102,7 +98,7 @@ export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "
 
 ## Deploy
 
-Simply this command to deploy the example
+Simply run this command to deploy the example
 
 ```bash
 terraform apply
@@ -190,8 +186,22 @@ tomcat-traffic-generator          1/1     Running             0          11s
 ## Destroy resources
 
 If you leave this stack running, you will continue to incur charges. To remove all resources
-created by Terraform, [refresh your Grafana API key](#apikey) and run:
+created by Terraform, [refresh your Grafana API key](#6-grafana-api-key) and run the command below.
 
-```sh
+Be careful, this command will removing everything created by Terraform. If you wish
+to keep your Amazon Managed Grafana or Amazon Managed Service for Prometheus workspaces. Remove them
+from your terraform state before running the destroy command.
+
+```bash
 terraform destroy
+```
+
+To remove resources from your Terraform state, run
+
+```bash
+# grafana workspace
+terraform state rm "module.eks_observability_accelerator.module.managed_grafana[0].aws_grafana_workspace.this[0]"
+
+# prometheus workspace
+terraform state rm "module.eks_observability_accelerator.aws_prometheus_workspace.this[0]"
 ```

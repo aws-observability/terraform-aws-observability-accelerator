@@ -106,7 +106,7 @@ export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "
 
 ## Deploy
 
-Simply this command to deploy the example
+Simply run this command to deploy the example
 
 ```bash
 terraform apply

@@ -1,4 +1,4 @@
-# Existing Managed Prometheus Workspace Observability Pattern
+# Monitoring Amazon Managed Service for Prometheus workspaces
 
 This example allows you to monitor your Amazon Managed Service for Prometheus workspaces
 using Amazon CloudWatch vended metrics and logs. It also creates configurable CloudWatch

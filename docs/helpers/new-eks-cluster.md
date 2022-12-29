@@ -1,6 +1,6 @@
-# EKS Cluster Deployment with new VPC
+# Creating a new Amazon EKS cluster with VPC
 
-Note: This example is a subset from [this EKS Blueprint example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/eks-cluster-with-new-vpc)
+> Note: This example is a subset from [this EKS Blueprint example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/eks-cluster-with-new-vpc)
 
 This example deploys the following:
 
@@ -8,77 +8,54 @@ This example deploys the following:
 - Internet gateway for Public Subnets and NAT Gateway for Private Subnets
 - EKS Cluster Control plane with one managed node group
 
-## How to Deploy
+## Prerequisites
 
-Visit the [prerequisites](section) for the minimum required to run this example
-
-### Prerequisites
-
-Ensure that you have installed the following tools in your Mac or Windows Laptop before start working with this module and run `terraform plan` and `apply`
-
-1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
-2. [Kubectl](https://Kubernetes.io/docs/tasks/tools/)
-3. [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
-
-### Minimum IAM Policy
-
-> **Note**: The policy resource is set as `*` to allow all resources, this is not a recommended practice.
-
-You can find the policy [here](min-iam-policy.json)
+Make sure to complete the [prerequisites section](/terraform-aws-observability-accelerator/concepts/#prerequisites)
+before proceeding.
 
 
-### Deployment Steps
+## Setup
 
-#### Step 1: Clone the repo using the command below
+### 1. Download sources and initialize Terraform
 
-```sh
-git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
 ```
-
-#### Step 2: Run Terraform INIT
-
-Initialize a working directory with configuration files
-
-```sh
+git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
 cd examples/eks-cluster-with-vpc/
 terraform init
 ```
 
-#### Step 3: Run Terraform PLAN
+### 2. AWS Region
 
-Verify the resources created by this execution
+Specify the AWS Region where the resources will be deployed:
 
-```sh
-export TF_VAR_aws_region=<ENTER YOUR REGION>   # Select your own region
-terraform plan
+```bash
+export TF_VAR_aws_region=xxx
 ```
 
-#### Step 4: Finally, Terraform APPLY
+## Deploy
 
-**Deploy the pattern**
+Simply run this command to deploy the example
 
-```sh
+```bash
 terraform apply
 ```
 
-Enter `yes` to apply.
-
-### Configure `kubectl` and test cluster
+##  Login to your cluster
 
 EKS Cluster details can be extracted from terraform output or from AWS Console to get the name of cluster.
-This following command used to update the `kubeconfig` in your local machine where you run kubectl commands to interact with your EKS Cluster.
+Use the following commands in your local machine where you want to interact with your EKS Cluster.
 
-#### Step 5: Run `update-kubeconfig` command
+### 1. Run `update-kubeconfig` command
 
 `~/.kube/config` file gets updated with cluster details and certificate from the below command
 
     aws eks --region <enter-your-region> update-kubeconfig --name <cluster-name>
 
-#### Step 6: List all the worker nodes by running the command below
+### 2. List all the worker nodes by running the command below
 
     kubectl get nodes
 
-#### Step 7: List all the pods running in `kube-system` namespace
+### 3. List all the pods running in `kube-system` namespace
 
     kubectl get pods -n kube-system
 

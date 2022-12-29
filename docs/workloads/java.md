@@ -1,9 +1,6 @@
 # Monitor Java/JMX applications running on Amazon EKS
 
-The current example deploys the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) for Amazon EKS with its requirements and make use of existing
-Amazon Managed Service for Prometheus and Amazon Managed Grafana workspaces.
-
-It is based on the `java module`, one of our [workloads modules](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/workloads/java)
+The current example deploys the [java workload module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/workloads/java),
 to provide to an existing EKS cluster with an OpenTelemetry collector,
 curated Grafana dashboards, Prometheus alerting and recording rules with multiple
 configuration options on the cluster infrastructure.
@@ -14,13 +11,6 @@ Make sure to complete the [prerequisites section](/terraform-aws-observability-a
 before proceeding.
 
 ## Setup
-
-This example uses a local terraform state. If you need states to be saved remotely,
-on Amazon S3 for example, visit the [terraform remote states](https://www.terraform.io/language/state/remote) documentation.
-
-Here we use terraform supported environment variables, but you can also edit the `terraform.tfvars` file directly and deploy
-with `terraform apply -var-file=terraform.tfvars`. Terraform tfvars file can be useful if
-you need to track changes as part of a Git repository or CI/CD pipeline.
 
 ### 1. Download sources and initialize Terraform
 
@@ -98,7 +88,7 @@ export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "
 
 ## Deploy
 
-Simply run this command to deploy the example
+Simply run this command to deploy.
 
 ```bash
 terraform apply

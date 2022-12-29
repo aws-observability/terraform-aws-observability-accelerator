@@ -14,13 +14,6 @@ before proceeding.
 
 ## Setup
 
-This example uses a local terraform state. If you need states to be saved remotely,
-on Amazon S3 for example, visit the [terraform remote states](https://www.terraform.io/language/state/remote) documentation.
-
-Here we use terraform supported environment variables, but you can also edit the `terraform.tfvars` file directly and deploy
-with `terraform apply -var-file=terraform.tfvars`. Terraform tfvars file can be useful if
-you need to track changes as part of a Git repository or CI/CD pipeline.
-
 
 ### 1. Download sources and initialize Terraform
 

@@ -23,13 +23,6 @@ before proceeding.
 
 ## Setup
 
-This example uses a local terraform state. If you need states to be saved remotely,
-on Amazon S3 for example, visit the [terraform remote states](https://www.terraform.io/language/state/remote) documentation.
-
-Here we use terraform supported environment variables, but you can also edit the `terraform.tfvars` file directly and deploy
-with `terraform apply -var-file=terraform.tfvars`. Terraform tfvars file can be useful if
-you need to track changes as part of a Git repository or CI/CD pipeline.
-
 ### 1. Download sources and initialize Terraform
 
 ```
@@ -81,7 +74,8 @@ To run this example you need an Amazon Managed Grafana workspace. If you have an
 export TF_VAR_managed_grafana_workspace_id=g-xxx
 ```
 
-To create a new one, within this example's Terraform state (sharing the same lifecycle with all the other resources):
+To create a new one, within this example's Terraform state (sharing the same lifecycle with all the
+other resources created by Terraform):
 
 - Edit main.tf and set `enable_managed_grafana = true`
 - Run
@@ -137,17 +131,6 @@ Open the Amazon Managed Service for Prometheus console and view the details of y
 
 To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
 
-## Advanced configuration
-
-1. Cross-region Amazon Managed Prometheus workspace
-
-If your existing Amazon Managed Prometheus workspace is in another AWS Region,
-add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws-xxx`.
-
-2. Cross-region Amazon Managed Grafana workspace
-
-If your existing Amazon Managed Prometheus workspace is in another AWS Region,
-add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws-xxx`.
 
 ## Destroy resources
 
@@ -171,3 +154,6 @@ terraform state rm "module.eks_observability_accelerator.module.managed_grafana[
 # prometheus workspace
 terraform state rm "module.eks_observability_accelerator.aws_prometheus_workspace.this[0]"
 ```
+
+
+> **Note:** To view all the features proposed by this module, visit the [module documentation](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/workloads/infra).

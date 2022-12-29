@@ -16,6 +16,19 @@ permissions required [in this file](https://github.com/aws-observability/terrafo
 > **Note**: The policy resource is set as `*` to allow all resources, this is not a recommended practice.
 You should restrict instead to the ARNs when applicable.
 
+### Terraform states and variables
+
+By default, our examples are using local Terraform states. If you need
+your Terraform states to be saved remotely, on Amazon S3, visit the
+[terraform remote states](https://www.terraform.io/language/state/remote) documentation.
+
+For simplicity, we use Terraform supported environment variables.
+You can also edit the `terraform.tfvars` files directly and deploy
+with `terraform apply -var-file=terraform.tfvars`. Terraform tfvars file can be useful if
+you need to track changes as part of a Git repository or CI/CD pipeline.
+
+> **Note:** When using `tfvars` files, always be careful to not store and commit any secrets (keys, passwords, ...)
+
 ## Base module
 
 The base module allows you to configure the AWS Observability services for your cluster and the AWS Distro for OpenTelemetry (ADOT) Operator as the signals collection mechanism.
@@ -70,6 +83,6 @@ All the modules come with end-to-end deployable examples.
 You can find **workload** examples like [Amazon EKS infrstructure monitoring](/terraform-aws-observability-accelerator/workloads/eks/) or [monitoring your Amazon Managed Service for Prometheus workspace](terraform-aws-observability-accelerator/workloads/managed-prometheus/) and more.
 
 
-## Getting started with AWS Observability Services
+## Getting started with AWS Observability services
 
 If you are new to AWS Observability services, or want to dive deeper into them, check our [One Observability Workshop](https://catalog.workshops.aws/observability/) for a hands-on experience in a self-paced environement or at an AWS venue.

@@ -25,12 +25,12 @@ theme:
 nav:
   - Home: index.md
   - Concepts: concepts.md
-  - Amazon EKS cluster monitoring: eks.md
-  - Workloads monitoring:
+  - Amazon EKS Cluster Monitoring: eks.md
+  - Workload Monitoring:
       - Java/JMX: workloads/java.md
       - Nginx: workloads/nginx.md
-      - Amazon Managed Service for Prometheus workspaces: workloads/managed-prometheus.md
-  - Supporting examples:
+      - Amazon Managed Service for Prometheus Workspaces: workloads/managed-prometheus.md
+  - Supporting Examples:
       - EKS Cluster with VPC: helpers/new-eks-cluster.md
         # - Amazon Managed Grafana setup: helpers/managed-grafana.md
   - Contributors: contributors.md

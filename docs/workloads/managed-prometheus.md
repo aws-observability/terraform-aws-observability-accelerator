@@ -19,7 +19,7 @@ before proceeding.
 
 ```bash
 git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
-cd examples/amp-monitoring
+cd examples/managed-prometheus-monitoring
 terraform init
 ```
 

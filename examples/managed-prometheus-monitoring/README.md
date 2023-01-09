@@ -109,7 +109,7 @@ In us-east-1 region an alarm is created for billing. This alarm utilizes anomaly
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0, < 1.3.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0 |
 | <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | >= 1.25.0 |
 
@@ -117,15 +117,14 @@ In us-east-1 region an alarm is created for billing. This alarm utilizes anomaly
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.36.1 |
-| <a name="provider_grafana"></a> [grafana](#provider\_grafana) | 1.30.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.46.0 |
+| <a name="provider_grafana"></a> [grafana](#provider\_grafana) | 1.31.1 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_amp_monitor"></a> [amp\_monitor](#module\_amp\_monitor) | ../../modules/workloads/amp-monitoring | n/a |
-| <a name="module_billing"></a> [billing](#module\_billing) | ../../modules/Billing | n/a |
+| <a name="module_managed_prometheus_monitoring"></a> [managed\_prometheus\_monitoring](#module\_managed\_prometheus\_monitoring) | ../../modules/workloads/managed-prometheus-monitoring | n/a |
 
 ## Resources
 
@@ -140,12 +139,12 @@ In us-east-1 region an alarm is created for billing. This alarm utilizes anomaly
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS Region | `string` | n/a | yes |
 | <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | API key for authorizing the Grafana provider to make changes to Amazon Managed Grafana | `string` | n/a | yes |
-| <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana (AMG) workspace ID | `string` | n/a | yes |
-| <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Service for Prometheus Workspace ID to create Alarms for | `string` | n/a | yes |
+| <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana workspace ID | `string` | n/a | yes |
+| <a name="input_managed_prometheus_workspace_ids"></a> [managed\_prometheus\_workspace\_ids](#input\_managed\_prometheus\_workspace\_ids) | Amazon Managed Service for Prometheus Workspace IDs to create Alarms for | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_grafana_dashboards_folder_id"></a> [grafana\_dashboards\_folder\_id](#output\_grafana\_dashboards\_folder\_id) | Grafana folder ID for automatic dashboards. Required by workload modules |
+| <a name="output_grafana_dashboard_urls"></a> [grafana\_dashboard\_urls](#output\_grafana\_dashboard\_urls) | URLs for dashboards created |
 <!-- END_TF_DOCS -->

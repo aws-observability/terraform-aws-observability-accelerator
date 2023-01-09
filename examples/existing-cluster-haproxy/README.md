@@ -2,7 +2,7 @@
 
 
 This example demonstrates how to use the AWS Observability Accelerator Terraform
-modules with Nginx monitoring enabled.
+modules with haproxy monitoring enabled.
 The current example deploys the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) for Amazon EKS with its requirements and make use of existing
 Amazon Managed Service for Prometheus and Amazon Managed Grafana workspaces.
 

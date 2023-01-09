@@ -1,12 +1,12 @@
-# Existing Cluster with the AWS Observability accelerator base module and Nginx monitoring
+# Existing Cluster with the AWS Observability accelerator base module and HAProxy monitoring
 
 
 This example demonstrates how to use the AWS Observability Accelerator Terraform
-modules with haproxy monitoring enabled.
+modules with HAProxy monitoring enabled.
 The current example deploys the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) for Amazon EKS with its requirements and make use of existing
 Amazon Managed Service for Prometheus and Amazon Managed Grafana workspaces.
 
-It is based on the `nginx module`, one of our [workload modules](../../modules/workloads/)
+It is based on the `haproxy module`, one of our [workload modules](../../modules/workloads/)
 to provide an existing EKS cluster with an OpenTelemetry collector,
 curated Grafana dashboards, Prometheus alerting and recording rules with multiple
 configuration options on the cluster infrastructure.

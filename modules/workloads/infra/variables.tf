@@ -156,3 +156,9 @@ variable "prometheus_config" {
   }
   nullable = false
 }
+
+variable "enable_tracing" {
+  description = "Enable tracing with AWS X-Ray"
+  type        = bool
+  default     = false
+}

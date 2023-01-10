@@ -7,7 +7,7 @@ workspace dashboard.
 
 ## Prerequisites
 
-Make sure to complete the [prerequisites section](/terraform-aws-observability-accelerator/concepts/#prerequisites)
+Make sure to complete the [prerequisites section](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/#prerequisites)
 before proceeding.
 
 > This example doesn't require an Amazon EKS cluster and Kubernetes tools (ex. `kubectl`).

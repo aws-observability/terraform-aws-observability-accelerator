@@ -25,5 +25,5 @@ output "managed_prometheus_workspace_id" {
 
 output "grafana_dashboard_urls" {
   description = "URLs for dashboards created"
-  value       = module.workloads_nginx.grafana_dashboard_urls
+  value       = module.workloads_haproxy.grafana_dashboard_urls
 }

@@ -18,14 +18,14 @@ body:
   - type: checkboxes
     id: terms
     attributes:
-      label: Welcome to Amazon EKS Blueprints!
+      label: Welcome to the AWS Observability Accelerator
       options:
         - label: Yes, I've searched similar issues on [GitHub](https://github.com/aws-observability/terraform-aws-observability-accelerator/issues) and didn't find any.
           required: true
 
   - type: input
     attributes:
-      label: Amazon EKS Blueprints Release version
+      label: AWS Observability Accelerator Release version
       description: |
         `latest` is not considered as a valid version.
         Enter release number!

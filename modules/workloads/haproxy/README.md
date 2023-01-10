@@ -1,6 +1,7 @@
-# Observability Pattern for Nginx
+# Observability Pattern for HAProxy
 
-This module provides an automated experience around Observability for Nginx workloads.
+This module provides an automated experience around Observability for HAProxy workloads.
+
 It provides the following resources:
 
 - AWS Distro For OpenTelemetry Operator and Collector

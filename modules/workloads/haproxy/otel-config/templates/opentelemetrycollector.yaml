@@ -5,7 +5,7 @@ metadata:
 spec:
   image: public.ecr.aws/aws-observability/aws-otel-collector:v0.21.1
   mode: deployment
-  serviceAccount: adot-collector-nginx
+  serviceAccount: adot-collector-haproxy
   config: |
     receivers:
       prometheus:

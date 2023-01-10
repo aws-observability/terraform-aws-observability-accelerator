@@ -80,7 +80,7 @@ All the modules come with end-to-end deployable examples.
 
 [Examples](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples) put modules together in a ready to deploy terraform configuration as a starting point. With little to no configuration, you can run `terraform apply` and use the deployed resources on your AWS Account.
 
-You can find **workload** examples like [Amazon EKS infrstructure monitoring](/terraform-aws-observability-accelerator/workloads/eks/) or [monitoring your Amazon Managed Service for Prometheus workspace](terraform-aws-observability-accelerator/workloads/managed-prometheus/) and more.
+You can find **workload** examples like [Amazon EKS infrstructure monitoring](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/) or [monitoring your Amazon Managed Service for Prometheus workspace](https://aws-observability.github.io/terraform-aws-observability-accelerator/workloads/managed-prometheus/) and more.
 
 
 ## Getting started with AWS Observability services

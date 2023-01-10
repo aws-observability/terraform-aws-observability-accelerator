@@ -31,7 +31,7 @@ export TF_VAR_aws_region=xxx
 ### 3. Amazon EKS Cluster
 
 To run this example, you need to provide your EKS cluster name. If you don't
-have a cluster ready, visit [this example](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/new-eks-cluster.md)
+have a cluster ready, visit [this example](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/new-eks-cluster/)
 first to create a new one.
 
 Specify your cluster name:

@@ -14,13 +14,14 @@ Prometheus recording rules and alerts.
 
 <img width="1501" alt="image" src="https://user-images.githubusercontent.com/10175027/193913383-94aaf4e2-58c6-4779-935b-e40528e86c03.png">
 
+## Documentation
 
-We will be leveraging [EKS Blueprints](https://github.com/aws-ia/terraform-aws-eks-blueprints)
-repository to deploy the solution.
+To explore the complete project documentation, please visit our [documentation site.](https://aws-observability.github.io/terraform-aws-observability-accelerator/)
 
 ## Getting started
 
-To quickstart with a complete workflow and view Amazon EKS infrastructure dashboards, visit the [existing cluster with base and module example](./examples/existing-cluster-with-base-and-infra/)
+To quickstart with a complete workflow and view Amazon EKS infrastructure dashboards,
+visit the [Amazon EKS cluster monitoring documentation](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/)
 
 ## How it works
 

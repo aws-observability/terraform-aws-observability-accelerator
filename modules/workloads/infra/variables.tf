@@ -175,7 +175,7 @@ variable "custom_metrics_config" {
     ports = list(number)
     # paths = optional(list(string), ["/metrics"])
     # list of samples to be dropped by label prefix, ex: go_ -> discards go_.*
-    dropped_series_prefixes = optional(list(string))
+    dropped_series_prefixes = list(string)
   })
 
   default = {

@@ -57,7 +57,7 @@ This module is inspired from the open source [kube-prometheus-stack](https://git
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_custom_metrics_config"></a> [custom\_metrics\_config](#input\_custom\_metrics\_config) | Configuration object to enable custom metrics collection | <pre>object({<br>    ports = list(number)<br>    # paths = optional(list(string), ["/metrics"])<br>    # list of samples to be dropped by label prefix, ex: go_ -> discards go_.*<br>    dropped_series_prefixes = optional(list(string))<br>  })</pre> | <pre>{<br>  "dropped_series_prefixes": [<br>    "unspecified"<br>  ],<br>  "ports": []<br>}</pre> | no |
+| <a name="input_custom_metrics_config"></a> [custom\_metrics\_config](#input\_custom\_metrics\_config) | Configuration object to enable custom metrics collection | <pre>object({<br>    ports = list(number)<br>    # paths = optional(list(string), ["/metrics"])<br>    # list of samples to be dropped by label prefix, ex: go_ -> discards go_.*<br>    dropped_series_prefixes = list(string)<br>  })</pre> | <pre>{<br>  "dropped_series_prefixes": [<br>    "unspecified"<br>  ],<br>  "ports": []<br>}</pre> | no |
 | <a name="input_dashboards_folder_id"></a> [dashboards\_folder\_id](#input\_dashboards\_folder\_id) | Grafana folder ID for automatic dashboards | `string` | n/a | yes |
 | <a name="input_eks_cluster_id"></a> [eks\_cluster\_id](#input\_eks\_cluster\_id) | EKS Cluster Id | `string` | n/a | yes |
 | <a name="input_enable_alerting_rules"></a> [enable\_alerting\_rules](#input\_enable\_alerting\_rules) | Enables or disables Managed Prometheus alerting rules | `bool` | `true` | no |

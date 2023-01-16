@@ -1678,13 +1678,13 @@ spec:
                   regex: $K8S_NODE_NAME
                   source_labels: [__meta_kubernetes_endpoint_node_name]
                 {{ end }}
-            - job_name: 'custom-metrics'
+            - job_name: "custom-metrics"
               kubernetes_sd_configs:
                 - role: pod
               relabel_configs:
                 - source_labels: [ __address__ ]
                   action: keep
-                  regex: '.*:8000$'
+                  regex: '{{ .Values.customMetricsPorts }}'
                 - action: replace
                   source_labels: [__meta_kubernetes_pod_node_name]
                   target_label: nodename
@@ -1707,7 +1707,7 @@ spec:
                 {{ end }}
               metric_relabel_configs:
                 - source_labels: [ __name__ ]
-                  regex: 'jvm_gc_collection_seconds.*'
+                  regex: '{{ .Values.customMetricsDroppedSeriesPrefixes }}'
                   action: drop
     exporters:
       {{ if .Values.enableTracing }}

@@ -85,6 +85,18 @@ module "helm_addon" {
       name  = "xRayGrpcEndpoint"
       value = "0.0.0.0:4317"
     },
+    {
+      name  = "enableCustomMetrics"
+      value = var.enable_custom_metrics
+    },
+    {
+      name  = "customMetricsPorts"
+      value = format(".*:(%s)$", join("|", var.custom_metrics_config.ports))
+    },
+    {
+      name  = "customMetricsDroppedSeriesPrefixes"
+      value = format("(%s.*)$", join(".*|", var.custom_metrics_config.dropped_series_prefixes))
+    }
   ]
 
   irsa_config = {
@@ -92,7 +104,7 @@ module "helm_addon" {
     kubernetes_namespace              = local.namespace
     create_kubernetes_service_account = true
     kubernetes_service_account        = try(var.helm_config.service_account, local.name)
-    irsa_iam_policies                 = [
+    irsa_iam_policies = [
       "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonPrometheusRemoteWriteAccess",
       "arn:${data.aws_partition.current.partition}:iam::aws:policy/AWSXrayWriteOnlyAccess"
     ]

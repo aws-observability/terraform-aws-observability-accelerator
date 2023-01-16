@@ -158,7 +158,28 @@ variable "prometheus_config" {
 }
 
 variable "enable_tracing" {
-  description = "Enable tracing with AWS X-Ray"
+  description = "(Experimental) Enables tracing with AWS X-Ray. This changes the deploy mode of the collector to daemon set"
   type        = bool
   default     = false
+}
+
+variable "enable_custom_metrics" {
+  description = "Allows additional metrics collection for config elements in the `custom_metrics_config` config object. Automatic dashboards are not included"
+  type        = bool
+  default     = false
+}
+
+variable "custom_metrics_config" {
+  description = "Configuration object to enable custom metrics collection"
+  type = object({
+    ports = list(number)
+    # paths = optional(list(string), ["/metrics"])
+    # list of samples to be dropped by label prefix, ex: go_ -> discards go_.*
+    dropped_series_prefixes = optional(list(string))
+  })
+
+  default = {
+    ports                   = []
+    dropped_series_prefixes = ["unspecified"]
+  }
 }

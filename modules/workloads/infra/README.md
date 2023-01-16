@@ -57,14 +57,16 @@ This module is inspired from the open source [kube-prometheus-stack](https://git
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_custom_metrics_config"></a> [custom\_metrics\_config](#input\_custom\_metrics\_config) | Configuration object to enable custom metrics collection | <pre>object({<br>    ports = list(number)<br>    # paths = optional(list(string), ["/metrics"])<br>    # list of samples to be dropped by label prefix, ex: go_ -> discards go_.*<br>    dropped_series_prefixes = optional(list(string))<br>  })</pre> | <pre>{<br>  "dropped_series_prefixes": [<br>    "unspecified"<br>  ],<br>  "ports": []<br>}</pre> | no |
 | <a name="input_dashboards_folder_id"></a> [dashboards\_folder\_id](#input\_dashboards\_folder\_id) | Grafana folder ID for automatic dashboards | `string` | n/a | yes |
 | <a name="input_eks_cluster_id"></a> [eks\_cluster\_id](#input\_eks\_cluster\_id) | EKS Cluster Id | `string` | n/a | yes |
 | <a name="input_enable_alerting_rules"></a> [enable\_alerting\_rules](#input\_enable\_alerting\_rules) | Enables or disables Managed Prometheus alerting rules | `bool` | `true` | no |
+| <a name="input_enable_custom_metrics"></a> [enable\_custom\_metrics](#input\_enable\_custom\_metrics) | Allows additional metrics collection for config elements in the `custom_metrics_config` config object. Automatic dashboards are not included | `bool` | `false` | no |
 | <a name="input_enable_dashboards"></a> [enable\_dashboards](#input\_enable\_dashboards) | Enables or disables curated dashboards | `bool` | `true` | no |
 | <a name="input_enable_kube_state_metrics"></a> [enable\_kube\_state\_metrics](#input\_enable\_kube\_state\_metrics) | Enables or disables Kube State metrics exporter. Disabling this might affect some data in the dashboards | `bool` | `true` | no |
 | <a name="input_enable_node_exporter"></a> [enable\_node\_exporter](#input\_enable\_node\_exporter) | Enables or disables Node exporter. Disabling this might affect some data in the dashboards | `bool` | `true` | no |
 | <a name="input_enable_recording_rules"></a> [enable\_recording\_rules](#input\_enable\_recording\_rules) | Enables or disables Managed Prometheus recording rules. Disabling this might affect some data in the dashboards | `bool` | `true` | no |
-| <a name="input_enable_tracing"></a> [enable\_tracing](#input\_enable\_tracing) | Enable tracing with AWS X-Ray | `bool` | `false` | no |
+| <a name="input_enable_tracing"></a> [enable\_tracing](#input\_enable\_tracing) | (Experimental) Enables tracing with AWS X-Ray. This changes the deploy mode of the collector to daemon set | `bool` | `false` | no |
 | <a name="input_helm_config"></a> [helm\_config](#input\_helm\_config) | Helm Config for Prometheus | `any` | `{}` | no |
 | <a name="input_irsa_iam_permissions_boundary"></a> [irsa\_iam\_permissions\_boundary](#input\_irsa\_iam\_permissions\_boundary) | IAM permissions boundary for IRSA roles | `string` | `""` | no |
 | <a name="input_irsa_iam_role_path"></a> [irsa\_iam\_role\_path](#input\_irsa\_iam\_role\_path) | IAM role path for IRSA roles | `string` | `"/"` | no |

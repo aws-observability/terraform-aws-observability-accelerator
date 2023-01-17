@@ -6,8 +6,8 @@ globalScrapeTimeout: ${global_scrape_timeout}
 globalScrapeSampleLimit: ${global_scrape_sample_limit}
 
 enableTracing: ${enable_tracing}
-xRayGrpcEndpoint: ${xray_grpc_endpoint}
-xRayHttpEndpoint: ${xray_http_endpoint}
+otlpGrpcEndpoint: ${otlp_grpc_endpoint}
+otlpHttpEndpoint: ${otlp_http_endpoint}
 
 enableCustomMetrics: ${enable_custom_metrics}
 customMetricsPorts: ${custom_metrics_ports}

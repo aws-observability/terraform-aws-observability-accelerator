@@ -34,6 +34,7 @@ resource "helm_release" "prometheus_node_exporter" {
   }
 }
 
+//*
 module "helm_addon" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.13.1"
 
@@ -78,11 +79,11 @@ module "helm_addon" {
       value = var.enable_tracing
     },
     {
-      name  = "xRayHttpEndpoint"
+      name  = "otlpHttpEndpoint"
       value = "0.0.0.0:4318"
     },
     {
-      name  = "xRayGrpcEndpoint"
+      name  = "otlpGrpcEndpoint"
       value = "0.0.0.0:4317"
     },
     {
@@ -112,3 +113,4 @@ module "helm_addon" {
 
   addon_context = local.context
 }
+//*/

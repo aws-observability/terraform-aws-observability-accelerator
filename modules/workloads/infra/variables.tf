@@ -86,7 +86,7 @@ variable "ksm_config" {
   default = {
     create_namespace   = true
     helm_chart_name    = "kube-state-metrics"
-    helm_chart_version = "4.16.0"
+    helm_chart_version = "4.24.0"
     helm_release_name  = "kube-state-metrics"
     helm_repo_url      = "https://prometheus-community.github.io/helm-charts"
     helm_settings      = {}
@@ -124,7 +124,7 @@ variable "ne_config" {
   default = {
     create_namespace   = true
     helm_chart_name    = "prometheus-node-exporter"
-    helm_chart_version = "2.0.3"
+    helm_chart_version = "4.8.0"
     helm_release_name  = "prometheus-node-exporter"
     helm_repo_url      = "https://prometheus-community.github.io/helm-charts"
     helm_settings      = {}

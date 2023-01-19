@@ -158,7 +158,7 @@ variable "prometheus_config" {
 }
 
 variable "enable_tracing" {
-  description = "(Experimental) Enables tracing with AWS X-Ray. This changes the deploy mode of the collector to daemon set"
+  description = "(Experimental) Enables tracing with AWS X-Ray. This changes the deploy mode of the collector to daemon set. Requirement: adot add-on <= 0.58-build.0"
   type        = bool
   default     = false
 }

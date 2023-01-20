@@ -13,7 +13,7 @@ resource "aws_identitystore_user" "example" {
   }
 
   emails {
-    value = var.identitystore_admins_info[count.index].email
+    value   = var.identitystore_admins_info[count.index].email
     primary = true
   }
 

@@ -30,7 +30,7 @@ jobs:
         id: dirs
         run: |
           DIRS=$(python3 .github/workflows/plan-examples.py)
-          echo "::set-output name=directories::$DIRS"
+          echo "directories=$DIRS" >> $GITHUB_OUTPUT
 
   plan:
     name: Plan examples

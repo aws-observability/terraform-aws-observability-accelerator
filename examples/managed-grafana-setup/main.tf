@@ -37,6 +37,7 @@ resource "aws_grafana_workspace" "workshop" {
   permission_type          = "SERVICE_MANAGED"
   role_arn                 = aws_iam_role.assume.arn
   data_sources             = ["PROMETHEUS"]
+  tags = local.tags
 }
 
 resource "aws_iam_role" "assume" {

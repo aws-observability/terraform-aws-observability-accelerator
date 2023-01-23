@@ -1,9 +1,17 @@
-data "aws_ssoadmin_instances" "example" {}
 
-resource "aws_identitystore_user" "example" {
+data "aws_ssoadmin_instances" "this" {}
+locals {
+  identity_store_id   = coalesce(var.identity_store_id, tolist(data.aws_ssoadmin_instances.this.identity_store_ids)[0])
+
+  tags = {
+    Source = "github.com/aws-observability/terraform-aws-observability-accelerator"
+  }
+}
+
+resource "aws_identitystore_user" "this" {
   count = length(var.identitystore_admins_info)
 
-  identity_store_id = tolist(data.aws_ssoadmin_instances.example.identity_store_ids)[0]
+  identity_store_id = local.identity_store_id
   display_name      = "${var.identitystore_admins_info[count.index].first_name} ${var.identitystore_admins_info[count.index].last_name}"
   user_name         = var.identitystore_admins_info[count.index].email
 
@@ -56,9 +64,9 @@ resource "aws_grafana_workspace_api_key" "key" {
 }
 
 
-resource "aws_grafana_role_association" "example" {
+resource "aws_grafana_role_association" "this" {
   count        = length(var.identitystore_admins_info)
   role         = "ADMIN"
-  user_ids     = aws_identitystore_user.example[*].user_id
+  user_ids     = aws_identitystore_user.this[*].user_id
   workspace_id = aws_grafana_workspace.workshop.id
 }

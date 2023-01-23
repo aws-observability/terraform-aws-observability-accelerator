@@ -55,7 +55,7 @@ resource "aws_iam_role" "this" {
       },
     ]
   })
-  managed_policy_arns = "arn:aws:iam::aws:policy/AmazonPrometheusQueryAccess"
+  managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonPrometheusQueryAccess"]
 }
 
 
@@ -63,5 +63,5 @@ resource "aws_grafana_role_association" "this" {
   count        = length(var.identitystore_admins_info)
   role         = "ADMIN"
   user_ids     = aws_identitystore_user.this[*].user_id
-  workspace_id = aws_grafana_workspace.workshop.id
+  workspace_id = aws_grafana_workspace.this.id
 }

@@ -56,14 +56,6 @@ resource "aws_iam_role" "assume" {
 }
 
 
-resource "aws_grafana_workspace_api_key" "key" {
-  key_name        = "admin"
-  key_role        = "ADMIN"
-  seconds_to_live = 259200 #3 days
-  workspace_id    = aws_grafana_workspace.workshop.id
-}
-
-
 resource "aws_grafana_role_association" "this" {
   count        = length(var.identitystore_admins_info)
   role         = "ADMIN"

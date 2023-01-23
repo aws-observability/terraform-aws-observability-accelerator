@@ -29,19 +29,19 @@ resource "aws_identitystore_user" "this" {
 }
 
 
-resource "aws_grafana_workspace" "workshop" {
-  name                     = "eks-observability-workshop-workspace"
-  description              = "EKS Observability Workshop's Grafana Workspace"
+resource "aws_grafana_workspace" "this" {
+  name                     = "aws-observability-accelerator-workshop-workspace"
+  description              = "AWS Observability Accelerator Workshop's Grafana Workspace"
   account_access_type      = "CURRENT_ACCOUNT"
   authentication_providers = ["AWS_SSO"]
   permission_type          = "SERVICE_MANAGED"
-  role_arn                 = aws_iam_role.assume.arn
+  role_arn                 = aws_iam_role.this
   data_sources             = ["PROMETHEUS"]
-  tags = local.tags
+  tags                     = local.tags
 }
 
-resource "aws_iam_role" "assume" {
-  name = "eks-observability-accelerator-grafana-assume"
+resource "aws_iam_role" "this" {
+  name = "aws-observability-accelerator-grafana"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

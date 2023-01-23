@@ -41,6 +41,7 @@ No modules.
 | <a name="output_grafana_workspace_endpoint"></a> [grafana\_workspace\_endpoint](#output\_grafana\_workspace\_endpoint) | The Grafana Workspace endpoint |
 | <a name="output_grafana_workspace_id"></a> [grafana\_workspace\_id](#output\_grafana\_workspace\_id) | The Grafana Workspace ID |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
 1. Supply first name, last name, email address in either terraform.tfvars file, as a default in the variables.tf file, or in the command line at runtime
 2. Once deployed, you will need to get the identity centre admin to send a verification email to users
 3. When you have accepted the verification email, you can then sign in to the grafana workspace

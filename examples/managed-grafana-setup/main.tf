@@ -55,6 +55,7 @@ resource "aws_iam_role" "this" {
       },
     ]
   })
+  managed_policy_arns = "arn:aws:iam::aws:policy/AmazonPrometheusQueryAccess"
 }
 
 

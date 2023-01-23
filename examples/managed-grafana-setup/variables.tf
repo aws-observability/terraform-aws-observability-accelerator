@@ -10,5 +10,5 @@ variable "identitystore_admins_info" {
 
 variable "identity_store_id" {
   description = "OPTIONAL ID for identity store"
-  default = ""
+  default     = ""
 }

@@ -1,7 +1,8 @@
 
 data "aws_ssoadmin_instances" "this" {}
+
 locals {
-  identity_store_id   = coalesce(var.identity_store_id, tolist(data.aws_ssoadmin_instances.this.identity_store_ids)[0])
+  identity_store_id = coalesce(var.identity_store_id, tolist(data.aws_ssoadmin_instances.this.identity_store_ids)[0])
 
   tags = {
     Source = "github.com/aws-observability/terraform-aws-observability-accelerator"

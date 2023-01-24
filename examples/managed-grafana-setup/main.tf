@@ -30,7 +30,7 @@ resource "aws_identitystore_user" "this" {
 
 
 resource "aws_grafana_workspace" "this" {
-  name                     = "aws-observability-accelerator-workshop-workspace"
+  name                     = var.grafana_workspace_name
   description              = "AWS Observability Accelerator Workshop's Grafana Workspace"
   account_access_type      = "CURRENT_ACCOUNT"
   authentication_providers = ["AWS_SSO"]

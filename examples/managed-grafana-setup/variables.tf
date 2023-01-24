@@ -15,7 +15,7 @@ variable "identity_store_id" {
 }
 
 variable "grafana_workspace_name" {
-  description = "The logical name of the AMG workspace"
-  default     = "aws-observability-accelerator-workshop-workspace"
+  description = "The logical name of the Amazon Managed Grafana workspace"
+  default     = "aws-observability-accelerator"
   type        = string
 }

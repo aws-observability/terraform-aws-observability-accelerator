@@ -35,7 +35,7 @@ resource "aws_grafana_workspace" "this" {
   account_access_type      = "CURRENT_ACCOUNT"
   authentication_providers = ["AWS_SSO"]
   permission_type          = "SERVICE_MANAGED"
-  role_arn                 = aws_iam_role.this
+  role_arn                 = aws_iam_role.this.arn
   data_sources             = ["PROMETHEUS"]
   tags                     = local.tags
 }

@@ -91,6 +91,9 @@ module "workloads_infra" {
     global_scrape_timeout  = "15s"
   }
 
+  # Enables or disables traces collection to AWS X-Ray
+  enable_tracing = false
+
   tags = local.tags
 
   depends_on = [

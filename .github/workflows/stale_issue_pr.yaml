@@ -22,7 +22,7 @@ jobs:
           stale-issue-label: stale
           stale-pr-label: stale
           # Not stale if have this labels
-          exempt-issue-labels: 'bug,enhancement'
+          exempt-issue-labels: 'bug,enhancement,"feature request"'
           exempt-pr-labels: 'bug,enhancement'
           operations-per-run: 100
           stale-issue-message: |

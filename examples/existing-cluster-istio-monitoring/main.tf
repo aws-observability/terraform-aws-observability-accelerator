@@ -74,8 +74,8 @@ provider "grafana" {
   auth = var.grafana_api_key
 }
 
-module "workloads_infra" {
-  source = "../../modules/workloads/infra"
+module "workloads_istio" {
+  source = "../../modules/workloads/istio"
 
   eks_cluster_id = module.eks_observability_accelerator.eks_cluster_id
 

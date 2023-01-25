@@ -5,6 +5,7 @@ on:
   pull_request_target:
     branches:
       - main
+      - ci-improvements #TODO: drop this before merging
   workflow_dispatch:
 
 concurrency:

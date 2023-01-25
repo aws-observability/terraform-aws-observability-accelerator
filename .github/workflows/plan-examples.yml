@@ -97,7 +97,11 @@ jobs:
         run: terraform init -reconfigure
         working-directory: ${{ matrix.directory }}
 
+      - name: Retrieve example's var file
+        run: aws ssm get-parameter --name /tfvars/${{ matrix.directory }} --query Parameter.Value --output text > e2e.tfvars
+        working-directory: ${{ matrix.directory }}
+
       - name: Terraform Plan
         if: steps.changes.outputs.src== 'true'
         working-directory: ${{ matrix.directory }}
-        run: terraform plan -no-color
+        run: terraform plan -no-color -var-file=e2e.tfvars

@@ -7,3 +7,8 @@ variable "aws_region" {
   description = "AWS Region"
   type        = string
 }
+variable "managed_node_instance_type" {
+  description = "Instance type for the cluster managed node groups"
+  type        = string
+  default     = "t3.xlarge"
+}

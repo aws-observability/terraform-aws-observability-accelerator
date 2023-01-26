@@ -105,4 +105,7 @@ jobs:
       - name: Terraform Plan
         if: steps.changes.outputs.src== 'true'
         working-directory: ${{ matrix.directory }}
-        run: terraform plan -no-color -var-file=e2e.tfvars
+        run: |
+          aws ssm get-parameter --name /tfvars/${{ matrix.directory }} --query Parameter.Value --output text > .env
+          source .env
+          terraform plan -no-color

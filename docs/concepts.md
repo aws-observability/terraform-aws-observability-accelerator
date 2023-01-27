@@ -11,7 +11,7 @@ All examples in this repository require the following tools installed
 ### Minimum IAM Policy
 
 To run the examples, you need a set of AWS IAM permissions. You can find an example of minimum
-permissions required [in this file](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/docs/docs/iam/min-iam-policy.json).
+permissions required [in this file](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/docs/iam/min-iam-policy.json).
 
 > **Note**: The policy resource is set as `*` to allow all resources, this is not a recommended practice.
 You should restrict instead to the ARNs when applicable.

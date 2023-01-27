@@ -4,26 +4,26 @@ resource "grafana_dashboard" “cluster” {
   config_json = file("${path.module}/dashboards/cluster.json")
 }
 
-resource "grafana_dashboard" "istio-mesh-dashboard" {
+resource "grafana_dashboard" "istiomeshdashboard" {
   count       = var.enable_dashboards ? 1 : 0
   folder      = var.dashboards_folder_id
   config_json = file("${path.module}/dashboards/istio-mesh-dashboard.json")
 }
 
-resource "grafana_dashboard" "istio-service-dashboard" {
+resource "grafana_dashboard" "istioservicedashboard" {
   count       = var.enable_dashboards ? 1 : 0
   folder      = var.dashboards_folder_id
   config_json = file("${path.module}/dashboards/istio-service-dashboard.json")
 }
 
 
-resource "grafana_dashboard" "istio-control-plane-dashboard" {
+resource "grafana_dashboard" "istiocontrolplanedashboard" {
   count       = var.enable_dashboards ? 1 : 0
   folder      = var.dashboards_folder_id
   config_json = file("${path.module}/dashboards/istio-control-plane-dashboard.json)
 }
 
-resource "grafana_dashboard" “istio-performance-dashboard" {
+resource "grafana_dashboard" “istioperformancedashboard" {
   count       = var.enable_dashboards ? 1 : 0
   folder      = var.dashboards_folder_id
   config_json = file("${path.module}/dashboards/istio-performance-dashboard.json")

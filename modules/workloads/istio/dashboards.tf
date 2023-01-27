@@ -17,7 +17,7 @@ resource "grafana_dashboard" "istio-service-dashboard" {
 }
 
 
-resource "grafana_dashboard" "istio-control-plane-dashboard." {
+resource "grafana_dashboard" "istio-control-plane-dashboard" {
   count       = var.enable_dashboards ? 1 : 0
   folder      = var.dashboards_folder_id
   config_json = file("${path.module}/dashboards/istio-control-plane-dashboard.json)

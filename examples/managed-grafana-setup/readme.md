@@ -41,7 +41,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_grafana_workspace_name"></a> [grafana\_workspace\_name](#input\_grafana\_workspace\_name) | The logical name of the AMG workspace | `string` | `"aws-observability-accelerator-workshop-workspace"` | no |
+| <a name="input_grafana_workspace_name"></a> [grafana\_workspace\_name](#input\_grafana\_workspace\_name) | The logical name of the Amazon Managed Grafana workspace | `string` | `"aws-observability-accelerator"` | no |
 | <a name="input_identity_store_id"></a> [identity\_store\_id](#input\_identity\_store\_id) | OPTIONAL ID for identity store | `string` | `""` | no |
 | <a name="input_identitystore_admins_info"></a> [identitystore\_admins\_info](#input\_identitystore\_admins\_info) | The minimum required data to create aws identity store users with admin access to the grafana workspace | <pre>list(object({<br>    first_name = string<br>    last_name  = string<br>    email      = string<br>  }))</pre> | n/a | yes |
 

@@ -10,7 +10,7 @@ resource "grafana_dashboard" "istiomeshdashboard" {
   config_json = file("${path.module}/dashboards/istio-mesh-dashboard.json")
 }
 
-resource "grafana_dashboard" "istiservicedashboard" {
+resource "grafana_dashboard" "istioservicedashboard" {
   count       = var.enable_dashboards ? 1 : 0
   folder      = var.dashboards_folder_id
   config_json = file("${path.module}/dashboards/istio-service-dashboard.json")

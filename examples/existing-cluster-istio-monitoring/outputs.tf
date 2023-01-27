@@ -30,5 +30,5 @@ output "managed_grafana_workspace_id" {
 
 output "grafana_dashboard_urls" {
   description = "URLs for dashboards created"
-  value       = module.workloads_infra.grafana_dashboard_urls
+  value       = module.workloads_istio.grafana_dashboard_urls
 }

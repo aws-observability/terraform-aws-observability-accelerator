@@ -65,6 +65,28 @@ module "eks_observability_accelerator" {
   tags = local.tags
 }
 
+#Add on for Tetrate istio
+module "eks_blueprints_kubernetes_addons" {
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints/modules/kubernetes-addons"
+
+  eks_cluster_id       = var.eks_cluster_id
+
+  # EKS Managed Add-ons
+  #enable_amazon_eks_vpc_cni    = true
+  #enable_amazon_eks_coredns    = true
+  #enable_amazon_eks_kube_proxy = true
+
+  # Add-ons
+  #enable_metrics_server     = true
+  #enable_cluster_autoscaler = true
+
+  # Tetrate Istio Add-on
+   enable_tetrate_istio = true
+
+  tags = local.tags
+}
+
+
 # https://www.terraform.io/language/modules/develop/providers
 # A module intended to be called by one or more other modules must not contain
 # any provider blocks.

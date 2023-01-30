@@ -40,7 +40,7 @@ To do this, you can define the instance type to use:
 export TF_VAR_managed_node_instance_type=xxx
 ```
 
-### 4. Anazon Elastic Kubernetes Service (Amazon EKS) Version
+### 4. Amazon Elastic Kubernetes Service (Amazon EKS) Version
 
 You can override the version of the cluster also:
 ```bash

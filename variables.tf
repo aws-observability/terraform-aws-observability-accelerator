@@ -18,11 +18,6 @@ variable "irsa_iam_permissions_boundary" {
   description = "IAM permissions boundary for IRSA roles"
   type        = string
   default     = null
-
-  # validation {
-  #   condition     = var.irsa_iam_permissions_boundary == null || (try(length(var.irsa_iam_permissions_boundary), 0) >= 20)
-  #   error_message = "IRSA IAM Permissions boundary must be 20 characters or longer!"
-  # }
 }
 
 variable "enable_amazon_eks_adot" {

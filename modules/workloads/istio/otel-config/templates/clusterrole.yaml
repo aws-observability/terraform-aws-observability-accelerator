@@ -19,11 +19,11 @@ rules:
       - extensions
     resources:
       - ingresses
-    verbs:
-      - get
+    verbs:  
+      - get 
       - list
-      - watch
-  - nonResourceURLs:
+      - watch 
+  - nonResourceURLs: 
       - /metrics
-    verbs:
-      - get
+    verbs:    
+      - get   

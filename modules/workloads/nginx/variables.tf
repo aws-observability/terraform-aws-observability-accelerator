@@ -19,13 +19,13 @@ variable "irsa_iam_role_path" {
 variable "irsa_iam_permissions_boundary" {
   description = "IAM permissions boundary for IRSA roles"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "managed_prometheus_workspace_endpoint" {
   description = "Amazon Managed Prometheus Workspace Endpoint"
   type        = string
-  default     = null
+  default     = ""
 }
 variable "managed_prometheus_workspace_id" {
   description = "Amazon Managed Prometheus Workspace ID"

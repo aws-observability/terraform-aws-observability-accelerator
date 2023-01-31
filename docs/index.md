@@ -3,10 +3,11 @@
 Welcome to the AWS Observability Accelerator for Terraform!
 
 The AWS Observability accelerator is a set of Terraform modules to help you
-configure Observability for your workloads and environemnts  with AWS
+configure Observability for your container workloads and environemnts with AWS
 Observability services. This project proposes a core module to bootstrap
-your cluster with the AWS Distro for OpenTelemetry (ADOT) Operator for EKS,
+your Amazon EKS cluster with the AWS Distro for OpenTelemetry (ADOT) Operator for EKS,
 Amazon Managed Service for Prometheus, Amazon Managed Grafana.
+
 Additionally we have a set of workload modules to leverage curated ADOT
 collector configurations, Grafana dashboards, Prometheus recording rules and alerts.
 
@@ -14,7 +15,7 @@ collector configurations, Grafana dashboards, Prometheus recording rules and ale
 
 ## Getting started
 
-This project provides a set of Terraform modules to enable metrics collection,
+This project provides a set of Terraform modules to enable metrics and traces collection,
 dashboards and alerts for monitoring:
 
 - Amazon EKS clusters infrastructure

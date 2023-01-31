@@ -167,4 +167,4 @@ collection, grouped by cluster and node.
 sum(up{job="custom-metrics"}) by (container_name, cluster, nodename)
 ```
 
-TODO screenshot
+<img width="2560" alt="Screenshot 2023-01-31 at 11 16 21" src="https://user-images.githubusercontent.com/10175027/215869004-e05f557d-c81a-41fb-a452-ede9f986cb27.png">

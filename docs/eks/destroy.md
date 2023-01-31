@@ -1,7 +1,7 @@
 # Destroy resources
 
 If you leave this stack running, you will continue to incur charges. To remove all resources
-created by Terraform, [refresh your Grafana API key](#6-grafana-api-key) and run the command below.
+created by Terraform, [refresh your Grafana API key](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/#6-grafana-api-key) and run the command below.
 
 Be careful, this command will removing everything created by Terraform. If you wish
 to keep your Amazon Managed Grafana or Amazon Managed Service for Prometheus workspaces. Remove them

@@ -17,8 +17,8 @@ spec:
   config: |
     extensions:
       sigv4auth:
-        region: "AWS_REGION"
-        service: "aps"
+        region: {{ .Values.region }}
+	service: "aps"
 
     receivers:
       prometheus:
@@ -303,8 +303,8 @@ spec:
 
     exporters:
       prometheusremotewrite:
-        endpoint: "AMP_WORKSPACE_URL"
-        auth:
+        endpoint: {{ .Values.ampurl }}
+	auth:
           authenticator: sigv4auth
         # external_labels:
           # label_name1: some_value1

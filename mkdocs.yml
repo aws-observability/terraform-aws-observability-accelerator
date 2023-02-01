@@ -25,7 +25,9 @@ theme:
 nav:
   - Home: index.md
   - Concepts: concepts.md
-  - Amazon EKS Cluster Monitoring: eks.md
+  - Amazon EKS:
+      - Infrastructure monitoring: eks/index.md
+      - Teardown: eks/destroy.md
   - Workload Monitoring:
       - Java/JMX: workloads/java.md
       - Nginx: workloads/nginx.md

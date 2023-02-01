@@ -12,7 +12,7 @@ variable "irsa_iam_role_path" {
 variable "irsa_iam_permissions_boundary" {
   description = "IAM permissions boundary for IRSA roles"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "enable_recording_rules" {
@@ -30,7 +30,7 @@ variable "enable_alerting_rules" {
 variable "managed_prometheus_workspace_endpoint" {
   description = "Amazon Managed Prometheus Workspace Endpoint"
   type        = string
-  default     = null
+  default     = ""
 }
 
 variable "managed_prometheus_workspace_id" {

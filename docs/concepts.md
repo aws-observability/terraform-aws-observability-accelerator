@@ -40,29 +40,35 @@ data. The base module serve as an anchor to the workload modules and cannot run 
 
 ```hcl
 module "eks_observability_accelerator" {
-  source          = "aws-observability/terraform-aws-observability-accelerator"
-  aws_region      = "eu-west-1"
-  eks_cluster_id  = "my-eks-cluster"
+  # use release tags and check for the latest versions
+  # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1
 
-  # As Grafana shares a different lifecycle, it is best to use an existing workspace.
+  aws_region     = "eu-west-1"
+  eks_cluster_id = "my-eks-cluster"
+
+  # As Grafana shares a different lifecycle, it's best to use an existing workspace.
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
   grafana_api_key              = var.grafana_api_key
 }
 ```
 
-You can optionally reuse an existing Amazon Managed Servce for Prometheus Workspaces:
+You can optionally reuse an existing Amazon Managed Servce for Prometheus Workspace:
 
 ```hcl
 module "eks_observability_accelerator" {
-  source = "aws-observability/terraform-aws-observability-accelerator"
-  aws_region = "eu-west-1"
+  # use release tags and check for the latest versions
+  # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1
+
+  aws_region     = "eu-west-1"
   eks_cluster_id = "my-eks-cluster"
 
   # prevents creation of a new Amazon Managed Prometheus workspace
   enable_managed_prometheus = false
 
   # reusing existing Amazon Managed Prometheus Workspace
-  managed_prometheus_workspace_id     = "ws-abcd123..."
+  managed_prometheus_workspace_id  = "ws-abcd123..."
 
   managed_grafana_workspace_id = "g-abcdef123"
   grafana_api_key              = var.grafana_api_key

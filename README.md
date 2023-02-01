@@ -39,9 +39,12 @@ data. The base module serve as an anchor to the workload modules and cannot run 
 
 ```hcl
 module "eks_observability_accelerator" {
-  source          = "aws-observability/terraform-aws-observability-accelerator"
-  aws_region      = "eu-west-1"
-  eks_cluster_id  = "my-eks-cluster"
+  # use release tags and check for the latest versions
+  # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1
+
+  aws_region     = "eu-west-1"
+  eks_cluster_id = "my-eks-cluster"
 
   # As Grafana shares a different lifecycle, it's best to use an existing workspace.
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
@@ -49,19 +52,22 @@ module "eks_observability_accelerator" {
 }
 ```
 
-You can optionally reuse an existing Amazon Managed Servce for Prometheus Workspaces:
+You can optionally reuse an existing Amazon Managed Servce for Prometheus Workspace:
 
 ```hcl
 module "eks_observability_accelerator" {
-  source = "aws-observability/terraform-aws-observability-accelerator"
-  aws_region = "eu-west-1"
+  # use release tags and check for the latest versions
+  # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1
+
+  aws_region     = "eu-west-1"
   eks_cluster_id = "my-eks-cluster"
 
   # prevents creation of a new Amazon Managed Prometheus workspace
   enable_managed_prometheus = false
 
   # reusing existing Amazon Managed Prometheus Workspace
-  managed_prometheus_workspace_id     = "ws-abcd123..."
+  managed_prometheus_workspace_id  = "ws-abcd123..."
 
   managed_grafana_workspace_id = "g-abcdef123"
   grafana_api_key              = var.grafana_api_key
@@ -164,8 +170,8 @@ If you are interested in contributing, see the [Contribution guide](https://gith
 | <a name="input_enable_cert_manager"></a> [enable\_cert\_manager](#input\_enable\_cert\_manager) | Allow reusing an existing installation of cert-manager | `bool` | `true` | no |
 | <a name="input_enable_managed_grafana"></a> [enable\_managed\_grafana](#input\_enable\_managed\_grafana) | Creates a new Amazon Managed Grafana Workspace | `bool` | `true` | no |
 | <a name="input_enable_managed_prometheus"></a> [enable\_managed\_prometheus](#input\_enable\_managed\_prometheus) | Creates a new Amazon Managed Service for Prometheus Workspace | `bool` | `true` | no |
-| <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | Grafana API key for the Amazon Managed Grafana workspace | `string` | `null` | no |
-| <a name="input_irsa_iam_permissions_boundary"></a> [irsa\_iam\_permissions\_boundary](#input\_irsa\_iam\_permissions\_boundary) | IAM permissions boundary for IRSA roles | `string` | `null` | no |
+| <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | Grafana API key for the Amazon Managed Grafana workspace | `string` | n/a | yes |
+| <a name="input_irsa_iam_permissions_boundary"></a> [irsa\_iam\_permissions\_boundary](#input\_irsa\_iam\_permissions\_boundary) | IAM permissions boundary for IRSA roles | `string` | `""` | no |
 | <a name="input_irsa_iam_role_path"></a> [irsa\_iam\_role\_path](#input\_irsa\_iam\_role\_path) | IAM role path for IRSA roles | `string` | `"/"` | no |
 | <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana Workspace ID | `string` | `""` | no |
 | <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Service for Prometheus Workspace ID | `string` | `""` | no |

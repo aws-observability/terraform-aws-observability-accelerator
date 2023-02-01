@@ -33,9 +33,9 @@ to enable monitoring to an existing EKS cluster.
 The base module allows you to configure the AWS Observability services for your cluster and
 the AWS Distro for OpenTelemetry (ADOT) Operator as the signals collection mechanism.
 
-This is the minimum configuration to have a new Amazon Managed
-Service for Prometheus Workspace, ADOT Operator deployed for you and ready to receive your
-data. The base module serve as an anchor to the workload modules and cannot run on its own.
+This is the minimum configuration to have a new Amazon Managed Service for Prometheus Workspace
+and ADOT Operator deployed for you and ready to receive your data.
+The base module serve as an anchor to the workload modules and cannot run on its own.
 
 ```hcl
 module "eks_observability_accelerator" {

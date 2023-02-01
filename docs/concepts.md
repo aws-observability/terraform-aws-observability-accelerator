@@ -31,20 +31,26 @@ you need to track changes as part of a Git repository or CI/CD pipeline.
 
 ## Base module
 
-The base module allows you to configure the AWS Observability services for your cluster and the AWS Distro for OpenTelemetry (ADOT) Operator as the signals collection mechanism.
+The base module allows you to configure the AWS Observability services for your cluster and
+the AWS Distro for OpenTelemetry (ADOT) Operator as the signals collection mechanism.
 
-Here is the minimum configuration to have a new Managed Grafana Workspace, Amazon Managed Service for Prometheus Workspace, ADOT Operator deployed for you and ready to receive your data.
+This is the minimum configuration to have a new Amazon Managed
+Service for Prometheus Workspace, ADOT Operator deployed for you and ready to receive your
+data. The base module serve as an anchor to the workload modules and cannot run on its own.
 
 ```hcl
 module "eks_observability_accelerator" {
-  source = "aws-observability/terraform-aws-observability-accelerator"
-  aws_region = "eu-west-1"
-  eks_cluster_id = "my-eks-cluster"
+  source          = "aws-observability/terraform-aws-observability-accelerator"
+  aws_region      = "eu-west-1"
+  eks_cluster_id  = "my-eks-cluster"
+
+  # As Grafana shares a different lifecycle, it is best to use an existing workspace.
+  managed_grafana_workspace_id = var.managed_grafana_workspace_id
+  grafana_api_key              = var.grafana_api_key
 }
 ```
 
-You can optionally reuse existing Workspaces to dissociate their lifecycle from the
-Terraform state.
+You can optionally reuse an existing Amazon Managed Servce for Prometheus Workspaces:
 
 ```hcl
 module "eks_observability_accelerator" {
@@ -57,9 +63,6 @@ module "eks_observability_accelerator" {
 
   # reusing existing Amazon Managed Prometheus Workspace
   managed_prometheus_workspace_id     = "ws-abcd123..."
-
-  # prevents creation of a new Amazon Managed Grafana workspace
-  enable_managed_grafana       = false
 
   managed_grafana_workspace_id = "g-abcdef123"
   grafana_api_key              = var.grafana_api_key

@@ -70,7 +70,6 @@ variable "managed_grafana_workspace_id" {
 variable "grafana_api_key" {
   description = "Grafana API key for the Amazon Managed Grafana workspace"
   type        = string
-  default     = null
 }
 
 variable "tags" {

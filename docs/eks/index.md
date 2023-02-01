@@ -1,20 +1,24 @@
-# Amazon EKS cluster monitoring
+# Amazon EKS cluster metrics
 
 This example demonstrates how to monitor your Amazon Elastic Kubernetes Service
 (Amazon EKS) cluster with the Observability Accelerator's EKS
 [infrastructure module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/workloads/infra).
 
-Monitoring Amazon Elastic Kubernetes Service (Amazon EKS) has two categories:
+Monitoring Amazon Elastic Kubernetes Service (Amazon EKS) for metrics has two categories:
 the control plane and the Amazon EKS nodes (with Kubernetes objects).
 The Amazon EKS control plane consists of control plane nodes that run the Kubernetes software,
 such as etcd and the Kubernetes API server. To read more on the components of an Amazon EKS cluster,
 please read the [service documentation](https://docs.aws.amazon.com/eks/latest/userguide/clusters.html).
 
 The Amazon EKS infrastructure Terraform modules focuses on metrics collection to Amazon
-Managed Service for Prometheus using the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) for Amazon EKS.
-Additionally, it provides default dashboards to get a comprehensible visibility on the nodes,
+Managed Service for Prometheus using the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) for Amazon EKS. It deploys the [node exporter](https://github.com/prometheus/node_exporter) and [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics) in your cluster.
+
+It provides default dashboards to get a comprehensible visibility on your nodes,
 namespaces, pods, and kubelet operations health. Finally, you get curated Prometheus recording rules
 and alerts to operate your cluster.
+
+Additionally, you can optionally collect additional custom Prometheus metrics from your applications running
+on your EKS cluster.
 
 ## Prerequisites
 
@@ -132,28 +136,35 @@ Open the Amazon Managed Service for Prometheus console and view the details of y
 To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
 
 
-## Destroy resources
+## Custom metrics collection
 
-If you leave this stack running, you will continue to incur charges. To remove all resources
-created by Terraform, [refresh your Grafana API key](#6-grafana-api-key) and run the command below.
+In addition to the cluster metrics, if you are interested in collecting Prometheus
+metrics from your pods, you can use setup `custom metrics collection`.
+This will instruct the ADOT collector to scrape your applications metrics based
+on the configuration you provide. You can also exclude some of the metrics and save costs.
 
-Be careful, this command will removing everything created by Terraform. If you wish
-to keep your Amazon Managed Grafana or Amazon Managed Service for Prometheus workspaces. Remove them
-from your terraform state before running the destroy command.
+Using the example, you can edit `examples/existing-cluster-with-base-and-infra/main.tf`.
+In the module `module "workloads_infra" {` add the following config (make sure the values matches your use case):
 
-```bash
-terraform destroy
+```hcl
+enable_custom_metrics = true
+
+custom_metrics_config = {
+    # list of applications ports (example)
+    ports = [8000, 8080]
+
+    # list of series prefixes you want to discard from ingestion
+    dropped_series_prefix = ["go_gcc"]
+}
 ```
 
-To remove resources from your Terraform state, run
+After applying Terraform, on Grafana, you can query Prometheus for your application metrics,
+create alerts and build on your own dashboards. On the explorer section of Grafana, the
+following query will give you the containers exposing metrics that matched the custom metrics
+collection, grouped by cluster and node.
 
-```bash
-# grafana workspace
-terraform state rm "module.eks_observability_accelerator.module.managed_grafana[0].aws_grafana_workspace.this[0]"
-
-# prometheus workspace
-terraform state rm "module.eks_observability_accelerator.aws_prometheus_workspace.this[0]"
+```promql
+sum(up{job="custom-metrics"}) by (container_name, cluster, nodename)
 ```
 
-
-> **Note:** To view all the features proposed by this module, visit the [module documentation](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/workloads/infra).
+<img width="2560" alt="Screenshot 2023-01-31 at 11 16 21" src="https://user-images.githubusercontent.com/10175027/215869004-e05f557d-c81a-41fb-a452-ede9f986cb27.png">

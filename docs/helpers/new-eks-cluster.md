@@ -32,6 +32,22 @@ Specify the AWS Region where the resources will be deployed:
 export TF_VAR_aws_region=xxx
 ```
 
+### 3. Instance Type
+
+Depending on your region or limitations in your account, you might need to change to a different instance type.
+To do this, you can define the instance type to use:
+```bash
+export TF_VAR_managed_node_instance_type=xxx
+```
+
+### 4. Amazon Elastic Kubernetes Service (Amazon EKS) Version
+
+You can override the version of the cluster also:
+```bash
+export TF_VAR_eks_version=xxx
+```
+
+
 ## Deploy
 
 Simply run this command to deploy the example

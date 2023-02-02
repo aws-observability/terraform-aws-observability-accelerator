@@ -8,7 +8,7 @@ apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
   name: observability
-  namespace: adot-collector-kubeprometheus
+  namespace: prometheus
 spec:
   image: public.ecr.aws/aws-observability/aws-otel-collector:v0.20.0
   mode: deployment
@@ -17,8 +17,8 @@ spec:
   config: |
     extensions:
       sigv4auth:
-        region: {{ .Values.region }}
-	service: "aps"
+        region: {{ .Values.region }} 
+        service: "aps"
 
     receivers:
       prometheus:
@@ -26,7 +26,10 @@ spec:
           global:
             scrape_interval: 15s
             scrape_timeout: 10s
-
+	    external_labels: 
+              cluster: {{ .Values.ekscluster }}
+              account_id: {{ .Values.accountId }}
+              region: {{ .Values.region }}
           scrape_configs:
           - job_name: kubernetes-apiservers
             bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -303,8 +306,8 @@ spec:
 
     exporters:
       prometheusremotewrite:
-        endpoint: {{ .Values.ampurl }}
-	auth:
+        endpoint: {{ .Values.ampurl }} 
+        auth:
           authenticator: sigv4auth
         # external_labels:
           # label_name1: some_value1
@@ -321,3 +324,47 @@ spec:
           processors: [batch/metrics]
           exporters: [prometheusremotewrite]
 
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: otel-prometheus-role
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+      - nodes/proxy
+      - services
+      - endpoints
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - nonResourceURLs:
+      - /metrics
+    verbs:
+      - get
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: otel-prometheus-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: otel-prometheus-role
+subjects:
+  - kind: ServiceAccount
+    name: amp-iamproxy-ingest-role
+    namespace: prometheus              

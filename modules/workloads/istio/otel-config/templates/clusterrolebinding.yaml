@@ -8,6 +8,6 @@ roleRef:
   name: otel-prometheus-role
 subjects:
   - kind: ServiceAccount
-    name: amp-iamproxy-ingest-role
+    name: adot-collector-kubeprometheus 
     namespace: adot-collector-kubeprometheus 
 

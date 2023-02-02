@@ -7,27 +7,25 @@
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
-  name: observability
-  namespace: adot-collector-kubeprometheus
+  name: adot 
 spec:
-  image: public.ecr.aws/aws-observability/aws-otel-collector:v0.20.0
+  image: public.ecr.aws/aws-observability/aws-otel-collector:v0.25.0
   mode: deployment
-  serviceAccount: amp-iamproxy-ingest-role
+  serviceAccount: adot-collector-kubeprometheus 
+
   config: |
     extensions:
       sigv4auth:
         region: {{ .Values.region }} 
         service: "aps"
+
     receivers:
       prometheus:
         config:
           global:
             scrape_interval: 15s
             scrape_timeout: 10s
-      external_labels: 
-              cluster: {{ .Values.ekscluster }}
-              account_id: {{ .Values.accountId }}
-              region: {{ .Values.region }}
+
           scrape_configs:
           - job_name: kubernetes-apiservers
             bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -321,3 +319,4 @@ spec:
           receivers: [prometheus]
           processors: [batch/metrics]
           exporters: [prometheusremotewrite]
+

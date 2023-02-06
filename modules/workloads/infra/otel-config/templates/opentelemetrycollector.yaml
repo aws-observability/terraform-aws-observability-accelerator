@@ -7,11 +7,6 @@ spec:
   {{ if .Values.enableTracing }}
   mode: daemonset
   hostNetwork: true
-  ports:
-    - port: 4317
-      name: "otlpgrpc"
-    - port: 4318
-      name: "oltphttp"
   {{ else }}
   mode: deployment
   {{ end }}

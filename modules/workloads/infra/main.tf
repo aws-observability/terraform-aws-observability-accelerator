@@ -41,7 +41,7 @@ module "helm_addon" {
     {
       name        = local.name
       chart       = "${path.module}/otel-config"
-      version     = "0.3.1"
+      version     = "0.4.0"
       namespace   = local.namespace
       description = "ADOT helm Chart deployment configuration"
     },

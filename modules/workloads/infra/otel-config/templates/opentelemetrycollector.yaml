@@ -3,7 +3,6 @@ kind: OpenTelemetryCollector
 metadata:
   name: adot
 spec:
-  image: public.ecr.aws/aws-observability/aws-otel-collector:v0.22.1
   {{ if .Values.enableTracing }}
   mode: daemonset
   hostNetwork: true

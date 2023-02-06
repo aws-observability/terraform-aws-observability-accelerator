@@ -8,6 +8,8 @@ globalScrapeSampleLimit: ${global_scrape_sample_limit}
 enableTracing: ${enable_tracing}
 otlpGrpcEndpoint: ${otlp_grpc_endpoint}
 otlpHttpEndpoint: ${otlp_http_endpoint}
+tracingTimeout: ${tracing_timeout}
+tracingSendBatchSize: ${tracing_send_batch_size}
 
 enableCustomMetrics: ${enable_custom_metrics}
 customMetricsPorts: ${custom_metrics_ports}

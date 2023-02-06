@@ -1729,8 +1729,8 @@ spec:
         send_batch_size: 500
     {{ if .Values.enableTracing }}
       batch/traces:
-        timeout: 10s
-        send_batch_size: 50
+        timeout: {{ .Values.tracingTimeout }}
+        send_batch_size: {{ .Values.tracingBatchSize }}
     {{ end }}
     service:
       extensions: [pprof, zpages, health_check, sigv4auth]

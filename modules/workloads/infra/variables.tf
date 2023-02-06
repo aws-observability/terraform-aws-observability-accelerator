@@ -164,6 +164,23 @@ variable "enable_tracing" {
   default     = false
 }
 
+variable "tracing_config" {
+  description = "Configuration object for traces collection to AWS X-Ray"
+  type = object({
+    otlp_grpc_endpoint = string
+    otlp_http_endpoint = string
+    send_batch_size    = number
+    timeout            = string
+  })
+
+  default = {
+    otlp_grpc_endpoint = "0.0.0.0:4317"
+    otlp_http_endpoint = "0.0.0.0:4318"
+    send_batch_size    = 50
+    timeout            = "30s"
+  }
+}
+
 variable "enable_custom_metrics" {
   description = "Allows additional metrics collection for config elements in the `custom_metrics_config` config object. Automatic dashboards are not included"
   type        = bool

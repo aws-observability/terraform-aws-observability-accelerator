@@ -27,12 +27,10 @@ These modules can be directly configured in your exisiting Terraform configurati
 to be deployed in our packaged
 [examples](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples)
 
-!!! tip
+We have supporting examples for quick setup such as:
 
-    We have supporting examples for quick setup such as:
-
-    - Creating an empty Amazon EKS cluster and a VPC
-    - Creating and configure an Amazon Managed Grafana workspace with SSO
+- Creating an empty Amazon EKS cluster and a VPC
+- Creating and configure an Amazon Managed Grafana workspace with SSO
 
 ## Motivation
 

@@ -13,10 +13,8 @@ All examples in this repository require the following tools installed
 To run the examples, you need a set of AWS IAM permissions. You can find an example of minimum
 permissions required [in this file](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/docs/iam/min-iam-policy.json).
 
-!!! warning
-
-    The policy resource is set as `*` to allow all resources, this is not a recommended practice.
-    You should restrict instead to the ARNs when applicable.
+> **Note**: The policy resource is set as `*` to allow all resources, this is not a recommended practice.
+You should restrict instead to the ARNs when applicable.
 
 ### Terraform states and variables
 
@@ -29,9 +27,7 @@ You can also edit the `terraform.tfvars` files directly and deploy
 with `terraform apply -var-file=terraform.tfvars`. Terraform tfvars file can be useful if
 you need to track changes as part of a Git repository or CI/CD pipeline.
 
-!!! warning
-
-    When using `tfvars` files, always be careful to not store and commit any secrets (keys, passwords, ...)
+> **Note:** When using `tfvars` files, always be careful to not store and commit any secrets (keys, passwords, ...)
 
 ## Base module
 
@@ -95,7 +91,6 @@ All the modules come with end-to-end deployable examples.
 
 You can find **workload** examples like [Amazon EKS infrstructure monitoring](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/) or [monitoring your Amazon Managed Service for Prometheus workspace](https://aws-observability.github.io/terraform-aws-observability-accelerator/workloads/managed-prometheus/) and more.
 
-![example diagram](images/example-diagram.svg)
 
 ## Getting started with AWS Observability services
 

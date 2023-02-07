@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-prometheus
+  namespace: service-mon
+spec:
+  ports:
+  - name: ingress-prometheus
+    port: 80
+    protocol: TCP
+    targetPort: 9901
+  selector:
+    app: controller-nginx-ingress
+  type: ClusterIP

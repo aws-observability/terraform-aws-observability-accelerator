@@ -1,0 +1,14 @@
+
+global:
+  scrape_interval: 30s
+
+scrape_configs:
+- job_name: ingress
+  honor_timestamps: true
+  scrape_interval: 1m
+  scrape_timeout: 1m
+  metrics_path: /metrics
+  scheme: http
+  static_configs:
+  - targets:
+    - ingress-prometheus.default.svc.cluster.local:80

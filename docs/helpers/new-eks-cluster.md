@@ -10,8 +10,9 @@ This example deploys the following:
 
 ## Prerequisites
 
-Make sure to complete the [prerequisites section](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/#prerequisites)
-before proceeding.
+!!! note
+    Make sure to complete the [prerequisites section](https://aws-observability.github.io/    terraform-aws-observability-accelerator/concepts/#prerequisites)
+    before proceeding.
 
 
 ## Setup

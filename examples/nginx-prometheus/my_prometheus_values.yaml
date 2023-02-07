@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 30s
+
+scrape_configs:
+- job_name: ingress
+  honor_timestamps: true
+  scrape_interval: 1m
+  scrape_timeout: 1m
+  metrics_path: /metrics
+  scheme: http
+  static_configs:
+  - targets:
+    - ingress-prometheus.default.svc.cluster.local:80
+server:
+  remoteWrite:
+    - url: https://aps-workspaces.us-east-2.amazonaws.com/workspaces/ws-8a723243-1cb9-4e74-ad6e-bba4274a4206/api/v1/remote_write
+      sigv4:
+        region: us-east-2
+      queue_config:
+        max_samples_per_send: 1000
+        max_shards: 200
+        capacity: 2500

@@ -7,8 +7,8 @@ configuration options on the cluster infrastructure.
 
 ## Prerequisites
 
-Make sure to complete the [prerequisites section](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/#prerequisites)
-before proceeding.
+!!! note
+    Make sure to complete the [prerequisites section](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/#prerequisites) before proceeding.
 
 ## Setup
 
@@ -118,8 +118,8 @@ Open the Amazon Managed Service for Prometheus console and view the details of y
 
 <img width="1314" alt="image" src="https://user-images.githubusercontent.com/97046295/194904104-09a28577-d149-478e-b0a1-dc21cb7effc1.png">
 
-
-To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
+!!! note
+    To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
 
 
 ## Deploy an Example Java Application
@@ -178,9 +178,10 @@ tomcat-traffic-generator          1/1     Running             0          11s
 If you leave this stack running, you will continue to incur charges. To remove all resources
 created by Terraform, [refresh your Grafana API key](#6-grafana-api-key) and run the command below.
 
-Be careful, this command will removing everything created by Terraform. If you wish
-to keep your Amazon Managed Grafana or Amazon Managed Service for Prometheus workspaces. Remove them
-from your terraform state before running the destroy command.
+!!! warning
+    Be careful, this command will removing everything created by Terraform. If you wish
+    to keep your Amazon Managed Grafana or Amazon Managed Service for Prometheus workspaces. Remove them
+    from your terraform state before running the destroy command.
 
 ```bash
 terraform destroy

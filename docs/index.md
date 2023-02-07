@@ -3,7 +3,7 @@
 Welcome to the AWS Observability Accelerator for Terraform!
 
 The AWS Observability accelerator is a set of Terraform modules to help you
-configure Observability for your container workloads and environemnts with AWS
+configure Observability for your container workloads and environments with AWS
 Observability services. This project proposes a core module to bootstrap
 your Amazon EKS cluster with the AWS Distro for OpenTelemetry (ADOT) Operator for EKS,
 Amazon Managed Service for Prometheus, Amazon Managed Grafana.
@@ -23,19 +23,20 @@ dashboards and alerts for monitoring:
 - Java/JMX workloads (running on Amazon EKS)
 - Amazon Managed Service for Prometheus workspaces with Amazon CloudWatch
 
-These modules can be directly configured in your exisiting Terraform configurations or ready
+These modules can be directly configured in your existing Terraform configurations or ready
 to be deployed in our packaged
 [examples](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples)
 
-We have supporting examples for quick setup such as:
+!!! tip
+    We have supporting examples for quick setup such as:
 
-- Creating an empty Amazon EKS cluster and a VPC
-- Creating and configure an Amazon Managed Grafana workspace with SSO
+    - Creating an empty Amazon EKS cluster and a VPC
+    - Creating and configure an Amazon Managed Grafana workspace with SSO
 
 ## Motivation
 
-To gain deep visibility into your workloads and environements, AWS proposes a
-set of secure, scalabale, highly available, production-grade managed open
+To gain deep visibility into your workloads and environments, AWS proposes a
+set of secure, scalable, highly available, production-grade managed open
 source services such as Amazon Managed Service for Prometheus, Amazon Managed
 Grafana and Amazon OpenSearch.
 
@@ -43,7 +44,7 @@ AWS customers have asked for best-practices and guidance to collect metrics, log
 and traces from their containerized applications and microservices with ease of
 deployment. Customers can use the AWS Observability Accelerator to configure their
 metrics collection, leveraging [AWS Distro for OpenTelemetry](https://aws-otel.github.io/),
-to have opinionated dashoards and alerts available in only minutes.
+to have opinionated dashboards and alerts available in only minutes.
 
 
 ## Support & Feedback

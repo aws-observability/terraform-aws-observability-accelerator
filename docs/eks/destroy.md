@@ -5,7 +5,7 @@ created by Terraform, [refresh your Grafana API key](https://aws-observability.g
 
 !!! warning
     Be careful, this command will removing everything created by Terraform. If you wish
-    to keep your Amazon Managed Grafana or Amazon Managed Service for Prometheus workspaces. Remove     them
+    to keep your Amazon Managed Grafana or Amazon Managed Service for Prometheus workspaces. Remove them
     from your terraform state before running the destroy command.
 
 ```bash

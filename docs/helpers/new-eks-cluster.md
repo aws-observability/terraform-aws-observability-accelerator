@@ -1,7 +1,7 @@
 # Creating a new Amazon EKS cluster with VPC
 
 !!! note
-    This example is a subset from [this EKS Blueprint example](https://github.com/aws-ia/    terraform-aws-eks-blueprints/tree/main/examples/eks-cluster-with-new-vpc)
+    This example is a subset from [this EKS Blueprint example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/eks-cluster-with-new-vpc)
 
 This example deploys the following:
 
@@ -11,8 +11,8 @@ This example deploys the following:
 
 ## Prerequisites
 
-Make sure to complete the [prerequisites section](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/#prerequisites)
-before proceeding.
+!!! note
+    Make sure to complete the [prerequisites section](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/#prerequisites) before proceeding.
 
 
 ## Setup

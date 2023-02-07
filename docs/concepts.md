@@ -55,7 +55,7 @@ module "eks_observability_accelerator" {
 }
 ```
 
-You can optionally reuse an existing Amazon Managed Servce for Prometheus Workspace:
+You can optionally reuse an existing Amazon Managed Service for Prometheus Workspace:
 
 ```hcl
 module "eks_observability_accelerator" {

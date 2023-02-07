@@ -22,8 +22,9 @@ on your EKS cluster.
 
 ## Prerequisites
 
-Make sure to complete the [prerequisites section](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/#prerequisites)
-before proceeding.
+!!! note
+    Make sure to complete the [prerequisites section](https://aws-observability.github.io/    terraform-aws-observability-accelerator/concepts/#prerequisites)
+    before proceeding.
 
 ## Setup
 
@@ -132,8 +133,8 @@ Open the Amazon Managed Service for Prometheus console and view the details of y
 
 <img width="1629" alt="image" src="https://user-images.githubusercontent.com/10175027/189301297-4865e75d-2d71-434f-b5d0-9750b3533632.png">
 
-
-To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
+!!! note
+    To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.    com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
 
 
 ## Custom metrics collection

@@ -13,8 +13,9 @@ All examples in this repository require the following tools installed
 To run the examples, you need a set of AWS IAM permissions. You can find an example of minimum
 permissions required [in this file](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/docs/iam/min-iam-policy.json).
 
-> **Note**: The policy resource is set as `*` to allow all resources, this is not a recommended practice.
-You should restrict instead to the ARNs when applicable.
+!!! warning
+    The policy resource is set as `*` to allow all resources, this is not a recommended practice.
+    You should restrict instead to the ARNs when applicable.
 
 ### Terraform states and variables
 
@@ -27,7 +28,8 @@ You can also edit the `terraform.tfvars` files directly and deploy
 with `terraform apply -var-file=terraform.tfvars`. Terraform tfvars file can be useful if
 you need to track changes as part of a Git repository or CI/CD pipeline.
 
-> **Note:** When using `tfvars` files, always be careful to not store and commit any secrets (keys, passwords, ...)
+!!! warning
+    When using `tfvars` files, always be careful to not store and commit any secrets (keys,     passwords, ...)
 
 ## Base module
 
@@ -89,7 +91,9 @@ All the modules come with end-to-end deployable examples.
 
 [Examples](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples) put modules together in a ready to deploy terraform configuration as a starting point. With little to no configuration, you can run `terraform apply` and use the deployed resources on your AWS Account.
 
-You can find **workload** examples like [Amazon EKS infrstructure monitoring](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/) or [monitoring your Amazon Managed Service for Prometheus workspace](https://aws-observability.github.io/terraform-aws-observability-accelerator/workloads/managed-prometheus/) and more.
+You can find **workload** examples like [Amazon EKS infrastructure monitoring](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/) or [monitoring your Amazon Managed Service for Prometheus workspace](https://aws-observability.github.io/terraform-aws-observability-accelerator/workloads/managed-prometheus/) and more.
+
+![example diagram](images/example-diagram.svg)
 
 
 ## Getting started with AWS Observability services

@@ -7,8 +7,9 @@ configuration options on the cluster infrastructure.
 
 ## Prerequisites
 
-Make sure to complete the [prerequisites section](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/#prerequisites)
-before proceeding.
+!!! note
+    Make sure to complete the [prerequisites section](https://aws-observability.github.io/    terraform-aws-observability-accelerator/concepts/#prerequisites)
+    before proceeding.
 
 ## Setup
 
@@ -178,9 +179,10 @@ tomcat-traffic-generator          1/1     Running             0          11s
 If you leave this stack running, you will continue to incur charges. To remove all resources
 created by Terraform, [refresh your Grafana API key](#6-grafana-api-key) and run the command below.
 
-Be careful, this command will removing everything created by Terraform. If you wish
-to keep your Amazon Managed Grafana or Amazon Managed Service for Prometheus workspaces. Remove them
-from your terraform state before running the destroy command.
+!!! warning
+    Be careful, this command will removing everything created by Terraform. If you wish
+    to keep your Amazon Managed Grafana or Amazon Managed Service for Prometheus workspaces. Remove     them
+    from your terraform state before running the destroy command.
 
 ```bash
 terraform destroy

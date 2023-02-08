@@ -1,0 +1,49 @@
+site_name: AWS Observability Accelerator for Terraform
+docs_dir: "docs"
+copyright: "Copyright &copy; Amazon 2022"
+site_author: "AWS"
+site_url: "https://aws-observability.github.io/terraform-aws-observability-accelerator/"
+repo_name: "aws-observability/terraform-aws-observability-accelerator"
+repo_url: "https://github.com/aws-observability/terraform-aws-observability-accelerator"
+
+theme:
+  logo: ../images/aws-logo.png
+  favicon: ../images/aws-favicon.png
+  name: material
+  font:
+    text: ember
+  custom_dir: docs/overrides
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.tabs.sticky
+
+  palette:
+    primary: indigo
+    accent: grey
+
+nav:
+  - Home: index.md
+  - Concepts: concepts.md
+  - Amazon EKS:
+      - Infrastructure monitoring: eks/index.md
+      - Teardown: eks/destroy.md
+  - Workload Monitoring:
+      - Java/JMX: workloads/java.md
+      - Nginx: workloads/nginx.md
+      - Amazon Managed Service for Prometheus Workspaces: workloads/managed-prometheus.md
+  - Supporting Examples:
+      - EKS Cluster with VPC: helpers/new-eks-cluster.md
+        # - Amazon Managed Grafana setup: helpers/managed-grafana.md
+  - Contributors: contributors.md
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - codehilite
+  - footnotes
+  - pymdownx.critic
+
+plugins:
+  - search

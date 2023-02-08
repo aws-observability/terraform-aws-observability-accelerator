@@ -41,7 +41,7 @@ module "helm_addon" {
     {
       name        = local.name
       chart       = "${path.module}/otel-config"
-      version     = "0.3.1"
+      version     = "0.4.0"
       namespace   = local.namespace
       description = "ADOT helm Chart deployment configuration"
     },
@@ -73,6 +73,38 @@ module "helm_addon" {
       name  = "accountId"
       value = local.context.aws_caller_identity_account_id
     },
+    {
+      name  = "enableTracing"
+      value = var.enable_tracing
+    },
+    {
+      name  = "otlpHttpEndpoint"
+      value = var.tracing_config.otlp_http_endpoint
+    },
+    {
+      name  = "otlpGrpcEndpoint"
+      value = var.tracing_config.otlp_grpc_endpoint
+    },
+    {
+      name  = "tracingTimeout"
+      value = var.tracing_config.timeout
+    },
+    {
+      name  = "tracingSendBatchSize"
+      value = var.tracing_config.send_batch_size
+    },
+    {
+      name  = "enableCustomMetrics"
+      value = var.enable_custom_metrics
+    },
+    {
+      name  = "customMetricsPorts"
+      value = format(".*:(%s)$", join("|", var.custom_metrics_config.ports))
+    },
+    {
+      name  = "customMetricsDroppedSeriesPrefixes"
+      value = format("(%s.*)$", join(".*|", var.custom_metrics_config.dropped_series_prefixes))
+    }
   ]
 
   irsa_config = {
@@ -80,7 +112,10 @@ module "helm_addon" {
     kubernetes_namespace              = local.namespace
     create_kubernetes_service_account = true
     kubernetes_service_account        = try(var.helm_config.service_account, local.name)
-    irsa_iam_policies                 = ["arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonPrometheusRemoteWriteAccess"]
+    irsa_iam_policies = [
+      "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonPrometheusRemoteWriteAccess",
+      "arn:${data.aws_partition.current.partition}:iam::aws:policy/AWSXrayWriteOnlyAccess"
+    ]
   }
 
   addon_context = local.context

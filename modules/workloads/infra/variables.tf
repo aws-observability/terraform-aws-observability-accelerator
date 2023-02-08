@@ -18,14 +18,15 @@ variable "irsa_iam_role_path" {
 variable "irsa_iam_permissions_boundary" {
   description = "IAM permissions boundary for IRSA roles"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "managed_prometheus_workspace_endpoint" {
   description = "Amazon Managed Prometheus Workspace Endpoint"
   type        = string
-  default     = null
+  default     = ""
 }
+
 variable "managed_prometheus_workspace_id" {
   description = "Amazon Managed Prometheus Workspace ID"
   type        = string
@@ -86,7 +87,7 @@ variable "ksm_config" {
   default = {
     create_namespace   = true
     helm_chart_name    = "kube-state-metrics"
-    helm_chart_version = "4.16.0"
+    helm_chart_version = "4.24.0"
     helm_release_name  = "kube-state-metrics"
     helm_repo_url      = "https://prometheus-community.github.io/helm-charts"
     helm_settings      = {}
@@ -155,4 +156,48 @@ variable "prometheus_config" {
     global_scrape_timeout  = "15s"
   }
   nullable = false
+}
+
+variable "enable_tracing" {
+  description = "(Experimental) Enables tracing with AWS X-Ray. This changes the deploy mode of the collector to daemon set. Requirement: adot add-on <= 0.58-build.0"
+  type        = bool
+  default     = false
+}
+
+variable "tracing_config" {
+  description = "Configuration object for traces collection to AWS X-Ray"
+  type = object({
+    otlp_grpc_endpoint = string
+    otlp_http_endpoint = string
+    send_batch_size    = number
+    timeout            = string
+  })
+
+  default = {
+    otlp_grpc_endpoint = "0.0.0.0:4317"
+    otlp_http_endpoint = "0.0.0.0:4318"
+    send_batch_size    = 50
+    timeout            = "30s"
+  }
+}
+
+variable "enable_custom_metrics" {
+  description = "Allows additional metrics collection for config elements in the `custom_metrics_config` config object. Automatic dashboards are not included"
+  type        = bool
+  default     = false
+}
+
+variable "custom_metrics_config" {
+  description = "Configuration object to enable custom metrics collection"
+  type = object({
+    ports = list(number)
+    # paths = optional(list(string), ["/metrics"])
+    # list of samples to be dropped by label prefix, ex: go_ -> discards go_.*
+    dropped_series_prefixes = list(string)
+  })
+
+  default = {
+    ports                   = []
+    dropped_series_prefixes = ["unspecified"]
+  }
 }

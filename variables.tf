@@ -17,7 +17,7 @@ variable "irsa_iam_role_path" {
 variable "irsa_iam_permissions_boundary" {
   description = "IAM permissions boundary for IRSA roles"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "enable_amazon_eks_adot" {
@@ -70,7 +70,6 @@ variable "managed_grafana_workspace_id" {
 variable "grafana_api_key" {
   description = "Grafana API key for the Amazon Managed Grafana workspace"
   type        = string
-  default     = null
 }
 
 variable "tags" {

@@ -108,8 +108,8 @@ Go to the Dashboards panel of your Grafana workspace. There will be a folder cal
 
 Open the "Java/JMX" dashboard to view its visualization
 
+<img width="2560" alt="Screenshot 2023-02-09 at 14 04 59" src="https://user-images.githubusercontent.com/10175027/217821001-2119c81f-94bd-4811-8bbb-caaf1ae5a77a.png">
 
-![image](https://user-images.githubusercontent.com/10175027/195903211-c47a5746-daa7-41f2-a6ea-bfe13f630c63.png)
 
 
 2. Amazon Managed Service for Prometheus rules and alerts

@@ -98,16 +98,13 @@ Go to the Dashboards panel of your Grafana workspace. There will be a folder cal
 
 Open the "Java/JMX" dashboard to view its visualization
 
-
-![image](https://user-images.githubusercontent.com/10175027/195903211-c47a5746-daa7-41f2-a6ea-bfe13f630c63.png)
-
+<img width="2560" alt="Grafana Java dashboard" src="https://user-images.githubusercontent.com/10175027/217821001-2119c81f-94bd-4811-8bbb-caaf1ae5a77a.png">
 
 2. Amazon Managed Service for Prometheus rules and alerts
 
 Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you will find new rules deployed.
 
 <img width="1314" alt="image" src="https://user-images.githubusercontent.com/97046295/194904104-09a28577-d149-478e-b0a1-dc21cb7effc1.png">
-
 
 To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
 

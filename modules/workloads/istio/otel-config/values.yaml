@@ -1,9 +1,11 @@
 ampurl: ${amp_url}
 region: ${region}
 ekscluster: ${eks_cluster}
+prometheusMetricsEndpoint: ${prometheus_metrics_endpoint}
+globalScrapeInterval: ${scrape_interval}
+globalScrapeTimeout: ${scrape_timeout}
+scrapeSampleLimit: ${scrape_sample_limit}
 
-globalScrapeTimeout: ${global_scrape_timeout}
-globalScrapeSampleLimit: ${global_scrape_sample_limit}
 # TODO: enable after terraform 1.3 as defaults will be optional
 
 #nodeExporterScrapeInterval: ${node_exporter_scrape_interval}

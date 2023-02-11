@@ -26,7 +26,7 @@ resource "grafana_dashboard" "this" {
 }
 
 module "billing" {
-  source = "../../workloads/managed-prometheus-monitoring/billing"
+  source = "./billing"
   providers = {
     aws = aws.billing_region
   }

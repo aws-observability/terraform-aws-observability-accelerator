@@ -1,55 +1,44 @@
-module "helm_addon" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.13.1"
+resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
+  count = var.enable_alerting_rules ? 1 : 0
 
-  helm_config = merge(
-    {
-      name        = local.name
-      chart       = "${path.module}/otel-config"
-      version     = "0.2.0"
-      namespace   = local.namespace
-      description = "ADOT helm Chart deployment configuration"
-    },
-    var.helm_config
-  )
+  name         = "accelerator-nginx-alerting"
+  workspace_id = var.managed_prometheus_workspace_id
+  data         = <<EOF
+groups:
+    - name: Nginx-HTTP-4xx-error-rate
+      rules:
+      - alert: metric:alerting_rule
+        expr: sum(rate(nginx_http_requests_total{status=~"^4.."}[1m])) / sum(rate(nginx_http_requests_total[1m])) * 100 > 5
+        for: 1m
+        labels:
+         severity: critical
+        annotations:
+         summary: Nginx high HTTP 4xx error rate (instance {{ $labels.instance }})
+         description: "Too many HTTP requests with status 4xx (> 5%)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+    - name: Nginx-HTTP-5xx-error-rate
+      rules:
+      - alert: metric:alerting_rule
+        expr: sum(rate(nginx_http_requests_total{status=~"^5.."}[1m])) / sum(rate(nginx_http_requests_total[1m])) * 100 > 5
+        for: 1m
+        labels:
+         severity: critical
+        annotations:
+         summary: Nginx high HTTP 5xx error rate (instance {{ $labels.instance }})
+         description: "Too many HTTP requests with status 5xx (> 5%)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+    - name: Nginx-high-latency
+      rules:
+      - alert: metric:alerting_rule
+        expr: histogram_quantile(0.99, sum(rate(nginx_http_request_duration_seconds_bucket[2m])) by (host, node)) > 3
+        for: 2m
+        labels:
+         severity: warning
+        annotations:
+         summary: Nginx latency high (instance {{ $labels.instance }})
+         description: "Nginx p99 latency is higher than 3 seconds\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+EOF
+}
+resource "grafana_dashboard" "workloads" {
+  folder      = var.dashboards_folder_id
+  config_json = file("${path.module}/dashboards/nginx.json")
 
-  set_values = [
-    {
-      name  = "ampurl"
-      value = "${var.managed_prometheus_workspace_endpoint}api/v1/remote_write"
-    },
-    {
-      name  = "region"
-      value = var.managed_prometheus_workspace_region
-    },
-    {
-      name  = "prometheusMetricsEndpoint"
-      value = "metrics"
-    },
-    {
-      name  = "prometheusMetricsPort"
-      value = 8888
-    },
-    {
-      name  = "scrapeInterval"
-      value = "15s"
-    },
-    {
-      name  = "scrapeTimeout"
-      value = "10s"
-    },
-    {
-      name  = "scrapeSampleLimit"
-      value = 1000
-    }
-  ]
-
-  irsa_config = {
-    create_kubernetes_namespace       = try(var.helm_config["create_namespace"], true)
-    kubernetes_namespace              = local.namespace
-    create_kubernetes_service_account = true
-    kubernetes_service_account        = try(var.helm_config.service_account, local.name)
-    irsa_iam_policies                 = ["arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonPrometheusRemoteWriteAccess"]
-  }
-
-  addon_context = local.context
 }

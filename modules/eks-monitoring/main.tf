@@ -112,6 +112,18 @@ module "helm_addon" {
     {
       name  = "javaScrapeSampleLimit"
       value = var.java_config.scrape_sample_limit
+    },
+    {
+      name  = "enable_nginx"
+      value = var.enable_nginx
+    },
+    {
+      name  = "nginxScrapeSampleLimit"
+      value = var.nginx_config.scrape_sample_limit
+    },
+    {
+      name  = "nginxPrometheusMetricsEndpoint"
+      value = var.nginx_config.prometheus_metrics_endpoint
     }
   ]
 
@@ -130,11 +142,22 @@ module "helm_addon" {
 }
 
 module "java_monitoring" {
-
   source = "./patterns/java"
+  count = var.enable_java ? 1 : 0
 
   managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
   enable_alerting_rules           = var.java_config.enable_alerting_rules
+  dashboards_folder_id            = var.dashboards_folder_id
+
+  tags = var.tags
+}
+
+module "nginx_monitoring" {
+  source = "./patterns/nginx"
+  count = var.enable_nginx ? 1 : 0
+
+  managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+  enable_alerting_rules           = var.nginx_config.enable_alerting_rules
   dashboards_folder_id            = var.dashboards_folder_id
 
   tags = var.tags

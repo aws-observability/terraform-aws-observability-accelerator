@@ -1736,6 +1736,39 @@ spec:
                   action: drop
             {{ end }}
 
+            {{ if .Values.enableNginx }}
+            - job_name: 'kubernetes-nginx'
+              sample_limit: {{ .Values.nginxScrapeSampleLimit }}
+              metrics_path: /{{ .Values.nginxPrometheusMetricsEndpoint }}
+              kubernetes_sd_configs:
+                - role: pod
+              relabel_configs:
+                - source_labels: [ __address__ ]
+                  action: keep
+                  regex: '.*:10254$'
+                - source_labels: [__meta_kubernetes_pod_container_name]
+                  target_label: container
+                  action: replace
+                - source_labels: [__meta_kubernetes_pod_node_name]
+                  target_label: host
+                  action: replace
+                - source_labels: [__meta_kubernetes_namespace]
+                  target_label: namespace
+                  action: replace
+              metric_relabel_configs:
+                - source_labels: [__name__]
+                  regex: 'go_memstats.*'
+                  action: drop
+                - source_labels: [__name__]
+                  regex: 'go_gc.*'
+                  action: drop
+                - source_labels: [__name__]
+                  regex: 'go_threads'
+                  action: drop
+                - regex: exported_host
+                  action: labeldrop
+            {{ end }}
+
     exporters:
       {{ if .Values.enableTracing }}
       awsxray:

@@ -3,15 +3,9 @@ kind: OpenTelemetryCollector
 metadata:
   name: adot
 spec:
-  image: public.ecr.aws/aws-observability/aws-otel-collector:v0.22.1
   {{ if .Values.enableTracing }}
   mode: daemonset
   hostNetwork: true
-  ports:
-    - port: 4317
-      name: "otlpgrpc"
-    - port: 4318
-      name: "oltphttp"
   {{ else }}
   mode: deployment
   {{ end }}
@@ -1735,8 +1729,8 @@ spec:
         send_batch_size: 500
     {{ if .Values.enableTracing }}
       batch/traces:
-        timeout: 10s
-        send_batch_size: 50
+        timeout: {{ .Values.tracingTimeout }}
+        send_batch_size: {{ .Values.tracingBatchSize }}
     {{ end }}
     service:
       extensions: [pprof, zpages, health_check, sigv4auth]

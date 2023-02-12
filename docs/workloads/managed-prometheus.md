@@ -7,10 +7,10 @@ workspace dashboard.
 
 ## Prerequisites
 
-Make sure to complete the [prerequisites section](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/#prerequisites)
-before proceeding.
-
-> This example doesn't require an Amazon EKS cluster and Kubernetes tools (ex. `kubectl`).
+!!! note
+    Make sure to complete the [prerequisites section](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/#prerequisites)
+    before proceeding.
+    This example doesn't require an Amazon EKS cluster and Kubernetes tools (ex. `kubectl`).
 
 ## Setup
 
@@ -96,3 +96,17 @@ Open the CloudWatch console and click `Alarms` > `All Alarms` to review the serv
 In us-east-1 region an alarm is created for billing. This alarm utilizes anomaly detection to detect anomalies in the Estimated Charges billing metric.
 
 <img width="1346" alt="image" src="https://user-images.githubusercontent.com/97046295/197042518-a98d69df-8f53-4a4a-afb8-f424d91da56f.png">
+
+## Destroy resources
+
+If you leave this stack running, you will continue to incur charges. To remove all resources
+created by Terraform, [refresh your Grafana API key](#5-grafana-api-key) and run the command below.
+
+!!! warning
+    Be careful, this command will remove everything created by Terraform. If you wish
+    to keep your Amazon Managed Grafana Dashboards or CloudWatch Alarms. Remove them
+    from your terraform state before running the destroy command.
+
+```bash
+terraform destroy
+```

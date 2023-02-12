@@ -41,7 +41,7 @@ module "helm_addon" {
     {
       name        = local.name
       chart       = "${path.module}/otel-config"
-      version     = "0.3.1"
+      version     = "0.4.0"
       namespace   = local.namespace
       description = "ADOT helm Chart deployment configuration"
     },
@@ -79,11 +79,19 @@ module "helm_addon" {
     },
     {
       name  = "otlpHttpEndpoint"
-      value = "0.0.0.0:4318"
+      value = var.tracing_config.otlp_http_endpoint
     },
     {
       name  = "otlpGrpcEndpoint"
-      value = "0.0.0.0:4317"
+      value = var.tracing_config.otlp_grpc_endpoint
+    },
+    {
+      name  = "tracingTimeout"
+      value = var.tracing_config.timeout
+    },
+    {
+      name  = "tracingSendBatchSize"
+      value = var.tracing_config.send_batch_size
     },
     {
       name  = "enableCustomMetrics"

@@ -222,14 +222,14 @@ variable "enable_nginx" {
 variable "nginx_config" {
   description = "Configuration object for NGINX monitoring"
   type = object({
-    enable_alerting_rules = bool
-    scrape_sample_limit   = number
+    enable_alerting_rules       = bool
+    scrape_sample_limit         = number
     prometheus_metrics_endpoint = string
   })
 
   default = {
-    enable_alerting_rules = true
-    scrape_sample_limit   = 1000
+    enable_alerting_rules       = true
+    scrape_sample_limit         = 1000
     prometheus_metrics_endpoint = "metrics"
   }
 }

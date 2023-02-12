@@ -41,7 +41,7 @@ The base module serve as an anchor to the workload modules and cannot run on its
 module "eks_observability_accelerator" {
   # use release tags and check for the latest versions
   # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
-  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1"
 
   aws_region     = "eu-west-1"
   eks_cluster_id = "my-eks-cluster"
@@ -58,7 +58,7 @@ You can optionally reuse an existing Amazon Managed Servce for Prometheus Worksp
 module "eks_observability_accelerator" {
   # use release tags and check for the latest versions
   # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
-  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1"
 
   aws_region     = "eu-west-1"
   eks_cluster_id = "my-eks-cluster"
@@ -143,7 +143,7 @@ If you are interested in contributing, see the [Contribution guide](https://gith
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_managed_grafana"></a> [managed\_grafana](#module\_managed\_grafana) | terraform-aws-modules/managed-service-grafana/aws | ~> 1.3 |
-| <a name="module_operator"></a> [operator](#module\_operator) | ./modules/add-ons/adot-operator | n/a |
+| <a name="module_operator"></a> [operator](#module\_operator) | ./modules/eks-monitoring/add-ons/adot-operator | n/a |
 
 ## Resources
 

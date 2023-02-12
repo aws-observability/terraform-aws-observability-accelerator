@@ -1,5 +1,5 @@
 module "operator" {
-  source = "./modules/eks/add-ons/adot-operator"
+  source = "./modules/eks-monitoring/add-ons/adot-operator"
   count  = var.enable_amazon_eks_adot ? 1 : 0
 
   enable_cert_manager = var.enable_cert_manager

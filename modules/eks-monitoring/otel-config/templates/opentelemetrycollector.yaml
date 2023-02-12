@@ -1703,6 +1703,39 @@ spec:
                 - source_labels: [ __name__ ]
                   regex: '{{ .Values.customMetricsDroppedSeriesPrefixes }}'
                   action: drop
+
+            {{ if .Values.enableJava }}
+            - job_name: 'kubernetes-java-jmx'
+              sample_limit: {{ .Values.javaScrapeSampleLimit }}
+              kubernetes_sd_configs:
+                - role: pod
+              relabel_configs:
+                - source_labels: [ __address__ ]
+                  action: keep
+                  regex: '.*:9404$'
+                - action: labelmap
+                  regex: __meta_kubernetes_pod_label_(.+)
+                - action: replace
+                  source_labels: [ __meta_kubernetes_namespace ]
+                  target_label: Namespace
+                - source_labels: [ __meta_kubernetes_pod_name ]
+                  action: replace
+                  target_label: pod_name
+                - action: replace
+                  source_labels: [ __meta_kubernetes_pod_container_name ]
+                  target_label: container_name
+                - action: replace
+                  source_labels: [ __meta_kubernetes_pod_controller_kind ]
+                  target_label: pod_controller_kind
+                - action: replace
+                  source_labels: [ __meta_kubernetes_pod_phase ]
+                  target_label: pod_controller_phase
+              metric_relabel_configs:
+                - source_labels: [ __name__ ]
+                  regex: 'jvm_gc_collection_seconds.*'
+                  action: drop
+            {{ end }}
+
     exporters:
       {{ if .Values.enableTracing }}
       awsxray:

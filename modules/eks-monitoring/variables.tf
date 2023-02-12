@@ -44,12 +44,6 @@ variable "dashboards_folder_id" {
   type        = string
 }
 
-variable "enable_recording_rules" {
-  description = "Enables or disables Managed Prometheus recording rules. Disabling this might affect some data in the dashboards"
-  type        = bool
-  default     = true
-}
-
 variable "enable_alerting_rules" {
   description = "Enables or disables Managed Prometheus alerting rules"
   type        = bool
@@ -199,5 +193,23 @@ variable "custom_metrics_config" {
   default = {
     ports                   = []
     dropped_series_prefixes = ["unspecified"]
+  }
+}
+
+variable "enable_java" {
+  description = "Enable Java workloads monitoring, alerting and default dashboards"
+  default     = false
+}
+
+variable "java_config" {
+  description = "Configuration object for Java/JMX monitoring"
+  type = object({
+    enable_alerting_rules = bool
+    scrape_sample_limit   = number
+  })
+
+  default = {
+    enable_alerting_rules = true
+    scrape_sample_limit   = 1000
   }
 }

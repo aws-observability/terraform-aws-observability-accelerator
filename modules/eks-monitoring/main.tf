@@ -104,6 +104,14 @@ module "helm_addon" {
     {
       name  = "customMetricsDroppedSeriesPrefixes"
       value = format("(%s.*)$", join(".*|", var.custom_metrics_config.dropped_series_prefixes))
+    },
+    {
+      name  = "enable_java"
+      value = var.enable_java
+    },
+    {
+      name  = "javaScrapeSampleLimit"
+      value = var.java_config.scrape_sample_limit
     }
   ]
 
@@ -119,4 +127,15 @@ module "helm_addon" {
   }
 
   addon_context = local.context
+}
+
+module "java_monitoring" {
+
+  source = "./patterns/java"
+
+  managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+  enable_alerting_rules           = var.java_config.enable_alerting_rules
+  dashboards_folder_id            = var.dashboards_folder_id
+
+  tags = var.tags
 }

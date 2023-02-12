@@ -33,6 +33,7 @@ This module is inspired from the open source [kube-prometheus-stack](https://git
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_helm_addon"></a> [helm\_addon](#module\_helm\_addon) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon | v4.13.1 |
+| <a name="module_java_monitoring"></a> [java\_monitoring](#module\_java\_monitoring) | ./patterns/java | n/a |
 
 ## Resources
 
@@ -63,13 +64,14 @@ This module is inspired from the open source [kube-prometheus-stack](https://git
 | <a name="input_enable_alerting_rules"></a> [enable\_alerting\_rules](#input\_enable\_alerting\_rules) | Enables or disables Managed Prometheus alerting rules | `bool` | `true` | no |
 | <a name="input_enable_custom_metrics"></a> [enable\_custom\_metrics](#input\_enable\_custom\_metrics) | Allows additional metrics collection for config elements in the `custom_metrics_config` config object. Automatic dashboards are not included | `bool` | `false` | no |
 | <a name="input_enable_dashboards"></a> [enable\_dashboards](#input\_enable\_dashboards) | Enables or disables curated dashboards | `bool` | `true` | no |
+| <a name="input_enable_java"></a> [enable\_java](#input\_enable\_java) | Enable Java workloads monitoring, alerting and default dashboards | `bool` | `false` | no |
 | <a name="input_enable_kube_state_metrics"></a> [enable\_kube\_state\_metrics](#input\_enable\_kube\_state\_metrics) | Enables or disables Kube State metrics exporter. Disabling this might affect some data in the dashboards | `bool` | `true` | no |
 | <a name="input_enable_node_exporter"></a> [enable\_node\_exporter](#input\_enable\_node\_exporter) | Enables or disables Node exporter. Disabling this might affect some data in the dashboards | `bool` | `true` | no |
-| <a name="input_enable_recording_rules"></a> [enable\_recording\_rules](#input\_enable\_recording\_rules) | Enables or disables Managed Prometheus recording rules. Disabling this might affect some data in the dashboards | `bool` | `true` | no |
 | <a name="input_enable_tracing"></a> [enable\_tracing](#input\_enable\_tracing) | (Experimental) Enables tracing with AWS X-Ray. This changes the deploy mode of the collector to daemon set. Requirement: adot add-on <= 0.58-build.0 | `bool` | `false` | no |
 | <a name="input_helm_config"></a> [helm\_config](#input\_helm\_config) | Helm Config for Prometheus | `any` | `{}` | no |
 | <a name="input_irsa_iam_permissions_boundary"></a> [irsa\_iam\_permissions\_boundary](#input\_irsa\_iam\_permissions\_boundary) | IAM permissions boundary for IRSA roles | `string` | `null` | no |
 | <a name="input_irsa_iam_role_path"></a> [irsa\_iam\_role\_path](#input\_irsa\_iam\_role\_path) | IAM role path for IRSA roles | `string` | `"/"` | no |
+| <a name="input_java_config"></a> [java\_config](#input\_java\_config) | Configuration object for Java/JMX monitoring | <pre>object({<br>    enable_alerting_rules = bool<br>    scrape_sample_limit   = number<br>  })</pre> | <pre>{<br>  "enable_alerting_rules": true,<br>  "scrape_sample_limit": 1000<br>}</pre> | no |
 | <a name="input_ksm_config"></a> [ksm\_config](#input\_ksm\_config) | Kube State metrics configuration | <pre>object({<br>    create_namespace   = bool<br>    k8s_namespace      = string<br>    helm_chart_name    = string<br>    helm_chart_version = string<br>    helm_release_name  = string<br>    helm_repo_url      = string<br>    helm_settings      = map(string)<br>    helm_values        = map(any)<br><br>    scrape_interval = string<br>    scrape_timeout  = string<br>  })</pre> | <pre>{<br>  "create_namespace": true,<br>  "helm_chart_name": "kube-state-metrics",<br>  "helm_chart_version": "4.24.0",<br>  "helm_release_name": "kube-state-metrics",<br>  "helm_repo_url": "https://prometheus-community.github.io/helm-charts",<br>  "helm_settings": {},<br>  "helm_values": {},<br>  "k8s_namespace": "kube-system",<br>  "scrape_interval": "60s",<br>  "scrape_timeout": "15s"<br>}</pre> | no |
 | <a name="input_managed_prometheus_workspace_endpoint"></a> [managed\_prometheus\_workspace\_endpoint](#input\_managed\_prometheus\_workspace\_endpoint) | Amazon Managed Prometheus Workspace Endpoint | `string` | `""` | no |
 | <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus Workspace ID | `string` | `null` | no |

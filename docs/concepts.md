@@ -44,7 +44,7 @@ The base module serve as an anchor to the workload modules and cannot run on its
 module "eks_observability_accelerator" {
   # use release tags and check for the latest versions
   # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
-  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1"
 
   aws_region     = "eu-west-1"
   eks_cluster_id = "my-eks-cluster"
@@ -61,7 +61,7 @@ You can optionally reuse an existing Amazon Managed Service for Prometheus Works
 module "eks_observability_accelerator" {
   # use release tags and check for the latest versions
   # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
-  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1"
 
   aws_region     = "eu-west-1"
   eks_cluster_id = "my-eks-cluster"

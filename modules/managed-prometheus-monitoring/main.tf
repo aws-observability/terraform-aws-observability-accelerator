@@ -11,7 +11,9 @@ locals {
 resource "grafana_data_source" "cloudwatch" {
   type       = "cloudwatch"
   name       = local.name
-  is_default = true
+
+  # Giving priority to Managed Prometheus datasources
+  is_default = false
   json_data {
     default_region  = var.aws_region
     sigv4_auth      = true

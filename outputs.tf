@@ -42,3 +42,8 @@ output "grafana_dashboards_folder_id" {
   description = "Grafana folder ID for automatic dashboards. Required by workload modules"
   value       = grafana_folder.this.id
 }
+
+output "grafana_prometheus_datasource_test" {
+  description = "Grafana save & test URL for Amazon Managed Prometheus workspace"
+  value = "${local.amg_ws_endpoint}/datasources/edit/${grafana_data_source.amp.uid}"
+}

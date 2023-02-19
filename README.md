@@ -38,7 +38,7 @@ and ADOT Operator deployed for you and ready to receive your data.
 The base module serve as an anchor to the workload modules and cannot run on its own.
 
 ```hcl
-module "eks_observability_accelerator" {
+module "aws_observability_accelerator" {
   # use release tags and check for the latest versions
   # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
   source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1"
@@ -46,7 +46,7 @@ module "eks_observability_accelerator" {
   aws_region     = "eu-west-1"
   eks_cluster_id = "my-eks-cluster"
 
-  # As Grafana shares a different lifecycle, it's best to use an existing workspace.
+  # As Grafana shares a different lifecycle, we recommend using an existing workspace.
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
   grafana_api_key              = var.grafana_api_key
 }
@@ -55,7 +55,7 @@ module "eks_observability_accelerator" {
 You can optionally reuse an existing Amazon Managed Servce for Prometheus Workspace:
 
 ```hcl
-module "eks_observability_accelerator" {
+module "aws_observability_accelerator" {
   # use release tags and check for the latest versions
   # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
   source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1"

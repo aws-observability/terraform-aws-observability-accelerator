@@ -1,88 +1,37 @@
 # Monitor Java/JMX applications running on Amazon EKS
 
-The current example deploys the [java workload module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/workloads/java),
-to provide to an existing EKS cluster with an OpenTelemetry collector,
-curated Grafana dashboards, Prometheus alerting and recording rules with multiple
-configuration options on the cluster infrastructure.
-
-## Prerequisites
-
 !!! note
-    Make sure to complete the [prerequisites section](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/#prerequisites) before proceeding.
+    Since v2.x, Java based applications monitoring on EKS has been merged within
+    the [eks-monitoring module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring)
+    to allow visibility both on the cluster and the workloads, [#59](https://github.com/aws-observability/terraform-aws-observability-accelerator/issues/59).
+
+In addition to EKS infrastructure monitoring, the current example provides
+curated Grafana dashboards, Prometheus alerting and recording rules with multiple
+configuration options for Java based workloads on EKS.
 
 ## Setup
 
-### 1. Download sources and initialize Terraform
+### 1. Add Java metrics, dashboards and alerts
 
-```bash
-git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
-cd examples/existing-cluster-java
-terraform init
+From the [previous example's](/terraform-aws-observability-accelerator/eks/) configuration,
+simply enable the Java pattern's flag.
+
+```hcl
+
+module "eks_monitoring" {
+   ...
+   enable_java = true
+}
 ```
 
-### 2. AWS Region
+You can further customize the Java pattern by providing `java_config` [options](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/modules/eks-monitoring/README.md#input_java_config).
 
-Specify the AWS Region where the resources will be deployed:
+### 2. Grafana API key
 
-```bash
-export TF_VAR_aws_region=xxx
-```
-
-### 3. Amazon EKS Cluster
-
-To run this example, you need to provide your EKS cluster name. If you don't
-have a cluster ready, visit [this example](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/new-eks-cluster/)
-first to create a new one.
-
-Specify your cluster name:
-
-```bash
-export TF_VAR_eks_cluster_id=xxx
-```
-
-### 4. Amazon Managed Service for Prometheus workspace (optional)
-
-By default, we create an Amazon Managed Service for Prometheus workspace for you.
-However, if you have an existing workspace you want to reuse, edit and run:
-
-```bash
-export TF_VAR_managed_prometheus_workspace_id=ws-xxx
-```
-
-To create a workspace outside of Terraform's state, simply run:
-
-```bash
-aws amp create-workspace --alias observability-accelerator --query '.workspaceId' --output text
-```
-
-### 5. Amazon Managed Grafana workspace
-
-To run this example you need an Amazon Managed Grafana workspace. If you have an existing workspace, edit and run:
+Make sure to refresh your temporary Grafana API key
 
 ```bash
 export TF_VAR_managed_grafana_workspace_id=g-xxx
-```
-
-To create a new one, within this example's Terraform state (sharing the same lifecycle with all the other resources):
-
-- Edit main.tf and set `enable_managed_grafana = true`
-- Run
-
-```bash
-terraform init
-terraform apply -target "module.eks_observability_accelerator.module.managed_grafana[0].aws_grafana_workspace.this[0]"
-export TF_VAR_managed_grafana_workspace_id=$(terraform output --raw managed_grafana_workspace_id)
-```
-
-### 6. Grafana API Key
-
-Amazon Managed Grafana provides a control plane API for generating Grafana API keys.
-As a security best practice, we will provide to Terraform a short lived API key to
-run the `apply` or `destroy` command.
-
-Ensure you have necessary IAM permissions (`CreateWorkspaceApiKey, DeleteWorkspaceApiKey`)
-
-```bash
 export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 1200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
 ```
 
@@ -94,13 +43,12 @@ Simply run this command to deploy.
 terraform apply
 ```
 
+!!! note
+    To see the complete Java example, open the [example on the repository](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples/existing-cluster-java)
+
 ## Visualization
 
-1. Prometheus datasource on Grafana
-
-Open your Grafana workspace and under Configuration -> Data sources, you will see `aws-observability-accelerator`. Open and click `Save & test`. You will then see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
-
-2. Grafana dashboards
+1. Grafana dashboards
 
 Go to the Dashboards panel of your Grafana workspace. There will be a folder called `Observability Accelerator Dashboards`
 
@@ -169,28 +117,4 @@ NAME                              READY   STATUS              RESTARTS   AGE
 tomcat-bad-traffic-generator      1/1     Running             0          11s
 tomcat-example-7958666589-2q755   0/1     ContainerCreating   0          11s
 tomcat-traffic-generator          1/1     Running             0          11s
-```
-
-## Destroy resources
-
-If you leave this stack running, you will continue to incur charges. To remove all resources
-created by Terraform, [refresh your Grafana API key](#6-grafana-api-key) and run the command below.
-
-!!! warning
-    Be careful, this command will removing everything created by Terraform. If you wish
-    to keep your Amazon Managed Grafana or Amazon Managed Service for Prometheus workspaces. Remove them
-    from your terraform state before running the destroy command.
-
-```bash
-terraform destroy
-```
-
-To remove resources from your Terraform state, run
-
-```bash
-# grafana workspace
-terraform state rm "module.eks_observability_accelerator.module.managed_grafana[0].aws_grafana_workspace.this[0]"
-
-# prometheus workspace
-terraform state rm "module.eks_observability_accelerator.aws_prometheus_workspace.this[0]"
 ```

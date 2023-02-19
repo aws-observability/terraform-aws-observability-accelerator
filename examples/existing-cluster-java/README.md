@@ -1,15 +1,16 @@
 # Existing Cluster with the AWS Observability accelerator base module and Java monitoring
 
-
 This example demonstrates how to use the AWS Observability Accelerator Terraform
-modules with Java monitoring enabled.
-The current example deploys the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) for Amazon EKS with its requirements and make use of existing
-Amazon Managed Service for Prometheus and Amazon Managed Grafana workspaces.
+modules to monitor EKS infrastructure and Java based workloads.
+The current example deploys the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html)
+for Amazon EKS with its requirements and make use of an existing Amazon Managed Grafana workspace.
+It creates a new Amazon Managed Service for Prometheus workspace unless provided with an existing one to reuse.
 
-It is based on the `java module`, one of our [workloads modules](../../modules/workloads/)
+Since v2.x releases, it uses the `EKS monitoring` [module](../../modules/eks-monitoring/)
 to provide an existing EKS cluster with an OpenTelemetry collector,
 curated Grafana dashboards, Prometheus alerting and recording rules with multiple
 configuration options on the cluster infrastructure.
+You will gain both visibility on the cluster and Java based applications.
 
 
 ## Prerequisites
@@ -39,11 +40,7 @@ cd examples/existing-cluster-java
 terraform init
 ```
 
-3. AWS Region
-
-Specify the AWS Region where the resources will be deployed. Edit the `terraform.tfvars` file and modify `aws_region="..."`. You can also use environement variables `export TF_VAR_aws_region=xxx`.
-
-4. Amazon EKS Cluster
+3. Amazon EKS Cluster
 
 To run this example, you need to provide your EKS cluster name.
 If you don't have a cluster ready, visit [this example](../eks-cluster-with-vpc)
@@ -51,18 +48,15 @@ first to create a new one.
 
 Add your cluster name for `eks_cluster_id="..."` to the `terraform.tfvars` or use an environment variable `export TF_VAR_eks_cluster_id=xxx`.
 
-5. Amazon Managed Service for Prometheus workspace (optional)
+4. Amazon Managed Grafana workspace
 
-If you have an existing workspace, add `managed_prometheus_workspace_id=ws-xxx`
-or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws-xxx`.
+To run this example you need an Amazon Managed Grafana workspace. If you have an existing workspace, create an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx`.
+To create a new one, visit our Amazon Managed Grafana [documentation](https://docs.aws.amazon.com/grafana/latest/userguide/getting-started-with-AMG.html).
+Make sure to provide the workspace with Amazon Managed Service for Prometheus read permissions.
 
-If you don't specify anything a new workspace will be created for you.
+> In the URL `https://g-xyz.grafana-workspace.eu-central-1.amazonaws.com`, the workspace ID would be `g-xyz`
 
-6. Amazon Managed Grafana workspace
-
-If you have an existing workspace, create an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx`.
-
-7. <a name="apikey"></a> Grafana API Key
+5. <a name="apikey"></a> Grafana API Key
 
 Amazon Managed Service for Grafana provides a control plane API for generating Grafana API keys. We will provide to Terraform
 a short lived API key to run the `apply` or `destroy` command.
@@ -84,11 +78,32 @@ or if you had only setup environment variables, run
 terraform apply
 ```
 
+## Additional configuration
+
+For the purpose of the example, we have provided default values for some of the variables.
+
+1. AWS Region
+
+Specify the AWS Region where the resources will be deployed. Edit the `terraform.tfvars` file and modify `aws_region="..."`. You can also use environement variables `export TF_VAR_aws_region=xxx`.
+
+
+2. Amazon Managed Service for Prometheus workspace
+
+If you have an existing workspace, add `managed_prometheus_workspace_id=ws-xxx`
+or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws-xxx`.
+
 ## Visualization
 
 1. Prometheus datasource on Grafana
 
-Open your Grafana workspace and under Configuration -> Data sources, you will see `aws-observability-accelerator`. Open and click `Save & test`. You will then see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
+Make sure to open the link in the output. After a successful deployment, this will open
+the Prometheus datasource configuration on Grafana.
+Click `Save & test` and you should see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
+
+```bash
+terraform output grafana_prometheus_datasource_test
+```
+
 
 2. Grafana dashboards
 
@@ -160,18 +175,6 @@ tomcat-example-7958666589-2q755   0/1     ContainerCreating   0          11s
 tomcat-traffic-generator          1/1     Running             0          11s
 ```
 
-## Advanced configuration
-
-1. Cross-region Amazon Managed Prometheus workspace
-
-If your existing Amazon Managed Prometheus workspace is in another AWS Region,
-add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws-xxx`.
-
-2. Cross-region Amazon Managed Grafana workspace
-
-If your existing Amazon Managed Prometheus workspace is in another AWS Region,
-add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws-xxx`.
-
 ## Destroy resources
 
 If you leave this stack running, you will continue to incur charges. To remove all resources
@@ -204,8 +207,8 @@ terraform destroy -var-file=terraform.tfvars
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_eks_observability_accelerator"></a> [eks\_observability\_accelerator](#module\_eks\_observability\_accelerator) | ../../ | n/a |
-| <a name="module_workloads_java"></a> [workloads\_java](#module\_workloads\_java) | ../../modules/workloads/java | n/a |
+| <a name="module_aws_observability_accelerator"></a> [aws\_observability\_accelerator](#module\_aws\_observability\_accelerator) | ../../ | n/a |
+| <a name="module_eks_monitoring"></a> [eks\_monitoring](#module\_eks\_monitoring) | ../../modules/eks-monitoring | n/a |
 
 ## Resources
 
@@ -220,8 +223,8 @@ terraform destroy -var-file=terraform.tfvars
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS Region | `string` | n/a | yes |
 | <a name="input_eks_cluster_id"></a> [eks\_cluster\_id](#input\_eks\_cluster\_id) | Name of the EKS cluster | `string` | n/a | yes |
-| <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | API key for authorizing the Grafana provider to make changes to Amazon Managed Grafana | `string` | `""` | no |
-| <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana Workspace ID | `string` | `""` | no |
+| <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | API key for authorizing the Grafana provider to make changes to Amazon Managed Grafana | `string` | n/a | yes |
+| <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana Workspace ID | `string` | n/a | yes |
 | <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Service for Prometheus Workspace ID | `string` | `""` | no |
 
 ## Outputs
@@ -232,6 +235,7 @@ terraform destroy -var-file=terraform.tfvars
 | <a name="output_eks_cluster_id"></a> [eks\_cluster\_id](#output\_eks\_cluster\_id) | EKS Cluster Id |
 | <a name="output_eks_cluster_version"></a> [eks\_cluster\_version](#output\_eks\_cluster\_version) | EKS Cluster version |
 | <a name="output_grafana_dashboard_urls"></a> [grafana\_dashboard\_urls](#output\_grafana\_dashboard\_urls) | URLs for dashboards created |
+| <a name="output_grafana_prometheus_datasource_test"></a> [grafana\_prometheus\_datasource\_test](#output\_grafana\_prometheus\_datasource\_test) | Grafana save & test URL for Amazon Managed Prometheus workspace |
 | <a name="output_managed_prometheus_workspace_endpoint"></a> [managed\_prometheus\_workspace\_endpoint](#output\_managed\_prometheus\_workspace\_endpoint) | Amazon Managed Prometheus workspace endpoint |
 | <a name="output_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#output\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus workspace ID |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

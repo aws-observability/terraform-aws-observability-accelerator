@@ -68,7 +68,7 @@ Open the Amazon Managed Service for Prometheus console and view the details of y
     To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
 
 
-## Deploy an Example Java Application
+## Deploy an example Java application
 
 In this section we will reuse an example from the AWS OpenTelemetry collector [repository](https://github.com/aws-observability/aws-otel-collector/blob/main/docs/developers/container-insights-eks-jmx.md). For convenience, the steps can be found below.
 

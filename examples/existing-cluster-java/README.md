@@ -1,4 +1,4 @@
-# Existing Cluster with the AWS Observability accelerator base module and Java monitoring
+# Monitor Java applications running on Amazon EKS
 
 This example demonstrates how to use the AWS Observability Accelerator Terraform
 modules to monitor EKS infrastructure and Java based workloads.
@@ -104,7 +104,6 @@ Click `Save & test` and you should see a notification confirming that the Amazon
 terraform output grafana_prometheus_datasource_test
 ```
 
-
 2. Grafana dashboards
 
 Go to the Dashboards panel of your Grafana workspace. There will be a folder called `Observability Accelerator Dashboards`
@@ -124,7 +123,7 @@ Open the Amazon Managed Service for Prometheus console and view the details of y
 To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
 
 
-## Deploy an Example Java Application
+## Deploy an example Java application
 
 In this section we will reuse an example from the AWS OpenTelemetry collector [repository](https://github.com/aws-observability/aws-otel-collector/blob/main/docs/developers/container-insights-eks-jmx.md). For convenience, the steps can be found below.
 

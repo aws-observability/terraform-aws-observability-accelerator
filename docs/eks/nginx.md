@@ -1,90 +1,37 @@
 # Monitor Nginx applications running on Amazon EKS
 
-The current example deploys the [nginx workload module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/workloads/nginx),
-to provide an existing EKS cluster with an OpenTelemetry collector,
-curated Grafana dashboards, Prometheus alerting and recording rules with multiple
-configuration options on the cluster infrastructure.
-
-
-## Prerequisites
-
 !!! note
-    Make sure to complete the [prerequisites section](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/#prerequisites) before proceeding.
+    Since v2.x, NGINX based applications monitoring on EKS has been merged within
+    the [eks-monitoring module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring)
+    to allow visibility both on the cluster and the workloads, [#59](https://github.com/aws-observability/terraform-aws-observability-accelerator/issues/59).
+
+In addition to EKS infrastructure monitoring, the current example provides
+curated Grafana dashboards, Prometheus alerting and recording rules with multiple
+configuration options for NGINX based workloads on EKS.
 
 ## Setup
 
+### 1. Add NGINX metrics, dashboards and alerts
 
-### 1. Download sources and initialize Terraform
+From the [EKS cluster monitoring example's](/terraform-aws-observability-accelerator/eks/) configuration,
+simply enable the NGINX pattern's flag.
 
-```bash
-git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
-cd examples/existing-cluster-nginx
-terraform init
+```hcl
+
+module "eks_monitoring" {
+   ...
+   enable_java = true
+}
 ```
 
-### 2. AWS Region
+You can further customize the Java pattern by providing `nginx_config` [options](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/modules/eks-monitoring/README.md#input_nginx_config).
 
-Specify the AWS Region where the resources will be deployed:
+### 2. Grafana API key
 
-```bash
-export TF_VAR_aws_region=xxx
-```
-
-### 3. Amazon EKS Cluster
-
-To run this example, you need to provide your EKS cluster name. If you don't
-have a cluster ready, visit [this example](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/new-eks-cluster/)
-first to create a new one.
-
-Specify your cluster name:
-
-```bash
-export TF_VAR_eks_cluster_id=xxx
-```
-
-### 4. Amazon Managed Service for Prometheus workspace (optional)
-
-By default, we create an Amazon Managed Service for Prometheus workspace for you.
-However, if you have an existing workspace you want to reuse, edit and run:
-
-```bash
-export TF_VAR_managed_prometheus_workspace_id=ws-xxx
-```
-
-To create a workspace outside of Terraform's state, simply run:
-
-```bash
-aws amp create-workspace --alias observability-accelerator --query '.workspaceId' --output text
-```
-
-### 5. Amazon Managed Grafana workspace
-
-To run this example you need an Amazon Managed Grafana workspace. If you have an existing workspace, edit and run:
+Make sure to refresh your temporary Grafana API key
 
 ```bash
 export TF_VAR_managed_grafana_workspace_id=g-xxx
-```
-
-To create a new one, within this example's Terraform state (sharing the same lifecycle with all the other resources):
-
-- Edit main.tf and set `enable_managed_grafana = true`
-- Run
-
-```bash
-terraform init
-terraform apply -target "module.eks_observability_accelerator.module.managed_grafana[0].aws_grafana_workspace.this[0]"
-export TF_VAR_managed_grafana_workspace_id=$(terraform output --raw managed_grafana_workspace_id)
-```
-
-### 6. Grafana API Key
-
-Amazon Managed Grafana provides a control plane API for generating Grafana API keys.
-As a security best practice, we will provide to Terraform a short lived API key to
-run the `apply` or `destroy` command.
-
-Ensure you have necessary IAM permissions (`CreateWorkspaceApiKey, DeleteWorkspaceApiKey`)
-
-```bash
 export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 1200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
 ```
 
@@ -96,13 +43,12 @@ Simply run this command to deploy.
 terraform apply
 ```
 
+!!! note
+    To see the complete NGINX example, open the [example on the repository](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples/existing-cluster-nginx)
+
 ## Visualization
 
-### 1. Prometheus datasource on Grafana
-
-Open your Grafana workspace and under Configuration -> Data sources, you will see `aws-observability-accelerator`. Open and click `Save & test`. You will see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
-
-### 2. Grafana dashboards
+1. Grafana dashboards
 
 Go to the Dashboards panel of your Grafana workspace. You will see a list of dashboards under the `Observability Accelerator Dashboards`
 
@@ -112,7 +58,7 @@ Open the NGINX dashboard and you will be able to view its visualization
 
 <img width="1850" alt="image" src="https://user-images.githubusercontent.com/97046295/196226043-e49afeb9-7828-467f-9199-5707cdc69aa9.png">
 
-### 3. Amazon Managed Service for Prometheus rules and alerts
+2. Amazon Managed Service for Prometheus rules and alerts
 
 Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you will find new rules deployed.
 
@@ -121,7 +67,7 @@ Open the Amazon Managed Service for Prometheus console and view the details of y
 !!! note
     To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
 
-## Deploy an Example Application to Visualize
+## Deploy an example application to visualize metrics
 
 In this section we will deploy sample application and extract metrics using AWS OpenTelemetry collector
 
@@ -172,27 +118,3 @@ kubectl get pods -n nginx-ingress-sample
 ### 7. Visualize the Application's dashboard
 
 Log back into your Managed Grafana Workspace and navigate to the dashboard side panel, click on `Observability Accelerator Dashboards` Folder and open the `NGINX` Dashboard.
-
-## Destroy resources
-
-If you leave this stack running, you will continue to incur charges. To remove all resources
-created by Terraform, [refresh your Grafana API key](#6-grafana-api-key) and run the command below.
-
-!!! warning
-    Be careful, this command will removing everything created by Terraform. If you wish
-    to keep your Amazon Managed Grafana or Amazon Managed Service for Prometheus workspaces. Remove them
-    from your terraform state before running the destroy command.
-
-```bash
-terraform destroy
-```
-
-To remove resources from your Terraform state, run
-
-```bash
-# grafana workspace
-terraform state rm "module.eks_observability_accelerator.module.managed_grafana[0].aws_grafana_workspace.this[0]"
-
-# prometheus workspace
-terraform state rm "module.eks_observability_accelerator.aws_prometheus_workspace.this[0]"
-```

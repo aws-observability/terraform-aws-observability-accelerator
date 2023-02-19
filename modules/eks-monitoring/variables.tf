@@ -3,6 +3,18 @@ variable "eks_cluster_id" {
   type        = string
 }
 
+variable "enable_amazon_eks_adot" {
+  description = "Enables the ADOT Operator on the EKS Cluster"
+  type        = bool
+  default     = true
+}
+
+variable "enable_cert_manager" {
+  description = "Allow reusing an existing installation of cert-manager"
+  type        = bool
+  default     = true
+}
+
 variable "helm_config" {
   description = "Helm Config for Prometheus"
   type        = any

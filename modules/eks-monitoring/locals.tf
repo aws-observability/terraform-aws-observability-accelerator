@@ -14,6 +14,7 @@ locals {
 
   eks_oidc_issuer_url  = replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")
   eks_cluster_endpoint = data.aws_eks_cluster.eks_cluster.endpoint
+  eks_cluster_version  = data.aws_eks_cluster.eks_cluster.version
 
   context = {
     aws_caller_identity_account_id = data.aws_caller_identity.current.account_id

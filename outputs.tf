@@ -1,16 +1,6 @@
-output "eks_cluster_id" {
-  description = "EKS Cluster Id"
-  value       = var.eks_cluster_id
-}
-
 output "aws_region" {
   description = "AWS Region"
   value       = var.aws_region
-}
-
-output "eks_cluster_version" {
-  description = "EKS Cluster version"
-  value       = data.aws_eks_cluster.eks_cluster.version
 }
 
 output "managed_prometheus_workspace_endpoint" {
@@ -45,5 +35,5 @@ output "grafana_dashboards_folder_id" {
 
 output "grafana_prometheus_datasource_test" {
   description = "Grafana save & test URL for Amazon Managed Prometheus workspace"
-  value = "${local.amg_ws_endpoint}/datasources/edit/${grafana_data_source.amp.uid}"
+  value       = "${local.amg_ws_endpoint}/datasources/edit/${grafana_data_source.amp.uid}"
 }

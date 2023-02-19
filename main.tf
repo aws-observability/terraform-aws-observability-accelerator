@@ -1,12 +1,3 @@
-module "operator" {
-  source = "./modules/eks-monitoring/add-ons/adot-operator"
-  count  = var.enable_amazon_eks_adot ? 1 : 0
-
-  enable_cert_manager = var.enable_cert_manager
-  kubernetes_version  = local.eks_cluster_version
-  addon_context       = local.context
-}
-
 resource "aws_prometheus_workspace" "this" {
   count = var.enable_managed_prometheus ? 1 : 0
 

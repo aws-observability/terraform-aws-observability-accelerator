@@ -9,8 +9,8 @@ locals {
 }
 
 resource "grafana_data_source" "cloudwatch" {
-  type       = "cloudwatch"
-  name       = local.name
+  type = "cloudwatch"
+  name = local.name
 
   # Giving priority to Managed Prometheus datasources
   is_default = false

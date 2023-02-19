@@ -20,11 +20,11 @@ simply enable the NGINX pattern's flag.
 
 module "eks_monitoring" {
    ...
-   enable_java = true
+   enable_nginx = true
 }
 ```
 
-You can further customize the Java pattern by providing `nginx_config` [options](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/modules/eks-monitoring/README.md#input_nginx_config).
+You can further customize the NGINX pattern by providing `nginx_config` [options](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/modules/eks-monitoring/README.md#input_nginx_config).
 
 ### 2. Grafana API key
 

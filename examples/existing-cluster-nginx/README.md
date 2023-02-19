@@ -46,7 +46,7 @@ Specify the AWS Region where the resources will be deployed. Edit the `terraform
 4. Amazon EKS Cluster
 
 To run this example, you need to provide your EKS cluster name.
-If you don't have a cluster ready, visit [this example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/eks-cluster-with-new-vpc)
+If you don't have a cluster ready, visit [this example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/v4.13.1/examples/eks-cluster-with-new-vpc)
 first to create a new one.
 
 Add your cluster name for `eks_cluster_id="..."` to the `terraform.tfvars` or use an environment variable `export TF_VAR_eks_cluster_id=xxx`.

@@ -31,6 +31,17 @@ you need to track changes as part of a Git repository or CI/CD pipeline.
 !!! warning
     When using `tfvars` files, always be careful to not store and commit any secrets (keys,     passwords, ...)
 
+
+## v2.x changes
+
+v2.x [releases](https://github.com/aws-observability/terraform-aws-observability-accelerator/releases) introduce
+couple of breaking changes compared to previous versions:
+
+- `modules/workloads/infra` module moves to `modules/eks-monitoring`
+- EKS configuration options moves from the base  module to the `eks-monitoring` module
+- EKS workload modules `modules/workloads/{java,nginx}` merge into `eks-monitoring` as configuration options (patterns), see [examples](./examples) to provide a more complete visiblity.
+- Examples have been updated to reflect these changes
+
 ## Base module
 
 The base module allows you to configure the AWS Observability services for your cluster and

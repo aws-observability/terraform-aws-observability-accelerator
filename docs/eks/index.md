@@ -2,7 +2,7 @@
 
 This example demonstrates how to monitor your Amazon Elastic Kubernetes Service
 (Amazon EKS) cluster with the Observability Accelerator's EKS
-[infrastructure module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/workloads/infra).
+[infrastructure module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring).
 
 Monitoring Amazon Elastic Kubernetes Service (Amazon EKS) for metrics has two categories:
 the control plane and the Amazon EKS nodes (with Kubernetes objects).
@@ -72,22 +72,15 @@ aws amp create-workspace --alias observability-accelerator --query '.workspaceId
 
 ### 5. Amazon Managed Grafana workspace
 
-To run this example you need an Amazon Managed Grafana workspace. If you have an existing workspace, edit and run:
+To run this example you need an Amazon Managed Grafana workspace. If you have an existing workspace, create an environment variable as described below.
+To create a new workspace, visit our Amazon Managed Grafana [documentation](https://docs.aws.amazon.com/grafana/latest/userguide/getting-started-with-AMG.html).
+Make sure to provide the workspace with Amazon Managed Service for Prometheus read permissions.
+
+!!! note
+    For the URL `https://g-xyz.grafana-workspace.eu-central-1.amazonaws.com`, the workspace ID would be `g-xyz`
 
 ```bash
 export TF_VAR_managed_grafana_workspace_id=g-xxx
-```
-
-To create a new one, within this example's Terraform state (sharing the same lifecycle with all the
-other resources created by Terraform):
-
-- Edit main.tf and set `enable_managed_grafana = true`
-- Run
-
-```bash
-terraform init
-terraform apply -target "module.eks_observability_accelerator.module.managed_grafana[0].aws_grafana_workspace.this[0]"
-export TF_VAR_managed_grafana_workspace_id=$(terraform output --raw managed_grafana_workspace_id)
 ```
 
 ### 6. Grafana API Key
@@ -114,7 +107,13 @@ terraform apply
 
 1. Prometheus datasource on Grafana
 
-Open your Grafana workspace and under Configuration -> Data sources, you should see `aws-observability-accelerator`. Open and click `Save & test`. You should see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
+Make sure to open the link in the output. After a successful deployment, this will open
+the Prometheus datasource configuration on Grafana.
+Click `Save & test` and you should see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
+
+```bash
+terraform output grafana_prometheus_datasource_test
+```
 
 2. Grafana dashboards
 

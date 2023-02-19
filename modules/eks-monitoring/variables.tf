@@ -210,6 +210,7 @@ variable "custom_metrics_config" {
 
 variable "enable_java" {
   description = "Enable Java workloads monitoring, alerting and default dashboards"
+  type        = bool
   default     = false
 }
 
@@ -228,6 +229,7 @@ variable "java_config" {
 
 variable "enable_nginx" {
   description = "Enable NGINX workloads monitoring, alerting and default dashboards"
+  type        = bool
   default     = false
 }
 

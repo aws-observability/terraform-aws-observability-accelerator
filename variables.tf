@@ -3,18 +3,6 @@ variable "aws_region" {
   type        = string
 }
 
-variable "irsa_iam_role_path" {
-  description = "IAM role path for IRSA roles"
-  type        = string
-  default     = "/"
-}
-
-variable "irsa_iam_permissions_boundary" {
-  description = "IAM permissions boundary for IRSA roles"
-  type        = string
-  default     = null
-}
-
 variable "enable_managed_prometheus" {
   description = "Creates a new Amazon Managed Service for Prometheus Workspace"
   type        = bool

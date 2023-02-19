@@ -14,9 +14,3 @@ variable "dashboards_folder_id" {
   description = "Grafana folder ID for automatic dashboards"
   type        = string
 }
-
-variable "tags" {
-  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
-  type        = map(string)
-  default     = {}
-}

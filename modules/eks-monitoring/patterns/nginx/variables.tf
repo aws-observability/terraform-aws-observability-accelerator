@@ -14,9 +14,3 @@ variable "enable_alerting_rules" {
   default     = true
   description = "Enables or disables Managed Prometheus alerting rules"
 }
-
-variable "tags" {
-  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
-  type        = map(string)
-  default     = {}
-}

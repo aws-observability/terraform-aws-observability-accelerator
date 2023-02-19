@@ -39,7 +39,8 @@ couple of breaking changes compared to previous versions:
 
 - `modules/workloads/infra` module moves to `modules/eks-monitoring`
 - EKS configuration options moves from the base  module to the `eks-monitoring` module
-- EKS workload modules `modules/workloads/{java,nginx}` merge into `eks-monitoring` as configuration options (patterns), see [examples](./examples) to provide a more complete visiblity.
+- EKS workload modules **java,nginx** merge into `eks-monitoring` as configuration options (patterns),
+see [examples](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples)
 - Examples have been updated to reflect these changes
 
 ## Base module
@@ -94,7 +95,7 @@ View all the configuration options in the [module's documentation](https://githu
 
 Workloads modules are focused Terraform modules provided in this repository. They essentially provide curated metrics collection, alerts and Grafana dashboards according to the use case. Most of those modules require the base module.
 
-You can check the full workload modules list and their documentation [here](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/workloads).
+You can check the full workload modules list and their documentation [here](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/).
 
 All the modules come with end-to-end deployable examples.
 

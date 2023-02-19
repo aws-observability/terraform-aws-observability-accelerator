@@ -159,8 +159,6 @@ module "java_monitoring" {
   managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
   enable_alerting_rules           = var.java_config.enable_alerting_rules
   dashboards_folder_id            = var.dashboards_folder_id
-
-  tags = var.tags
 }
 
 module "nginx_monitoring" {
@@ -170,6 +168,4 @@ module "nginx_monitoring" {
   managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
   enable_alerting_rules           = var.nginx_config.enable_alerting_rules
   dashboards_folder_id            = var.dashboards_folder_id
-
-  tags = var.tags
 }

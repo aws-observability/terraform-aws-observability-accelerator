@@ -87,9 +87,8 @@ View all the configuration options in the module documentation below.
 
 ### Workload modules
 
-[Workloads modules](./modules/workloads) are provided, which essentially provide curated
+[Workloads modules](./modules) are provided, which essentially provide curated
 metrics collection, alerting rule and Grafana dashboards.
-
 
 #### Infrastructure monitoring
 

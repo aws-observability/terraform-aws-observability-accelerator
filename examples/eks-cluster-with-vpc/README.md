@@ -1,6 +1,6 @@
 # EKS Cluster Deployment with new VPC
 
-Note: This example is a subset from [this EKS Blueprint example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/eks-cluster-with-new-vpc)
+Note: This example is a subset from [this EKS Blueprint example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/v4.13.1/examples/eks-cluster-with-new-vpc)
 
 This example deploys the following Basic EKS Cluster with VPC
 

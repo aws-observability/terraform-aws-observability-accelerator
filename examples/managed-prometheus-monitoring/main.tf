@@ -22,7 +22,7 @@ resource "grafana_folder" "this" {
 }
 
 module "managed_prometheus_monitoring" {
-  source                           = "../../modules/workloads/managed-prometheus-monitoring"
+  source                           = "../../modules/managed-prometheus-monitoring"
   dashboards_folder_id             = resource.grafana_folder.this.id
   aws_region                       = local.region
   managed_prometheus_workspace_ids = var.managed_prometheus_workspace_ids

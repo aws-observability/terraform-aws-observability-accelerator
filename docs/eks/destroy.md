@@ -15,11 +15,10 @@ terraform destroy
 To remove resources from your Terraform state, run
 
 ```bash
-# grafana workspace
-terraform state rm "module.eks_observability_accelerator.module.managed_grafana[0].aws_grafana_workspace.this[0]"
-
 # prometheus workspace
 terraform state rm "module.eks_observability_accelerator.aws_prometheus_workspace.this[0]"
 ```
 
-> **Note:** To view all the features proposed by this module, visit the [module documentation](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/workloads/infra).
+!!! note
+    To view all the features proposed by this module,
+    visit the [module documentation](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring).

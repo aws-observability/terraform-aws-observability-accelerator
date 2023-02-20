@@ -2,7 +2,7 @@
 
 This example demonstrates how to monitor your Amazon Elastic Kubernetes Service
 (Amazon EKS) cluster with the Observability Accelerator's EKS
-[infrastructure module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/feat/modules-composition/modules/eks-monitoring).
+[infrastructure module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring).
 
 Monitoring Amazon Elastic Kubernetes Service (Amazon EKS) for metrics has two categories:
 the control plane and the Amazon EKS nodes (with Kubernetes objects).

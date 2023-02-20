@@ -12,6 +12,9 @@ workspace dashboard.
     before proceeding.
     This example doesn't require an Amazon EKS cluster and Kubernetes tools (ex. `kubectl`).
 
+!!! note
+    This example requires [CloudWatch Billing Metrics](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/monitor_estimated_charges_with_cloudwatch.html#turning_on_billing_metrics) to be enabled in order to create some of the alarms in this module.
+
 ## Setup
 
 

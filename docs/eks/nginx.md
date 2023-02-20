@@ -2,7 +2,7 @@
 
 !!! note
     Since v2.x, NGINX based applications monitoring on EKS has been merged within
-    the [eks-monitoring module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/feat/modules-composition/modules/eks-monitoring)
+    the [eks-monitoring module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring)
     to allow visibility both on the cluster and the workloads, [#59](https://github.com/aws-observability/terraform-aws-observability-accelerator/issues/59).
 
 In addition to EKS infrastructure monitoring, the current example provides
@@ -24,7 +24,7 @@ module "eks_monitoring" {
 }
 ```
 
-You can further customize the NGINX pattern by providing `nginx_config` [options](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/feat/modules-composition/modules/eks-monitoring/README.md#input_nginx_config).
+You can further customize the NGINX pattern by providing `nginx_config` [options](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/modules/eks-monitoring/README.md#input_nginx_config).
 
 ### 2. Grafana API key
 

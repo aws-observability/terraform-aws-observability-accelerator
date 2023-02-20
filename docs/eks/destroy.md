@@ -20,4 +20,5 @@ terraform state rm "module.eks_observability_accelerator.aws_prometheus_workspac
 ```
 
 !!! note
-    To view all the features proposed by this module, visit the [module documentation](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/workloads/infra).
+    To view all the features proposed by this module,
+    visit the [module documentation](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring).

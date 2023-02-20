@@ -31,7 +31,7 @@ to be deployed in our packaged
     We have supporting examples for quick setup such as:
 
     - Creating an empty Amazon EKS cluster and a VPC
-    - Creating and configure an Amazon Managed Grafana workspace with SSO
+    - Creating and configure an Amazon Managed Grafana workspace with SSO (coming soon)
 
 ## Motivation
 

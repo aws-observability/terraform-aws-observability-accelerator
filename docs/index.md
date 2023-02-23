@@ -11,7 +11,7 @@ Amazon Managed Service for Prometheus, Amazon Managed Grafana.
 Additionally we have a set of workload modules to leverage curated ADOT
 collector configurations, Grafana dashboards, Prometheus recording rules and alerts.
 
-<img width="1501" alt="image" src="../resources/media/o11y-accelerator-amp-xray.png">
+<img width="1501" alt="image" src="../resources/media/light-o11y-accelerator-amp-xray.png">
 
 ## Getting started
 

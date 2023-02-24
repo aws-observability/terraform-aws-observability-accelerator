@@ -105,7 +105,7 @@ terraform apply
 
 ## Visualization
 
-1. Prometheus datasource on Grafana
+### 1. Prometheus datasource on Grafana
 
 Make sure to open the link in the output. After a successful deployment, this will open
 the Prometheus datasource configuration on Grafana.
@@ -115,7 +115,7 @@ Click `Save & test` and you should see a notification confirming that the Amazon
 terraform output grafana_prometheus_datasource_test
 ```
 
-2. Grafana dashboards
+### 2. Grafana dashboards
 
 Go to the Dashboards panel of your Grafana workspace. You should see a list of dashboards under the `Observability Accelerator Dashboards`
 
@@ -125,7 +125,7 @@ Open a specific dashboard and you should be able to view its visualization
 
 <img width="2056" alt="cluster headlines" src="https://user-images.githubusercontent.com/10175027/199110753-9bc7a9b7-1b45-4598-89d3-32980154080e.png">
 
-3. Amazon Managed Service for Prometheus rules and alerts
+### 3. Amazon Managed Service for Prometheus rules and alerts
 
 Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you should find new rules deployed.
 

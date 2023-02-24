@@ -12,7 +12,7 @@ Amazon Managed Grafana. Additionally we have a set of workloads modules to
 leverage curated ADOT collector configurations, Grafana dashboards,
 Prometheus recording rules and alerts.
 
-<img width="1501" alt="image" src="resources/media/dark-o11y-accelerator-amp-xray.png">
+<img width="1501" alt="image" src="docs/images/dark-o11y-accelerator-amp-xray.png">
 
 ## Documentation
 

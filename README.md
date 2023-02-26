@@ -12,8 +12,8 @@ Amazon Managed Grafana and AWS Distro for OpenTelemetry (ADOT).
 We provide curated metrics, traces collection, alerting rules and Grafana dashboards
 for your EKS infrastructure, Java/JMX, NGINX based workloads and custom applications.
 
-You also can monitor your Amazon Managed Service for Prometheus workspaces with
-[this module](./modules/managed-prometheus-monitoring)
+You also can monitor your Amazon Managed Service for Prometheus workspaces ingestion,
+costs, active series with [this module](./modules/managed-prometheus-monitoring).
 
 <img width="1501" alt="image" src="docs/images/dark-o11y-accelerator-amp-xray.png">
 

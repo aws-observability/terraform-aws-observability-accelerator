@@ -75,8 +75,8 @@ In this section we will reuse an example from the AWS OpenTelemetry collector [r
 #### 1. Clone repository
 
 ```sh
-git clone https://github.com/aws-observability/aws-otel-test-framework)
-cd sample-apps/jmx/
+git clone https://github.com/aws-observability/aws-otel-test-framework
+cd aws-otel-test-framework/sample-apps/jmx/
 ```
 
 #### 2. Authenticate to Amazon ECR

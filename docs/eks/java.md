@@ -11,7 +11,7 @@ configuration options for Java based workloads on EKS.
 
 ## Setup
 
-### 1. Add Java metrics, dashboards and alerts
+#### 1. Add Java metrics, dashboards and alerts
 
 From the [previous example's](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/) configuration,
 simply enable the Java pattern's flag.
@@ -26,7 +26,7 @@ module "eks_monitoring" {
 
 You can further customize the Java pattern by providing `java_config` [options](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/modules/eks-monitoring/README.md#input_java_config).
 
-### 2. Grafana API key
+#### 2. Grafana API key
 
 Make sure to refresh your temporary Grafana API key
 
@@ -48,7 +48,7 @@ terraform apply
 
 ## Visualization
 
-1. Grafana dashboards
+#### 1. Grafana dashboards
 
 Go to the Dashboards panel of your Grafana workspace. There will be a folder called `Observability Accelerator Dashboards`
 
@@ -58,7 +58,7 @@ Open the "Java/JMX" dashboard to view its visualization
 
 <img width="2560" alt="Grafana Java dashboard" src="https://user-images.githubusercontent.com/10175027/217821001-2119c81f-94bd-4811-8bbb-caaf1ae5a77a.png">
 
-2. Amazon Managed Service for Prometheus rules and alerts
+#### 2. Amazon Managed Service for Prometheus rules and alerts
 
 Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you will find new rules deployed.
 
@@ -72,9 +72,14 @@ Open the Amazon Managed Service for Prometheus console and view the details of y
 
 In this section we will reuse an example from the AWS OpenTelemetry collector [repository](https://github.com/aws-observability/aws-otel-collector/blob/main/docs/developers/container-insights-eks-jmx.md). For convenience, the steps can be found below.
 
-1. Clone [this repository](https://github.com/aws-observability/aws-otel-test-framework) and navigate to the `sample-apps/jmx/` directory.
+#### 1. Clone repository
 
-2. Authenticate to Amazon ECR
+```sh
+git clone https://github.com/aws-observability/aws-otel-test-framework)
+cd sample-apps/jmx/
+```
+
+#### 2. Authenticate to Amazon ECR
 
 ```sh
 export AWS_ACCOUNT_ID=`aws sts get-caller-identity --query Account --output text`
@@ -82,7 +87,7 @@ export AWS_REGION={region}
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
 ```
 
-3. Create an Amazon ECR repository
+#### 3. Create an Amazon ECR repository
 
 ```sh
 aws ecr create-repository --repository-name prometheus-sample-tomcat-jmx \
@@ -90,14 +95,14 @@ aws ecr create-repository --repository-name prometheus-sample-tomcat-jmx \
  --region $AWS_REGION
 ```
 
-4. Build Docker image and push to ECR.
+#### 4. Build Docker image and push to ECR.
 
 ```sh
 docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/prometheus-sample-tomcat-jmx:latest .
 docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/prometheus-sample-tomcat-jmx:latest
 ```
 
-5. Install sample application
+#### 5. Install sample application
 
 ```sh
 export SAMPLE_TRAFFIC_NAMESPACE=javajmx-sample

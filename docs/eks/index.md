@@ -1,8 +1,8 @@
 # Amazon EKS cluster metrics
 
 This example demonstrates how to monitor your Amazon Elastic Kubernetes Service
-(Amazon EKS) cluster with the Observability Accelerator's EKS
-[infrastructure module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring).
+(Amazon EKS) cluster with the Observability Accelerator's 
+[EKS monitoring module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring).
 
 Monitoring Amazon Elastic Kubernetes Service (Amazon EKS) for metrics has two categories:
 the control plane and the Amazon EKS nodes (with Kubernetes objects).
@@ -17,7 +17,7 @@ It provides default dashboards to get a comprehensible visibility on your nodes,
 namespaces, pods, and kubelet operations health. Finally, you get curated Prometheus recording rules
 and alerts to operate your cluster.
 
-Additionally, you can optionally collect additional custom Prometheus metrics from your applications running
+Additionally, you can optionally collect custom Prometheus metrics from your applications running
 on your EKS cluster.
 
 ## Prerequisites
@@ -27,7 +27,7 @@ on your EKS cluster.
 
 ## Setup
 
-### 1. Download sources and initialize Terraform
+#### 1. Download sources and initialize Terraform
 
 ```
 git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
@@ -35,7 +35,7 @@ cd examples/existing-cluster-with-base-and-infra
 terraform init
 ```
 
-### 2. AWS Region
+#### 2. AWS Region
 
 Specify the AWS Region where the resources will be deployed:
 
@@ -43,7 +43,7 @@ Specify the AWS Region where the resources will be deployed:
 export TF_VAR_aws_region=xxx
 ```
 
-### 3. Amazon EKS Cluster
+#### 3. Amazon EKS Cluster
 
 To run this example, you need to provide your EKS cluster name. If you don't
 have a cluster ready, visit [this example](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/new-eks-cluster/)
@@ -55,7 +55,7 @@ Specify your cluster name:
 export TF_VAR_eks_cluster_id=xxx
 ```
 
-### 4. Amazon Managed Service for Prometheus workspace (optional)
+#### 4. Amazon Managed Service for Prometheus workspace (optional)
 
 By default, we create an Amazon Managed Service for Prometheus workspace for you.
 However, if you have an existing workspace you want to reuse, edit and run:
@@ -70,7 +70,7 @@ To create a workspace outside of Terraform's state, simply run:
 aws amp create-workspace --alias observability-accelerator --query '.workspaceId' --output text
 ```
 
-### 5. Amazon Managed Grafana workspace
+#### 5. Amazon Managed Grafana workspace
 
 To run this example you need an Amazon Managed Grafana workspace. If you have an existing workspace, create an environment variable as described below.
 To create a new workspace, visit our Amazon Managed Grafana [documentation](https://docs.aws.amazon.com/grafana/latest/userguide/getting-started-with-AMG.html).
@@ -83,7 +83,7 @@ Make sure to provide the workspace with Amazon Managed Service for Prometheus re
 export TF_VAR_managed_grafana_workspace_id=g-xxx
 ```
 
-### 6. Grafana API Key
+#### 6. Grafana API Key
 
 Amazon Managed Grafana provides a control plane API for generating Grafana API keys.
 As a security best practice, we will provide to Terraform a short lived API key to
@@ -105,7 +105,7 @@ terraform apply
 
 ## Visualization
 
-### 1. Prometheus datasource on Grafana
+#### 1. Prometheus datasource on Grafana
 
 Make sure to open the link in the output. After a successful deployment, this will open
 the Prometheus datasource configuration on Grafana.
@@ -115,7 +115,7 @@ Click `Save & test` and you should see a notification confirming that the Amazon
 terraform output grafana_prometheus_datasource_test
 ```
 
-### 2. Grafana dashboards
+#### 2. Grafana dashboards
 
 Go to the Dashboards panel of your Grafana workspace. You should see a list of dashboards under the `Observability Accelerator Dashboards`
 
@@ -125,7 +125,7 @@ Open a specific dashboard and you should be able to view its visualization
 
 <img width="2056" alt="cluster headlines" src="https://user-images.githubusercontent.com/10175027/199110753-9bc7a9b7-1b45-4598-89d3-32980154080e.png">
 
-### 3. Amazon Managed Service for Prometheus rules and alerts
+#### 3. Amazon Managed Service for Prometheus rules and alerts
 
 Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you should find new rules deployed.
 

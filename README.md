@@ -5,7 +5,7 @@
 Welcome to the AWS Observability Accelerator for Terraform!
 
 The AWS Observability Accelerator for Terraform is a set of opinionated modules to
-help you set up observability for your containerized environments on AWS with
+help you set up observability for your AWS environments with
 AWS-managed observability services such as Amazon Managed Service for Prometheus,
 Amazon Managed Grafana and AWS Distro for OpenTelemetry (ADOT).
 

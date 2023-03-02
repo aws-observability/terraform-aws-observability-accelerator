@@ -2,6 +2,12 @@ variable "cluster_name" {
   description = "Name of cluster - used by Terratest for e2e test automation"
   type        = string
   default     = ""
+
+  validation {
+    # cluster name is used as prefix on eks_blueprint module and cannot be >25 characters
+    condition     = can(regex("^[a-zA-Z][-a-zA-Z0-9]{3,24}$", var.cluster_name))
+    error_message = "Failed! Cluster name must satisfy regular expression pattern: '[a-zA-Z][-a-zA-Z0-9]{3,19}'"
+  }
 }
 variable "aws_region" {
   description = "AWS Region"

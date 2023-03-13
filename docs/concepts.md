@@ -31,6 +31,18 @@ you need to track changes as part of a Git repository or CI/CD pipeline.
 !!! warning
     When using `tfvars` files, always be careful to not store and commit any secrets (keys,     passwords, ...)
 
+
+## v2.x changes
+
+v2.x [releases](https://github.com/aws-observability/terraform-aws-observability-accelerator/releases) introduce
+couple of breaking changes compared to previous versions:
+
+- `modules/workloads/infra` module moves to `modules/eks-monitoring`
+- EKS configuration options moves from the base  module to the `eks-monitoring` module
+- EKS workload modules **java,nginx** merge into `eks-monitoring` as configuration options (patterns),
+see [examples](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples)
+- Examples have been updated to reflect these changes
+
 ## Base module
 
 The base module allows you to configure the AWS Observability services for your cluster and
@@ -41,7 +53,7 @@ and ADOT Operator deployed for you and ready to receive your data.
 The base module serve as an anchor to the workload modules and cannot run on its own.
 
 ```hcl
-module "eks_observability_accelerator" {
+module "aws_observability_accelerator" {
   # use release tags and check for the latest versions
   # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
   source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1"
@@ -49,7 +61,7 @@ module "eks_observability_accelerator" {
   aws_region     = "eu-west-1"
   eks_cluster_id = "my-eks-cluster"
 
-  # As Grafana shares a different lifecycle, it's best to use an existing workspace.
+  # As Grafana shares a different lifecycle, we recommend using an existing workspace.
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
   grafana_api_key              = var.grafana_api_key
 }
@@ -58,7 +70,7 @@ module "eks_observability_accelerator" {
 You can optionally reuse an existing Amazon Managed Service for Prometheus Workspace:
 
 ```hcl
-module "eks_observability_accelerator" {
+module "aws_observability_accelerator" {
   # use release tags and check for the latest versions
   # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
   source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1"
@@ -83,7 +95,7 @@ View all the configuration options in the [module's documentation](https://githu
 
 Workloads modules are focused Terraform modules provided in this repository. They essentially provide curated metrics collection, alerts and Grafana dashboards according to the use case. Most of those modules require the base module.
 
-You can check the full workload modules list and their documentation [here](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/workloads).
+You can check the full workload modules list and their documentation [here](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/).
 
 All the modules come with end-to-end deployable examples.
 
@@ -93,7 +105,20 @@ All the modules come with end-to-end deployable examples.
 
 You can find **workload** examples like [Amazon EKS infrastructure monitoring](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/) or [monitoring your Amazon Managed Service for Prometheus workspace](https://aws-observability.github.io/terraform-aws-observability-accelerator/workloads/managed-prometheus/) and more.
 
-![example diagram](images/example-diagram.svg)
+``` mermaid
+classDiagram
+    Example <|-- Base Module
+    Example <|-- Workload Module
+    class Base Module{
+        Amazon Managed Prometheus
+        Amazon Managed Grafana Data Sources
+    }
+    class Workload Module{
+        Amazon Distro for Open Telemetry Config
+        Amazon Managed Prometheus Alerts
+        Amazon Managed Grafana Dashboards
+    }
+```
 
 
 ## Getting started with AWS Observability services

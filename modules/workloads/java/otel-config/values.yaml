@@ -1,6 +1,0 @@
-ampurl: ${amp_url}
-region: ${region}
-prometheusMetricsEndpoint: ${prometheus_metrics_endpoint}
-globalScrapeInterval: ${scrape_interval}
-globalScrapeTimeout: ${scrape_timeout}
-scrapeSampleLimit: ${scrape_sample_limit}

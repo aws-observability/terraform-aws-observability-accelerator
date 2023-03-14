@@ -6,7 +6,7 @@ variable "cluster_name" {
   validation {
     # cluster name is used as prefix on eks_blueprint module and cannot be >25 characters
     condition     = can(regex("^[a-zA-Z][-a-zA-Z0-9]{3,24}$", var.cluster_name))
-    error_message = "Failed! Cluster name must satisfy regular expression pattern: '[a-zA-Z][-a-zA-Z0-9]{3,19}'"
+    error_message = "Failed! Cluster name is used as a prefix-name for other resoruces. Max size is 25 chars and must satisfy regular expression pattern: '[a-zA-Z][-a-zA-Z0-9]{3,19}'"
   }
 }
 variable "aws_region" {

@@ -74,7 +74,7 @@ aws amp create-workspace --alias observability-accelerator --query '.workspaceId
 
 To run this example you need an Amazon Managed Grafana workspace. If you have
 an existing workspace, create an environment variable as described below.
-To create a new workspace, visit [this example](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/managed-grafana/).
+To create a new workspace, visit our supporting example for Grafana.
 
 !!! note
     For the URL `https://g-xyz.grafana-workspace.eu-central-1.amazonaws.com`, the workspace ID would be `g-xyz`

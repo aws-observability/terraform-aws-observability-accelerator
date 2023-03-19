@@ -1,13 +1,11 @@
-# Managed Grafana Setup
-This example creates a Managed Grafana Workspace and Identity Centre Users for it.
+# Amazon Managed Grafana Workspace Setup
 
-# Deployment Instructions
+This example creates an Amazon Managed Grafana Workspace with
+Amazon CloudWatch, Amazon X-Ray and Amazon Managed Service for Prometheus
+datasources
 
-1. Supply variables first name, last name, email address in either terraform.tfvars file, as a default in the variables.tf file, or in the command line at runtime
-2. Once deployed, you will need to get the identity centre admin to send a verification email to users
-3. When you have accepted the verification email, you can then sign in to the grafana workspace
-
-
+Step-by-step instructions available on our [docs site](https://aws-observability.github.io/terraform-aws-observability-accelerator/)
+under **Supporting Examples**
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements

@@ -2,13 +2,6 @@ provider "aws" {
   region = var.aws_region
 }
 
-/*
-TODO: docs
-TODO: unified alerting setup on AMP
-TODO: test IAM roles tags
-TODO: test versions
-*/
-
 locals {
   name        = "aws-observability-accelerator"
   description = "Amazon Managed Grafana workspace for ${local.name}"
@@ -48,8 +41,7 @@ module "managed_grafana" {
   iam_role_path                  = "/grafana/"
   iam_role_force_detach_policies = true
   iam_role_max_session_duration  = 7200
-  # iam_role_tags                  = { role = true }
-  iam_role_tags = local.tags
+  iam_role_tags                  = local.tags
 
   tags = local.tags
 }

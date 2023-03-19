@@ -1,8 +1,11 @@
 # Amazon Managed Grafana Workspace Setup
 
 This example creates an Amazon Managed Grafana Workspace with
-Amazon CloudWatch, Amazon X-Ray and Amazon Managed Service for Prometheus
+Amazon CloudWatch, AWS X-Ray and Amazon Managed Service for Prometheus
 datasources
+
+The authentication method chosen for this example is with IAM Identity
+Center (former SSO). You can extend this example to add SAML.
 
 Step-by-step instructions available on our [docs site](https://aws-observability.github.io/terraform-aws-observability-accelerator/)
 under **Supporting Examples**

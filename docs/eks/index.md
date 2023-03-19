@@ -1,7 +1,7 @@
 # Amazon EKS cluster metrics
 
 This example demonstrates how to monitor your Amazon Elastic Kubernetes Service
-(Amazon EKS) cluster with the Observability Accelerator's 
+(Amazon EKS) cluster with the Observability Accelerator's
 [EKS monitoring module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring).
 
 Monitoring Amazon Elastic Kubernetes Service (Amazon EKS) for metrics has two categories:

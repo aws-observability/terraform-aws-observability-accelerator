@@ -45,6 +45,8 @@ After apply, Terraform will output the Worksapce's URL, but you need to:
 - [Setup user(s)](https://docs.aws.amazon.com/singlesignon/latest/userguide/getting-started.html) in the IAM Identity Center (former SSO)
 - [Assign the user(s) to the workspace](https://docs.aws.amazon.com/grafana/latest/userguide/AMG-manage-users-and-groups-AMG.html) with proper permissions
 
+<img width="1936" alt="Screenshot 2023-03-19 at 12 04 45" src="https://user-images.githubusercontent.com/10175027/226172947-f8588ed3-3751-47c1-a3ed-fb4c2d4d847e.png">
+
 
 ## Cleanup
 

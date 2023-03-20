@@ -47,9 +47,11 @@ Add your cluster name for `eks_cluster_id="..."` to the `terraform.tfvars` or us
 
 4. Amazon Managed Grafana workspace
 
-To run this example you need an Amazon Managed Grafana workspace. If you have an existing workspace, create an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx`.
-To create a new one, visit our Amazon Managed Grafana [documentation](https://docs.aws.amazon.com/grafana/latest/userguide/getting-started-with-AMG.html).
-Make sure to provide the workspace with Amazon Managed Service for Prometheus read permissions.
+To run this example you need an Amazon Managed Grafana workspace. If you have
+an existing workspace, create an environment variable
+`export TF_VAR_managed_grafana_workspace_id=g-xxx`.
+
+To create a new one, visit [this example](../managed-grafana-workspace).
 
 > In the URL `https://g-xyz.grafana-workspace.eu-central-1.amazonaws.com`, the workspace ID would be `g-xyz`
 

@@ -1,7 +1,7 @@
 # Amazon EKS cluster metrics
 
 This example demonstrates how to monitor your Amazon Elastic Kubernetes Service
-(Amazon EKS) cluster with the Observability Accelerator's 
+(Amazon EKS) cluster with the Observability Accelerator's
 [EKS monitoring module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring).
 
 Monitoring Amazon Elastic Kubernetes Service (Amazon EKS) for metrics has two categories:
@@ -72,9 +72,9 @@ aws amp create-workspace --alias observability-accelerator --query '.workspaceId
 
 #### 5. Amazon Managed Grafana workspace
 
-To run this example you need an Amazon Managed Grafana workspace. If you have an existing workspace, create an environment variable as described below.
-To create a new workspace, visit our Amazon Managed Grafana [documentation](https://docs.aws.amazon.com/grafana/latest/userguide/getting-started-with-AMG.html).
-Make sure to provide the workspace with Amazon Managed Service for Prometheus read permissions.
+To run this example you need an Amazon Managed Grafana workspace. If you have
+an existing workspace, create an environment variable as described below.
+To create a new workspace, visit our supporting example for Grafana.
 
 !!! note
     For the URL `https://g-xyz.grafana-workspace.eu-central-1.amazonaws.com`, the workspace ID would be `g-xyz`

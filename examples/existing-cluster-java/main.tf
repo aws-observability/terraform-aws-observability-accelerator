@@ -47,7 +47,6 @@ module "aws_observability_accelerator" {
   managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
 
   # reusing existing Amazon Managed Grafana workspace
-  enable_managed_grafana       = false
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
   grafana_api_key              = var.grafana_api_key
 

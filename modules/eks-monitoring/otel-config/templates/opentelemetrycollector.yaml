@@ -1769,6 +1769,38 @@ spec:
                   action: labeldrop
             {{ end }}
 
+            {{ if .Values.enableMemcached }}
+            - job_name: 'kubernetes-memcached'
+              sample_limit: {{ .Values.memcachedScrapeSampleLimit }}
+              metrics_path: /{{ .Values.memcachedPrometheusMetricsEndpoint }}
+              kubernetes_sd_configs:
+                - role: pod
+              relabel_configs:
+                - source_labels: [ __address__ ]
+                  action: keep
+                  regex: '.*:{{ .Value.memcachedScrapingPort }}$'
+                - action: labelmap
+                  regex: __meta_kubernetes_pod_label_(.+)
+                - source_labels: [__meta_kubernetes_pod_container_name]
+                  target_label: container
+                  action: replace
+                - source_labels: [__meta_kubernetes_pod_node_name]
+                  target_label: host
+                  action: replace
+                - source_labels: [ __meta_kubernetes_pod_name ]
+                  action: replace
+                  target_label: pod_name
+                - action: replace
+                  source_labels: [ __meta_kubernetes_pod_controller_kind ]
+                  target_label: pod_controller_kind
+                - action: replace
+                  source_labels: [ __meta_kubernetes_pod_phase ]
+                  target_label: pod_controller_phase
+                - source_labels: [__meta_kubernetes_namespace]
+                  target_label: namespace
+                  action: replace
+            {{ end }}
+
     exporters:
       {{ if .Values.enableTracing }}
       awsxray:

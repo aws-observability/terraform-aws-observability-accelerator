@@ -133,6 +133,22 @@ module "helm_addon" {
     {
       name  = "nginxPrometheusMetricsEndpoint"
       value = var.nginx_config.prometheus_metrics_endpoint
+    },
+    {
+      name  = "enable_memcached"
+      value = var.enable_memcached
+    },
+    {
+      name  = "memcachedScrapeSampleLimit"
+      value = var.memcached_config.scrape_sample_limit
+    },
+    {
+      name  = "memcachedPrometheusMetricsEndpoint"
+      value = var.memcached_config.prometheus_metrics_endpoint
+    },
+    {
+      name  = "memcachedScrapingPort"
+      value = var.memcached_config.scraping_port
     }
   ]
 
@@ -167,5 +183,14 @@ module "nginx_monitoring" {
 
   managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
   enable_alerting_rules           = var.nginx_config.enable_alerting_rules
+  dashboards_folder_id            = var.dashboards_folder_id
+}
+
+module "memcached_monitoring" {
+  source = "./patterns/memcached"
+  count  = var.enable_memcached ? 1 : 0
+
+  managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+  enable_alerting_rules           = var.memcached_config.enable_alerting_rules
   dashboards_folder_id            = var.dashboards_folder_id
 }

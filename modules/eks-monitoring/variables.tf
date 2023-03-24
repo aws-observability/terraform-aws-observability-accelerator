@@ -247,3 +247,26 @@ variable "nginx_config" {
     prometheus_metrics_endpoint = "metrics"
   }
 }
+
+variable "enable_memcached" {
+  description = "Enable Memcached workloads monitoring, alerting and default dashboards"
+  type        = bool
+  default     = false
+}
+
+variable "memcached_config" {
+  description = "Configuration object for Memcached monitoring"
+  type = object({
+    enable_alerting_rules       = bool
+    scrape_sample_limit         = number
+    scraping_port = number
+    prometheus_metrics_endpoint = string
+  })
+
+  default = {
+    enable_alerting_rules       = true
+    scrape_sample_limit         = 1000
+    scraping_port = 9150
+    prometheus_metrics_endpoint = "metrics"
+  }
+}

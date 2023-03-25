@@ -172,9 +172,9 @@ module "nginx_monitoring" {
 
 module "fluentbit_logs" {
   source = "./add-ons/aws-for-fluentbit"
-  count = var.enable_logs ? 1 : 0
+  count  = var.enable_logs ? 1 : 0
 
   # TODO: add fluentbit_config.cw_log_retention_days
   cw_log_retention_days = 90
-  addon_context = local.context
+  addon_context         = local.context
 }

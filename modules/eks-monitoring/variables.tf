@@ -250,6 +250,6 @@ variable "nginx_config" {
 
 variable "enable_logs" {
   description = "Using AWS For FluentBit to collect cluster and application logs to Amazon CloudWatch"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }

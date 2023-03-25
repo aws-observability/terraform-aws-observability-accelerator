@@ -247,3 +247,9 @@ variable "nginx_config" {
     prometheus_metrics_endpoint = "metrics"
   }
 }
+
+variable "enable_logs" {
+  description = "Using AWS For FluentBit to collect cluster and application logs to Amazon CloudWatch"
+  type = bool
+  default = true
+}

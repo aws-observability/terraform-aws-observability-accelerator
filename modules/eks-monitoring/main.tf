@@ -169,3 +169,11 @@ module "nginx_monitoring" {
   enable_alerting_rules           = var.nginx_config.enable_alerting_rules
   dashboards_folder_id            = var.dashboards_folder_id
 }
+
+module "fluentbit_logs" {
+  source = "./add-ons/aws-for-fluentbit"
+  count = var.enable_logs ? 1 : 0
+
+  create_cw_log_group = true
+  addon_context = local.context
+}

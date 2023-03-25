@@ -40,7 +40,7 @@ spec:
             scrape_timeout: {{ .Values.globalScrapeTimeout }}
             external_labels:
               cluster: {{ .Values.ekscluster }}
-              account_id: {{ .Values.accountId }}
+              # account_id: {{ .Values.accountId }}
               region: {{ .Values.region }}
           scrape_configs:
             - job_name: 'kubernetes-kubelet'

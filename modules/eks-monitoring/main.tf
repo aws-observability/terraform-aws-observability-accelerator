@@ -174,6 +174,7 @@ module "fluentbit_logs" {
   source = "./add-ons/aws-for-fluentbit"
   count = var.enable_logs ? 1 : 0
 
-  create_cw_log_group = true
+  # TODO: add fluentbit_config.cw_log_retention_days
+  cw_log_retention_days = 90
   addon_context = local.context
 }

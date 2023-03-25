@@ -4,28 +4,10 @@ variable "helm_config" {
   default     = {}
 }
 
-variable "create_cw_log_group" {
-  description = "Set to false to use existing CloudWatch log group supplied via the cw_log_group_name variable."
-  type        = bool
-  default     = true
-}
-
-variable "cw_log_group_name" {
-  description = "FluentBit CloudWatch Log group name"
-  type        = string
-  default     = null
-}
-
-variable "cw_log_group_retention" {
+variable "cw_log_retention_days" {
   description = "FluentBit CloudWatch Log group retention period"
   type        = number
   default     = 90
-}
-
-variable "cw_log_group_kms_key_arn" {
-  description = "FluentBit CloudWatch Log group KMS Key"
-  type        = string
-  default     = null
 }
 
 variable "manage_via_gitops" {

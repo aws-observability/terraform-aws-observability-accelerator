@@ -1,6 +1,5 @@
 locals {
   name            = "aws-for-fluent-bit"
-  log_group_name  = var.cw_log_group_name == null ? "/${var.addon_context.eks_cluster_id}/worker-fluentbit-logs" : var.cw_log_group_name
   service_account = try(var.helm_config.service_account, "${local.name}-sa")
 
   set_values = [
@@ -32,13 +31,13 @@ locals {
 
   default_helm_values = [templatefile("${path.module}/values.yaml", {
     aws_region      = var.addon_context.aws_region_name,
-    log_group_name  = local.log_group_name,
+    cluster_name = var.addon_context.eks_cluster_id
+    log_retention_days = var.cw_log_retention_days
     service_account = local.service_account
   })]
 
   argocd_gitops_config = {
     enable             = true
-    logGroupName       = local.log_group_name
     serviceAccountName = local.service_account
   }
 

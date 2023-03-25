@@ -8,18 +8,9 @@ cloudWatch:
 cloudWatchLogs:
   enabled: true
   region: ${aws_region}
-    #logGroupName: ${log_group_name}
-  logGroupTemplate: /aws/eks/observabilityaccelerator/eks-cluster-with-vpc/$kubernetes['namespace_name']
+  # logGroupName is a fallback to failed parsing
+  logGroupName: /aws/eks/observability-accelerator/workloads
+  logGroupTemplate: /aws/eks/observability-accelerator/${cluster_name}/$kubernetes['namespace_name']
   logStreamTemplate: $kubernetes['container_name'].$kubernetes['pod_name']
-
-firehose:
-  enabled: false
-  region: ${aws_region}
-
-kinesis:
-  enabled: false
-  region: ${aws_region}
-
-elasticsearch:
-  enabled: false
-  region: ${aws_region}
+  log_key: log
+  log_retention_days: ${log_retention_days}

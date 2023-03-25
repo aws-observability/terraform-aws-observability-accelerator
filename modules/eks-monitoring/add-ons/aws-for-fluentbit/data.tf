@@ -24,6 +24,9 @@ data "aws_iam_policy_document" "irsa" {
   }
 }
 
+
+#TODO : enable KMS when supported on fluentbit cw config
+/*
 data "aws_iam_policy_document" "kms" {
   statement {
     sid       = "Enable IAM User Permissions"
@@ -63,3 +66,4 @@ data "aws_iam_policy_document" "kms" {
     }
   }
 }
+*/

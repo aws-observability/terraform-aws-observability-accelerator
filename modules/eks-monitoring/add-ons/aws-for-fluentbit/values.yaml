@@ -1,0 +1,25 @@
+serviceAccount:
+  create: false
+  name: ${service_account}
+
+cloudWatch:
+  enabled: false
+
+cloudWatchLogs:
+  enabled: true
+  region: ${aws_region}
+    #logGroupName: ${log_group_name}
+  logGroupTemplate: /aws/eks/observabilityaccelerator/eks-cluster-with-vpc/$kubernetes['namespace_name']
+  logStreamTemplate: $kubernetes['container_name'].$kubernetes['pod_name']
+
+firehose:
+  enabled: false
+  region: ${aws_region}
+
+kinesis:
+  enabled: false
+  region: ${aws_region}
+
+elasticsearch:
+  enabled: false
+  region: ${aws_region}

@@ -253,3 +253,15 @@ variable "enable_logs" {
   type        = bool
   default     = true
 }
+
+variable "logs_config" {
+  description = "Configuration object for logs collection"
+  type = object({
+    cw_log_retention_days = number
+  })
+
+  default = {
+    # Valid values are  [1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653]
+    cw_log_retention_days = 90
+  }
+}

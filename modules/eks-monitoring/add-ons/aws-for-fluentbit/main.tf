@@ -13,5 +13,3 @@ resource "aws_iam_policy" "aws_for_fluent_bit" {
   policy      = data.aws_iam_policy_document.irsa.json
   tags        = var.addon_context.tags
 }
-
-# TODO: open issue on FluentBit to support KMS keys

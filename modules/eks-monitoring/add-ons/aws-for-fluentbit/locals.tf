@@ -30,16 +30,11 @@ locals {
   )
 
   default_helm_values = [templatefile("${path.module}/values.yaml", {
-    aws_region         = var.addon_context.aws_region_name,
+    aws_region         = var.addon_context.aws_region_name
     cluster_name       = var.addon_context.eks_cluster_id
     log_retention_days = var.cw_log_retention_days
     service_account    = local.service_account
   })]
-
-  argocd_gitops_config = {
-    enable             = true
-    serviceAccountName = local.service_account
-  }
 
   irsa_config = {
     kubernetes_namespace                = local.helm_config["namespace"]

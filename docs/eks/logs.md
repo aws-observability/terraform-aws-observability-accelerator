@@ -35,7 +35,7 @@ fields @timestamp, log
 | limit 100
 ```
 
-
+<img width="1987" alt="Screenshot 2023-03-27 at 19 08 35" src="https://user-images.githubusercontent.com/10175027/228037030-95005f47-ff46-4f7a-af74-d31809c52fcd.png">
 
 [CloudWatch Logs syntax](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html)
 provide powerful functions to extract data from your logs. The `stats()`
@@ -56,6 +56,7 @@ fields @timestamp, log
     You can add logs in your dashboards with logs panel types or time series
     depending on your query results type.
 
+<img width="2056" alt="image" src="https://user-images.githubusercontent.com/10175027/228037186-12691590-0bfe-465b-a83b-5c4f583ebf96.png">
 
 !!! warning
     Querying CloudWatch logs will incur costs per GB scanned. Use small time

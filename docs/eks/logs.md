@@ -37,6 +37,9 @@ fields @timestamp, log
 
 <img width="1987" alt="Screenshot 2023-03-27 at 19 08 35" src="https://user-images.githubusercontent.com/10175027/228037030-95005f47-ff46-4f7a-af74-d31809c52fcd.png">
 
+
+### Example - Using time series visualizations
+
 [CloudWatch Logs syntax](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html)
 provide powerful functions to extract data from your logs. The `stats()`
 function allows you to calculate aggregate statistics with log field values.

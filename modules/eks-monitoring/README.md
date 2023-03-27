@@ -2,11 +2,12 @@
 
 This module provides EKS cluster monitoring with the following resources:
 
-- AWS Distro For OpenTelemetry Operator and Collector
+- AWS Distro For OpenTelemetry Operator and Collector for Metrics and Traces
+- Logs with [AWS for FluentBit](https://github.com/aws/aws-for-fluent-bit)
 - AWS Managed Grafana Dashboard and data source
 - Alerts and recording rules with AWS Managed Service for Prometheus
 
-This module is inspired from the open source [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
+This module make use of the open source [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements

@@ -12,7 +12,7 @@ dashboards for your EKS infrastructure, Java/JMX, NGINX based workloads and
 your custom applications.
 
 You also can monitor your Amazon Managed Service for Prometheus workspaces ingestion,
-costs, active series with [this module](./modules/managed-prometheus-monitoring).
+costs, active series with [this module](https://aws-observability.github.io/terraform-aws-observability-accelerator/workloads/managed-prometheus/).
 
 <img width="1501" alt="image" src="images/dark-o11y-accelerator-amp-xray.png">
 

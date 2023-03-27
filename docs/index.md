@@ -2,14 +2,13 @@
 
 Welcome to the AWS Observability Accelerator for Terraform!
 
-The AWS Observability accelerator is a set of Terraform modules to help you
-configure Observability for your container workloads and environments with AWS
-Observability services. This project proposes a core module to bootstrap
-your Amazon EKS cluster with the AWS Distro for OpenTelemetry (ADOT) Operator for EKS,
-Amazon Managed Service for Prometheus, Amazon Managed Grafana.
+The AWS Observability Accelerator for Terraform is a set of opinionated modules to
+help you set up observability for your AWS environments with
+AWS-managed observability services such as Amazon Managed Service for Prometheus,
+Amazon Managed Grafana and AWS Distro for OpenTelemetry (ADOT).
 
-Additionally we have a set of workload modules to leverage curated ADOT
-collector configurations, Grafana dashboards, Prometheus recording rules and alerts.
+We provide curated metrics, traces collection, alerting rules and Grafana dashboards
+for your EKS infrastructure, Java/JMX, NGINX based workloads and custom applications.
 
 <img width="1501" alt="image" src="images/dark-o11y-accelerator-amp-xray.png">
 
@@ -30,7 +29,7 @@ to be deployed in our packaged
 !!! tip
     We have supporting examples for quick setup such as:
 
-    - Creating an empty Amazon EKS cluster and a VPC
+    - Creating a new Amazon EKS cluster and a VPC
     - Creating and configure an Amazon Managed Grafana workspace with SSO (coming soon)
 
 ## Motivation
@@ -43,7 +42,7 @@ Grafana and Amazon OpenSearch.
 AWS customers have asked for best-practices and guidance to collect metrics, logs
 and traces from their containerized applications and microservices with ease of
 deployment. Customers can use the AWS Observability Accelerator to configure their
-metrics collection, leveraging [AWS Distro for OpenTelemetry](https://aws-otel.github.io/),
+metrics and traces collection, leveraging [AWS Distro for OpenTelemetry](https://aws-otel.github.io/),
 to have opinionated dashboards and alerts available in only minutes.
 
 

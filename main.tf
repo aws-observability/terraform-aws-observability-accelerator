@@ -19,20 +19,6 @@ alertmanager_config: |
 EOF
 }
 
-module "managed_grafana" {
-  count   = var.enable_managed_grafana ? 1 : 0
-  source  = "terraform-aws-modules/managed-service-grafana/aws"
-  version = "~> 1.3"
-
-  # Workspace
-  name              = local.name
-  stack_set_name    = local.name
-  data_sources      = ["PROMETHEUS"]
-  associate_license = false
-
-  tags = var.tags
-}
-
 provider "grafana" {
   url  = local.amg_ws_endpoint
   auth = var.grafana_api_key

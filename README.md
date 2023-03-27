@@ -4,13 +4,16 @@
 
 Welcome to the AWS Observability Accelerator for Terraform!
 
-The AWS Observability accelerator for Terraform is a set of modules to help you
-configure Observability for your Amazon EKS clusters with AWS Observability services.
-This project proposes a core module to bootstrap your cluster with the AWS Distro for
-OpenTelemetry (ADOT) Operator for EKS, Amazon Managed Service for Prometheus,
-Amazon Managed Grafana. Additionally we have a set of workloads modules to
-leverage curated ADOT collector configurations, Grafana dashboards,
-Prometheus recording rules and alerts.
+The AWS Observability Accelerator for Terraform is a set of opinionated modules to
+help you set up observability for your AWS environments with
+AWS-managed observability services such as Amazon Managed Service for Prometheus,
+Amazon Managed Grafana and AWS Distro for OpenTelemetry (ADOT).
+
+We provide curated metrics, traces collection, alerting rules and Grafana dashboards
+for your EKS infrastructure, Java/JMX, NGINX based workloads and custom applications.
+
+You also can monitor your Amazon Managed Service for Prometheus workspaces ingestion,
+costs, active series with [this module](./modules/managed-prometheus-monitoring).
 
 <img width="1501" alt="image" src="docs/images/dark-o11y-accelerator-amp-xray.png">
 
@@ -88,7 +91,7 @@ View all the configuration options in the module documentation below.
 ### Workload modules
 
 [Workloads modules](./modules) are provided, which essentially provide curated
-metrics collection, alerting rule and Grafana dashboards.
+metrics collection, alerting rules and Grafana dashboards.
 
 #### Infrastructure monitoring
 
@@ -148,9 +151,7 @@ If you are interested in contributing, see the [Contribution guide](https://gith
 
 ## Modules
 
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_managed_grafana"></a> [managed\_grafana](#module\_managed\_grafana) | terraform-aws-modules/managed-service-grafana/aws | ~> 1.3 |
+No modules.
 
 ## Resources
 
@@ -169,7 +170,6 @@ If you are interested in contributing, see the [Contribution guide](https://gith
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS Region | `string` | n/a | yes |
 | <a name="input_enable_alertmanager"></a> [enable\_alertmanager](#input\_enable\_alertmanager) | Creates Amazon Managed Service for Prometheus AlertManager for all workloads | `bool` | `false` | no |
-| <a name="input_enable_managed_grafana"></a> [enable\_managed\_grafana](#input\_enable\_managed\_grafana) | Creates a new Amazon Managed Grafana Workspace | `bool` | `true` | no |
 | <a name="input_enable_managed_prometheus"></a> [enable\_managed\_prometheus](#input\_enable\_managed\_prometheus) | Creates a new Amazon Managed Service for Prometheus Workspace | `bool` | `true` | no |
 | <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | Grafana API key for the Amazon Managed Grafana workspace | `string` | n/a | yes |
 | <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana Workspace ID | `string` | `""` | no |

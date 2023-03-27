@@ -33,8 +33,8 @@ nav:
   - Monitoring Managed Service for Prometheus Workspaces: workloads/managed-prometheus.md
   - Supporting Examples:
       - EKS Cluster with VPC: helpers/new-eks-cluster.md
-        # - Amazon Managed Grafana setup: helpers/managed-grafana.md
-  - Support & feedback: support.md
+      - Amazon Managed Grafana setup: helpers/managed-grafana.md
+  - Support & Feedback: support.md
   - Contributors: contributors.md
 
 markdown_extensions:
@@ -44,6 +44,11 @@ markdown_extensions:
   - codehilite
   - footnotes
   - pymdownx.critic
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 plugins:
   - search

@@ -18,7 +18,7 @@ jobs:
           close-issue-message: 'Issue closed due to inactivity.'
           close-pr-message: 'Pull request closed due to inactivity.'
           days-before-close: 10
-          days-before-stale: 30
+          days-before-stale: 60
           stale-issue-label: stale
           stale-pr-label: stale
           # Not stale if have this labels
@@ -26,8 +26,8 @@ jobs:
           exempt-pr-labels: 'bug,enhancement'
           operations-per-run: 100
           stale-issue-message: |
-            This issue has been automatically marked as stale because it has been open 30 days
+            This issue has been automatically marked as stale because it has been open 60 days
             with no activity. Remove stale label or comment or this issue will be closed in 10 days
           stale-pr-message: |
-            This PR has been automatically marked as stale because it has been open 30 days
+            This PR has been automatically marked as stale because it has been open 60 days
             with no activity. Remove stale label or comment or this PR will be closed in 10 days

@@ -27,17 +27,12 @@ variable "enable_alertmanager" {
   default     = false
 }
 
-variable "enable_managed_grafana" {
-  description = "Creates a new Amazon Managed Grafana Workspace"
-  type        = bool
-  default     = true
-}
-
 variable "managed_grafana_workspace_id" {
   description = "Amazon Managed Grafana Workspace ID"
   type        = string
   default     = ""
 }
+
 variable "grafana_api_key" {
   description = "Grafana API key for the Amazon Managed Grafana workspace"
   type        = string

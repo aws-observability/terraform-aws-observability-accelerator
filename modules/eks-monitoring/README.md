@@ -95,3 +95,18 @@ This module is inspired from the open source [kube-prometheus-stack](https://git
 | <a name="output_eks_cluster_version"></a> [eks\_cluster\_version](#output\_eks\_cluster\_version) | EKS Cluster version |
 | <a name="output_grafana_dashboard_urls"></a> [grafana\_dashboard\_urls](#output\_grafana\_dashboard\_urls) | URLs for dashboards created |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+## Troubleshooting
+
+When you upgrade the eks-monitoring module from v2.1.0 or earlier, the following error may occur.
+
+```bash
+Error: cannot patch "prometheus-node-exporter" with kind DaemonSet: DaemonSet.apps "prometheus-node-exporter" is invalid: spec.selector: Invalid value: v1.LabelSelector{MatchLabels:map[string]string{"app.kubernetes.io/instance":"prometheus-node-exporter", "app.kubernetes.io/name":"prometheus-node-exporter"}, MatchExpressions:[]v1.LabelSelectorRequirement(nil)}: field is immutable
+```
+
+This is due to the upgrade of the node-exporter chart from v2 to v4. Manually delete the node-exporter's DaemonSet as described in [the link here](https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-node-exporter#3x-to-4x), and then apply.
+
+```bash
+kubectl -n prometheus-node-exporter delete daemonset -l app=prometheus-node-exporter
+terraform apply
+```

@@ -47,7 +47,8 @@ terraform init
 Verify the resources created by this execution
 
 ```sh
-export TF_VAR_aws_region=<ENTER YOUR REGION>   # Select your own region
+export TF_VAR_aws_region=<ENTER YOUR REGION>           # Select your own region
+export TF_VAR_cluster_name=<ENTER YOUR CLUSTER NAME>   # Enter your cluster name
 terraform plan
 ```
 

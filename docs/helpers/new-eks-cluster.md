@@ -33,6 +33,14 @@ Specify the AWS Region where the resources will be deployed:
 export TF_VAR_aws_region=xxx
 ```
 
+### 3. Cluster Name
+
+Specify the name of your EKS cluster:
+
+```bash
+export TF_VAR_cluster_name=xxx
+```
+
 ## Deploy
 
 Simply run this command to deploy the example

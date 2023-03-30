@@ -89,6 +89,8 @@ module "eks_monitoring" {
     global_scrape_timeout  = "15s"
   }
 
+  enable_logs = true
+
   tags = local.tags
 
   depends_on = [

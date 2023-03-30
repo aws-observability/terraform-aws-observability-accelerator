@@ -29,6 +29,7 @@ nav:
       - Infrastructure monitoring: eks/index.md
       - Java/JMX: eks/java.md
       - Nginx: eks/nginx.md
+      - Viewing logs: eks/logs.md
       - Teardown: eks/destroy.md
   - Monitoring Managed Service for Prometheus Workspaces: workloads/managed-prometheus.md
   - Supporting Examples:

@@ -7,7 +7,7 @@ This module provides EKS cluster monitoring with the following resources:
 - AWS Managed Grafana Dashboard and data source
 - Alerts and recording rules with AWS Managed Service for Prometheus
 
-This module make use of the open source [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
+This module makes use of the open source [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements

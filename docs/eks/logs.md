@@ -2,8 +2,8 @@
 
 By default, we deploy a FluentBit daemon set in the cluster to collect worker
 logs for all namespaces. Logs collection can be disabled with
-`enable_logs = false`. Logs are collected to Amazon CloudWatch Logs, which
-enables you to centralize the logs from all of your systems, applications,
+`enable_logs = false`. Logs are collected and exported to Amazon CloudWatch Logs,
+which enables you to centralize the logs from all of your systems, applications,
 and AWS services that you use, in a single, highly scalable service.
 
 Further configuration options are available in the [module documentation](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring#inputs).

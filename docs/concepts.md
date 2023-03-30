@@ -123,4 +123,6 @@ classDiagram
 
 ## Getting started with AWS Observability services
 
-If you are new to AWS Observability services, or want to dive deeper into them, check our [One Observability Workshop](https://catalog.workshops.aws/observability/) for a hands-on experience in a self-paced environement or at an AWS venue.
+If you are new to AWS Observability services, or want to dive deeper into them,
+check our [One Observability Workshop](https://catalog.workshops.aws/observability/)
+for a hands-on experience in a self-paced environement or at an AWS venue.

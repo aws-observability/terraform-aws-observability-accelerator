@@ -44,7 +44,7 @@ resource "helm_release" "prometheus_node_exporter" {
 }
 
 module "helm_addon" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.13.1"
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.26.0"
 
   helm_config = merge(
     {
@@ -168,4 +168,12 @@ module "nginx_monitoring" {
   managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
   enable_alerting_rules           = var.nginx_config.enable_alerting_rules
   dashboards_folder_id            = var.dashboards_folder_id
+}
+
+module "fluentbit_logs" {
+  source = "./add-ons/aws-for-fluentbit"
+  count  = var.enable_logs ? 1 : 0
+
+  cw_log_retention_days = var.logs_config.cw_log_retention_days
+  addon_context         = local.context
 }

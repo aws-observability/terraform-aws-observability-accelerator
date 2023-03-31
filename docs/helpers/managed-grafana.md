@@ -18,7 +18,7 @@ Center (former SSO). You can extend this example to add SAML.
 
 ```
 git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
-cd examples/managed-grafana-workspace
+cd terraform-aws-observability-accelerator/examples/managed-grafana-workspace
 terraform init
 ```
 

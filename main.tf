@@ -25,6 +25,7 @@ provider "grafana" {
 }
 
 resource "grafana_data_source" "amp" {
+  count      = var.create_grafana_data_source ? 1 : 0
   type       = "prometheus"
   name       = local.name
   is_default = true
@@ -39,5 +40,6 @@ resource "grafana_data_source" "amp" {
 
 # dashboards
 resource "grafana_folder" "this" {
+  count = var.create_dashboard_folder ? 1 : 0
   title = "Observability Accelerator Dashboards"
 }

@@ -153,11 +153,13 @@ module "helm_addon" {
 }
 
 module "java_monitoring" {
-  source = "./patterns/java"
-  count  = var.enable_java ? 1 : 0
+  source            = "./patterns/java"
+  count             = var.enable_java ? 1 : 0
+  enable_dashboards = var.enable_dashboards
 
   managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
   enable_alerting_rules           = var.java_config.enable_alerting_rules
+  enable_recording_rules          = var.java_config.enable_recording_rules
   dashboards_folder_id            = var.dashboards_folder_id
 }
 

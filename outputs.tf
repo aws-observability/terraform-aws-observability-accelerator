@@ -30,10 +30,10 @@ output "managed_grafana_workspace_id" {
 
 output "grafana_dashboards_folder_id" {
   description = "Grafana folder ID for automatic dashboards. Required by workload modules"
-  value       = grafana_folder.this.id
+  value       = var.create_dashboard_folder ? grafana_folder.this[0].id : ""
 }
 
 output "grafana_prometheus_datasource_test" {
   description = "Grafana save & test URL for Amazon Managed Prometheus workspace"
-  value       = "${local.amg_ws_endpoint}/datasources/edit/${grafana_data_source.amp.uid}"
+  value       = var.create_grafana_data_source ? "${local.amg_ws_endpoint}/datasources/edit/${grafana_data_source.amp[0].uid}" : ""
 }

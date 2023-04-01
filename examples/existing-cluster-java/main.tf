@@ -47,7 +47,6 @@ module "aws_observability_accelerator" {
   managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
 
   # reusing existing Amazon Managed Grafana workspace
-  enable_managed_grafana       = false
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
   grafana_api_key              = var.grafana_api_key
 
@@ -84,6 +83,8 @@ module "eks_monitoring" {
     global_scrape_timeout  = "15s"
     scrape_sample_limit    = 2000
   }
+
+  enable_logs = true
 
   tags = local.tags
 

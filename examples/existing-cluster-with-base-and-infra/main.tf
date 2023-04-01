@@ -50,7 +50,6 @@ module "aws_observability_accelerator" {
   enable_alertmanager = true
 
   # reusing existing Amazon Managed Grafana workspace
-  enable_managed_grafana       = false
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
   grafana_api_key              = var.grafana_api_key
 
@@ -89,6 +88,8 @@ module "eks_monitoring" {
     global_scrape_interval = "60s"
     global_scrape_timeout  = "15s"
   }
+
+  enable_logs = true
 
   tags = local.tags
 

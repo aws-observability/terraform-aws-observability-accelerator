@@ -2,36 +2,39 @@
 
 Welcome to the AWS Observability Accelerator for Terraform!
 
-The AWS Observability accelerator is a set of Terraform modules to help you
-configure Observability for your container workloads and environments with AWS
-Observability services. This project proposes a core module to bootstrap
-your Amazon EKS cluster with the AWS Distro for OpenTelemetry (ADOT) Operator for EKS,
-Amazon Managed Service for Prometheus, Amazon Managed Grafana.
+The AWS Observability Accelerator for Terraform is a set of opinionated modules to
+help you set up observability for your AWS environments with
+AWS-managed observability services such as Amazon Managed Service for Prometheus,
+Amazon Managed Grafana, AWS Distro for OpenTelemetry (ADOT) and Amazon CloudWatch.
 
-Additionally we have a set of workload modules to leverage curated ADOT
-collector configurations, Grafana dashboards, Prometheus recording rules and alerts.
+We provide curated metrics, logs, traces collection, alerting rules and Grafana
+dashboards for your EKS infrastructure, Java/JMX, NGINX based workloads and
+your custom applications.
 
-<img width="1501" alt="image" src="https://user-images.githubusercontent.com/10175027/193913383-94aaf4e2-58c6-4779-935b-e40528e86c03.png">
+You also can monitor your Amazon Managed Service for Prometheus workspaces ingestion,
+costs, active series with [this module](https://aws-observability.github.io/terraform-aws-observability-accelerator/workloads/managed-prometheus/).
+
+<img width="1501" alt="image" src="images/dark-o11y-accelerator-amp-xray.png">
 
 ## Getting started
 
-This project provides a set of Terraform modules to enable metrics and traces collection,
-dashboards and alerts for monitoring:
+This project provides a set of Terraform modules to enable metrics, logs and
+traces collection, dashboards and alerts for monitoring:
 
-- Amazon EKS clusters infrastructure
+- Amazon EKS clusters infrastructure and applications
 - NGINX workloads (running on Amazon EKS)
 - Java/JMX workloads (running on Amazon EKS)
 - Amazon Managed Service for Prometheus workspaces with Amazon CloudWatch
 
-These modules can be directly configured in your existing Terraform configurations or ready
-to be deployed in our packaged
+These modules can be directly configured in your existing Terraform
+configurations or ready to be deployed in our packaged
 [examples](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples)
 
 !!! tip
     We have supporting examples for quick setup such as:
 
-    - Creating an empty Amazon EKS cluster and a VPC
-    - Creating and configure an Amazon Managed Grafana workspace with SSO (coming soon)
+    - Creating a new Amazon EKS cluster and a VPC
+    - Creating and configure an Amazon Managed Grafana workspace with SSO
 
 ## Motivation
 
@@ -43,7 +46,7 @@ Grafana and Amazon OpenSearch.
 AWS customers have asked for best-practices and guidance to collect metrics, logs
 and traces from their containerized applications and microservices with ease of
 deployment. Customers can use the AWS Observability Accelerator to configure their
-metrics collection, leveraging [AWS Distro for OpenTelemetry](https://aws-otel.github.io/),
+metrics and traces collection, leveraging [AWS Distro for OpenTelemetry](https://aws-otel.github.io/),
 to have opinionated dashboards and alerts available in only minutes.
 
 

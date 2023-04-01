@@ -24,8 +24,8 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 288,
-  "iteration": 1667248982867,
+  "id": 531,
+  "iteration": 1679681754059,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -613,6 +613,7 @@
             "mode": "thresholds"
           },
           "custom": {
+            "align": "auto",
             "displayMode": "auto"
           },
           "decimals": 2,
@@ -668,8 +669,8 @@
                 "value": [
                   {
                     "targetBlank": false,
-                    "title": "Drill down to pods",
-                    "url": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1"
+                    "title": "Drill down",
+                    "url": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=${__data.fields[1]}"
                   }
                 ]
               },
@@ -697,8 +698,8 @@
                 "value": [
                   {
                     "targetBlank": false,
-                    "title": "Drill down to workloads",
-                    "url": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1"
+                    "title": "Drill down",
+                    "url": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=${__data.fields[1]}"
                   }
                 ]
               },
@@ -845,8 +846,8 @@
                 "value": [
                   {
                     "targetBlank": false,
-                    "title": "Drill down to pods",
-                    "url": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1"
+                    "title": "Drill down",
+                    "url": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=${__data.fields[1]}"
                   }
                 ]
               },
@@ -1137,16 +1138,261 @@
       "type": "row"
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "columns": [],
-      "dashLength": 10,
-      "dashes": false,
       "datasource": {
+        "type": "prometheus",
         "uid": "$datasource"
       },
-      "fill": 1,
-      "fontSize": "100%",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "decimals": 2,
+          "displayName": "",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Time"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Pods"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "targetBlank": false,
+                    "title": "Drill down",
+                    "url": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=${__data.fields[1]}"
+                  }
+                ]
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Workloads"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "targetBlank": false,
+                    "title": "Drill down",
+                    "url": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=${__data.fields[1]}"
+                  }
+                ]
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #C"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Memory Usage"
+              },
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #D"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Memory Requests"
+              },
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #E"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Memory Requests %"
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #F"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Memory Limits"
+              },
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #G"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Memory Limits %"
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "namespace"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Namespace"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "targetBlank": false,
+                    "title": "Drill down",
+                    "url": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=${__data.fields[1]}"
+                  }
+                ]
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          }
+        ]
+      },
       "gridPos": {
         "h": 7,
         "w": 24,
@@ -1155,182 +1401,28 @@
       },
       "id": 10,
       "interval": "1m",
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
       "links": [],
-      "nullPointMode": "null as zero",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "showHeader": true,
-      "sort": {
-        "col": 0,
-        "desc": true
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
       },
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "styles": [
-        {
-          "alias": "Time",
-          "align": "auto",
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "pattern": "Time",
-          "type": "hidden"
-        },
-        {
-          "alias": "Pods",
-          "align": "auto",
-          "colors": [],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 0,
-          "link": true,
-          "linkTargetBlank": false,
-          "linkTooltip": "Drill down to pods",
-          "linkUrl": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1",
-          "pattern": "Value #A",
-          "thresholds": [],
-          "type": "number",
-          "unit": "short"
-        },
-        {
-          "alias": "Workloads",
-          "align": "auto",
-          "colors": [],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 0,
-          "link": true,
-          "linkTargetBlank": false,
-          "linkTooltip": "Drill down to workloads",
-          "linkUrl": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1",
-          "pattern": "Value #B",
-          "thresholds": [],
-          "type": "number",
-          "unit": "short"
-        },
-        {
-          "alias": "Memory Usage",
-          "align": "auto",
-          "colors": [],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "link": false,
-          "linkTargetBlank": false,
-          "linkTooltip": "Drill down",
-          "linkUrl": "",
-          "pattern": "Value #C",
-          "thresholds": [],
-          "type": "number",
-          "unit": "bytes"
-        },
-        {
-          "alias": "Memory Requests",
-          "align": "auto",
-          "colors": [],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "link": false,
-          "linkTargetBlank": false,
-          "linkTooltip": "Drill down",
-          "linkUrl": "",
-          "pattern": "Value #D",
-          "thresholds": [],
-          "type": "number",
-          "unit": "bytes"
-        },
-        {
-          "alias": "Memory Requests %",
-          "align": "auto",
-          "colors": [],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "link": false,
-          "linkTargetBlank": false,
-          "linkTooltip": "Drill down",
-          "linkUrl": "",
-          "pattern": "Value #E",
-          "thresholds": [],
-          "type": "number",
-          "unit": "percentunit"
-        },
-        {
-          "alias": "Memory Limits",
-          "align": "auto",
-          "colors": [],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "link": false,
-          "linkTargetBlank": false,
-          "linkTooltip": "Drill down",
-          "linkUrl": "",
-          "pattern": "Value #F",
-          "thresholds": [],
-          "type": "number",
-          "unit": "bytes"
-        },
-        {
-          "alias": "Memory Limits %",
-          "align": "auto",
-          "colors": [],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "link": false,
-          "linkTargetBlank": false,
-          "linkTooltip": "Drill down",
-          "linkUrl": "",
-          "pattern": "Value #G",
-          "thresholds": [],
-          "type": "number",
-          "unit": "percentunit"
-        },
-        {
-          "alias": "Namespace",
-          "align": "auto",
-          "colors": [],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "link": true,
-          "linkTargetBlank": false,
-          "linkTooltip": "Drill down to pods",
-          "linkUrl": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1",
-          "pattern": "namespace",
-          "thresholds": [],
-          "type": "number",
-          "unit": "short"
-        },
-        {
-          "alias": "",
-          "align": "auto",
-          "colors": [],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "pattern": "/.*/",
-          "thresholds": [],
-          "type": "string",
-          "unit": "short"
-        }
-      ],
+      "pluginVersion": "8.4.7",
       "targets": [
         {
           "datasource": {
             "uid": "$datasource"
           },
+          "exemplar": false,
           "expr": "sum(kube_pod_owner{job=\"kube-state-metrics\", cluster=\"$cluster\"}) by (namespace)",
           "format": "table",
           "instant": true,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "A",
@@ -1340,9 +1432,11 @@
           "datasource": {
             "uid": "$datasource"
           },
+          "exemplar": false,
           "expr": "count(avg(namespace_workload_pod:kube_pod_owner:relabel{cluster=\"$cluster\"}) by (workload, namespace)) by (namespace)",
           "format": "table",
           "instant": true,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "B",
@@ -1352,9 +1446,11 @@
           "datasource": {
             "uid": "$datasource"
           },
+          "exemplar": false,
           "expr": "sum(container_memory_rss{job=\"kubelet\", cluster=\"$cluster\", container!=\"\"}) by (namespace)",
           "format": "table",
           "instant": true,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "C",
@@ -1364,9 +1460,11 @@
           "datasource": {
             "uid": "$datasource"
           },
+          "exemplar": false,
           "expr": "sum(namespace_memory:kube_pod_container_resource_requests:sum{cluster=\"$cluster\"}) by (namespace)",
           "format": "table",
           "instant": true,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "D",
@@ -1376,9 +1474,11 @@
           "datasource": {
             "uid": "$datasource"
           },
+          "exemplar": false,
           "expr": "sum(container_memory_rss{job=\"kubelet\", cluster=\"$cluster\", container!=\"\"}) by (namespace) / sum(namespace_memory:kube_pod_container_resource_requests:sum{cluster=\"$cluster\"}) by (namespace)",
           "format": "table",
           "instant": true,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "E",
@@ -1388,9 +1488,11 @@
           "datasource": {
             "uid": "$datasource"
           },
+          "exemplar": false,
           "expr": "sum(namespace_memory:kube_pod_container_resource_limits:sum{cluster=\"$cluster\"}) by (namespace)",
           "format": "table",
           "instant": true,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "F",
@@ -1400,42 +1502,27 @@
           "datasource": {
             "uid": "$datasource"
           },
+          "exemplar": false,
           "expr": "sum(container_memory_rss{job=\"kubelet\", cluster=\"$cluster\", container!=\"\"}) by (namespace) / sum(namespace_memory:kube_pod_container_resource_limits:sum{cluster=\"$cluster\"}) by (namespace)",
           "format": "table",
           "instant": true,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "G",
           "step": 10
         }
       ],
-      "thresholds": [],
       "title": "Requests by Namespace",
-      "tooltip": {
-        "shared": false,
-        "sort": 2,
-        "value_type": "individual"
-      },
-      "transform": "table",
-      "type": "table-old",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
+      "transformations": [
         {
-          "format": "short",
-          "logBase": 1,
-          "min": 0,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": false
+          "id": "merge",
+          "options": {
+            "reducers": []
+          }
         }
-      ]
+      ],
+      "type": "table"
     },
     {
       "collapsed": false,
@@ -1474,6 +1561,7 @@
             "mode": "thresholds"
           },
           "custom": {
+            "align": "auto",
             "displayMode": "auto"
           },
           "decimals": 2,
@@ -1671,8 +1759,8 @@
                 "value": [
                   {
                     "targetBlank": false,
-                    "title": "Drill down to pods",
-                    "url": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1"
+                    "title": "Drill down",
+                    "url": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=${__data.fields[1]}"
                   }
                 ]
               },
@@ -2491,6 +2579,7 @@
             "mode": "thresholds"
           },
           "custom": {
+            "align": "auto",
             "displayMode": "auto"
           },
           "decimals": 2,
@@ -2688,8 +2777,8 @@
                 "value": [
                   {
                     "targetBlank": false,
-                    "title": "Drill down to pods",
-                    "url": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=$__cell_1"
+                    "title": "Drill down",
+                    "url": "/d/a87fb0d919ec0ea5f6543124e16c42a5/kubernetes-compute-resources-namespace-workloads?var-datasource=$datasource&var-cluster=$cluster&var-namespace=${__data.fields[1]}"
                   }
                 ]
               },
@@ -2828,7 +2917,7 @@
     "list": [
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "default",
           "value": "default"
         },
@@ -2846,6 +2935,11 @@
         "type": "datasource"
       },
       {
+        "current": {
+          "selected": false,
+          "text": "eks-cluster-with-vpc",
+          "value": "eks-cluster-with-vpc"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "$datasource"
@@ -2903,6 +2997,6 @@
   "timezone": "utc",
   "title": "Kubernetes / Compute Resources / Cluster",
   "uid": "efa86fd1d0c121a26444b636a3f509a8",
-  "version": 3,
+  "version": 23,
   "weekStart": ""
 }

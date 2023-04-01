@@ -1,5 +1,5 @@
 # (mandatory) AWS Region where your resources will be located
-aws_region = "eu-central-1"
+aws_region = ""
 
 # (mandatory) EKS Cluster name
 eks_cluster_id = "eks-cluster-with-vpc"

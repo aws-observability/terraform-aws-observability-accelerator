@@ -233,6 +233,12 @@ variable "enable_nginx" {
   default     = false
 }
 
+variable "enable_istio" {
+  description = "Enable ISTIO workloads monitoring, alerting and default dashboards"
+  type        = bool
+  default     = false
+}
+
 variable "nginx_config" {
   description = "Configuration object for NGINX monitoring"
   type = object({

@@ -14,9 +14,9 @@
 ### More
 
 - [ ] Yes, I have tested the PR using my local account setup  (Provide any test evidence report under Additional Notes)
-- [ ] Yes, I have added a new example under [examples](https://github.com/aws-observability/terraform-aws-eks-blueprints/tree/main/examples) to support my PR
+- [ ] Yes, I have added a new example under [examples](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples) to support my PR
 - [ ] Yes, I have created another PR for add-ons under [add-ons](https://github.com/aws-samples/eks-blueprints-add-ons) repo (if applicable)
-- [ ] Yes, I have updated the [docs](https://github.com/aws-observability/terraform-aws-eks-blueprints/tree/main/docs) for this feature
+- [ ] Yes, I have updated the [docs](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/docs) for this feature
 - [ ] Yes, I ran `pre-commit run -a` with this PR
 
 

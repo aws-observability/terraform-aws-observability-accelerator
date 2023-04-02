@@ -4,40 +4,13 @@ ekscluster: ${eks_cluster}
 
 globalScrapeTimeout: ${global_scrape_timeout}
 globalScrapeSampleLimit: ${global_scrape_sample_limit}
-# TODO: enable after terraform 1.3 as defaults will be optional
 
-#nodeExporterScrapeInterval: ${node_exporter_scrape_interval}
-#nodeExporterScrapeTimeout: ${node_exporter_scrape_timeout}
+enableTracing: ${enable_tracing}
+otlpGrpcEndpoint: ${otlp_grpc_endpoint}
+otlpHttpEndpoint: ${otlp_http_endpoint}
+tracingTimeout: ${tracing_timeout}
+tracingSendBatchSize: ${tracing_send_batch_size}
 
-#kubeletScrapeInterval: ${kubelet_scrape_interval}
-#kubeletScrapeTimeout: ${kubelet_scrape_timeout}
-
-#operatorScrapeInterval: ${operator_scrape_interval}
-#operatorScrapeTimeout: ${operator_scrape_timeout}
-
-#kubeletScrapeInterval: ${operator_scrape_interval}
-#kubeletScrapeTimeout: ${operator_scrape_timeout}
-
-#ksmScrapeInterval: ${ksm_scrape_interval}
-#ksmScrapeTimeout: ${ksm_scrape_timeout}
-
-#schedulerScrapeInterval: ${scheduler_scrape_interval}
-#schedulerScrapeTimeout: ${scheduler_scrape_timeout}
-
-#proxyScrapeInterval: ${proxy_scrape_interval}
-#proxyScrapeTimeout: ${proxy_scrape_timeout}
-
-#etcdScrapeInterval: ${etcd_scrape_interval}
-#etcdScrapeTimeout: ${etcd_scrape_timeout}
-
-#controllerManagerScrapeInterval:  ${controller_manager_scrape_interval}
-#controllerManagerScrapeTimeout:  ${controller_manager_scrape_timeout}
-
-#corednsScrapeInterval:  ${coredns_scrape_interval}
-#corednsScrapeTimeout:  ${coredns_scrape_timeout}
-
-#apiserverScrapeInterval:  ${apiserver_scrape_interval}
-#apiserverScrapeTimeout:  ${apiserver_scrape_timeout}
-
-#alertmanagerScrapeInterval:  ${alertmnager_scrape_interval}
-#alertmanagerScrapeTimeout:  ${alertmnager_scrape_timeout}
+enableCustomMetrics: ${enable_custom_metrics}
+customMetricsPorts: ${custom_metrics_ports}
+customMetricsDroppedSeriesPrefixes: ${custom_metrics_dropped_series_prefixes}

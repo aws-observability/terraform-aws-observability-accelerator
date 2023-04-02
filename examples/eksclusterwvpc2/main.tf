@@ -44,11 +44,7 @@ module "eks_blueprints" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.13.1"
 
   cluster_name    = local.cluster_name
-<<<<<<< HEAD
   cluster_version = "1.24"
-=======
-  cluster_version = var.eks_version
->>>>>>> 2c5882b7e16d78e4dcc8721ab9264a5b6faeb0a7
 
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnets
@@ -56,13 +52,8 @@ module "eks_blueprints" {
   managed_node_groups = {
     mg_5 = {
       node_group_name = "managed-ondemand"
-<<<<<<< HEAD
       instance_types  = ["m5.large"]
       min_size        = 2
-=======
-      instance_types  = [var.managed_node_instance_type]
-      min_size        = var.managed_node_min_size
->>>>>>> 2c5882b7e16d78e4dcc8721ab9264a5b6faeb0a7
       subnet_ids      = module.vpc.private_subnets
     }
   }

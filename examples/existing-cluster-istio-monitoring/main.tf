@@ -33,6 +33,7 @@ locals {
   }
 }
 
+
 # deploys the base module
 module "eks_observability_accelerator" {
   # source = "aws-observability/terrarom-aws-observability-accelerator"

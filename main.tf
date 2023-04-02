@@ -1,12 +1,3 @@
-module "operator" {
-  source = "./modules/add-ons/adot-operator"
-  count  = var.enable_amazon_eks_adot ? 1 : 0
-
-  enable_cert_manager = var.enable_cert_manager
-  kubernetes_version  = local.eks_cluster_version
-  addon_context       = local.context
-}
-
 resource "aws_prometheus_workspace" "this" {
   count = var.enable_managed_prometheus ? 1 : 0
 
@@ -26,20 +17,6 @@ alertmanager_config: |
     receivers:
       - name: 'default'
 EOF
-}
-
-module "managed_grafana" {
-  count   = var.enable_managed_grafana ? 1 : 0
-  source  = "terraform-aws-modules/managed-service-grafana/aws"
-  version = "~> 1.3"
-
-  # Workspace
-  name              = local.name
-  stack_set_name    = local.name
-  data_sources      = ["PROMETHEUS"]
-  associate_license = false
-
-  tags = var.tags
 }
 
 provider "grafana" {

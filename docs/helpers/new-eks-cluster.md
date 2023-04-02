@@ -1,7 +1,7 @@
 # Creating a new Amazon EKS cluster with VPC
 
 !!! note
-    This example is a subset from [this EKS Blueprint example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/eks-cluster-with-new-vpc)
+    This example is a subset from [this EKS Blueprint example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/v4.13.1/examples/eks-cluster-with-new-vpc)
 
 This example deploys the following:
 
@@ -33,21 +33,13 @@ Specify the AWS Region where the resources will be deployed:
 export TF_VAR_aws_region=xxx
 ```
 
-### 3. Instance Type
+### 3. Cluster Name
 
-Depending on your region or limitations in your account, you might need to change to a different instance type.
-To do this, you can define the instance type to use:
+Specify the name of your EKS cluster:
+
 ```bash
-export TF_VAR_managed_node_instance_type=xxx
+export TF_VAR_cluster_name=xxx
 ```
-
-### 4. Amazon Elastic Kubernetes Service (Amazon EKS) Version
-
-You can override the version of the cluster also:
-```bash
-export TF_VAR_eks_version=xxx
-```
-
 
 ## Deploy
 
@@ -55,6 +47,24 @@ Simply run this command to deploy the example
 
 ```bash
 terraform apply
+```
+
+## Additional configuration (optional)
+
+
+### 1. Instance Type
+
+Depending on your region or limitations in your account, you might need to change to a different instance type.
+To do this, you can define the instance type to use:
+```bash
+export TF_VAR_managed_node_instance_type=xxx
+```
+
+### 2. Amazon Elastic Kubernetes Service (Amazon EKS) Version
+
+You can override the version of the cluster also:
+```bash
+export TF_VAR_eks_version=xxx
 ```
 
 ##  Login to your cluster

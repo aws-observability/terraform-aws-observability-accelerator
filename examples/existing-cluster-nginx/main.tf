@@ -25,8 +25,7 @@ provider "helm" {
 }
 
 locals {
-  region = var.aws_region
-
+  region               = var.aws_region
   eks_cluster_endpoint = data.aws_eks_cluster.this.endpoint
   create_new_workspace = var.managed_prometheus_workspace_id == "" ? true : false
 
@@ -35,31 +34,19 @@ locals {
   }
 }
 
-module "eks_observability_accelerator" {
-  # source = "aws-observability/terrarom-aws-observability-accelerator"
+module "aws_observability_accelerator" {
   source = "../../"
+  # source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v2.0.0"
 
-  aws_region     = var.aws_region
-  eks_cluster_id = var.eks_cluster_id
-
-  # deploys AWS Distro for OpenTelemetry operator into the cluster
-  enable_amazon_eks_adot = true
-
-  # reusing existing certificate manager? defaults to true
-  enable_cert_manager = true
+  aws_region = var.aws_region
 
   # creates a new AMP workspace, defaults to true
   enable_managed_prometheus = local.create_new_workspace
 
   # reusing existing AMP if specified
-  managed_prometheus_workspace_id     = var.managed_prometheus_workspace_id
-  managed_prometheus_workspace_region = null # defaults to the current region, useful for cross region scenarios (same account)
-
-  # sets up the AMP alert manager at the workspace level
-  enable_alertmanager = true
+  managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
 
   # reusing existing Amazon Managed Grafana workspace
-  enable_managed_grafana       = false
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
   grafana_api_key              = var.grafana_api_key
 
@@ -67,24 +54,30 @@ module "eks_observability_accelerator" {
 }
 
 provider "grafana" {
-  url  = module.eks_observability_accelerator.managed_grafana_workspace_endpoint
+  url  = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
   auth = var.grafana_api_key
 }
 
-module "workloads_nginx" {
-  source = "../../modules/workloads/nginx"
+module "eks_monitoring" {
+  source = "../../modules/eks-monitoring"
+  # source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v2.0.0"
 
-  eks_cluster_id = module.eks_observability_accelerator.eks_cluster_id
+  # enable NGINX metrics collection, dashboards and alerts rules creation
+  enable_nginx = true
 
-  dashboards_folder_id            = module.eks_observability_accelerator.grafana_dashboards_folder_id
-  managed_prometheus_workspace_id = module.eks_observability_accelerator.managed_prometheus_workspace_id
+  eks_cluster_id = var.eks_cluster_id
 
-  managed_prometheus_workspace_endpoint = module.eks_observability_accelerator.managed_prometheus_workspace_endpoint
-  managed_prometheus_workspace_region   = module.eks_observability_accelerator.managed_prometheus_workspace_region
+  dashboards_folder_id            = module.aws_observability_accelerator.grafana_dashboards_folder_id
+  managed_prometheus_workspace_id = module.aws_observability_accelerator.managed_prometheus_workspace_id
+
+  managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
+  managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
+
+  enable_logs = true
 
   tags = local.tags
 
   depends_on = [
-    module.eks_observability_accelerator
+    module.aws_observability_accelerator
   ]
 }

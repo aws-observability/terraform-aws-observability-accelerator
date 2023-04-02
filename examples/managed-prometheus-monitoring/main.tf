@@ -8,13 +8,12 @@ provider "grafana" {
 }
 
 data "aws_grafana_workspace" "this" {
-  count        = var.managed_grafana_workspace_id == "" ? 0 : 1
   workspace_id = var.managed_grafana_workspace_id
 }
 
 locals {
   region          = var.aws_region
-  amg_ws_endpoint = "https://${data.aws_grafana_workspace.this[0].endpoint}"
+  amg_ws_endpoint = "https://${data.aws_grafana_workspace.this.endpoint}"
 }
 
 resource "grafana_folder" "this" {
@@ -22,7 +21,7 @@ resource "grafana_folder" "this" {
 }
 
 module "managed_prometheus_monitoring" {
-  source                           = "../../modules/workloads/managed-prometheus-monitoring"
+  source                           = "../../modules/managed-prometheus-monitoring"
   dashboards_folder_id             = resource.grafana_folder.this.id
   aws_region                       = local.region
   managed_prometheus_workspace_ids = var.managed_prometheus_workspace_ids

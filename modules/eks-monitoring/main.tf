@@ -131,6 +131,14 @@ module "helm_addon" {
       value = var.nginx_config.scrape_sample_limit
     },
     {
+      name  = "enable_istio"
+      value = var.enable_istio
+    },
+    {
+      name  = "istioScrapeSampleLimit"
+      value = var.istio_config.scrape_sample_limit
+    },
+    {
       name  = "nginxPrometheusMetricsEndpoint"
       value = var.nginx_config.prometheus_metrics_endpoint
     }
@@ -169,6 +177,17 @@ module "nginx_monitoring" {
   enable_alerting_rules           = var.nginx_config.enable_alerting_rules
   dashboards_folder_id            = var.dashboards_folder_id
 }
+
+module "istio_monitoring" {
+  source = "./patterns/istio"
+  count  = var.enable_istio ? 1 : 0
+
+  managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+  enable_alerting_rules           = var.istio_config.enable_alerting_rules
+  dashboards_folder_id            = var.dashboards_folder_id
+}
+
+
 
 module "fluentbit_logs" {
   source = "./add-ons/aws-for-fluentbit"

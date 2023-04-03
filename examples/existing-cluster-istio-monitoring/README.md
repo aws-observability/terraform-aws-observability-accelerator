@@ -19,7 +19,10 @@ Ensure that you have the following tools installed locally:
 1. [aws cli v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 2. [kubectl](https://kubernetes.io/docs/tasks/tools/)
 3. [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
-4. Grafana workspace created with api key 
+4. Grafana workspace id
+5. Managed Prometheus workspace id 
+6. Grafana api key 
+7. EKS cluster 
 
 
 ## Setup

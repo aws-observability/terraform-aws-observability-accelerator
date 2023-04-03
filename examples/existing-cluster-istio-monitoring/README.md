@@ -19,6 +19,7 @@ Ensure that you have the following tools installed locally:
 1. [aws cli v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 2. [kubectl](https://kubernetes.io/docs/tasks/tools/)
 3. [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+4. Grafana workspace created with api key 
 
 
 ## Setup
@@ -39,52 +40,38 @@ cd examples/existing-cluster-istio-monitoring
 terraform init
 ```
 
-3. AWS Region
+3. Update variables.tf. Uncomment each of the defaults below with actual values for the name of the EKS cluster, aws_region, Prometheus workspace id, grafana workspace id and grafana api key.  
 
-Specify the AWS Region where the resources will be deployed. Edit the `terraform.tfvars` file and modify `aws_region="..."`. You can also use environement variables `export TF_VAR_aws_region=xxx`.
+variable "eks_cluster_id" {
+  description = "Name of the EKS cluster"
+  type        = string
+#  default     = "eks-cluster-with-vpc"
+}
+variable "aws_region" {
+  description = "AWS Region"
+  type        = string
+#  default     = "us-east-1" 
+}
+variable "managed_prometheus_workspace_id" {
+  description = "Amazon Managed Service for Prometheus Workspace ID"
+  type        = string
+#  default     = ""
+}
+variable "managed_grafana_workspace_id" {
+  description = "Amazon Managed Grafana Workspace ID"
+  type        = string
+#  default     = ""
+}
+variable "grafana_api_key" {
+  description = "API key for authorizing the Grafana provider to make changes to Amazon Managed Grafana"
+  type        = string
+#  default     = ""
+  sensitive   = true
+}
 
-4. Amazon EKS Cluster
 
-To run this example, you need to provide your EKS cluster name.
-If you don't have a cluster ready, visit [this example](../eks-cluster-with-vpc)
-first to create a new one.
-
-Add your cluster name for `eks_cluster_id="..."` to the `terraform.tfvars` or use an environment variable `export TF_VAR_eks_cluster_id=xxx`.
-
-5. Amazon Managed Service for Prometheus workspace (optional)
-
-If you have an existing workspace, add `managed_prometheus_workspace_id=ws-xxx`
-or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws-xxx`.
-
-If you don't specify anything a new workspace will be created for you.
-
-6. Amazon Managed Grafana workspace
-
-To run this example you need an Amazon Managed Grafana workspace. If you have an existing workspace, create an environment variable `export TF_VAR_managed_grafana_workspace_id=g-xxx`.
-
-To create a new one, within this example's Terraform state (sharing the same lifecycle with all the other resources):
-
-- Edit main.tf and set `enable_managed_grafana = true`
-- Run `terraform apply -target "module.eks_observability_accelerator.module.managed_grafana[0].aws_grafana_workspace.this[0]"`.
-- Run `export TF_VAR_managed_grafana_workspace_id=$(terraform output --raw managed_grafana_workspace_id)`.
-
-7. <a name="apikey"></a> Grafana API Key
-
-Amazon Managed Service for Grafana provides a control plane API for generating Grafana API keys. We will provide to Terraform
-a short lived API key to run the `apply` or `destroy` command.
-Ensure you have necessary IAM permissions (`CreateWorkspaceApiKey, DeleteWorkspaceApiKey`)
-
-```sh
-export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 1200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
-```
 
 ## Deploy
-
-```sh
-terraform apply -var-file=terraform.tfvars
-```
-
-or if you had only setup environment variables, run
 
 ```sh
 terraform apply

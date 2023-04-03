@@ -21,8 +21,23 @@ Ensure that you have the following tools installed locally:
 3. [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 4. Grafana workspace id
 5. Managed Prometheus workspace id 
-6. Grafana api key 
-7. EKS cluster 
+```
+Setup Amazon Managed Service for Prometheus workspace
+
+A workspace in Amazon Managed Service for Prometheus is a logical space dedicated to storing and querying Prometheus metrics. A workspace supports fine-grained access control for authorizing its management updating, listing, describing, deleting, and the ingestion and querying of metrics.
+
+Use the following command to create an Amazon Managed Service for Prometheus workspace:
+
+aws amp create-workspace \
+--alias $IAA_AMP_WORKSPACE_NAME \
+--region $IAA_AWS_REGION
+
+Creating the Amazon Managed service for Prometheus workspace takes just a few seconds.
+
+You can improve security and performance by creating VPC-endpoint for Amazon Managed Service for Prometheus. For more information, see Using Amazon Service for Prometheus with interface VPC endpoints.
+```
+7. Grafana api key 
+8. EKS cluster 
 
 
 ## Setup

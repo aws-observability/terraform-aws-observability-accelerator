@@ -42,6 +42,7 @@ terraform init
 
 3. Update variables.tf. Uncomment each of the defaults below with actual values for the name of the EKS cluster, aws_region, Prometheus workspace id, grafana workspace id and grafana api key.  
 
+```
 variable "eks_cluster_id" {
   description = "Name of the EKS cluster"
   type        = string
@@ -68,7 +69,7 @@ variable "grafana_api_key" {
 #  default     = ""
   sensitive   = true
 }
-
+```
 
 
 ## Deploy

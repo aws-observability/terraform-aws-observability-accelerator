@@ -86,7 +86,7 @@ This module makes use of the open source [kube-prometheus-stack](https://github.
 | <a name="input_managed_prometheus_workspace_endpoint"></a> [managed\_prometheus\_workspace\_endpoint](#input\_managed\_prometheus\_workspace\_endpoint) | Amazon Managed Prometheus Workspace Endpoint | `string` | `""` | no |
 | <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus Workspace ID | `string` | `null` | no |
 | <a name="input_managed_prometheus_workspace_region"></a> [managed\_prometheus\_workspace\_region](#input\_managed\_prometheus\_workspace\_region) | Amazon Managed Prometheus Workspace's Region | `string` | `null` | no |
-| <a name="input_ne_config"></a> [ne\_config](#input\_ne\_config) | Node exporter configuration | <pre>object({<br>    create_namespace   = bool<br>    k8s_namespace      = string<br>    helm_chart_name    = string<br>    helm_chart_version = string<br>    helm_release_name  = string<br>    helm_repo_url      = string<br>    helm_settings      = map(string)<br>    helm_values        = map(any)<br><br>    scrape_interval = string<br>    scrape_timeout  = string<br>  })</pre> | <pre>{<br>  "create_namespace": true,<br>  "helm_chart_name": "prometheus-node-exporter",<br>  "helm_chart_version": "2.0.3",<br>  "helm_release_name": "prometheus-node-exporter",<br>  "helm_repo_url": "https://prometheus-community.github.io/helm-charts",<br>  "helm_settings": {},<br>  "helm_values": {},<br>  "k8s_namespace": "prometheus-node-exporter",<br>  "scrape_interval": "60s",<br>  "scrape_timeout": "60s"<br>}</pre> | no |
+| <a name="input_ne_config"></a> [ne\_config](#input\_ne\_config) | Node exporter configuration | <pre>object({<br>    create_namespace   = bool<br>    k8s_namespace      = string<br>    helm_chart_name    = string<br>    helm_chart_version = string<br>    helm_release_name  = string<br>    helm_repo_url      = string<br>    helm_settings      = map(string)<br>    helm_values        = map(any)<br><br>    scrape_interval = string<br>    scrape_timeout  = string<br>  })</pre> | <pre>{<br>  "create_namespace": true,<br>  "helm_chart_name": "prometheus-node-exporter",<br>  "helm_chart_version": "4.14.0",<br>  "helm_release_name": "prometheus-node-exporter",<br>  "helm_repo_url": "https://prometheus-community.github.io/helm-charts",<br>  "helm_settings": {},<br>  "helm_values": {},<br>  "k8s_namespace": "prometheus-node-exporter",<br>  "scrape_interval": "60s",<br>  "scrape_timeout": "60s"<br>}</pre> | no |
 | <a name="input_nginx_config"></a> [nginx\_config](#input\_nginx\_config) | Configuration object for NGINX monitoring | <pre>object({<br>    enable_alerting_rules       = bool<br>    scrape_sample_limit         = number<br>    prometheus_metrics_endpoint = string<br>  })</pre> | <pre>{<br>  "enable_alerting_rules": true,<br>  "prometheus_metrics_endpoint": "metrics",<br>  "scrape_sample_limit": 1000<br>}</pre> | no |
 | <a name="input_prometheus_config"></a> [prometheus\_config](#input\_prometheus\_config) | Controls default values such as scrape interval, timeouts and ports globally | <pre>object({<br>    global_scrape_interval = string<br>    global_scrape_timeout  = string<br>  })</pre> | <pre>{<br>  "global_scrape_interval": "60s",<br>  "global_scrape_timeout": "15s"<br>}</pre> | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | `map(string)` | `{}` | no |
@@ -100,3 +100,18 @@ This module makes use of the open source [kube-prometheus-stack](https://github.
 | <a name="output_eks_cluster_version"></a> [eks\_cluster\_version](#output\_eks\_cluster\_version) | EKS Cluster version |
 | <a name="output_grafana_dashboard_urls"></a> [grafana\_dashboard\_urls](#output\_grafana\_dashboard\_urls) | URLs for dashboards created |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+## Troubleshooting
+
+When you upgrade the eks-monitoring module from v2.1.0 or earlier, the following error may occur.
+
+```bash
+Error: cannot patch "prometheus-node-exporter" with kind DaemonSet: DaemonSet.apps "prometheus-node-exporter" is invalid: spec.selector: Invalid value: v1.LabelSelector{MatchLabels:map[string]string{"app.kubernetes.io/instance":"prometheus-node-exporter", "app.kubernetes.io/name":"prometheus-node-exporter"}, MatchExpressions:[]v1.LabelSelectorRequirement(nil)}: field is immutable
+```
+
+This is due to the upgrade of the node-exporter chart from v2 to v4. Manually delete the node-exporter's DaemonSet as described in [the link here](https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-node-exporter#3x-to-4x), and then apply.
+
+```bash
+kubectl -n prometheus-node-exporter delete daemonset -l app=prometheus-node-exporter
+terraform apply
+```

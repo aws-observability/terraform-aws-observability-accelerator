@@ -38,7 +38,7 @@ variable "grafana_api_key" {
   type        = string
 }
 
-variable "create_grafana_data_source" {
+variable "create_prometheus_data_source" {
   description = "Boolean flag to enable Amazon Managed Grafana datasource"
   type        = bool
   default     = false

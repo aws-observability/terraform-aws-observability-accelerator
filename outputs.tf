@@ -35,5 +35,5 @@ output "grafana_dashboards_folder_id" {
 
 output "grafana_prometheus_datasource_test" {
   description = "Grafana save & test URL for Amazon Managed Prometheus workspace"
-  value       = var.create_grafana_data_source ? "${local.amg_ws_endpoint}/datasources/edit/${grafana_data_source.amp[0].uid}" : ""
+  value       = var.create_prometheus_data_source ? "${local.amg_ws_endpoint}/datasources/edit/${grafana_data_source.amp[0].uid}" : ""
 }

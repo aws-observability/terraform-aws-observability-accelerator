@@ -25,7 +25,7 @@ provider "grafana" {
 }
 
 resource "grafana_data_source" "amp" {
-  count      = var.create_grafana_data_source ? 1 : 0
+  count      = var.create_prometheus_data_source ? 1 : 0
   type       = "prometheus"
   name       = local.name
   is_default = true

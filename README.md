@@ -4,13 +4,14 @@
 
 Welcome to the AWS Observability Accelerator for Terraform!
 
-The AWS Observability Accelerator for Terraform is a set of opinionated modules to
-help you set up observability for your AWS environments with
+The AWS Observability Accelerator for Terraform is a set of opinionated modules
+to help you set up observability for your AWS environments with
 AWS-managed observability services such as Amazon Managed Service for Prometheus,
-Amazon Managed Grafana and AWS Distro for OpenTelemetry (ADOT).
+Amazon Managed Grafana, AWS Distro for OpenTelemetry (ADOT) and Amazon CloudWatch.
 
-We provide curated metrics, traces collection, alerting rules and Grafana dashboards
-for your EKS infrastructure, Java/JMX, NGINX based workloads and custom applications.
+We provide curated metrics, logs, traces collection, alerting rules and Grafana
+dashboards for your EKS infrastructure, Java/JMX, NGINX based workloads and
+your custom applications.
 
 You also can monitor your Amazon Managed Service for Prometheus workspaces ingestion,
 costs, active series with [this module](./modules/managed-prometheus-monitoring).
@@ -42,18 +43,20 @@ v2+ releases introduces couple of breaking changes compared to previous versions
 
 ### Base Module
 
-The base module allows you to configure the AWS Observability services for your cluster and
-the AWS Distro for OpenTelemetry (ADOT) Operator as the signals collection mechanism.
+The base module allows you to configure the AWS Observability services for your
+cluster and the AWS Distro for OpenTelemetry (ADOT) Operator as the signals
+collection mechanism.
 
-This is the minimum configuration to have a new Amazon Managed Service for Prometheus Workspace
-and ADOT Operator deployed for you and ready to receive your data.
-The base module serve as an anchor to the workload modules and cannot run on its own.
+This is the minimum configuration to have a new Amazon Managed Service for
+Prometheus Workspace and ADOT Operator deployed for you and ready to receive
+your data. The base module serve as an anchor to the workload modules and
+cannot run on its own.
 
 ```hcl
 module "aws_observability_accelerator" {
   # use release tags and check for the latest versions
   # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
-  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1"
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v2.1.0"
 
   aws_region     = "eu-west-1"
   eks_cluster_id = "my-eks-cluster"
@@ -70,7 +73,7 @@ You can optionally reuse an existing Amazon Managed Servce for Prometheus Worksp
 module "aws_observability_accelerator" {
   # use release tags and check for the latest versions
   # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
-  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1"
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v2.1.0"
 
   aws_region     = "eu-west-1"
   eks_cluster_id = "my-eks-cluster"
@@ -91,13 +94,13 @@ View all the configuration options in the module documentation below.
 ### Workload modules
 
 [Workloads modules](./modules) are provided, which essentially provide curated
-metrics collection, alerting rules and Grafana dashboards.
+metrics, logs, traces collection, alerting rules and Grafana dashboards.
 
-#### Infrastructure monitoring
+#### Amazon EKS monitoring
 
 ```hcl
-module "workloads_infra" {
-  source = "aws-observability/terraform-aws-observability-accelerator/workloads/infra"
+module "eks_monitoring" {
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v2.1.0"
 
   eks_cluster_id = module.eks_observability_accelerator.eks_cluster_id
 
@@ -106,6 +109,9 @@ module "workloads_infra" {
 
   managed_prometheus_workspace_endpoint = module.eks_observability_accelerator.managed_prometheus_workspace_endpoint
   managed_prometheus_workspace_region   = module.eks_observability_accelerator.managed_prometheus_workspace_region
+
+  enable_logs = true
+  enable_tracing = true
 }
 ```
 
@@ -118,17 +124,30 @@ Check the the [complete example](./examples/existing-cluster-with-base-and-infra
 
 ## Motivation
 
-Kubernetes is a powerful and extensible container orchestration technology that allows you to deploy and manage containerized applications at scale. The extensible nature of Kubernetes also allows you to use a wide range of popular open-source tools, commonly referred to as add-ons, in Kubernetes clusters. With such a large number of tools and design choices available, building a tailored EKS cluster that meets your application’s specific needs can take a significant amount of time. It involves integrating a wide range of open-source tools and AWS services and requires deep expertise in AWS and Kubernetes.
+To gain deep visibility into your workloads and environments, AWS proposes a
+set of secure, scalable, highly available, production-grade managed open
+source services such as Amazon Managed Service for Prometheus, Amazon Managed
+Grafana and Amazon OpenSearch.
 
-AWS customers have asked for examples that demonstrate how to integrate the landscape of Kubernetes tools and make it easy for them to provision complete, opinionated EKS clusters that meet specific application requirements. Customers can use AWS Observability Accelerator to configure and deploy purpose built EKS clusters, and start onboarding workloads in days, rather than months.
+AWS customers have asked for best-practices and guidance to collect metrics, logs
+and traces from their containerized applications and microservices with ease of
+deployment. Customers can use the AWS Observability Accelerator to configure their
+metrics and traces collection, leveraging [AWS Distro for OpenTelemetry](https://aws-otel.github.io/),
+to have opinionated dashboards and alerts available in only minutes.
+
 
 ## Support & Feedback
 
-AWS Observability Accelerator for Terraform is maintained by AWS Solution Architects. It is not part of an AWS service and support is provided best-effort by the AWS Observability Accelerator community.
+AWS Observability Accelerator for Terraform is maintained by AWS Solution
+Architects. It is not part of an AWS service and support is provided best-effort
+by the AWS Observability Accelerator community.
 
-To post feedback, submit feature ideas, or report bugs, please use the [Issues](https://github.com/aws-observability/terraform-aws-observability-accelerator/issues) section of this GitHub repo.
+To post feedback, submit feature ideas, or report bugs, please use the
+[Issues](https://github.com/aws-observability/terraform-aws-observability-accelerator/issues)
+section of this GitHub repo.
 
-If you are interested in contributing, see the [Contribution guide](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/CONTRIBUTING.md).
+If you are interested in contributing, see the
+[Contribution guide](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/CONTRIBUTING.md).
 
 ---
 

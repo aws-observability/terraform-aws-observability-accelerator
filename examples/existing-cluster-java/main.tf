@@ -84,6 +84,8 @@ module "eks_monitoring" {
     scrape_sample_limit    = 2000
   }
 
+  enable_logs = true
+
   tags = local.tags
 
   depends_on = [

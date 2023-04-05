@@ -73,6 +73,8 @@ module "eks_monitoring" {
   managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
   managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
 
+  enable_logs = true
+
   tags = local.tags
 
   depends_on = [

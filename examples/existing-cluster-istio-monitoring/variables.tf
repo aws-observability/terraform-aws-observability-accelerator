@@ -21,6 +21,6 @@ variable "managed_grafana_workspace_id" {
 variable "grafana_api_key" {
   description = "API key for authorizing the Grafana provider to make changes to Amazon Managed Grafana"
   type        = string
-  default     = "eyJrIjoic2tWTm5Nb0JSZnNTalMxOWtENndwMzNTekw3b09vMWUiLCJuIjoiRGVtbyIsImlkIjoxfQ=="
+  default     = "eyJrIjoiZ1VmeTdLMnF2MWh3ZWVuTXRydXliTkRaZjNLTDRQUHIiLCJuIjoiZGVtbyIsImlkIjoxfQ=="
   sensitive   = true
 }

@@ -89,7 +89,7 @@ module "eks_monitoring" {
   source = "../../modules/eks-monitoring"
   # source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v2.0.0"
 
-  # enable java metrics collection, dashboards and alerts rules creation
+  # enable istio  metrics collection, dashboards and alerts rules creation
   enable_istio = true
 
   eks_cluster_id = var.eks_cluster_id

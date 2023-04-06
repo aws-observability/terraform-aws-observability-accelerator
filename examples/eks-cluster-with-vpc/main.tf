@@ -41,10 +41,10 @@ locals {
 #---------------------------------------------------------------
 
 module "eks_blueprints" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.13.1"
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.27.0"
 
   cluster_name    = local.cluster_name
-  cluster_version = "1.24"
+  cluster_version = var.eks_version
 
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnets
@@ -52,8 +52,8 @@ module "eks_blueprints" {
   managed_node_groups = {
     mg_5 = {
       node_group_name = "managed-ondemand"
-      instance_types  = ["m5.large"]
-      min_size        = 2
+      instance_types  = [var.managed_node_instance_type]
+      min_size        = var.managed_node_min_size
       subnet_ids      = module.vpc.private_subnets
     }
   }
@@ -62,7 +62,7 @@ module "eks_blueprints" {
 }
 
 module "eks_blueprints_kubernetes_addons" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.13.1"
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.27.0"
 
   eks_cluster_id       = module.eks_blueprints.eks_cluster_id
   eks_cluster_endpoint = module.eks_blueprints.eks_cluster_endpoint

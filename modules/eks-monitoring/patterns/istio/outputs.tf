@@ -1,6 +1,5 @@
 output "grafana_dashboard_urls" {
   value = [concat(
-    grafana_dashboard.cluster[*].url,
     grafana_dashboard.istiocontrolplanedashboard[*].url,
     grafana_dashboard.istiomeshdashboard[*].url,
     grafana_dashboard.istioperformancedashboard[*].url,

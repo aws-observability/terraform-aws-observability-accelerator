@@ -37,3 +37,13 @@ output "grafana_prometheus_datasource_test" {
   description = "Grafana save & test URL for Amazon Managed Prometheus workspace"
   value       = var.create_prometheus_data_source ? "${local.amg_ws_endpoint}/datasources/edit/${grafana_data_source.amp[0].uid}" : ""
 }
+
+output "grafana_dashboard_folder_created" {
+  description = "Boolean value indicating if the module created a dashboard folder in Amazon Managed Grafana"
+  value       = var.create_dashboard_folder
+}
+
+output "prometheus_data_source_created" {
+  description = "Boolean value indicating if the module created a prometheus data source in Amazon Managed Grafana"
+  value       = var.create_prometheus_data_source
+}

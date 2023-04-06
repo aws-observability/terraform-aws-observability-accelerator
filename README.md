@@ -188,8 +188,8 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS Region | `string` | n/a | yes |
-| <a name="input_create_dashboard_folder"></a> [create\_dashboard\_folder](#input\_create\_dashboard\_folder) | Boolean flag to enable Amazon Managed Grafana folder and dashboards | `bool` | `false` | no |
-| <a name="input_create_prometheus_data_source"></a> [create\_prometheus\_data\_source](#input\_create\_prometheus\_data\_source) | Boolean flag to enable Amazon Managed Grafana datasource | `bool` | `false` | no |
+| <a name="input_create_dashboard_folder"></a> [create\_dashboard\_folder](#input\_create\_dashboard\_folder) | Boolean flag to enable Amazon Managed Grafana folder and dashboards | `bool` | `true` | no |
+| <a name="input_create_prometheus_data_source"></a> [create\_prometheus\_data\_source](#input\_create\_prometheus\_data\_source) | Boolean flag to enable Amazon Managed Grafana datasource | `bool` | `true` | no |
 | <a name="input_enable_alertmanager"></a> [enable\_alertmanager](#input\_enable\_alertmanager) | Creates Amazon Managed Service for Prometheus AlertManager for all workloads | `bool` | `false` | no |
 | <a name="input_enable_managed_prometheus"></a> [enable\_managed\_prometheus](#input\_enable\_managed\_prometheus) | Creates a new Amazon Managed Service for Prometheus Workspace | `bool` | `true` | no |
 | <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | Grafana API key for the Amazon Managed Grafana workspace | `string` | n/a | yes |
@@ -203,6 +203,7 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_aws_region"></a> [aws\_region](#output\_aws\_region) | AWS Region |
+| <a name="output_grafana_dashboard_folder_created"></a> [grafana\_dashboard\_folder\_created](#output\_grafana\_dashboard\_folder\_created) | Boolean value indicating if the module created a dashboard folder in Amazon Managed Grafana |
 | <a name="output_grafana_dashboards_folder_id"></a> [grafana\_dashboards\_folder\_id](#output\_grafana\_dashboards\_folder\_id) | Grafana folder ID for automatic dashboards. Required by workload modules |
 | <a name="output_grafana_prometheus_datasource_test"></a> [grafana\_prometheus\_datasource\_test](#output\_grafana\_prometheus\_datasource\_test) | Grafana save & test URL for Amazon Managed Prometheus workspace |
 | <a name="output_managed_grafana_workspace_endpoint"></a> [managed\_grafana\_workspace\_endpoint](#output\_managed\_grafana\_workspace\_endpoint) | Amazon Managed Grafana workspace endpoint |
@@ -210,6 +211,7 @@ No modules.
 | <a name="output_managed_prometheus_workspace_endpoint"></a> [managed\_prometheus\_workspace\_endpoint](#output\_managed\_prometheus\_workspace\_endpoint) | Amazon Managed Prometheus workspace endpoint |
 | <a name="output_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#output\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus workspace ID |
 | <a name="output_managed_prometheus_workspace_region"></a> [managed\_prometheus\_workspace\_region](#output\_managed\_prometheus\_workspace\_region) | Amazon Managed Prometheus workspace region |
+| <a name="output_prometheus_data_source_created"></a> [prometheus\_data\_source\_created](#output\_prometheus\_data\_source\_created) | Boolean value indicating if the module created a prometheus data source in Amazon Managed Grafana |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Contributing

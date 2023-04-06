@@ -14,3 +14,9 @@ variable "dashboards_folder_id" {
   description = "Grafana folder ID for automatic dashboards"
   type        = string
 }
+
+variable "enable_dashboards" {
+  description = "Enables or disables curated dashboards"
+  type        = bool
+  default     = true
+}

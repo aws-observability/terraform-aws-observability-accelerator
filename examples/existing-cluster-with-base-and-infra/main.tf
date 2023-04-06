@@ -77,6 +77,10 @@ module "eks_monitoring" {
   # reusing existing certificate manager? defaults to true
   enable_cert_manager = true
 
+  # control the publishing of dashboards by specifying the boolean value for the variable 'enable_dashboards', default is 'true'
+  # the intention to publish is overruled depending upon whether grafana dashboard folder is created by the observability accelerator
+  enable_dashboards = module.aws_observability_accelerator.grafana_dashboard_folder_created ? var.enable_dashboards : false
+
   dashboards_folder_id            = module.aws_observability_accelerator.grafana_dashboards_folder_id
   managed_prometheus_workspace_id = module.aws_observability_accelerator.managed_prometheus_workspace_id
 

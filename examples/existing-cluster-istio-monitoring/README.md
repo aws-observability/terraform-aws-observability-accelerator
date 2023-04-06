@@ -36,7 +36,7 @@ Creating the Amazon Managed service for Prometheus workspace takes just a few se
 
 You can improve security and performance by creating VPC-endpoint for Amazon Managed Service for Prometheus. For more information, see Using Amazon Service for Prometheus with interface VPC endpoints.
 ```
-7. Grafana api key 
+7. [Grafana api key with Admin role](https://docs.aws.amazon.com/grafana/latest/userguide/API_key_console.html)
 8. EKS cluster 
 
 

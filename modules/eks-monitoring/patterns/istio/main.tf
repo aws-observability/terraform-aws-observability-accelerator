@@ -1,5 +1,5 @@
 resource "aws_prometheus_rule_group_namespace" "recording_rules" {
-  name         = "accelerator-java-rules"
+  name         = "accelerator-istio-rules"
   workspace_id = var.managed_prometheus_workspace_id
   data         = <<EOF
 groups:
@@ -13,7 +13,7 @@ EOF
 resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
   count = var.enable_alerting_rules ? 1 : 0
 
-  name         = "accelerator-java-alerting"
+  name         = "accelerator-istio-alerting"
   workspace_id = var.managed_prometheus_workspace_id
   data         = <<EOF
 groups:

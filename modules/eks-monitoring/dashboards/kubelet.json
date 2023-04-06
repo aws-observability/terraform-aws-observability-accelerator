@@ -2148,7 +2148,7 @@
           "uid": "$datasource"
         },
         "definition": "",
-        "hide": 2,
+        "hide": 0,
         "includeAll": false,
         "label": "cluster",
         "multi": false,

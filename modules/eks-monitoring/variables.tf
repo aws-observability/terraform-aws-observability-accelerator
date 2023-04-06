@@ -62,6 +62,12 @@ variable "enable_alerting_rules" {
   default     = true
 }
 
+variable "enable_recording_rules" {
+  description = "Enables or disables Managed Prometheus recording rules"
+  type        = bool
+  default     = true
+}
+
 variable "enable_dashboards" {
   description = "Enables or disables curated dashboards"
   type        = bool
@@ -217,13 +223,15 @@ variable "enable_java" {
 variable "java_config" {
   description = "Configuration object for Java/JMX monitoring"
   type = object({
-    enable_alerting_rules = bool
-    scrape_sample_limit   = number
+    enable_alerting_rules  = bool
+    enable_recording_rules = bool
+    scrape_sample_limit    = number
   })
 
   default = {
-    enable_alerting_rules = true
-    scrape_sample_limit   = 1000
+    enable_alerting_rules  = true
+    enable_recording_rules = true
+    scrape_sample_limit    = 1000
   }
 }
 

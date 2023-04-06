@@ -38,6 +38,18 @@ variable "grafana_api_key" {
   type        = string
 }
 
+variable "create_prometheus_data_source" {
+  description = "Boolean flag to enable Amazon Managed Grafana datasource"
+  type        = bool
+  default     = false
+}
+
+variable "create_dashboard_folder" {
+  description = "Boolean flag to enable Amazon Managed Grafana folder and dashboards"
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
   type        = map(string)

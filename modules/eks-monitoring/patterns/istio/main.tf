@@ -61,7 +61,6 @@ groups:
     - record: "workload:istio_tcp_connections_closed_total"
       expr: |
         sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_tcp_connections_closed_total)
-
 EOF
 }
 
@@ -72,7 +71,7 @@ resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
   workspace_id = var.managed_prometheus_workspace_id
   data         = <<EOF
   groups:
-    - name: ./basic.rules
+    - name: "istio.basic.alerting-rules"
       rules:
         - alert: IngressTrafficMissing
           annotations:
@@ -88,7 +87,7 @@ resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
           expr: >
             absent(istio_request_total)==1 or absent(istio_request_duration_milliseconds_bucket)==1
           for: 5m
-    - name: ./workload.rules
+    - name: "istio.workload.alerting-rules"
       rules:
         - alert: HTTP5xxRateHigh
           annotations:
@@ -109,7 +108,7 @@ resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
           annotations:
             description: 'The ingress latency P99 > 250ms '
             message:  "Request duration has slowed down for ingress: {{`{{$labels.source_workload}}`}} in namespace: {{`{{$labels.namespace}}`}}. Response duration is {{`{{$value}}`}} milliseconds"
-    - name: ./infra.rules
+    - name: "istio.infra.alerting-rules"
       rules:
         - alert: ProxyContainerCPUUsageHigh
           expr: (sum(rate(container_cpu_usage_seconds_total{namespace!="kube-system", container=~"istio-proxy", namespace!=""}[5m])) BY (namespace, pod, container) * 100) > 80
@@ -147,7 +146,7 @@ resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
           annotations:
             summary: "Istiod Container Memory usage increase rate high, VALUE = {{ $value }}\n"
             description: "Istiod Container Memory usage increases more than 1k Bytes/sec"
-    - name: ./controlplane.rules
+    - name: "istio.controlplane.alerting-rules"
       rules:
         - alert: IstiodxdsPushErrorsHigh
           annotations:
@@ -184,53 +183,7 @@ resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
           expr: >
             sum(rate(istio_requests_total{reporter="source", source_workload="istio-ingressgateway",response_code="200",destination_service_namespace=~"service-graph.*"}[5m])) < 1490
           for: 30m
-    - name: "istio.recording-rules"
-      interval: 5s
-      rules:
-        - record: "workload:istio_requests_total"
-          expr: |
-            sum without(instance, namespace, pod) (istio_requests_total)
-        - record: "workload:istio_request_duration_milliseconds_count"
-          expr: |
-            sum without(instance, namespace, pod) (istio_request_duration_milliseconds_count)
-        - record: "workload:istio_request_duration_milliseconds_sum"
-          expr: |
-            sum without(instance, namespace, pod) (istio_request_duration_milliseconds_sum)
-        - record: "workload:istio_request_duration_milliseconds_bucket"
-          expr: |
-            sum without(instance, namespace, pod) (istio_request_duration_milliseconds_bucket)
-    - name: k8s.rules
-      rules:
-        - expr: |
-            sum(rate(container_cpu_usage_seconds_total{job="kubelet", metrics_path="/metrics/cadvisor", image!="", container!="POD"}[5m])) by (namespace)
-          record: namespace:container_cpu_usage_seconds_total:sum_rate
-        - expr: |
-            sum by (cluster, namespace, pod, container) (
-              rate(container_cpu_usage_seconds_total{job="kubelet", metrics_path="/metrics/cadvisor", image!="", container!="POD"}[5m])
-            ) * on (cluster, namespace, pod) group_left(node) topk by (cluster, namespace, pod) (
-              1, max by(cluster, namespace, pod, node) (kube_pod_info)
-            )
-          record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
-        - expr: |
-            container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", image!=""}
-            * on (namespace, pod) group_left(node) topk by(namespace, pod) (1,
-              max by(namespace, pod, node) (kube_pod_info)
-            )
-          record: node_namespace_pod_container:container_memory_working_set_bytes
-        - expr: |
-            max by (cluster, namespace, workload, pod) (
-              label_replace(
-                label_replace(
-                  kube_pod_owner{job="kube-state-metrics", owner_kind="ReplicaSet"},
-                  "replicaset", "$1", "owner_name", "(.*)"
-                ) * on(replicaset, namespace) group_left(owner_name) topk by(replicaset, namespace) (
-                  1, max by (replicaset, namespace, owner_name) (
-                    kube_replicaset_owner{job="kube-state-metrics"}
-                  )
-                ),
-                "workload", "$1", "owner_name", "(.*)"
-              )
-            )
+    
 
 EOF
 }

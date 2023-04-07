@@ -71,8 +71,8 @@ resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
   name         = "accelerator-istio-alerting"
   workspace_id = var.managed_prometheus_workspace_id
   data         = <<EOF
-groups:
- - name: ./basic.rules
+  groups:
+    - name: ./basic.rules
       rules:
         - alert: IngressTrafficMissing
           annotations:
@@ -231,9 +231,7 @@ groups:
                 "workload", "$1", "owner_name", "(.*)"
               )
             )
-          labels:
-            workload_type: deployment
-          record: mixin_pod_workload
+
 EOF
 }
 

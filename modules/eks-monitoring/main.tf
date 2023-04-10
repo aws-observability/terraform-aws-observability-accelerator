@@ -179,3 +179,39 @@ module "fluentbit_logs" {
   cw_log_retention_days = var.logs_config.cw_log_retention_days
   addon_context         = local.context
 }
+
+resource "helm_release" "grafana_operator" {
+  count            = var.enable_grafana_operator ? 1 : 0
+  chart            = var.go_config.helm_chart_name
+  create_namespace = var.go_config.create_namespace
+  namespace        = var.go_config.k8s_namespace
+  name             = var.go_config.helm_release_name
+  version          = var.go_config.helm_chart_version
+  repository       = var.go_config.helm_repo_url
+
+  dynamic "set" {
+    for_each = var.go_config.helm_settings
+    content {
+      name  = set.key
+      value = set.value
+    }
+  }
+}
+
+resource "helm_release" "fluxcd" {
+  count            = var.enable_grafana_operator ? 1 : 0
+  chart            = var.flux_config.helm_chart_name
+  create_namespace = var.flux_config.create_namespace
+  namespace        = var.flux_config.k8s_namespace
+  name             = var.flux_config.helm_release_name
+  version          = var.flux_config.helm_chart_version
+  repository       = var.flux_config.helm_repo_url
+
+  dynamic "set" {
+    for_each = var.flux_config.helm_settings
+    content {
+      name  = set.key
+      value = set.value
+    }
+  }
+}

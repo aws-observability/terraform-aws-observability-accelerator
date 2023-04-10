@@ -273,3 +273,67 @@ variable "logs_config" {
     cw_log_retention_days = 90
   }
 }
+
+variable "enable_grafana_operator" {
+  description = "Enables or disables Grafana Operator. Disabling this might affect some data in the dashboards"
+  type        = bool
+  default     = true
+}
+
+variable "go_config" {
+  description = "Grafana Operator configuration"
+  type = object({
+    create_namespace   = bool
+    k8s_namespace      = string
+    helm_chart_name    = string
+    helm_chart_version = string
+    helm_release_name  = string
+    helm_repo_url      = string
+    helm_settings      = map(string)
+    helm_values        = map(any)
+  })
+
+  default = {
+    create_namespace   = true
+    helm_chart_name    = "grafana-operator-v5.0.0-rc0"
+    helm_chart_version = "v5.0.0-rc0"
+    helm_release_name  = "grafana-operator-v5.0.0-rc0"
+    helm_repo_url      = "oci://ghcr.io/grafana-operator/helm-charts/grafana-operator"
+    helm_settings      = {}
+    helm_values        = {}
+    k8s_namespace      = "grafana-operator"
+  }
+  nullable = false
+}
+
+variable "enable_fluxcd" {
+  description = "Enables or disables FluxCD. Disabling this might affect some data in the dashboards"
+  type        = bool
+  default     = true
+}
+
+variable "flux_config" {
+  description = "FluxCD configuration"
+  type = object({
+    create_namespace   = bool
+    k8s_namespace      = string
+    helm_chart_name    = string
+    helm_chart_version = string
+    helm_release_name  = string
+    helm_repo_url      = string
+    helm_settings      = map(string)
+    helm_values        = map(any)
+  })
+
+  default = {
+    create_namespace   = true
+    helm_chart_name    = "flux2"
+    helm_chart_version = "2.7.0"
+    helm_release_name  = "observability-fluxcd-addon"
+    helm_repo_url      = "https://fluxcd-community.github.io/helm-charts"
+    helm_settings      = {}
+    helm_values        = {}
+    k8s_namespace      = "flux-system"
+  }
+  nullable = false
+}

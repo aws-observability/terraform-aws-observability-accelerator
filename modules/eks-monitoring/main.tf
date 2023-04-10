@@ -44,7 +44,7 @@ resource "helm_release" "prometheus_node_exporter" {
 }
 
 resource "helm_release" "fluxcd" {
-  count            = var.enable_fluxcd? 1 : 0
+  count            = var.enable_fluxcd ? 1 : 0
   chart            = var.flux_config.helm_chart_name
   create_namespace = var.flux_config.create_namespace
   namespace        = var.flux_config.k8s_namespace

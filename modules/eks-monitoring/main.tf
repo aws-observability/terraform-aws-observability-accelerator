@@ -61,21 +61,23 @@ resource "helm_release" "fluxcd" {
   }
 }
 
-resource "null_resource" "grafana_operator" {
-  triggers = {
-    always_run = timestamp()
-  }
+resource "helm_release" "grafana_operator" {
+  count            = var.enable_grafana_operator ? 1 : 0
+  chart            = var.go_config.helm_chart_name
+  create_namespace = var.go_config.create_namespace
+  namespace        = var.go_config.k8s_namespace
+  name             = var.go_config.helm_release_name
+  version          = var.go_config.helm_chart_version
+  repository       = var.go_config.helm_repo_url
 
-  provisioner "local-exec" {
-    command = <<-EOT
-      helm upgrade -i grafana-operator oci://ghcr.io/grafana-operator/helm-charts/grafana-operator \
-        --version v5.0.0-rc0 \
-        --namespace grafana-operator \
-        --create-namespace
-    EOT
+  dynamic "set" {
+    for_each = var.go_config.helm_settings
+    content {
+      name  = set.key
+      value = set.value
+    }
   }
 }
-
 
 module "helm_addon" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.26.0"

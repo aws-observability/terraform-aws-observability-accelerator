@@ -305,3 +305,35 @@ variable "flux_config" {
   }
   nullable = false
 }
+
+variable "enable_grafana_operator" {
+  description = "Enables or disables Grafana Operator. Disabling this might affect some data in the dashboards"
+  type        = bool
+  default     = true
+}
+
+variable "go_config" {
+  description = "Grafana Operator configuration"
+  type = object({
+    create_namespace   = bool
+    k8s_namespace      = string
+    helm_chart_name    = string
+    helm_chart_version = string
+    helm_release_name  = string
+    helm_repo_url      = string
+    helm_settings      = map(string)
+    helm_values        = map(any)
+  })
+
+  default = {
+    create_namespace   = true
+    helm_chart_name    = "spegel"
+    helm_chart_version = "v5.0.0-rc1"
+    helm_release_name  = "grafana-operator"
+    helm_repo_url      = "oci://ghcr.io/xenitab/helm-charts/spegel"
+    helm_settings      = {}
+    helm_values        = {}
+    k8s_namespace      = "grafana-operator"
+  }
+  nullable = false
+}

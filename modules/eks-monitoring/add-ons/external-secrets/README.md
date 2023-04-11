@@ -49,5 +49,5 @@ This example deploys an EKS Cluster with the External Secrets Operator. The clus
 ## Outputs
 
 No outputs.
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK --
 

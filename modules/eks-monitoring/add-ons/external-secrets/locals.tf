@@ -1,0 +1,9 @@
+locals {
+  name                     = "external-secrets"
+  namespace                = "external-secrets"
+  cluster_secretstore_name = "cluster-secretstore-sm"
+  cluster_secretstore_sa   = "cluster-secretstore-sa"
+  secretstore_name         = "secretstore-ps"
+  secretstore_sa           = "secretstore-sa"
+
+}

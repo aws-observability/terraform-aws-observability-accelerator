@@ -62,21 +62,12 @@ resource "helm_release" "fluxcd" {
 }
 
 resource "helm_release" "grafana_operator" {
-  count            = var.enable_grafana_operator ? 1 : 0
-  chart            = var.go_config.helm_chart_name
-  create_namespace = var.go_config.create_namespace
-  namespace        = var.go_config.k8s_namespace
-  name             = var.go_config.helm_release_name
+  chart            = var.go_config.helm_chart 
+  name             = var.go_config.helm_name
+  namespace        = var.go_config.k8s_namespace 
   version          = var.go_config.helm_chart_version
-  repository       = var.go_config.helm_repo_url
-
-  dynamic "set" {
-    for_each = var.go_config.helm_settings
-    content {
-      name  = set.key
-      value = set.value
-    }
-  }
+  create_namespace = var.go_config.create_namespace
+  max_history      = 3
 }
 
 module "helm_addon" {
@@ -214,5 +205,18 @@ module "fluentbit_logs" {
 
   cw_log_retention_days = var.logs_config.cw_log_retention_days
   addon_context         = local.context
+}
+
+module "external-secrets" {
+  source = "./add-ons/external-secrets"
+  count  = var.enable_external_secrets ? 1 : 0
+
+  enable_external_secrets = var.enable_external_secrets
+  grafana_api_key         = var.grafana_api_key
+  addon_context           = local.context
+  target_secret_namespace = var.go_config.k8s_namespace 
+  target_secret_name      = var.target_secret_name
+
+  depends_on = [resource.helm_release.grafana_operator]
 }
 

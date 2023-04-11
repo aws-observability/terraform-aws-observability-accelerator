@@ -316,24 +316,43 @@ variable "go_config" {
   description = "Grafana Operator configuration"
   type = object({
     create_namespace   = bool
+    helm_chart         = string
+    helm_name          = string
     k8s_namespace      = string
-    helm_chart_name    = string
-    helm_chart_version = string
     helm_release_name  = string
-    helm_repo_url      = string
-    helm_settings      = map(string)
-    helm_values        = map(any)
+    helm_chart_version = string
   })
 
   default = {
     create_namespace   = true
-    helm_chart_name    = "spegel"
-    helm_chart_version = "v5.0.0-rc1"
-    helm_release_name  = "grafana-operator"
-    helm_repo_url      = "oci://ghcr.io/xenitab/helm-charts/spegel"
-    helm_settings      = {}
-    helm_values        = {}
+    helm_chart         = "oci://ghcr.io/grafana-operator/helm-charts/grafana-operator"
+    helm_name          = "grafana-operator"
     k8s_namespace      = "grafana-operator"
+    helm_release_name  = "grafana-operator"
+    helm_chart_version = "v5.0.0-rc1"
   }
   nullable = false
+}
+
+variable "enable_external_secrets" {
+  description = "Enables or disables External Secrets."
+  type        = bool
+  default     = true
+}
+
+variable "grafana_api_key" {
+  description = "Grafana API key for the Amazon Managed Grafana workspace"
+  type        = string
+}
+
+variable "target_secret_name" {
+  description = "Target secret in Kubernetes to store the Grafana API Key Secret"
+  type        = string
+  default     = "grafana-admin-credentials"
+}
+
+variable "target_secret_namespace" {
+  description = "Target namespace of secret in Kubernetes to store the Grafana API Key Secret"
+  type        = string
+  default     = "grafana-operator"
 }

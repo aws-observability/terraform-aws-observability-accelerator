@@ -346,7 +346,7 @@ variable "grafana_api_key" {
 }
 
 variable "target_secret_name" {
-  description = "Target secret in Kubernetes to store the Grafana API Key Secret"
+  description = "Target secret in Kubernetes to store the Grafana API Key"
   type        = string
   default     = "grafana-admin-credentials"
 }

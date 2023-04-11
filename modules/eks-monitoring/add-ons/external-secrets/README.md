@@ -1,6 +1,6 @@
 # External Secrets Operator Kubernetes addon
 
-This example deploys an EKS Cluster with the External Secrets Operator. The cluster is populated with a ClusterSecretStore and ExternalSecret using Grafana API Key secret from AWS Secret Manager. A secret for each store is also created. Both stores use IRSA (IAM Roles For Service Account) to retrieve the secret values from AWS.
+This deploys an EKS Cluster with the External Secrets Operator. The cluster is populated with a ClusterSecretStore and ExternalSecret using Grafana API Key secret from AWS Secret Manager. A secret store for each AWS Secret Manager is created. Store use IRSA (IAM Roles For Service Account) to retrieve the secret values from AWS.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements

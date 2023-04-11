@@ -52,6 +52,8 @@ module "aws_observability_accelerator" {
   # reusing existing Amazon Managed Grafana workspace
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
   grafana_api_key              = var.grafana_api_key
+  target_secret_name           = "grafana-admin-credentials"
+  target_secret_namespace      = "grafana-operator"
 
   tags = local.tags
 }
@@ -76,6 +78,10 @@ module "eks_monitoring" {
 
   # reusing existing certificate manager? defaults to true
   enable_cert_manager = true
+
+  # deploys external-secrets in to the cluster
+  enable_external_secrets = true
+  grafana_api_key         = var.grafana_api_key
 
   # control the publishing of dashboards by specifying the boolean value for the variable 'enable_dashboards', default is 'true'
   # the intention to publish is overruled depending upon whether grafana dashboard folder is created by the observability accelerator

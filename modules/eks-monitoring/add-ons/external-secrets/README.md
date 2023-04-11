@@ -34,7 +34,6 @@ This example deploys an EKS Cluster with the External Secrets Operator. The clus
 | [aws_secretsmanager_secret](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
 | [aws_secretsmanager_secret_version](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource || [aws_region](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | datasource |
 
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |

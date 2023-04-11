@@ -22,29 +22,29 @@ This example deploys an EKS Cluster with the External Secrets Operator. The clus
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_cert_manager"></a> [cert\_manager](#module\_cert\_manager) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/cert-manager | v4.13.1 |
+| <a name="module_external_secrets"></a> [external\_secrets](#module\_external\_manager) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/external-secrets | v4.28.0 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [aws_eks_addon.adot](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_addon) | resource |
-| [kubernetes_cluster_role_binding_v1.adot](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/cluster_role_binding_v1) | resource |
-| [kubernetes_cluster_role_v1.adot](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/cluster_role_v1) | resource |
-| [kubernetes_namespace_v1.adot](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace_v1) | resource |
-| [kubernetes_role_binding_v1.adot](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_binding_v1) | resource |
-| [kubernetes_role_v1.adot](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_v1) | resource |
-| [aws_eks_addon_version.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_addon_version) | data source |
+| [aws_kms_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
+| [aws_iam_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
+| [kubectl_manifest](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
+| [aws_secretsmanager_secret](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
+| [aws_secretsmanager_secret_version](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource || [aws_region](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | datasource |
+
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_addon_config"></a> [addon\_config](#input\_addon\_config) | Amazon EKS Managed ADOT Add-on config | `any` | `{}` | no |
 | <a name="input_addon_context"></a> [addon\_context](#input\_addon\_context) | Input configuration for the addon | <pre>object({<br>    aws_caller_identity_account_id = string<br>    aws_caller_identity_arn        = string<br>    aws_eks_cluster_endpoint       = string<br>    aws_partition_id               = string<br>    aws_region_name                = string<br>    eks_cluster_id                 = string<br>    eks_oidc_issuer_url            = string<br>    eks_oidc_provider_arn          = string<br>    irsa_iam_role_path             = string<br>    irsa_iam_permissions_boundary  = string<br>    tags                           = map(string)<br>  })</pre> | n/a | yes |
-| <a name="input_enable_cert_manager"></a> [enable\_cert\_manager](#input\_enable\_cert\_manager) | Enable cert-manager, a requirement for ADOT Operator | `bool` | `true` | no |
-| <a name="input_helm_config"></a> [helm\_config](#input\_helm\_config) | Helm provider config for cert-manager | `any` | <pre>{<br>  "version": "v1.8.2"<br>}</pre> | no |
-| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | EKS Cluster version | `string` | n/a | yes |
+| <a name="input_enable_external_secrets"></a> [enable\_external\_secrets](#input\_enable\_external\_secrets) | Enable external secrets to read Grafana API Key | `bool` | `true` | no |
+| <a name="input_helm_config"></a> [helm\_config](#input\_helm\_config) | Helm provider config for external-secrets | `any` | <pre>{<br>  "version": "v1.8.2"<br>}</pre> | no |
+| <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | Grafana API Key | `string` | n/a | yes |
+| <a name="input_target_secret_name"></a> [target\_secret\_name](#input\_target\_secret\_name) | Target secret to store Grafana API Key Secret | `string` | grafana-admin-credentials | yes |
+| <a name="input_target_secret_namespace"></a> [target\_secret\_namespace](#input\_target\_secret\_namespace) | Target Namespace to store Grafana API Key Secret | `string` | grafana-operator | yes |
 
 ## Outputs
 

@@ -352,7 +352,7 @@ variable "target_secret_name" {
 }
 
 variable "target_secret_namespace" {
-  description = "Target namespace of secret in Kubernetes to store the Grafana API Key"
+  description = "Target namespace of secret in Kubernetes to store the Grafana API Key Secret"
   type        = string
   default     = "grafana-operator"
 }

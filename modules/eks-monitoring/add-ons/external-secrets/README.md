@@ -2,82 +2,52 @@
 
 This example deploys an EKS Cluster with the External Secrets Operator. The cluster is populated with a ClusterSecretStore and SecretStore example using SecretManager and Parameter Store respectively. A secret for each store is also created. Both stores use IRSA to retrieve the secret values from AWS.
 
-## How to Deploy
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
 
-### Prerequisites:
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.72 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.10 |
 
-Ensure that you have installed the following tools in your Mac or Windows Laptop before start working with this module and run Terraform Plan and Apply
+## Providers
 
-1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
-2. [Kubectl](https://Kubernetes.io/docs/tasks/tools/)
-3. [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.72 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >= 2.10 |
 
-### Deployment Steps
+## Modules
 
-#### Step 1: Clone the repo using the command below
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_cert_manager"></a> [cert\_manager](#module\_cert\_manager) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/cert-manager | v4.13.1 |
 
-```sh
-git clone https://github.com/aws-ia/terraform-aws-eks-blueprints.git
-```
+## Resources
 
-#### Step 2: Run Terraform INIT
+| Name | Type |
+|------|------|
+| [aws_eks_addon.adot](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_addon) | resource |
+| [kubernetes_cluster_role_binding_v1.adot](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/cluster_role_binding_v1) | resource |
+| [kubernetes_cluster_role_v1.adot](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/cluster_role_v1) | resource |
+| [kubernetes_namespace_v1.adot](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace_v1) | resource |
+| [kubernetes_role_binding_v1.adot](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_binding_v1) | resource |
+| [kubernetes_role_v1.adot](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_v1) | resource |
+| [aws_eks_addon_version.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_addon_version) | data source |
 
-Initialize a working directory with configuration files
+## Inputs
 
-```sh
-cd examples/external-secrets/
-terraform init
-```
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_addon_config"></a> [addon\_config](#input\_addon\_config) | Amazon EKS Managed ADOT Add-on config | `any` | `{}` | no |
+| <a name="input_addon_context"></a> [addon\_context](#input\_addon\_context) | Input configuration for the addon | <pre>object({<br>    aws_caller_identity_account_id = string<br>    aws_caller_identity_arn        = string<br>    aws_eks_cluster_endpoint       = string<br>    aws_partition_id               = string<br>    aws_region_name                = string<br>    eks_cluster_id                 = string<br>    eks_oidc_issuer_url            = string<br>    eks_oidc_provider_arn          = string<br>    irsa_iam_role_path             = string<br>    irsa_iam_permissions_boundary  = string<br>    tags                           = map(string)<br>  })</pre> | n/a | yes |
+| <a name="input_enable_cert_manager"></a> [enable\_cert\_manager](#input\_enable\_cert\_manager) | Enable cert-manager, a requirement for ADOT Operator | `bool` | `true` | no |
+| <a name="input_helm_config"></a> [helm\_config](#input\_helm\_config) | Helm provider config for cert-manager | `any` | <pre>{<br>  "version": "v1.8.2"<br>}</pre> | no |
+| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | EKS Cluster version | `string` | n/a | yes |
 
-#### Step 3: Run Terraform PLAN
+## Outputs
 
-Verify the resources created by this execution
+No outputs.
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
-```sh
-export AWS_REGION=<ENTER YOUR REGION>   # Select your own region
-terraform plan
-```
-
-#### Step 4: Finally, Terraform APPLY
-
-**Deploy the pattern**
-
-```sh
-terraform apply
-```
-
-Enter `yes` to apply.
-
-### Configure `kubectl` and test cluster
-
-EKS Cluster details can be extracted from terraform output or from AWS Console to get the name of cluster.
-This following command used to update the `kubeconfig` in your local machine where you run kubectl commands to interact with your EKS Cluster.
-
-#### Step 5: Run `update-kubeconfig` command
-
-`~/.kube/config` file gets updated with cluster details and certificate from the below command
-
-    $ aws eks --region <enter-your-region> update-kubeconfig --name <cluster-name>
-
-### Step 6: List the secret resources in the `external-secrets` namespace
-
-    $ kubectl get externalsecrets -n external-secrets
-    $ kubectl get secrets -n external-secrets
-
-## Cleanup
-
-To clean up your environment, destroy the Terraform modules in reverse order.
-
-Destroy the Kubernetes Add-ons, EKS cluster with Node groups and VPC
-
-```sh
-terraform destroy -target="module.eks_blueprints_kubernetes_addons" -auto-approve
-terraform destroy -target="module.eks_blueprints" -auto-approve
-terraform destroy -target="module.vpc" -auto-approve
-```
-
-Finally, destroy any additional resources that are not in the above modules
-
-```sh
-terraform destroy -auto-approve
-```

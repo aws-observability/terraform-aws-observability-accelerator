@@ -26,7 +26,7 @@ terraform {
 
   # ##  Used for end-to-end testing on project; update to suit your needs
   # backend "s3" {
-  #   bucket = "observability-accelerator-terraform-states"
+  #   bucket = "aws-observability-accelerator-terraform-states"
   #   region = "us-west-2"
   #   key    = "e2e/existing-cluster-java/terraform.tfstate"
   # }

@@ -28,7 +28,7 @@ terraform {
   # backend "s3" {
   #   bucket = "observability-accelerator-terraform-states"
   #   region = "us-west-2"
-  #   key    = "e2e/existing-cluster-with-base-and-infra/terraform.tfstate"
+  #   key    = "e2e/existing-cluster-nginx/terraform.tfstate"
   # }
 
 }

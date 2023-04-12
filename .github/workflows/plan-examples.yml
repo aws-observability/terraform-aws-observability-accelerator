@@ -79,7 +79,7 @@ jobs:
 
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v1
-        if: steps.changes.outputs.src== 'true'
+        # if: steps.changes.outputs.src== 'true'
         with:
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
           aws-region: us-west-2

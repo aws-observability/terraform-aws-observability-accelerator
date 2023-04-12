@@ -62,17 +62,17 @@ jobs:
         if: "!contains(github.event_name, 'pull_request')"
         uses: actions/checkout@v3
 
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          # Need to check not only the example directory
-          # but also the supporting module(s) code
-          # for plans (not for pre-commit)
-          filters: |
-            src:
-              - '${{ matrix.directory }}/**/*.(tf|yml|yaml)'
-              - 'modules/**/*.(tf|yml|yaml)'
-              - '*.tf'
+      # - uses: dorny/paths-filter@v2
+      #   id: changes
+      #   with:
+      #     # Need to check not only the example directory
+      #     # but also the supporting module(s) code
+      #     # for plans (not for pre-commit)
+      #     filters: |
+      #       src:
+      #         - '${{ matrix.directory }}/**/*.(tf|yml|yaml)'
+      #         - 'modules/**/*.(tf|yml|yaml)'
+      #         - '*.tf'
 
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v1

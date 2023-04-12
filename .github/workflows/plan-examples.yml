@@ -83,21 +83,27 @@ jobs:
           role-duration-seconds: 3600
           role-session-name: GithubActions-Session
 
-      - name: Terraform Job
-        uses: hashicorp/setup-terraform@v2
-        if: steps.changes.outputs.src== 'true'
+      - name: Terraform plan from CodeBuild
+        # if: steps.changes.outputs.src== 'true'
+        uses: aws-actions/aws-codebuild-run-build@v1
         with:
-          terraform_version: 1.2.9
-
-      - if: steps.changes.outputs.src== 'true'
-        run: terraform version
-
-      - name: Terraform Init
-        if: steps.changes.outputs.src== 'true'
-        run: terraform init -reconfigure
-        working-directory: ${{ matrix.directory }}
-
-      - name: Terraform Plan
-        if: steps.changes.outputs.src== 'true'
-        working-directory: ${{ matrix.directory }}
-        run: terraform plan -no-color
+          project-name: terraform-plan
+          disable-source-override: true
+          buildspec-override: |
+            version: 0.2
+            env:
+              variables:
+                TF_VAR_aws_region: "us-west-2"
+            phases:
+              build:
+                commands:
+                  # - export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 1800 --workspace-id g-a34f3f558f --query key --output text --region us-east-1`
+                   - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+                   - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+                   - sudo apt-get update && sudo apt-get install terraform
+                   - terraform -version
+                   - aws --version
+                   - cd ${{ matrix.directory }}
+                   - sed -i 's/#//' versions.tf
+                   - terraform init
+                   - terraform plan

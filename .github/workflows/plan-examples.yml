@@ -93,6 +93,7 @@ jobs:
           TF_VAR_aws_region: us-west-2
           TF_VAR_managed_grafana_workspace_id: ${{ secrets.GRAFANA_WORKSPACE_ID }}
           TF_VAR_eks_cluster_id: eks-cluster-with-vpc
+          TF_VAR_managed_prometheus_workspace_ids: ${{ secrets.PROMETHEUS_WORKSPACE_ID }}
         with:
           project-name: terraform-plan
           disable-source-override: false
@@ -100,12 +101,14 @@ jobs:
             TF_VAR_aws_region,
             TF_VAR_managed_grafana_workspace_id,
             TF_VAR_eks_cluster_id,
+            TF_VAR_managed_prometheus_workspace_ids
           buildspec-override: |
             version: 0.2
             phases:
               build:
                 commands:
-                   - export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 1800 --workspace-id $TF_VAR_aws_managed_grafana_workspace_id --query key --output text --region us-west-2`
+                   # - export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 1800 --workspace-id $TF_VAR_aws_managed_grafana_workspace_id --query key --output text --region us-west-2`
+                   - export TF_VAR_grafana_api_key="fakeapikey"
                    - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
                    - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
                    - sudo apt-get update && sudo apt-get install terraform

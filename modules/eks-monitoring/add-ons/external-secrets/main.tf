@@ -24,7 +24,7 @@ module "cluster_secretstore_role" {
   irsa_iam_policies           = [aws_iam_policy.cluster_secretstore.arn]
   eks_cluster_id              = var.addon_context.eks_cluster_id
   eks_oidc_provider_arn       = var.addon_context.eks_oidc_provider_arn
-  depends_on = [module.external_secrets]
+  depends_on                  = [module.external_secrets]
 }
 
 resource "aws_iam_policy" "cluster_secretstore" {

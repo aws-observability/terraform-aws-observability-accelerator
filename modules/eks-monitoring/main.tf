@@ -62,9 +62,9 @@ resource "helm_release" "fluxcd" {
 }
 
 resource "helm_release" "grafana_operator" {
-  chart            = var.go_config.helm_chart 
+  chart            = var.go_config.helm_chart
   name             = var.go_config.helm_name
-  namespace        = var.go_config.k8s_namespace 
+  namespace        = var.go_config.k8s_namespace
   version          = var.go_config.helm_chart_version
   create_namespace = var.go_config.create_namespace
   max_history      = 3
@@ -214,9 +214,8 @@ module "external-secrets" {
   enable_external_secrets = var.enable_external_secrets
   grafana_api_key         = var.grafana_api_key
   addon_context           = local.context
-  target_secret_namespace = var.go_config.k8s_namespace 
+  target_secret_namespace = var.go_config.k8s_namespace
   target_secret_name      = var.target_secret_name
 
   depends_on = [resource.helm_release.grafana_operator]
 }
-

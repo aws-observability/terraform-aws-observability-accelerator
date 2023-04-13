@@ -5,7 +5,7 @@ This module provides EKS cluster monitoring with the following resources:
 - AWS Distro For OpenTelemetry Operator and Collector for Metrics and Traces
 - Logs with [AWS for FluentBit](https://github.com/aws/aws-for-fluent-bit)
 - Installs Grafana Operator to add AWS data sources and create Grafana Dashboards to Amazon Managed Grafana.
-- Installs FluxCD to perform GitOps sync of a Git Repo to EKS Cluster. We will use this later for creating Grafana Dashboards and AWS datasources to Amazon Managed Grafana. 
+- Installs FluxCD to perform GitOps sync of a Git Repo to EKS Cluster. We will use this later for creating Grafana Dashboards and AWS datasources to Amazon Managed Grafana.
 - Installs External Secrets Operator to retrieve and Sync the Grafana API keys.
 - Amazon Managed Grafana Dashboard and data source
 - Alerts and recording rules with AWS Managed Service for Prometheus
@@ -36,6 +36,7 @@ This module makes use of the open source [kube-prometheus-stack](https://github.
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_external-secrets"></a> [external-secrets](#module\_external-secrets) | ./add-ons/external-secrets | n/a |
 | <a name="module_fluentbit_logs"></a> [fluentbit\_logs](#module\_fluentbit\_logs) | ./add-ons/aws-for-fluentbit | n/a |
 | <a name="module_helm_addon"></a> [helm\_addon](#module\_helm\_addon) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon | v4.26.0 |
 | <a name="module_java_monitoring"></a> [java\_monitoring](#module\_java\_monitoring) | ./patterns/java | n/a |
@@ -54,6 +55,8 @@ This module makes use of the open source [kube-prometheus-stack](https://github.
 | [grafana_dashboard.nodes](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
 | [grafana_dashboard.nsworkload](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
 | [grafana_dashboard.workloads](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
+| [helm_release.fluxcd](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [helm_release.grafana_operator](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.kube_state_metrics](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.prometheus_node_exporter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
@@ -73,6 +76,9 @@ This module makes use of the open source [kube-prometheus-stack](https://github.
 | <a name="input_enable_cert_manager"></a> [enable\_cert\_manager](#input\_enable\_cert\_manager) | Allow reusing an existing installation of cert-manager | `bool` | `true` | no |
 | <a name="input_enable_custom_metrics"></a> [enable\_custom\_metrics](#input\_enable\_custom\_metrics) | Allows additional metrics collection for config elements in the `custom_metrics_config` config object. Automatic dashboards are not included | `bool` | `false` | no |
 | <a name="input_enable_dashboards"></a> [enable\_dashboards](#input\_enable\_dashboards) | Enables or disables curated dashboards | `bool` | `true` | no |
+| <a name="input_enable_external_secrets"></a> [enable\_external\_secrets](#input\_enable\_external\_secrets) | Installs External Secrets to EKS Cluster | `bool` | `true` | no |
+| <a name="input_enable_fluxcd"></a> [enable\_fluxcd](#input\_enable\_fluxcd) | Enables or disables FluxCD. Disabling this might affect some data in the dashboards | `bool` | `true` | no |
+| <a name="input_enable_grafana_operator"></a> [enable\_grafana\_operator](#input\_enable\_grafana\_operator) | Deploys Grafana Operator to EKS Cluster | `bool` | `true` | no |
 | <a name="input_enable_java"></a> [enable\_java](#input\_enable\_java) | Enable Java workloads monitoring, alerting and default dashboards | `bool` | `false` | no |
 | <a name="input_enable_kube_state_metrics"></a> [enable\_kube\_state\_metrics](#input\_enable\_kube\_state\_metrics) | Enables or disables Kube State metrics exporter. Disabling this might affect some data in the dashboards | `bool` | `true` | no |
 | <a name="input_enable_logs"></a> [enable\_logs](#input\_enable\_logs) | Using AWS For FluentBit to collect cluster and application logs to Amazon CloudWatch | `bool` | `true` | no |
@@ -80,6 +86,9 @@ This module makes use of the open source [kube-prometheus-stack](https://github.
 | <a name="input_enable_node_exporter"></a> [enable\_node\_exporter](#input\_enable\_node\_exporter) | Enables or disables Node exporter. Disabling this might affect some data in the dashboards | `bool` | `true` | no |
 | <a name="input_enable_recording_rules"></a> [enable\_recording\_rules](#input\_enable\_recording\_rules) | Enables or disables Managed Prometheus recording rules | `bool` | `true` | no |
 | <a name="input_enable_tracing"></a> [enable\_tracing](#input\_enable\_tracing) | (Experimental) Enables tracing with AWS X-Ray. This changes the deploy mode of the collector to daemon set. Requirement: adot add-on <= 0.58-build.0 | `bool` | `false` | no |
+| <a name="input_flux_config"></a> [flux\_config](#input\_flux\_config) | FluxCD configuration | <pre>object({<br>    create_namespace   = bool<br>    k8s_namespace      = string<br>    helm_chart_name    = string<br>    helm_chart_version = string<br>    helm_release_name  = string<br>    helm_repo_url      = string<br>    helm_settings      = map(string)<br>    helm_values        = map(any)<br>  })</pre> | <pre>{<br>  "create_namespace": true,<br>  "helm_chart_name": "flux2",<br>  "helm_chart_version": "2.7.0",<br>  "helm_release_name": "observability-fluxcd-addon",<br>  "helm_repo_url": "https://fluxcd-community.github.io/helm-charts",<br>  "helm_settings": {},<br>  "helm_values": {},<br>  "k8s_namespace": "flux-system"<br>}</pre> | no |
+| <a name="input_go_config"></a> [go\_config](#input\_go\_config) | Grafana Operator configuration | <pre>object({<br>    create_namespace   = bool<br>    helm_chart         = string<br>    helm_name          = string<br>    k8s_namespace      = string<br>    helm_release_name  = string<br>    helm_chart_version = string<br>  })</pre> | <pre>{<br>  "create_namespace": true,<br>  "helm_chart": "oci://ghcr.io/grafana-operator/helm-charts/grafana-operator",<br>  "helm_chart_version": "v5.0.0-rc1",<br>  "helm_name": "grafana-operator",<br>  "helm_release_name": "grafana-operator",<br>  "k8s_namespace": "grafana-operator"<br>}</pre> | no |
+| <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | Grafana API key for the Amazon Managed Grafana workspace | `string` | n/a | yes |
 | <a name="input_helm_config"></a> [helm\_config](#input\_helm\_config) | Helm Config for Prometheus | `any` | `{}` | no |
 | <a name="input_irsa_iam_permissions_boundary"></a> [irsa\_iam\_permissions\_boundary](#input\_irsa\_iam\_permissions\_boundary) | IAM permissions boundary for IRSA roles | `string` | `null` | no |
 | <a name="input_irsa_iam_role_path"></a> [irsa\_iam\_role\_path](#input\_irsa\_iam\_role\_path) | IAM role path for IRSA roles | `string` | `"/"` | no |
@@ -93,6 +102,8 @@ This module makes use of the open source [kube-prometheus-stack](https://github.
 | <a name="input_nginx_config"></a> [nginx\_config](#input\_nginx\_config) | Configuration object for NGINX monitoring | <pre>object({<br>    enable_alerting_rules       = bool<br>    scrape_sample_limit         = number<br>    prometheus_metrics_endpoint = string<br>  })</pre> | <pre>{<br>  "enable_alerting_rules": true,<br>  "prometheus_metrics_endpoint": "metrics",<br>  "scrape_sample_limit": 1000<br>}</pre> | no |
 | <a name="input_prometheus_config"></a> [prometheus\_config](#input\_prometheus\_config) | Controls default values such as scrape interval, timeouts and ports globally | <pre>object({<br>    global_scrape_interval = string<br>    global_scrape_timeout  = string<br>  })</pre> | <pre>{<br>  "global_scrape_interval": "60s",<br>  "global_scrape_timeout": "15s"<br>}</pre> | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | `map(string)` | `{}` | no |
+| <a name="input_target_secret_name"></a> [target\_secret\_name](#input\_target\_secret\_name) | Target secret in Kubernetes to store the Grafana API Key Secret | `string` | `"grafana-admin-credentials"` | no |
+| <a name="input_target_secret_namespace"></a> [target\_secret\_namespace](#input\_target\_secret\_namespace) | Target namespace of secret in Kubernetes to store the Grafana API Key Secret | `string` | `"grafana-operator"` | no |
 | <a name="input_tracing_config"></a> [tracing\_config](#input\_tracing\_config) | Configuration object for traces collection to AWS X-Ray | <pre>object({<br>    otlp_grpc_endpoint = string<br>    otlp_http_endpoint = string<br>    send_batch_size    = number<br>    timeout            = string<br>  })</pre> | <pre>{<br>  "otlp_grpc_endpoint": "0.0.0.0:4317",<br>  "otlp_http_endpoint": "0.0.0.0:4318",<br>  "send_batch_size": 50,<br>  "timeout": "30s"<br>}</pre> | no |
 
 ## Outputs

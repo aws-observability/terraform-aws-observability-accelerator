@@ -114,7 +114,6 @@ jobs:
                    - terraform -version
                    - aws --version
                    - cd ${{ matrix.directory }}
-                   - cat variables.tf
                    - sed -i 's/#//' versions.tf
                    - terraform init
                    - terraform plan

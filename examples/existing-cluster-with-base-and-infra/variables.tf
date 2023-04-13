@@ -1,6 +1,7 @@
 variable "eks_cluster_id" {
   description = "Name of the EKS cluster"
   type        = string
+  default     = "eks-cluster-with-vpc"
 }
 
 variable "aws_region" {

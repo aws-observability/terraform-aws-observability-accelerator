@@ -91,14 +91,14 @@ jobs:
         uses: aws-actions/aws-codebuild-run-build@v1
         env:
           TF_VAR_aws_region: us-west-2
-          TF_VAR_aws_managed_grafana_workspace_id: ${{ secrets.GRAFANA_WORKSPACE_ID }}
+          TF_VAR_managed_grafana_workspace_id: ${{ secrets.GRAFANA_WORKSPACE_ID }}
           TF_VAR_eks_cluster_id: eks-cluster-with-vpc
         with:
           project-name: terraform-plan
           disable-source-override: false
           env-vars-for-codebuild: |
             TF_VAR_aws_region,
-            TF_VAR_aws_managed_grafana_workspace_id,
+            TF_VAR_managed_grafana_workspace_id,
             TF_VAR_eks_cluster_id,
           buildspec-override: |
             version: 0.2

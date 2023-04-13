@@ -307,7 +307,7 @@ variable "flux_config" {
 }
 
 variable "enable_grafana_operator" {
-  description = "Enables or disables Grafana Operator. Disabling this might affect some data in the dashboards"
+  description = "Deploys Grafana Operator to EKS Cluster"
   type        = bool
   default     = true
 }
@@ -335,7 +335,7 @@ variable "go_config" {
 }
 
 variable "enable_external_secrets" {
-  description = "Enables or disables External Secrets."
+  description = "Installs External Secrets to EKS Cluster"
   type        = bool
   default     = true
 }

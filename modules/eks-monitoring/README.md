@@ -5,6 +5,8 @@ This module provides EKS cluster monitoring with the following resources:
 - AWS Distro For OpenTelemetry Operator and Collector for Metrics and Traces
 - Logs with [AWS for FluentBit](https://github.com/aws/aws-for-fluent-bit)
 - Installs Grafana Operator to manage add data sources and create Dashboards to Amazon Managed Grafana.
+- Installs FluxCD to perform GitOps sync of a Git Repo to EKS Cluster. We will use this later for creating Grafana Dashboards and AWS datasources to Amazon Managed Grafana. 
+- Installs External Secrets Operator to retrieve and Sync the Grafana API keys.
 - Amazon Managed Grafana Dashboard and data source
 - Alerts and recording rules with AWS Managed Service for Prometheus
 

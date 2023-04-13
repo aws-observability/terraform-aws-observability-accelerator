@@ -92,12 +92,16 @@ jobs:
         with:
           project-name: terraform-plan
           disable-source-override: false
+          env-vars-for-codebuild: |
+            TF_VAR_aws_region,
+            TF_VAR_aws_managed_grafana_workspace_id,
+            TF_VAR_eks_cluster_id,
+          env:
+            TF_VAR_aws_region: us-west-2
+            TF_VAR_aws_managed_grafana_workspace_id: ${{ secrets.GRAFANA_WORKSPACE_ID }}
+            TF_VAR_eks_cluster_id: eks-cluster-with-vpc
           buildspec-override: |
             version: 0.2
-            env:
-              variables:
-                TF_VAR_aws_region: "us-west-2"
-                TF_VAR_aws_managed_grafana_workspace_id: ${{ secrets.GRAFANA_WORKSPACE_ID }}
             phases:
               build:
                 commands:
@@ -108,7 +112,6 @@ jobs:
                    - terraform -version
                    - aws --version
                    - cd ${{ matrix.directory }}
-                   - cat versions.tf
                    - sed -i 's/#//' versions.tf
                    - terraform init
                    - terraform plan

@@ -78,7 +78,7 @@ jobs:
       #         - '*.tf'
 
       - name: Configure AWS credentials from Test account
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         # if: steps.changes.outputs.src== 'true'
         with:
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
@@ -107,7 +107,6 @@ jobs:
             phases:
               build:
                 commands:
-                   # - export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 1800 --workspace-id $TF_VAR_aws_managed_grafana_workspace_id --query key --output text --region us-west-2`
                    - export TF_VAR_grafana_api_key="fakeapikey"
                    - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
                    - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
@@ -115,6 +114,7 @@ jobs:
                    - terraform -version
                    - aws --version
                    - cd ${{ matrix.directory }}
+                   - cat variables.tf
                    - sed -i 's/#//' versions.tf
                    - terraform init
                    - terraform plan

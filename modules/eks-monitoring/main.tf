@@ -62,6 +62,7 @@ resource "helm_release" "fluxcd" {
 }
 
 resource "helm_release" "grafana_operator" {
+  count            = var.enable_grafana_operator ? 1 : 0
   chart            = var.go_config.helm_chart
   name             = var.go_config.helm_name
   namespace        = var.go_config.k8s_namespace
@@ -207,14 +208,14 @@ module "fluentbit_logs" {
   addon_context         = local.context
 }
 
-module "external-secrets" {
+module "external_secrets" {
   source = "./add-ons/external-secrets"
   count  = var.enable_external_secrets ? 1 : 0
 
   enable_external_secrets = var.enable_external_secrets
   grafana_api_key         = var.grafana_api_key
   addon_context           = local.context
-  target_secret_namespace = var.go_config.k8s_namespace
+  target_secret_namespace = var.target_secret_namespace
   target_secret_name      = var.target_secret_name
 
   depends_on = [resource.helm_release.grafana_operator]

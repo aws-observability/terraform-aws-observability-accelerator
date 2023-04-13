@@ -36,7 +36,7 @@ This module makes use of the open source [kube-prometheus-stack](https://github.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_external-secrets"></a> [external-secrets](#module\_external-secrets) | ./add-ons/external-secrets | n/a |
+| <a name="module_external_secrets"></a> [external\_secrets](#module\_external\_secrets) | ./add-ons/external-secrets | n/a |
 | <a name="module_fluentbit_logs"></a> [fluentbit\_logs](#module\_fluentbit\_logs) | ./add-ons/aws-for-fluentbit | n/a |
 | <a name="module_helm_addon"></a> [helm\_addon](#module\_helm\_addon) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon | v4.26.0 |
 | <a name="module_java_monitoring"></a> [java\_monitoring](#module\_java\_monitoring) | ./patterns/java | n/a |

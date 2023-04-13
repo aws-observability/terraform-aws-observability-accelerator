@@ -2,9 +2,9 @@ name: plan-examples
 
 on:
   # Review https://securitylab.github.com/research/github-actions-preventing-pwn-requests/ and better understand the risks of using pull_request_target before making major changes to this workflow.
-  pull_request_target:
-    branches:
-      - main
+  #pull_request_target:
+  #  branches:
+  #    - main
   push:
     branches:
       - plan-tests
@@ -91,7 +91,7 @@ jobs:
         uses: aws-actions/aws-codebuild-run-build@v1
         with:
           project-name: terraform-plan
-          disable-source-override: true
+          disable-source-override: false
           buildspec-override: |
             version: 0.2
             env:

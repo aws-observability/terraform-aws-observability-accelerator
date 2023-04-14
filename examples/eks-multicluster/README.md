@@ -5,7 +5,7 @@ This example shows how to use the [AWS Observability Accelerator](https://github
 ## Prerequisites
 
 1. Using the example [eks-cluster-with-vpc](../eks-cluster-with-vpc/), create two EKS clusters with the names:
-   1. `eks-cluster-1` 
+   1. `eks-cluster-1`
    2. `eks-cluster-2`
 2. Following the instructions found in this [blog post](https://aws.amazon.com/blogs/mt/announcing-aws-observability-accelerator-to-configure-comprehensive-observability-for-amazon-eks/):
    1. Create an `Amazon Managed Grafana` workspace and capture the workspace ID (ex: g-abc123)
@@ -13,9 +13,9 @@ This example shows how to use the [AWS Observability Accelerator](https://github
 
 ## Setup
 
-1. Git clone this project, `cd` into it `terraform-aws-observability-accelerator/examples/eks-multicluster` and initialize the Terraform 
+1. Git clone this project, `cd` into it `terraform-aws-observability-accelerator/examples/eks-multicluster` and initialize the Terraform
 
-   ```sh 
+   ```sh
    git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
    cd terraform-aws-observability-accelerator/examples/eks-multicluster
    terraform init
@@ -46,11 +46,11 @@ This example shows how to use the [AWS Observability Accelerator](https://github
    # (mandatory) Grafana API Key - https://docs.aws.amazon.com/grafana/latest/userguide/API_key_console.html
    grafana_api_key = "<AMG Key with admin access>"
    ```
-3. Deploy the Observability for the first EKS cluster and capture the `Amazon Managed Service for Prometheus` workspace ID that was created as a result. 
+3. Deploy the Observability for the first EKS cluster and capture the `Amazon Managed Service for Prometheus` workspace ID that was created as a result.
 
    > **Note!** Run the task to completion before moving to the next step
 
-   ```sh 
+   ```sh
    terraform apply -var-file=eks-cluster-1.tfvars -state=./eks-cluster-1.tfstate --auto-approve
    ```
 4. Similar to step #2, create a `terraform` variables file **eks-cluster-2.tfvars**, specific to the second EKS cluster, as shown below. This time around, in addition to `<AMG Workspace ID>` and `<AMG Key with admin access>`, substitute `<ws-XXXX-XXXXX-XXXXX-XXXXXXXXX>` as well with the workspace ID you noted the previous step.
@@ -78,8 +78,8 @@ This example shows how to use the [AWS Observability Accelerator](https://github
 
    # (mandatory) Grafana API Key - https://docs.aws.amazon.com/grafana/latest/userguide/API_key_console.html
     grafana_api_key = "<AMG Key with admin access>"
-   ``` 
-5. Deploy the Observability for the second EKS cluster 
+   ```
+5. Deploy the Observability for the second EKS cluster
    ```sh
    terraform apply -var-file=eks-cluster-2.tfvars -state=./eks-cluster-2.tfstate --auto-approve
    ```

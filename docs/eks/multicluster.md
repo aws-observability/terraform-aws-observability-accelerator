@@ -4,7 +4,7 @@ This example shows how to use the [AWS Observability Accelerator](https://github
 
 ## Prerequisites
 
-1. Using the example [eks-cluster-with-vpc](../eks-cluster-with-vpc/), create two EKS clusters with the names:
+1. Using the example [eks-cluster-with-vpc](../../examples/eks-cluster-with-vpc/), create two EKS clusters with the names:
    1. `eks-cluster-1`
    2. `eks-cluster-2`
 2. Following the instructions found in this [blog post](https://aws.amazon.com/blogs/mt/announcing-aws-observability-accelerator-to-configure-comprehensive-observability-for-amazon-eks/):

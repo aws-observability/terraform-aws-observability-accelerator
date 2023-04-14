@@ -43,6 +43,34 @@ resource "helm_release" "prometheus_node_exporter" {
   }
 }
 
+resource "helm_release" "fluxcd" {
+  count            = var.enable_fluxcd ? 1 : 0
+  chart            = var.flux_config.helm_chart_name
+  create_namespace = var.flux_config.create_namespace
+  namespace        = var.flux_config.k8s_namespace
+  name             = var.flux_config.helm_release_name
+  version          = var.flux_config.helm_chart_version
+  repository       = var.flux_config.helm_repo_url
+
+  dynamic "set" {
+    for_each = var.flux_config.helm_settings
+    content {
+      name  = set.key
+      value = set.value
+    }
+  }
+}
+
+resource "helm_release" "grafana_operator" {
+  count            = var.enable_grafana_operator ? 1 : 0
+  chart            = var.go_config.helm_chart
+  name             = var.go_config.helm_name
+  namespace        = var.go_config.k8s_namespace
+  version          = var.go_config.helm_chart_version
+  create_namespace = var.go_config.create_namespace
+  max_history      = 3
+}
+
 module "helm_addon" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.26.0"
 
@@ -178,4 +206,17 @@ module "fluentbit_logs" {
 
   cw_log_retention_days = var.logs_config.cw_log_retention_days
   addon_context         = local.context
+}
+
+module "external_secrets" {
+  source = "./add-ons/external-secrets"
+  count  = var.enable_external_secrets ? 1 : 0
+
+  enable_external_secrets = var.enable_external_secrets
+  grafana_api_key         = var.grafana_api_key
+  addon_context           = local.context
+  target_secret_namespace = var.target_secret_namespace
+  target_secret_name      = var.target_secret_name
+
+  depends_on = [resource.helm_release.grafana_operator]
 }

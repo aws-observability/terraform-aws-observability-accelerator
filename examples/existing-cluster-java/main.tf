@@ -69,6 +69,12 @@ module "eks_monitoring" {
   # enable java metrics collection, dashboards and alerts rules creation
   enable_java = true
 
+  # deploys external-secrets in to the cluster
+  enable_external_secrets = true
+  grafana_api_key         = var.grafana_api_key
+  target_secret_name      = "grafana-admin-credentials"
+  target_secret_namespace = "grafana-operator"
+
   eks_cluster_id = var.eks_cluster_id
 
   # control the publishing of dashboards by specifying the boolean value for the variable 'enable_dashboards', default is 'true'

@@ -16,7 +16,6 @@ resource "grafana_dashboard" "nsworkload" {
   config_json = file("${path.module}/dashboards/namespace-workloads.json")
 }
 
-
 resource "grafana_dashboard" "kubelet" {
   count       = var.enable_dashboards ? 1 : 0
   folder      = var.dashboards_folder_id

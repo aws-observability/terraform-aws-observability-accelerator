@@ -4,85 +4,78 @@ This example shows how to use the [AWS Observability Accelerator](https://github
 
 ## Prerequisites
 
-1. Using the example [eks-cluster-with-vpc](../eks-cluster-with-vpc/), create two EKS clusters with the names:
+#### 1. EKS clusters 
+
+Using the example [eks-cluster-with-vpc](../../examples/eks-cluster-with-vpc/), create two EKS clusters with the names:
    1. `eks-cluster-1`
    2. `eks-cluster-2`
-2. Following the instructions found in this [blog post](https://aws.amazon.com/blogs/mt/announcing-aws-observability-accelerator-to-configure-comprehensive-observability-for-amazon-eks/):
-   1. Create an `Amazon Managed Grafana` workspace and capture the workspace ID (ex: g-abc123)
-   2. Create an Grafana dashboards API key and capture the (contents of the) key
+
+#### 2. Amazon Managed Serivce for Prometheus (AMP) workspace 
+
+We recommend that you create a new AMP workspace. To do that you can run the following command.
+
+Ensure you have the following necessary IAM permissions
+* `aps.CreateWorkspace`
+
+```sh
+export TF_VAR_managed_prometheus_workspace_id=$(aws amp create-workspace --alias observability-accelerator --query='workspaceId' --output text)
+```
+
+#### 3. Amazon Managed Grafana (AMG) workspace 
+
+To run this example you need an AMG workspace. If you have
+an existing workspace, create an environment variable as described below.
+To create a new workspace, visit our supporting example for managed Grafana.
+
+!!! note
+    For the URL `https://g-xyz.grafana-workspace.eu-central-1.amazonaws.com`, the workspace ID would be `g-xyz`
+
+```sh
+export TF_VAR_managed_grafana_workspace_id=g-xxx
+```
+
+#### 4. Grafana API Key
+
+AMG provides a control plane API for generating Grafana API keys.
+As a security best practice, we will provide to Terraform a short lived API key to
+run the `apply` or `destroy` command.
+
+Ensure you have the following necessary IAM permissions 
+* `grafana.CreateWorkspaceApiKey`
+* `grafana.DeleteWorkspaceApiKey`
+
+```sh
+export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 1200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
+```
 
 ## Setup
 
-1. Git clone this project, `cd` into it `terraform-aws-observability-accelerator/examples/eks-multicluster` and initialize the Terraform
+#### 1. Download sources and initialize Terraform
 
-   ```sh
-   git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
-   cd terraform-aws-observability-accelerator/examples/eks-multicluster
-   terraform init
-   ```
-2. Create a `terraform` variables file **eks-cluster-1.tfvars**, specific to the first EKS cluster, as shown below. Ensure to substitute the `<AMG Workspace ID>` and `<AMG Key with admin access>` with correct values working with the existing `Amazon Managed Grafana` workspace.
+```sh
+git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
+cd terraform-aws-observability-accelerator/examples/eks-multicluster
+terraform init
+```
 
-   **eks-cluster-1.tfvars**
-   ```
-   # (mandatory) EKS cluster id/name
-   eks_cluster_id = "eks-cluster-1"
+#### 2. Deploy
 
-   enable_alertmanager         = true
-   create_dashboard_folder     = true
-   enable_dashboards           = true
-   create_prometheus_data_source  = true
+Verify by looking at the file `variables.tf` that there are two EKS clusters targeted for deployment by the names:
+1. `eks-cluster-1` (default value, called _primary_)
+2. `eks-cluster-2` (default value, called _secondary_)
 
-   enable_recording_rules      = true
-   enable_alerting_rules       = true
-   enable_java_recording_rules = true
-   enable_java_alerting_rules  = true
+The difference between primary and secondary being that Terraform, when setting up the primary EKS cluster for observability, it also sets up: 
+* Dashboard folder and files in `AMG`
+* Prometheus and Java, alerting and recording rules in `AMP`
 
-   # (mandatory) Amazon Managed Grafana Workspace ID: ex: g-abc123
-   managed_grafana_workspace_id = "<AMG Workspace ID>"
+!!! warning
+    To override the defaults, create a `terraform.tfvars` and change the default values of the variables.
 
-   # (optional) Leave it empty for a new workspace to be created
-   managed_prometheus_workspace_id = ""
+Run the following command to deploy 
 
-   # (mandatory) Grafana API Key - https://docs.aws.amazon.com/grafana/latest/userguide/API_key_console.html
-   grafana_api_key = "<AMG Key with admin access>"
-   ```
-3. Deploy the Observability for the first EKS cluster and capture the `Amazon Managed Service for Prometheus` workspace ID that was created as a result.
-
-   > **Note!** Run the task to completion before moving to the next step
-
-   ```sh
-   terraform apply -var-file=eks-cluster-1.tfvars -state=./eks-cluster-1.tfstate --auto-approve
-   ```
-4. Similar to step #2, create a `terraform` variables file **eks-cluster-2.tfvars**, specific to the second EKS cluster, as shown below. This time around, in addition to `<AMG Workspace ID>` and `<AMG Key with admin access>`, substitute `<ws-XXXX-XXXXX-XXXXX-XXXXXXXXX>` as well with the workspace ID you noted the previous step.
-
-   **eks-cluster-2.tfvars**
-   ```
-   # (mandatory) EKS cluster id/name
-   eks_cluster_id = "eks-cluster-2"
-
-   enable_alertmanager         = false
-   create_dashboard_folder     = false
-   enable_dashboards           = false
-   create_prometheus_data_source  = false
-
-   enable_recording_rules      = false
-   enable_alerting_rules       = false
-   enable_java_recording_rules = false
-   enable_java_alerting_rules  = false
-
-   # (mandatory) Amazon Managed Grafana Workspace ID: ex: g-abc123
-   managed_grafana_workspace_id = "<AMG Workspace ID>"
-
-   # (optional) Leave it empty for a new workspace to be created
-   managed_prometheus_workspace_id = "<ws-XXXX-XXXXX-XXXXX-XXXXXXXXX>"
-
-   # (mandatory) Grafana API Key - https://docs.aws.amazon.com/grafana/latest/userguide/API_key_console.html
-    grafana_api_key = "<AMG Key with admin access>"
-   ```
-5. Deploy the Observability for the second EKS cluster
-   ```sh
-   terraform apply -var-file=eks-cluster-2.tfvars -state=./eks-cluster-2.tfstate --auto-approve
-   ```
+```sh 
+terraform apply --auto-approve
+```
 
 ## Verifying Multicluster Observability
 
@@ -96,10 +89,8 @@ Note how you are able to use the `cluster` dropdown to filter the dashboards to 
 
 ## Cleanup
 
-```sh
-# Clean up Observability on eks-cluster-1
-terraform destroy -var-file=eks-cluster-1.tfvars -state=./eks-cluster-1.tfstate --auto-approve
+To clean up entirely, run the following command:
 
-# Clean up Observability on eks-cluster-2
-terraform destroy -var-file=eks-cluster-2.tfvars -state=./eks-cluster-2.tfstate --auto-approve
+```sh
+terraform destroy --auto-approve
 ```

@@ -1,107 +1,100 @@
-provider "aws" {
-  region = local.region
-}
-
-data "aws_eks_cluster_auth" "this" {
-  name = var.eks_cluster_id
-}
-
-data "aws_eks_cluster" "this" {
-  name = var.eks_cluster_id
-}
-
-provider "kubernetes" {
-  host                   = local.eks_cluster_endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.this.token
-}
-
-provider "helm" {
-  kubernetes {
-    host                   = local.eks_cluster_endpoint
-    cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
-    token                  = data.aws_eks_cluster_auth.this.token
-  }
-}
-
-locals {
-  region               = var.aws_region
-  eks_cluster_endpoint = data.aws_eks_cluster.this.endpoint
-  create_new_workspace = var.managed_prometheus_workspace_id == "" ? true : false
-  tags = {
-    Source = "github.com/aws-observability/terraform-aws-observability-accelerator"
-  }
-}
-
-provider "grafana" {
-  url  = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
-  auth = var.grafana_api_key
-}
-
 module "aws_observability_accelerator" {
-  source = "../../../terraform-aws-observability-accelerator"
-
-  aws_region = var.aws_region
-
-  # creates a new Amazon Managed Prometheus workspace, defaults to true
-  enable_managed_prometheus = local.create_new_workspace
-
-  # reusing existing Amazon Managed Prometheus if specified
+  source                              = "../../../terraform-aws-observability-accelerator"
+  aws_region                          = var.primary_eks_cluster.aws_region
+  enable_managed_prometheus           = false
+  enable_alertmanager                 = true
+  create_dashboard_folder             = true
+  create_prometheus_data_source       = true
+  grafana_api_key                     = var.grafana_api_key
+  managed_prometheus_workspace_region = null
   managed_prometheus_workspace_id     = var.managed_prometheus_workspace_id
-  managed_prometheus_workspace_region = null # defaults to the current region, useful for cross region scenarios (same account)
+  managed_grafana_workspace_id        = var.managed_grafana_workspace_id
 
-  # sets up the Amazon Managed Prometheus alert manager at the workspace level
-  enable_alertmanager = var.enable_alertmanager
-
-  # decide whether to create a dashboard folder
-  create_dashboard_folder = var.create_dashboard_folder
-
-  # decide whether to create/set Amazon Managed service for Prometheus as a datasource
-  create_prometheus_data_source = var.create_prometheus_data_source
-
-  # reusing existing Amazon Managed Grafana workspace
-  managed_grafana_workspace_id = var.managed_grafana_workspace_id
-  grafana_api_key              = var.grafana_api_key
-
-  tags = local.tags
-
+  providers = {
+    aws = aws.primary
+  }
 }
 
-module "eks_monitoring" {
-  source = "../../../terraform-aws-observability-accelerator//modules/eks-monitoring"
-
-  eks_cluster_id = var.eks_cluster_id
-
-  # deploys AWS Distro for OpenTelemetry operator into the cluster
+module "primary_eks_cluster_monitoring" {
+  source                 = "../../../terraform-aws-observability-accelerator//modules/eks-monitoring"
+  eks_cluster_id         = var.primary_eks_cluster.id
   enable_amazon_eks_adot = true
+  enable_cert_manager    = true
+  enable_java            = true
 
-  # reusing existing certificate manager? defaults to true
-  enable_cert_manager = true
+  // This section of configuration results in actions performed on AMG and AMP; and it needs to be done just once
+  // Hence, this in performed in conjunction with the primary EKS cluster
+  enable_dashboards      = true
+  enable_alerting_rules  = true
+  enable_recording_rules = true
 
-  enable_java = true
-  java_config = {
-    enable_alerting_rules  = var.enable_java_alerting_rules
-    enable_recording_rules = var.enable_java_recording_rules
-    scrape_sample_limit    = 1
-  }
-  enable_dashboards      = var.enable_dashboards
-  enable_alerting_rules  = var.enable_alerting_rules
-  enable_recording_rules = var.enable_recording_rules
-
-  dashboards_folder_id            = module.aws_observability_accelerator.grafana_dashboards_folder_id
-  managed_prometheus_workspace_id = module.aws_observability_accelerator.managed_prometheus_workspace_id
-
+  grafana_api_key                       = var.grafana_api_key
+  dashboards_folder_id                  = module.aws_observability_accelerator.grafana_dashboards_folder_id
+  managed_prometheus_workspace_id       = module.aws_observability_accelerator.managed_prometheus_workspace_id
   managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
   managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
 
-  # optional, defaults to 60s interval and 15s timeout
+  java_config = {
+    enable_alerting_rules  = true
+    enable_recording_rules = true
+    scrape_sample_limit    = 1
+  }
+
   prometheus_config = {
     global_scrape_interval = "60s"
     global_scrape_timeout  = "15s"
     scrape_sample_limit    = 2000
   }
 
-  tags = local.tags
+  providers = {
+    aws        = aws.primary
+    kubernetes = kubernetes.primary
+    helm       = helm.primary
+    grafana    = grafana
+  }
+
+  depends_on = [
+    module.aws_observability_accelerator
+  ]
+}
+
+module "secondary_eks_cluster_monitoring" {
+  source                 = "../../../terraform-aws-observability-accelerator//modules/eks-monitoring"
+  eks_cluster_id         = var.secondary_eks_cluster.id
+  enable_amazon_eks_adot = true
+  enable_cert_manager    = true
+  enable_java            = true
+
+  // This section of configuration results in actions performed on AMG and AMP; and it needs to be done just once
+  // Since performed in conjunction with the primary EKS cluster, we will skip them with secondart EKS cluster
+  enable_dashboards      = false
+  enable_alerting_rules  = false
+  enable_recording_rules = false
+
+  grafana_api_key                       = var.grafana_api_key
+  dashboards_folder_id                  = module.aws_observability_accelerator.grafana_dashboards_folder_id
+  managed_prometheus_workspace_id       = module.aws_observability_accelerator.managed_prometheus_workspace_id
+  managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
+  managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
+
+  java_config = {
+    enable_alerting_rules  = false // addressed by primary EKS cluster
+    enable_recording_rules = false // addressed by primary EKS cluster
+    scrape_sample_limit    = 1
+  }
+
+  prometheus_config = {
+    global_scrape_interval = "60s"
+    global_scrape_timeout  = "15s"
+    scrape_sample_limit    = 2000
+  }
+
+  providers = {
+    aws        = aws.secondary
+    kubernetes = kubernetes.secondary
+    helm       = helm.secondary
+    grafana    = grafana
+  }
 
   depends_on = [
     module.aws_observability_accelerator

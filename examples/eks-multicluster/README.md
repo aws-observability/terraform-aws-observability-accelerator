@@ -4,13 +4,13 @@ This example shows how to use the [AWS Observability Accelerator](https://github
 
 ## Prerequisites
 
-#### 1. EKS clusters 
+#### 1. EKS clusters
 
 Using the example [eks-cluster-with-vpc](../../examples/eks-cluster-with-vpc/), create two EKS clusters with the names:
    1. `eks-cluster-1`
    2. `eks-cluster-2`
 
-#### 2. Amazon Managed Serivce for Prometheus (AMP) workspace 
+#### 2. Amazon Managed Serivce for Prometheus (AMP) workspace
 
 We recommend that you create a new AMP workspace. To do that you can run the following command.
 
@@ -21,7 +21,7 @@ Ensure you have the following necessary IAM permissions
 export TF_VAR_managed_prometheus_workspace_id=$(aws amp create-workspace --alias observability-accelerator --query='workspaceId' --output text)
 ```
 
-#### 3. Amazon Managed Grafana (AMG) workspace 
+#### 3. Amazon Managed Grafana (AMG) workspace
 
 To run this example you need an AMG workspace. If you have
 an existing workspace, create an environment variable as described below.
@@ -40,7 +40,7 @@ AMG provides a control plane API for generating Grafana API keys.
 As a security best practice, we will provide to Terraform a short lived API key to
 run the `apply` or `destroy` command.
 
-Ensure you have the following necessary IAM permissions 
+Ensure you have the following necessary IAM permissions
 * `grafana.CreateWorkspaceApiKey`
 * `grafana.DeleteWorkspaceApiKey`
 
@@ -64,16 +64,16 @@ Verify by looking at the file `variables.tf` that there are two EKS clusters tar
 1. `eks-cluster-1` (default value, called _primary_)
 2. `eks-cluster-2` (default value, called _secondary_)
 
-The difference between primary and secondary being that Terraform, when setting up the primary EKS cluster for observability, it also sets up: 
+The difference between primary and secondary being that Terraform, when setting up the primary EKS cluster for observability, it also sets up:
 * Dashboard folder and files in `AMG`
 * Prometheus and Java, alerting and recording rules in `AMP`
 
 !!! warning
     To override the defaults, create a `terraform.tfvars` and change the default values of the variables.
 
-Run the following command to deploy 
+Run the following command to deploy
 
-```sh 
+```sh
 terraform apply --auto-approve
 ```
 

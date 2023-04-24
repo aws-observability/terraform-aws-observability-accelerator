@@ -1,6 +1,6 @@
 module "aws_observability_accelerator" {
   source                              = "../../../terraform-aws-observability-accelerator"
-  aws_region                          = var.primary_eks_cluster.aws_region
+  aws_region                          = var.eks_cluster_1_region
   enable_managed_prometheus           = false
   enable_alertmanager                 = true
   create_dashboard_folder             = true
@@ -11,19 +11,19 @@ module "aws_observability_accelerator" {
   managed_grafana_workspace_id        = var.managed_grafana_workspace_id
 
   providers = {
-    aws = aws.primary
+    aws = aws.eks_cluster_1
   }
 }
 
-module "primary_eks_cluster_monitoring" {
+module "eks_cluster_1_monitoring" {
   source                 = "../../../terraform-aws-observability-accelerator//modules/eks-monitoring"
-  eks_cluster_id         = var.primary_eks_cluster.id
+  eks_cluster_id         = var.eks_cluster_1_id
   enable_amazon_eks_adot = true
   enable_cert_manager    = true
   enable_java            = true
 
   # This configuration section results in actions performed on AMG and AMP; and it needs to be done just once
-  # And hence, this in performed in conjunction with the setup of the primary EKS cluster
+  # And hence, this in performed in conjunction with the setup of the eks_cluster_1 EKS cluster
   enable_dashboards      = true
   enable_alerting_rules  = true
   enable_recording_rules = true
@@ -47,9 +47,9 @@ module "primary_eks_cluster_monitoring" {
   }
 
   providers = {
-    aws        = aws.primary
-    kubernetes = kubernetes.primary
-    helm       = helm.primary
+    aws        = aws.eks_cluster_1
+    kubernetes = kubernetes.eks_cluster_1
+    helm       = helm.eks_cluster_1
     grafana    = grafana
   }
 
@@ -58,15 +58,15 @@ module "primary_eks_cluster_monitoring" {
   ]
 }
 
-module "secondary_eks_cluster_monitoring" {
+module "eks_cluster_2_monitoring" {
   source                 = "../../../terraform-aws-observability-accelerator//modules/eks-monitoring"
-  eks_cluster_id         = var.secondary_eks_cluster.id
+  eks_cluster_id         = var.eks_cluster_2_id
   enable_amazon_eks_adot = true
   enable_cert_manager    = true
   enable_java            = true
 
-  # Since the following were enabled in conjunction with the set up of the primary EKS cluster, we will skip
-  # them with the secondary EKS cluster
+  # Since the following were enabled in conjunction with the set up of the eks_cluster_1 EKS cluster, we will skip
+  # them with the eks_cluster_2 EKS cluster
   enable_dashboards      = false
   enable_alerting_rules  = false
   enable_recording_rules = false
@@ -78,8 +78,8 @@ module "secondary_eks_cluster_monitoring" {
   managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
 
   java_config = {
-    enable_alerting_rules  = false # addressed while setting up the primary EKS cluster
-    enable_recording_rules = false # addressed while setting up the primary EKS cluster
+    enable_alerting_rules  = false # addressed while setting up the eks_cluster_1 EKS cluster
+    enable_recording_rules = false # addressed while setting up the eks_cluster_1 EKS cluster
     scrape_sample_limit    = 1
   }
 
@@ -90,9 +90,9 @@ module "secondary_eks_cluster_monitoring" {
   }
 
   providers = {
-    aws        = aws.secondary
-    kubernetes = kubernetes.secondary
-    helm       = helm.secondary
+    aws        = aws.eks_cluster_2
+    kubernetes = kubernetes.eks_cluster_2
+    helm       = helm.eks_cluster_2
     grafana    = grafana
   }
 

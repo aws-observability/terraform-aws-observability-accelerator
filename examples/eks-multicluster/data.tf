@@ -1,15 +1,15 @@
-data "aws_eks_cluster_auth" "primary" {
-  name = var.primary_eks_cluster.id
+data "aws_eks_cluster_auth" "eks_cluster_1" {
+  name = var.eks_cluster_1_id
 }
 
-data "aws_eks_cluster_auth" "secondary" {
-  name = var.secondary_eks_cluster.id
+data "aws_eks_cluster_auth" "eks_cluster_2" {
+  name = var.eks_cluster_2_id
 }
 
-data "aws_eks_cluster" "primary" {
-  name = var.primary_eks_cluster.id
+data "aws_eks_cluster" "eks_cluster_1" {
+  name = var.eks_cluster_1_id
 }
 
-data "aws_eks_cluster" "secondary" {
-  name = var.secondary_eks_cluster.id
+data "aws_eks_cluster" "eks_cluster_2" {
+  name = var.eks_cluster_2_id
 }

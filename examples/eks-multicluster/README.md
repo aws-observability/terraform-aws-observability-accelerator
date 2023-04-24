@@ -60,11 +60,11 @@ terraform init
 
 #### 2. Deploy
 
-Verify by looking at the file `variables.tf` that there are two EKS clusters targeted for deployment by the names:
-1. `eks-cluster-1` (default value, called _primary_)
-2. `eks-cluster-2` (default value, called _secondary_)
+Verify by looking at the file `variables.tf` that there are two EKS clusters targeted for deployment by the names/ids:
+1. `eks-cluster-1`
+2. `eks-cluster-2`
 
-The difference between primary and secondary is that Terraform, when setting up the primary EKS cluster for observability, also sets up:
+The difference in deployment between these clusters is that Terraform, when setting up the EKS cluster behind variable `eks_cluster_1_id` for observability, also sets up:
 * Dashboard folder and files in `AMG`
 * Prometheus and Java, alerting and recording rules in `AMP`
 

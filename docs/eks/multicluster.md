@@ -64,7 +64,7 @@ Verify by looking at the file `variables.tf` that there are two EKS clusters tar
 1. `eks-cluster-1` (default value, called _primary_)
 2. `eks-cluster-2` (default value, called _secondary_)
 
-The difference between primary and secondary being that Terraform, when setting up the primary EKS cluster for observability, it also sets up:
+The difference between primary and secondary is that Terraform, when setting up the primary EKS cluster for observability, also sets up:
 * Dashboard folder and files in `AMG`
 * Prometheus and Java, alerting and recording rules in `AMP`
 

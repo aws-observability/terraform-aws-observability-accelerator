@@ -22,8 +22,8 @@ module "primary_eks_cluster_monitoring" {
   enable_cert_manager    = true
   enable_java            = true
 
-  // This section of configuration results in actions performed on AMG and AMP; and it needs to be done just once
-  // Hence, this in performed in conjunction with the primary EKS cluster
+  # This configuration section results in actions performed on AMG and AMP; and it needs to be done just once
+  # And hence, this in performed in conjunction with the setup of the primary EKS cluster
   enable_dashboards      = true
   enable_alerting_rules  = true
   enable_recording_rules = true
@@ -65,8 +65,8 @@ module "secondary_eks_cluster_monitoring" {
   enable_cert_manager    = true
   enable_java            = true
 
-  // This section of configuration results in actions performed on AMG and AMP; and it needs to be done just once
-  // Since performed in conjunction with the primary EKS cluster, we will skip them with secondart EKS cluster
+  # Since the following were enabled in conjunction with the set up of the primary EKS cluster, we will skip 
+  # them with the secondary EKS cluster
   enable_dashboards      = false
   enable_alerting_rules  = false
   enable_recording_rules = false
@@ -78,8 +78,8 @@ module "secondary_eks_cluster_monitoring" {
   managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
 
   java_config = {
-    enable_alerting_rules  = false // addressed by primary EKS cluster
-    enable_recording_rules = false // addressed by primary EKS cluster
+    enable_alerting_rules  = false # addressed while setting up the primary EKS cluster
+    enable_recording_rules = false # addressed while setting up the primary EKS cluster
     scrape_sample_limit    = 1
   }
 

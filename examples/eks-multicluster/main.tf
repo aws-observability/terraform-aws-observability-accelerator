@@ -65,7 +65,7 @@ module "secondary_eks_cluster_monitoring" {
   enable_cert_manager    = true
   enable_java            = true
 
-  # Since the following were enabled in conjunction with the set up of the primary EKS cluster, we will skip 
+  # Since the following were enabled in conjunction with the set up of the primary EKS cluster, we will skip
   # them with the secondary EKS cluster
   enable_dashboards      = false
   enable_alerting_rules  = false

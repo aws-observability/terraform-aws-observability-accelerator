@@ -83,9 +83,9 @@ One you have successfully run the above setup, you should be able to see dashboa
 
 Note how you are able to use the `cluster` dropdown to filter the dashboards to metrics collected from a specific EKS cluster.
 
-![Sample Image 1](../../docs/images/eks-multicluster-1.png)
+<img width="2557" alt="eks-multicluster-1" src="https://user-images.githubusercontent.com/4762573/233949110-ce275d06-7ad8-494c-b527-d9c2a0fb6645.png">
 
-![Sample Image 2](../../docs/images/eks-multicluster-2.png)
+<img width="2560" alt="eks-multicluster-2" src="https://user-images.githubusercontent.com/4762573/233949227-f401f81e-e0d6-4242-96ad-0bcd39ad4e2d.png">
 
 ## Cleanup
 

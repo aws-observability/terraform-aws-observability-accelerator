@@ -110,8 +110,6 @@ terraform apply
 
 Open your Grafana workspace and under Configuration -> Data sources, you should see `aws-observability-accelerator`. Open and click `Save & test`. You should see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
 
-2. Grafana dashboards
-
 For Default Region, choose the region where the Amazon Managed Service for Prometheus workspace exists. 
 
 
@@ -122,6 +120,7 @@ Select the Save and test button. You will see data source working.
 
 ![C96E9C99-FBC9-455B-8DFB-1F11598FCE2D](https://user-images.githubusercontent.com/47993564/236845978-289ed5ee-dcbd-4f8e-a2ab-dbb43b586b1a.jpeg)
 
+2. Grafana dashboards
 
 Go to the Dashboards panel of your Grafana workspace. You should see a list of dashboards under the `Observability Accelerator Dashboards`
 

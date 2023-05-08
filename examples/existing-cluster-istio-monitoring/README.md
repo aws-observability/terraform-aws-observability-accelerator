@@ -134,7 +134,7 @@ Open a specific dashboard and you should be able to view its visualization. Exam
 ![68AC86D7-4959-4527-A723-A19E8FD9E8F5](https://user-images.githubusercontent.com/47993564/236842708-72225322-4f97-44cc-aac0-40a3356e50c6.jpeg)
 
 
-2. Amazon Managed Service for Prometheus rules and alerts
+3. Amazon Managed Service for Prometheus rules and alerts
 
 Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you should find new rules deployed.
 

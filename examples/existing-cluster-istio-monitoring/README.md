@@ -112,6 +112,17 @@ Open your Grafana workspace and under Configuration -> Data sources, you should 
 
 2. Grafana dashboards
 
+For Default Region, choose the region where the Amazon Managed Service for Prometheus workspace exists. 
+
+
+![3297CF9F-47B6-4572-A331-9B8C9CCDDD72](https://user-images.githubusercontent.com/47993564/236845936-168eac88-74cc-43be-85af-95e9c1b495ef.jpeg)
+
+Select the Save and test button. You will see data source working.
+
+
+![C96E9C99-FBC9-455B-8DFB-1F11598FCE2D](https://user-images.githubusercontent.com/47993564/236845978-289ed5ee-dcbd-4f8e-a2ab-dbb43b586b1a.jpeg)
+
+
 Go to the Dashboards panel of your Grafana workspace. You should see a list of dashboards under the `Observability Accelerator Dashboards`
 
 
@@ -133,9 +144,8 @@ Open the Amazon Managed Service for Prometheus console and view the details of y
 
 To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
 
-3. Configure the Prometheus data source
 
-For Default Region, choose the region where you created the Amazon Managed Service for Prometheus workspace
+
 
 Select the Save and test button. You will see data source working.
 

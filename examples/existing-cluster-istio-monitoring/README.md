@@ -114,7 +114,9 @@ Open your Grafana workspace and under Configuration -> Data sources, you should 
 
 Go to the Dashboards panel of your Grafana workspace. You should see a list of dashboards under the `Observability Accelerator Dashboards`
 
-<img width="1540" alt="image" src="https://user-images.githubusercontent.com/10175027/190000716-29e16698-7c90-49d6-8c37-79ca1790e2cc.png">
+
+![8184A2F7-C9BD-4F96-BA1C-2D11E951C287](https://user-images.githubusercontent.com/47993564/236841811-fdd5a07c-6e5e-4654-a735-80f92f5bee56.jpeg)
+
 
 Open a specific dashboard and you should be able to view its visualization
 

@@ -118,9 +118,10 @@ Go to the Dashboards panel of your Grafana workspace. You should see a list of d
 ![8184A2F7-C9BD-4F96-BA1C-2D11E951C287](https://user-images.githubusercontent.com/47993564/236841811-fdd5a07c-6e5e-4654-a735-80f92f5bee56.jpeg)
 
 
-Open a specific dashboard and you should be able to view its visualization
+Open a specific dashboard and you should be able to view its visualization. Example below is for the Istio Control Plane Dashboard with data for the last hour. 
 
-<img width="1721" alt="Screenshot 2022-08-30 at 20 01 32" src="https://user-images.githubusercontent.com/10175027/187515925-67864dd1-2b35-4be0-a15e-1e36805e8b29.png">
+![68AC86D7-4959-4527-A723-A19E8FD9E8F5](https://user-images.githubusercontent.com/47993564/236842708-72225322-4f97-44cc-aac0-40a3356e50c6.jpeg)
+
 
 2. Amazon Managed Service for Prometheus rules and alerts
 

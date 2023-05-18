@@ -6,7 +6,8 @@ This example shows how to use the [AWS Observability Accelerator](https://github
 
 #### 1. EKS clusters
 
-Using the example [eks-cluster-with-vpc](../../examples/eks-cluster-with-vpc/), create two EKS clusters with the names:
+Using the example [eks-cluster-with-vpc](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/new-eks-cluster/), create two EKS clusters with the names:
+
    1. `eks-cluster-1`
    2. `eks-cluster-2`
 
@@ -15,6 +16,7 @@ Using the example [eks-cluster-with-vpc](../../examples/eks-cluster-with-vpc/), 
 We recommend that you create a new AMP workspace. To do that you can run the following command.
 
 Ensure you have the following necessary IAM permissions
+
 * `aps.CreateWorkspace`
 
 ```sh
@@ -41,6 +43,7 @@ As a security best practice, we will provide to Terraform a short lived API key 
 run the `apply` or `destroy` command.
 
 Ensure you have the following necessary IAM permissions
+
 * `grafana.CreateWorkspaceApiKey`
 * `grafana.DeleteWorkspaceApiKey`
 
@@ -61,10 +64,12 @@ terraform init
 #### 2. Deploy
 
 Verify by looking at the file `variables.tf` that there are two EKS clusters targeted for deployment by the names/ids:
+
 1. `eks-cluster-1`
 2. `eks-cluster-2`
 
 The difference in deployment between these clusters is that Terraform, when setting up the EKS cluster behind variable `eks_cluster_1_id` for observability, also sets up:
+
 * Dashboard folder and files in `AMG`
 * Prometheus and Java, alerting and recording rules in `AMP`
 

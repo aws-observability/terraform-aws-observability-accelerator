@@ -62,6 +62,12 @@ variable "enable_alerting_rules" {
   default     = true
 }
 
+variable "enable_recording_rules" {
+  description = "Enables or disables Managed Prometheus recording rules"
+  type        = bool
+  default     = true
+}
+
 variable "enable_dashboards" {
   description = "Enables or disables curated dashboards"
   type        = bool
@@ -131,7 +137,7 @@ variable "ne_config" {
   default = {
     create_namespace   = true
     helm_chart_name    = "prometheus-node-exporter"
-    helm_chart_version = "2.0.3"
+    helm_chart_version = "4.14.0"
     helm_release_name  = "prometheus-node-exporter"
     helm_repo_url      = "https://prometheus-community.github.io/helm-charts"
     helm_settings      = {}
@@ -217,13 +223,15 @@ variable "enable_java" {
 variable "java_config" {
   description = "Configuration object for Java/JMX monitoring"
   type = object({
-    enable_alerting_rules = bool
-    scrape_sample_limit   = number
+    enable_alerting_rules  = bool
+    enable_recording_rules = bool
+    scrape_sample_limit    = number
   })
 
   default = {
-    enable_alerting_rules = true
-    scrape_sample_limit   = 1000
+    enable_alerting_rules  = true
+    enable_recording_rules = true
+    scrape_sample_limit    = 1000
   }
 }
 
@@ -285,4 +293,87 @@ variable "logs_config" {
     # Valid values are  [1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653]
     cw_log_retention_days = 90
   }
+}
+
+variable "enable_fluxcd" {
+  description = "Enables or disables FluxCD. Disabling this might affect some data in the dashboards"
+  type        = bool
+  default     = true
+}
+
+variable "flux_config" {
+  description = "FluxCD configuration"
+  type = object({
+    create_namespace   = bool
+    k8s_namespace      = string
+    helm_chart_name    = string
+    helm_chart_version = string
+    helm_release_name  = string
+    helm_repo_url      = string
+    helm_settings      = map(string)
+    helm_values        = map(any)
+  })
+
+  default = {
+    create_namespace   = true
+    helm_chart_name    = "flux2"
+    helm_chart_version = "2.7.0"
+    helm_release_name  = "observability-fluxcd-addon"
+    helm_repo_url      = "https://fluxcd-community.github.io/helm-charts"
+    helm_settings      = {}
+    helm_values        = {}
+    k8s_namespace      = "flux-system"
+  }
+  nullable = false
+}
+
+variable "enable_grafana_operator" {
+  description = "Deploys Grafana Operator to EKS Cluster"
+  type        = bool
+  default     = true
+}
+
+variable "go_config" {
+  description = "Grafana Operator configuration"
+  type = object({
+    create_namespace   = bool
+    helm_chart         = string
+    helm_name          = string
+    k8s_namespace      = string
+    helm_release_name  = string
+    helm_chart_version = string
+  })
+
+  default = {
+    create_namespace   = true
+    helm_chart         = "oci://ghcr.io/grafana-operator/helm-charts/grafana-operator"
+    helm_name          = "grafana-operator"
+    k8s_namespace      = "grafana-operator"
+    helm_release_name  = "grafana-operator"
+    helm_chart_version = "v5.0.0-rc1"
+  }
+  nullable = false
+}
+
+variable "enable_external_secrets" {
+  description = "Installs External Secrets to EKS Cluster"
+  type        = bool
+  default     = true
+}
+
+variable "grafana_api_key" {
+  description = "Grafana API key for the Amazon Managed Grafana workspace"
+  type        = string
+}
+
+variable "target_secret_name" {
+  description = "Target secret in Kubernetes to store the Grafana API Key Secret"
+  type        = string
+  default     = "grafana-admin-credentials"
+}
+
+variable "target_secret_namespace" {
+  description = "Target namespace of secret in Kubernetes to store the Grafana API Key Secret"
+  type        = string
+  default     = "grafana-operator"
 }

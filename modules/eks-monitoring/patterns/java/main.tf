@@ -1,4 +1,5 @@
 resource "aws_prometheus_rule_group_namespace" "recording_rules" {
+  count        = var.enable_recording_rules ? 1 : 0
   name         = "accelerator-java-rules"
   workspace_id = var.managed_prometheus_workspace_id
   data         = <<EOF
@@ -31,6 +32,7 @@ EOF
 }
 
 resource "grafana_dashboard" "this" {
+  count       = var.enable_dashboards ? 1 : 0
   folder      = var.dashboards_folder_id
   config_json = file("${path.module}/dashboards/default.json")
 }

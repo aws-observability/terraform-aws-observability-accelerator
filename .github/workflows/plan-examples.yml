@@ -75,7 +75,7 @@ jobs:
               - '*.tf'
 
       - name: Configure AWS credentials from Test account
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         if: steps.changes.outputs.src== 'true'
         with:
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
@@ -83,21 +83,34 @@ jobs:
           role-duration-seconds: 3600
           role-session-name: GithubActions-Session
 
-      - name: Terraform Job
-        uses: hashicorp/setup-terraform@v2
+      - name: Terraform plan from CodeBuild
         if: steps.changes.outputs.src== 'true'
+        uses: aws-actions/aws-codebuild-run-build@v1
+        env:
+          TF_VAR_aws_region: us-west-2
+          TF_VAR_managed_grafana_workspace_id: ${{ secrets.GRAFANA_WORKSPACE_ID }}
+          TF_VAR_eks_cluster_id: e2e-tests
+          TF_VAR_managed_prometheus_workspace_ids: ${{ secrets.PROMETHEUS_WORKSPACE_ID }}
         with:
-          terraform_version: 1.2.9
-
-      - if: steps.changes.outputs.src== 'true'
-        run: terraform version
-
-      - name: Terraform Init
-        if: steps.changes.outputs.src== 'true'
-        run: terraform init -reconfigure
-        working-directory: ${{ matrix.directory }}
-
-      - name: Terraform Plan
-        if: steps.changes.outputs.src== 'true'
-        working-directory: ${{ matrix.directory }}
-        run: terraform plan -no-color
+          project-name: terraform-plan
+          disable-source-override: false
+          env-vars-for-codebuild: |
+            TF_VAR_aws_region,
+            TF_VAR_managed_grafana_workspace_id,
+            TF_VAR_eks_cluster_id,
+            TF_VAR_managed_prometheus_workspace_ids
+          buildspec-override: |
+            version: 0.2
+            phases:
+              build:
+                commands:
+                   - export TF_VAR_grafana_api_key="fakeapikey"
+                   - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+                   - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+                   - sudo apt-get update && sudo apt-get install terraform
+                   - terraform -version
+                   - aws --version
+                   - cd ${{ matrix.directory }}
+                   - sed -i 's/#//' versions.tf
+                   - terraform init
+                   - terraform plan

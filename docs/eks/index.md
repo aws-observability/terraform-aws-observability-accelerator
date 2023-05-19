@@ -167,3 +167,18 @@ sum(up{job="custom-metrics"}) by (container_name, cluster, nodename)
 ```
 
 <img width="2560" alt="Screenshot 2023-01-31 at 11 16 21" src="https://user-images.githubusercontent.com/10175027/215869004-e05f557d-c81a-41fb-a452-ede9f986cb27.png">
+
+## Troubleshooting
+
+When you upgrade the eks-monitoring module from v2.1.0 or earlier, the following error may occur.
+
+```bash
+Error: cannot patch "prometheus-node-exporter" with kind DaemonSet: DaemonSet.apps "prometheus-node-exporter" is invalid: spec.selector: Invalid value: v1.LabelSelector{MatchLabels:map[string]string{"app.kubernetes.io/instance":"prometheus-node-exporter", "app.kubernetes.io/name":"prometheus-node-exporter"}, MatchExpressions:[]v1.LabelSelectorRequirement(nil)}: field is immutable
+```
+
+This is due to the upgrade of the node-exporter chart from v2 to v4. Manually delete the node-exporter's DaemonSet as described in [the link here](https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-node-exporter#3x-to-4x), and then apply.
+
+```bash
+kubectl -n prometheus-node-exporter delete daemonset -l app=prometheus-node-exporter
+terraform apply
+```

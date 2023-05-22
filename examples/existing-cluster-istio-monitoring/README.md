@@ -39,7 +39,7 @@ You can improve security and performance by creating VPC-endpoint for Amazon Man
 7. [Grafana api key with Admin role](https://docs.aws.amazon.com/grafana/latest/userguide/API_key_console.html)
 8. Create an EKS cluster by following the readme below 
 
-[https://github.com/awsdabra/terraform-aws-observability-accelerator/tree/main/examples/eks-cluster-with-vpc](https://github.com/awsdabra/terraform-aws-observability-accelerator/blob/main/examples/eks-cluster-with-vpc/README.md)
+[https://github.com/aws/terraform-aws-observability-accelerator/tree/main/examples/eks-cluster-with-vpc](https://github.com/aws/terraform-aws-observability-accelerator/blob/main/examples/eks-cluster-with-vpc/README.md)
 
 
 
@@ -56,7 +56,7 @@ on Amazon S3 for example, visit the [terraform remote states](https://www.terraf
 1. Clone the repo using the command below
 
 ```
-git clone https://github.com/terraform-aws-observability-accelerator
+git clone https://github.com/aws/terraform-aws-observability-accelerator
 ```
 
 2. Initialize terraform

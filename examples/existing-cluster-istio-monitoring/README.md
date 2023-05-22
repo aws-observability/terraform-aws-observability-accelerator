@@ -56,7 +56,7 @@ on Amazon S3 for example, visit the [terraform remote states](https://www.terraf
 1. Clone the repo using the command below
 
 ```
-git clone https://github.com/awsdabra/terraform-aws-observability-accelerator
+git clone https://github.com/terraform-aws-observability-accelerator
 ```
 
 2. Initialize terraform

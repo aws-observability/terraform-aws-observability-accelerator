@@ -1,6 +1,6 @@
-# Java patterns module
+# Istio patterns module
 
-Provides monitoring for Java based workloads with the following resources:
+Provides monitoring for Istio based workloads with the following resources:
 
 - AWS Managed Grafana Dashboard and data source
 - Alerts and recording rules with AWS Managed Service for Prometheus

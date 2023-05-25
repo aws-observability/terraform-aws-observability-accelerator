@@ -31,6 +31,7 @@ This module makes use of the open source [kube-prometheus-stack](https://github.
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0.0 |
 | <a name="provider_grafana"></a> [grafana](#provider\_grafana) | >= 1.25.0 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | >= 2.4.1 |
+| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >= 1.14 |
 
 ## Modules
 
@@ -59,6 +60,8 @@ This module makes use of the open source [kube-prometheus-stack](https://github.
 | [helm_release.grafana_operator](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.kube_state_metrics](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.prometheus_node_exporter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [kubectl_manifest.flux_gitrepository](https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs/resources/manifest) | resource |
+| [kubectl_manifest.flux_kustomization](https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs/resources/manifest) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_eks_cluster.eks_cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
@@ -89,6 +92,8 @@ This module makes use of the open source [kube-prometheus-stack](https://github.
 | <a name="input_flux_config"></a> [flux\_config](#input\_flux\_config) | FluxCD configuration | <pre>object({<br>    create_namespace   = bool<br>    k8s_namespace      = string<br>    helm_chart_name    = string<br>    helm_chart_version = string<br>    helm_release_name  = string<br>    helm_repo_url      = string<br>    helm_settings      = map(string)<br>    helm_values        = map(any)<br>  })</pre> | <pre>{<br>  "create_namespace": true,<br>  "helm_chart_name": "flux2",<br>  "helm_chart_version": "2.7.0",<br>  "helm_release_name": "observability-fluxcd-addon",<br>  "helm_repo_url": "https://fluxcd-community.github.io/helm-charts",<br>  "helm_settings": {},<br>  "helm_values": {},<br>  "k8s_namespace": "flux-system"<br>}</pre> | no |
 | <a name="input_go_config"></a> [go\_config](#input\_go\_config) | Grafana Operator configuration | <pre>object({<br>    create_namespace   = bool<br>    helm_chart         = string<br>    helm_name          = string<br>    k8s_namespace      = string<br>    helm_release_name  = string<br>    helm_chart_version = string<br>  })</pre> | <pre>{<br>  "create_namespace": true,<br>  "helm_chart": "oci://ghcr.io/grafana-operator/helm-charts/grafana-operator",<br>  "helm_chart_version": "v5.0.0-rc1",<br>  "helm_name": "grafana-operator",<br>  "helm_release_name": "grafana-operator",<br>  "k8s_namespace": "grafana-operator"<br>}</pre> | no |
 | <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | Grafana API key for the Amazon Managed Grafana workspace | `string` | n/a | yes |
+| <a name="input_grafana_node_exporter_dashboard_url"></a> [grafana\_node\_exporter\_dashboard\_url](#input\_grafana\_node\_exporter\_dashboard\_url) | Dashboard URL for Node Exporter Grafana Dashboard JSON | `string` | `"https://raw.githubusercontent.com/aws-samples/one-observability-demo/main/grafana-dashboards/nodeexporter-nodes.json"` | no |
+| <a name="input_grafana_url"></a> [grafana\_url](#input\_grafana\_url) | Endpoint URL of Amazon Managed Grafana workspace | `string` | n/a | yes |
 | <a name="input_helm_config"></a> [helm\_config](#input\_helm\_config) | Helm Config for Prometheus | `any` | `{}` | no |
 | <a name="input_irsa_iam_permissions_boundary"></a> [irsa\_iam\_permissions\_boundary](#input\_irsa\_iam\_permissions\_boundary) | IAM permissions boundary for IRSA roles | `string` | `null` | no |
 | <a name="input_irsa_iam_role_path"></a> [irsa\_iam\_role\_path](#input\_irsa\_iam\_role\_path) | IAM role path for IRSA roles | `string` | `"/"` | no |

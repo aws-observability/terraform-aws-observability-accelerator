@@ -91,7 +91,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: grafana-repo
-  postBuild: 
+  postBuild:
     substitute:
       AMG_AWS_REGION: ${var.managed_prometheus_workspace_region}
       AMP_ENDPOINT_URL: ${var.managed_prometheus_workspace_endpoint}

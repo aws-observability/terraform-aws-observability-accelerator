@@ -367,5 +367,3 @@ variable "target_secret_namespace" {
   type        = string
   default     = "grafana-operator"
 }
-
-

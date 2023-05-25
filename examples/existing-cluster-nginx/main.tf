@@ -72,6 +72,7 @@ module "eks_monitoring" {
   grafana_api_key         = var.grafana_api_key
   target_secret_name      = "grafana-admin-credentials"
   target_secret_namespace = "grafana-operator"
+  grafana_url             = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
 
   # control the publishing of dashboards by specifying the boolean value for the variable 'enable_dashboards', default is 'true'
   # the intention to publish is overruled depending upon whether grafana dashboard folder is created by the observability accelerator

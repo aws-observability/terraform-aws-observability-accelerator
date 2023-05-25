@@ -345,6 +345,17 @@ variable "grafana_api_key" {
   type        = string
 }
 
+variable "grafana_url" {
+  description = "Endpoint URL of Amazon Managed Grafana workspace"
+  type        = string
+}
+
+variable "grafana_node_exporter_dashboard_url" {
+  description = "Dashboard URL for Node Exporter Grafana Dashboard JSON"
+  type        = string
+  default     = "https://raw.githubusercontent.com/aws-samples/one-observability-demo/main/grafana-dashboards/nodeexporter-nodes.json"
+}
+
 variable "target_secret_name" {
   description = "Target secret in Kubernetes to store the Grafana API Key Secret"
   type        = string
@@ -356,3 +367,5 @@ variable "target_secret_namespace" {
   type        = string
   default     = "grafana-operator"
 }
+
+

@@ -61,6 +61,46 @@ resource "helm_release" "fluxcd" {
   }
 }
 
+resource "kubectl_manifest" "flux_gitrepository" {
+  yaml_body  = <<YAML
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: grafana-repo
+  namespace: flux-system
+spec:
+  interval: 5m0s
+  url: https://github.com/aws-samples/one-observability-demo
+  ref:
+    branch: main
+YAML
+  depends_on = [module.external_secrets]
+}
+
+resource "kubectl_manifest" "flux_kustomization" {
+  yaml_body  = <<YAML
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: grafana-kustomization
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ./grafana-operator-manifests
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: grafana-repo
+  postBuild: 
+    substitute:
+      AMG_AWS_REGION: ${var.managed_prometheus_workspace_region}
+      AMP_ENDPOINT_URL: ${var.managed_prometheus_workspace_endpoint}
+      AMG_ENDPOINT_URL: ${var.grafana_url}
+      GRAFANA_NODEEXP_DASH_URL: ${var.grafana_node_exporter_dashboard_url}
+YAML
+  depends_on = [module.external_secrets]
+}
+
 resource "helm_release" "grafana_operator" {
   count            = var.enable_grafana_operator ? 1 : 0
   chart            = var.go_config.helm_chart

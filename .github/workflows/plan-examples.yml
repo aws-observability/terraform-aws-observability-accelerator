@@ -5,6 +5,9 @@ on:
   pull_request_target:
     branches:
       - main
+  push:
+    branches:
+      - plan-tests
   workflow_dispatch:
 
 concurrency:
@@ -90,6 +93,8 @@ jobs:
           TF_VAR_aws_region: us-west-2
           TF_VAR_managed_grafana_workspace_id: ${{ secrets.GRAFANA_WORKSPACE_ID }}
           TF_VAR_eks_cluster_id: e2e-tests
+          TF_VAR_eks_cluster_1_id: e2e-tests,
+          TF_VAR_eks_cluster_2_id: e2e-tests,
           TF_VAR_managed_prometheus_workspace_ids: ${{ secrets.PROMETHEUS_WORKSPACE_ID }}
         with:
           project-name: terraform-plan

@@ -90,6 +90,8 @@ jobs:
           TF_VAR_aws_region: us-west-2
           TF_VAR_managed_grafana_workspace_id: ${{ secrets.GRAFANA_WORKSPACE_ID }}
           TF_VAR_eks_cluster_id: e2e-tests
+          TF_VAR_eks_cluster_1_id: e2e-tests,
+          TF_VAR_eks_cluster_2_id: e2e-tests,
           TF_VAR_managed_prometheus_workspace_ids: ${{ secrets.PROMETHEUS_WORKSPACE_ID }}
         with:
           project-name: terraform-plan
@@ -98,8 +100,6 @@ jobs:
             TF_VAR_aws_region,
             TF_VAR_managed_grafana_workspace_id,
             TF_VAR_eks_cluster_id,
-            TF_VAR_eks_cluster_1_id, 
-            TF_VAR_eks_cluster_2_id,
             TF_VAR_managed_prometheus_workspace_ids
           buildspec-override: |
             version: 0.2

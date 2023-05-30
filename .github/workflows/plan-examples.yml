@@ -103,7 +103,9 @@ jobs:
             TF_VAR_aws_region,
             TF_VAR_managed_grafana_workspace_id,
             TF_VAR_eks_cluster_id,
-            TF_VAR_managed_prometheus_workspace_ids
+            TF_VAR_managed_prometheus_workspace_ids,
+            TF_VAR_eks_cluster_1_id,
+            TF_VAR_eks_cluster_2_id
           buildspec-override: |
             version: 0.2
             phases:

@@ -65,8 +65,8 @@ module "eks_cluster_2_monitoring" {
   enable_cert_manager    = true
   enable_java            = true
 
-  # Since the following were enabled in conjunction with the set up of the eks_cluster_1 EKS cluster, we will skip
-  # them with the eks_cluster_2 EKS cluster
+  # Since the following were enabled in conjunction with the set up of the
+  # eks_cluster_1 EKS cluster, we will skip them with the eks_cluster_2 EKS cluster
   enable_dashboards      = false
   enable_alerting_rules  = false
   enable_recording_rules = false

@@ -1,8 +1,5 @@
 # Creating a new Amazon EKS cluster with VPC
 
-!!! note
-    This example is a subset from [this EKS Blueprint example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/v4.32.0/examples/eks-cluster-with-new-vpc)
-
 This example deploys the following:
 
 - New sample VPC, 3 Private Subnets and 3 Public Subnets

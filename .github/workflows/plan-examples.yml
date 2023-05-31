@@ -5,9 +5,10 @@ on:
   pull_request_target:
     branches:
       - main
+  # this will allow to run test on main and not modify the status badge when opening a PR
   push:
-    branches:
-      - plan-tests
+    branches: ["main"]
+    
   workflow_dispatch:
 
 concurrency:

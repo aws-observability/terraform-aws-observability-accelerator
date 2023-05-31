@@ -5,6 +5,10 @@ on:
   pull_request_target:
     branches:
       - main
+  # this will allow to run test on main and not modify the status badge when opening a PR
+  push:
+    branches: ["main"]
+    
   workflow_dispatch:
 
 concurrency:
@@ -90,6 +94,8 @@ jobs:
           TF_VAR_aws_region: us-west-2
           TF_VAR_managed_grafana_workspace_id: ${{ secrets.GRAFANA_WORKSPACE_ID }}
           TF_VAR_eks_cluster_id: e2e-tests
+          TF_VAR_eks_cluster_1_id: e2e-tests
+          TF_VAR_eks_cluster_2_id: e2e-tests
           TF_VAR_managed_prometheus_workspace_ids: ${{ secrets.PROMETHEUS_WORKSPACE_ID }}
         with:
           project-name: terraform-plan
@@ -98,7 +104,9 @@ jobs:
             TF_VAR_aws_region,
             TF_VAR_managed_grafana_workspace_id,
             TF_VAR_eks_cluster_id,
-            TF_VAR_managed_prometheus_workspace_ids
+            TF_VAR_managed_prometheus_workspace_ids,
+            TF_VAR_eks_cluster_1_id,
+            TF_VAR_eks_cluster_2_id
           buildspec-override: |
             version: 0.2
             phases:

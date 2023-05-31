@@ -8,6 +8,12 @@ on:
       - '**.tf'
       - '**.yml'
       - '**.yaml'
+  push:
+    branches: ["main"]
+    paths:
+      - '**.tf'
+      - '**.yml'
+      - '**.yaml'
 
 env:
   TERRAFORM_DOCS_VERSION: v0.16.0

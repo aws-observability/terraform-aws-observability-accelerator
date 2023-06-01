@@ -7,7 +7,9 @@ on:
       - main
   # this will allow to run test on main and not modify the status badge when opening a PR
   push:
-    branches: ["main"]
+    branches:
+      - main
+      - deps-update
 
   workflow_dispatch:
 

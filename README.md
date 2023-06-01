@@ -1,7 +1,7 @@
 # AWS Observability Accelerator for Terraform
 
-[![pre-commit](https://github.com/aws-observability/terraform-aws-observability-accelerator/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/aws-observability/terraform-aws-observability-accelerator/actions/workflows/pre-commit.yaml)
-[![plan-examples](https://github.com/aws-observability/terraform-aws-observability-accelerator/actions/workflows/plan-examples.yml/badge.svg)](https://github.com/aws-observability/terraform-aws-observability-accelerator/actions/workflows/plan-examples.yml)
+[![pre-commit](https://github.com/aws-observability/terraform-aws-observability-accelerator/actions/workflows/pre-commit.yaml/badge.svg?branch=main)](https://github.com/aws-observability/terraform-aws-observability-accelerator/actions/workflows/pre-commit.yaml)
+[![plan-examples](https://github.com/aws-observability/terraform-aws-observability-accelerator/actions/workflows/plan-examples.yml/badge.svg?branch=main)](https://github.com/aws-observability/terraform-aws-observability-accelerator/actions/workflows/plan-examples.yml)
 
 Welcome to the AWS Observability Accelerator for Terraform!
 

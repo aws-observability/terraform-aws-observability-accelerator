@@ -72,7 +72,7 @@ resource "helm_release" "grafana_operator" {
 }
 
 module "helm_addon" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.26.0"
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.32.0"
 
   helm_config = merge(
     {

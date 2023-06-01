@@ -1,16 +1,8 @@
 name: plan-examples
 
 on:
-  # Review https://securitylab.github.com/research/github-actions-preventing-pwn-requests/ and better understand the risks of using pull_request_target before making major changes to this workflow.
-  pull_request_target:
-    branches:
-      - main
   # this will allow to run test on main and not modify the status badge when opening a PR
   push:
-    branches:
-      - main
-      - deps-update
-
   workflow_dispatch:
 
 concurrency:

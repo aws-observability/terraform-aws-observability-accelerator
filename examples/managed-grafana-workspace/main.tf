@@ -14,7 +14,7 @@ locals {
 
 module "managed_grafana" {
   source  = "terraform-aws-modules/managed-service-grafana/aws"
-  version = "1.8.0"
+  version = "1.10.0"
 
   name                      = local.name
   associate_license         = false
@@ -31,6 +31,8 @@ module "managed_grafana" {
       enabled = true
     }
   })
+
+  grafana_version = "9.4"
 
 
   # Workspace IAM role

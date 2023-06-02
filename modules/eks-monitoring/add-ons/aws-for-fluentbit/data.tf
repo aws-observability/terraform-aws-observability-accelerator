@@ -16,6 +16,8 @@ data "aws_iam_policy_document" "irsa" {
       "logs:CreateLogStream",
       "logs:DescribeLogGroups",
       "logs:DescribeLogStreams",
+      "logs:PutRetentionPolicy",
     ]
   }
+
 }

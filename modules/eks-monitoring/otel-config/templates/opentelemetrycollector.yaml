@@ -25,14 +25,12 @@ spec:
           fieldPath: "metadata.namespace"
   config: |
     receivers:
-      {{ if .Values.enableTracing }}
       otlp:
         protocols:
           grpc:
             endpoint: {{ .Values.otlpGrpcEndpoint }}
           http:
             endpoint: {{ .Values.otlpHttpEndpoint }}
-      {{ end }}
       prometheus:
         config:
           global:
@@ -1801,7 +1799,7 @@ spec:
       extensions: [pprof, zpages, health_check, sigv4auth]
       pipelines:
         metrics:
-          receivers: [prometheus]
+          receivers: [prometheus, otlp]
           processors: [batch/metrics]
           exporters: [logging, prometheusremotewrite]
         {{ if .Values.enableTracing }}

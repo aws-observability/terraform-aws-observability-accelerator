@@ -70,7 +70,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 5m0s
-  url: https://github.com/aws-samples/one-observability-demo
+  url: https://github.com/aws-observability/aws-observability-accelerator
   ref:
     branch: main
 YAML
@@ -86,7 +86,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m0s
-  path: ./grafana-operator-manifests
+  path: ./artifacts/grafana-operator-manifests
   prune: true
   sourceRef:
     kind: GitRepository

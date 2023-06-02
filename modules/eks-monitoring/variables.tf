@@ -353,7 +353,7 @@ variable "grafana_url" {
 variable "grafana_node_exporter_dashboard_url" {
   description = "Dashboard URL for Node Exporter Grafana Dashboard JSON"
   type        = string
-  default     = "https://raw.githubusercontent.com/aws-samples/one-observability-demo/main/grafana-dashboards/nodeexporter-nodes.json"
+  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/nodeexporter-nodes.json"
 }
 
 variable "target_secret_name" {

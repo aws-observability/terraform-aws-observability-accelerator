@@ -28,8 +28,8 @@ resource "grafana_dashboard" "cluster" {
   config_json = file("${path.module}/dashboards/cluster.json")
 }
 
-resource "grafana_dashboard" "nodeexp_nodes" {
-  count       = var.enable_dashboards ? 1 : 0
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/nodeexporter-nodes.json")
-}
+# resource "grafana_dashboard" "nodeexp_nodes" {
+#   count       = var.enable_dashboards ? 1 : 0
+#   folder      = var.dashboards_folder_id
+#   config_json = file("${path.module}/dashboards/nodeexporter-nodes.json")
+# }

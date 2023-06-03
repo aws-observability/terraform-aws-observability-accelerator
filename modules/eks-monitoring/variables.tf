@@ -74,6 +74,30 @@ variable "enable_dashboards" {
   default     = true
 }
 
+variable "flux_name" {
+  description = "Flux GitRepository and Kustomization Name"
+  type        = string
+  default     = "grafana-dashboards"
+}
+
+variable "flux_gitrepository_url" {
+  description = "Flux GitRepository URL"
+  type        = string
+  default     = "https://github.com/aws-observability/aws-observability-accelerator"
+}
+
+variable "flux_gitrepository_branch" {
+  description = "Flux GitRepository Branch"
+  type        = string
+  default     = "feature/allDashboards"
+}
+
+variable "flux_kustomization_path" {
+  description = "Flux Kustomization Path"
+  type        = string
+  default     = "./artifacts/grafana-operator-manifests"
+}
+
 variable "enable_kube_state_metrics" {
   description = "Enables or disables Kube State metrics exporter. Disabling this might affect some data in the dashboards"
   type        = bool

@@ -3,13 +3,13 @@ resource "kubectl_manifest" "flux_gitrepository" {
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: GitRepository
 metadata:
-  name: grafana-repo
+  name: ${var.flux_name}
   namespace: flux-system
 spec:
   interval: 5m0s
-  url: https://github.com/aws-observability/aws-observability-accelerator
+  url: ${var.flux_gitrepository_url}
   ref:
-    branch: main
+    branch: ${var.flux_gitrepository_branch}
 YAML
   count      = var.enable_dashboards ? 1 : 0
   depends_on = [module.external_secrets]
@@ -21,15 +21,15 @@ resource "kubectl_manifest" "flux_kustomization" {
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: grafana-kustomization
+  name: ${var.flux_name}
   namespace: flux-system
 spec:
   interval: 1m0s
-  path: ./artifacts/grafana-operator-manifests
+  path: ${var.flux_kustomization_path}
   prune: true
   sourceRef:
     kind: GitRepository
-    name: grafana-repo
+    name: ${var.flux_name}
   postBuild:
     substitute:
       AMG_AWS_REGION: ${var.managed_prometheus_workspace_region}

@@ -1,5 +1,4 @@
 resource "kubectl_manifest" "flux_gitrepository" {
-  count      = var.enable_dashboards ? 1 : 0
   yaml_body  = <<YAML
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: GitRepository
@@ -12,11 +11,12 @@ spec:
   ref:
     branch: main
 YAML
+  count      = var.enable_dashboards ? 1 : 0
   depends_on = [module.external_secrets]
+
 }
 
 resource "kubectl_manifest" "flux_kustomization" {
-  count      = var.enable_dashboards ? 1 : 0
   yaml_body  = <<YAML
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
@@ -42,5 +42,6 @@ spec:
       GRAFANA_NODES_DASH_URL: ${var.grafana_nodes_dashboard_url},
       GRAFANA_WORKLOADS_DASH_URL: ${var.grafana_workloads_dashboard_url}
 YAML
+  count      = var.enable_dashboards ? 1 : 0
   depends_on = [module.external_secrets]
 }

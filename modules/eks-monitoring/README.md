@@ -120,7 +120,8 @@ This module makes use of the open source [kube-prometheus-stack](https://github.
 
 ## Troubleshooting
 
-When you upgrade the eks-monitoring module from v2.1.0 or earlier, the following error may occur.
+
+1. When you upgrade the eks-monitoring module from v2.1.0 or earlier, the following error may occur.
 
 ```bash
 Error: cannot patch "prometheus-node-exporter" with kind DaemonSet: DaemonSet.apps "prometheus-node-exporter" is invalid: spec.selector: Invalid value: v1.LabelSelector{MatchLabels:map[string]string{"app.kubernetes.io/instance":"prometheus-node-exporter", "app.kubernetes.io/name":"prometheus-node-exporter"}, MatchExpressions:[]v1.LabelSelectorRequirement(nil)}: field is immutable
@@ -131,4 +132,57 @@ This is due to the upgrade of the node-exporter chart from v2 to v4. Manually de
 ```bash
 kubectl -n prometheus-node-exporter delete daemonset -l app=prometheus-node-exporter
 terraform apply
+```
+
+2. In case you dont see the grafana dashboards in your Amazon Managed Grafana console, check on the logs on your grafana operator pod using the below command :
+
+```bash
+kubectl get pods -n grafana-operator
+```
+
+Output:
+
+```
+NAME                                READY   STATUS    RESTARTS   AGE
+grafana-operator-866d4446bb-nqq5c   1/1     Running   0          3h17m
+```
+
+```bash
+kubectl logs grafana-operator-866d4446bb-nqq5c -n grafana-operator
+```
+
+Output:
+
+```
+1.6857285045556655e+09	ERROR	error reconciling datasource	{"controller": "grafanadatasource", "controllerGroup": "grafana.integreatly.org", "controllerKind": "GrafanaDatasource", "GrafanaDatasource": {"name":"grafanadatasource-sample-amp","namespace":"grafana-operator"}, "namespace": "grafana-operator", "name": "grafanadatasource-sample-amp", "reconcileID": "72cfd60c-a255-44a1-bfbd-88b0cbc4f90c", "datasource": "grafanadatasource-sample-amp", "grafana": "external-grafana", "error": "status: 401, body: {\"message\":\"Expired API key\"}\n"}
+github.com/grafana-operator/grafana-operator/controllers.(*GrafanaDatasourceReconciler).Reconcile
+```
+
+If you observe, the the above `grafana-api-key error` in the logs, your grafana API key is expired. Please use the operational procedure to update your `grafana-api-key` :
+
+- First, lets create a new Grafana API key.
+
+```bash
+export GO_AMG_API_KEY=$(aws grafana create-workspace-api-key \
+  --key-name "grafana-operator-key-new" \
+  --key-role "ADMIN" \
+  --seconds-to-live 432000 \
+  --workspace-id <YOUR_WORKSPACE_ID> \
+  --query key \
+  --output text)
+```
+
+- Next, lets grab the Grafana API key secret name from AWS Secrets Manager. The keyname should start with `terraform-..`
+
+```bash
+aws secretsmanager list-secrets
+```
+
+- Finally, update the Grafana API key secret in AWS Secrets Manager using the above new Grafana API key:
+
+```bash
+aws secretsmanager update-secret \
+    --secret-id  <Your Secret Name> \
+    --secret-string "${GO_AMG_API_KEY}" \
+    --region <Your AWS Region>
 ```

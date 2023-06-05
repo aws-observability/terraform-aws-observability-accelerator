@@ -377,7 +377,7 @@ variable "grafana_url" {
 variable "grafana_cluster_dashboard_url" {
   description = "Dashboard URL for Cluster Grafana Dashboard JSON"
   type        = string
-  default     = "https://github.com/aws-observability/aws-observability-accelerator/blob/main/artifacts/grafana-dashboards/eks/infrastructure/cluster.json"
+  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/cluster.json"
 }
 
 variable "grafana_kubelet_dashboard_url" {

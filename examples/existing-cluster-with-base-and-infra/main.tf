@@ -49,10 +49,6 @@ module "aws_observability_accelerator" {
   # sets up the Amazon Managed Prometheus alert manager at the workspace level
   enable_alertmanager = true
 
-  # reusing existing Amazon Managed Grafana workspace
-  managed_grafana_workspace_id = var.managed_grafana_workspace_id
-  grafana_api_key              = var.grafana_api_key
-
   tags = local.tags
 }
 
@@ -85,10 +81,8 @@ module "eks_monitoring" {
   grafana_url             = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
 
   # control the publishing of dashboards by specifying the boolean value for the variable 'enable_dashboards', default is 'true'
-  # the intention to publish is overruled depending upon whether grafana dashboard folder is created by the observability accelerator
   enable_dashboards = module.aws_observability_accelerator.grafana_dashboard_folder_created ? var.enable_dashboards : false
 
-  dashboards_folder_id            = module.aws_observability_accelerator.grafana_dashboards_folder_id
   managed_prometheus_workspace_id = module.aws_observability_accelerator.managed_prometheus_workspace_id
 
   managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
@@ -99,6 +93,10 @@ module "eks_monitoring" {
     global_scrape_interval = "60s"
     global_scrape_timeout  = "15s"
   }
+
+  # reusing existing Amazon Managed Grafana workspace
+  managed_grafana_workspace_id = var.managed_grafana_workspace_id
+  grafana_api_key              = var.grafana_api_key
 
   enable_logs = true
 

@@ -1,35 +1,47 @@
-resource "grafana_dashboard" "workloads" {
-  count       = var.enable_dashboards ? 1 : 0
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/workloads.json")
+resource "kubectl_manifest" "flux_gitrepository" {
+  yaml_body  = <<YAML
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: ${var.flux_name}
+  namespace: flux-system
+spec:
+  interval: 5m0s
+  url: ${var.flux_gitrepository_url}
+  ref:
+    branch: ${var.flux_gitrepository_branch}
+YAML
+  count      = var.enable_dashboards ? 1 : 0
+  depends_on = [module.external_secrets]
+
 }
 
-resource "grafana_dashboard" "nodes" {
-  count       = var.enable_dashboards ? 1 : 0
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/nodes.json")
-}
-
-resource "grafana_dashboard" "nsworkload" {
-  count       = var.enable_dashboards ? 1 : 0
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/namespace-workloads.json")
-}
-
-resource "grafana_dashboard" "kubelet" {
-  count       = var.enable_dashboards ? 1 : 0
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/kubelet.json")
-}
-
-resource "grafana_dashboard" "cluster" {
-  count       = var.enable_dashboards ? 1 : 0
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/cluster.json")
-}
-
-resource "grafana_dashboard" "nodeexp_nodes" {
-  count       = var.enable_dashboards ? 1 : 0
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/nodeexporter-nodes.json")
+resource "kubectl_manifest" "flux_kustomization" {
+  yaml_body  = <<YAML
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: ${var.flux_name}
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ${var.flux_kustomization_path}
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ${var.flux_name}
+  postBuild:
+    substitute:
+      AMG_AWS_REGION: ${var.managed_prometheus_workspace_region}
+      AMP_ENDPOINT_URL: ${var.managed_prometheus_workspace_endpoint}
+      AMG_ENDPOINT_URL: ${var.grafana_url}
+      GRAFANA_CLUSTER_DASH_URL: ${var.grafana_cluster_dashboard_url}
+      GRAFANA_KUBELET_DASH_URL: ${var.grafana_kubelet_dashboard_url}
+      GRAFANA_NSWRKLDS_DASH_URL: ${var.grafana_namespace_workloads_dashboard_url}
+      GRAFANA_NODEEXP_DASH_URL: ${var.grafana_node_exporter_dashboard_url}
+      GRAFANA_NODES_DASH_URL: ${var.grafana_nodes_dashboard_url}
+      GRAFANA_WORKLOADS_DASH_URL: ${var.grafana_workloads_dashboard_url}
+YAML
+  count      = var.enable_dashboards ? 1 : 0
+  depends_on = [module.external_secrets]
 }

@@ -26,7 +26,7 @@ traces collection, dashboards and alerts for monitoring:
 - Java/JMX workloads (running on Amazon EKS)
 - Amazon Managed Service for Prometheus workspaces with Amazon CloudWatch
 - Installs Grafana Operator to add AWS data sources and create Grafana Dashboards to Amazon Managed Grafana.
-- Installs FluxCD to perform GitOps sync of a Git Repo to EKS Cluster. We will use this later for creating Grafana Dashboards and AWS datasources to Amazon Managed Grafana.
+- Installs FluxCD to perform GitOps sync of a Git Repo to EKS Cluster. We will use this later for creating Grafana Dashboards and AWS data sources to Amazon Managed Grafana.
 - Installs External Secrets Operator to retrieve and Sync the Grafana API keys.
 
 These modules can be directly configured in your existing Terraform

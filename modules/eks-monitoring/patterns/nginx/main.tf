@@ -37,8 +37,44 @@ groups:
          description: "Nginx p99 latency is higher than 3 seconds\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 EOF
 }
-resource "grafana_dashboard" "workloads" {
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/nginx.json")
 
+
+resource "kubectl_manifest" "flux_gitrepository" {
+  yaml_body  = <<YAML
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: ${var.flux_name}
+  namespace: flux-system
+spec:
+  interval: 5m0s
+  url: ${var.flux_gitrepository_url}
+  ref:
+    branch: ${var.flux_gitrepository_branch}
+YAML
+  count      = var.enable_dashboards ? 1 : 0
+}
+
+resource "kubectl_manifest" "flux_kustomization" {
+  yaml_body  = <<YAML
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: ${var.flux_name}
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ${var.flux_kustomization_path}
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ${var.flux_name}
+  postBuild:
+    substitute:
+      AMG_AWS_REGION: ${var.managed_prometheus_workspace_region}
+      AMP_ENDPOINT_URL: ${var.managed_prometheus_workspace_endpoint}
+      AMG_ENDPOINT_URL: ${var.grafana_url}
+      GRAFANA_NGINX_DASH_URL: ${var.grafana_dashboard_url}
+YAML
+  count      = var.enable_dashboards ? 1 : 0
 }

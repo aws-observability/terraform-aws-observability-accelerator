@@ -188,16 +188,15 @@ module "java_monitoring" {
   managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
   enable_alerting_rules           = var.java_config.enable_alerting_rules
   enable_recording_rules          = var.java_config.enable_recording_rules
-  dashboards_folder_id            = var.dashboards_folder_id
 }
 
 module "nginx_monitoring" {
   source = "./patterns/nginx"
   count  = var.enable_nginx ? 1 : 0
+  enable_dashboards = var.enable_dashboards
 
   managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
   enable_alerting_rules           = var.nginx_config.enable_alerting_rules
-  dashboards_folder_id            = var.dashboards_folder_id
 }
 
 module "fluentbit_logs" {

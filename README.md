@@ -25,7 +25,7 @@ To explore the complete project documentation, please visit our [documentation s
 
 ## Getting started
 
-To quickstart with a complete workflow and view Amazon EKS infrastructure dashboards,
+To quick start with a complete workflow and view Amazon EKS infrastructure dashboards,
 visit the [Amazon EKS cluster monitoring documentation](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/)
 
 ## How it works
@@ -39,8 +39,9 @@ v2+ releases introduces couple of breaking changes compared to previous versions
 
 - `modules/workloads/infra` module moves to `modules/eks-monitoring`
 - All EKS configuration options moves from the base  module to the `eks-monitoring` module
-- All EKS workload modules `modules/workloads/{java,nginx}` merge into `eks-monitoring` as configuration options (patterns), see [examples](./examples) to provide a more complete visiblity
+- All EKS workload modules `modules/workloads/{java,nginx}` merge into `eks-monitoring` as configuration options (patterns), see [examples](./examples) to provide a more complete visibility
 - All examples have been updated to reflect these changes
+- Introducing GitOps for Grafana contents (Dashboards, Folders and Data sources) with [Grafana Operator](https://github.com/grafana-operator/grafana-operator) and [Flux CD](https://fluxcd.io/)
 
 ### Base Module
 

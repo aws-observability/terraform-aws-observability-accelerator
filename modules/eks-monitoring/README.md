@@ -12,6 +12,8 @@ This module provides EKS cluster monitoring with the following resources:
 
 This module makes use of the open source [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
 
+See examples using this Terraform modules in the **Amazon EKS** section of [this documentation](https://aws-observability.github.io/terraform-aws-observability-accelerator/)
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
@@ -121,83 +123,3 @@ This module makes use of the open source [kube-prometheus-stack](https://github.
 | <a name="output_eks_cluster_version"></a> [eks\_cluster\_version](#output\_eks\_cluster\_version) | EKS Cluster version |
 | <a name="output_grafana_dashboard_urls"></a> [grafana\_dashboard\_urls](#output\_grafana\_dashboard\_urls) | URLs for dashboards created |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-
-## Troubleshooting
-
-1. When you upgrade the eks-monitoring module from v2.1.0 or earlier, the following error may occur.
-
-```bash
-Error: cannot patch "prometheus-node-exporter" with kind DaemonSet: DaemonSet.apps "prometheus-node-exporter" is invalid: spec.selector: Invalid value: v1.LabelSelector{MatchLabels:map[string]string{"app.kubernetes.io/instance":"prometheus-node-exporter", "app.kubernetes.io/name":"prometheus-node-exporter"}, MatchExpressions:[]v1.LabelSelectorRequirement(nil)}: field is immutable
-```
-
-This is due to the upgrade of the node-exporter chart from v2 to v4. Manually delete the node-exporter's DaemonSet as described in [the link here](https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-node-exporter#3x-to-4x), and then apply.
-
-```bash
-kubectl -n prometheus-node-exporter delete daemonset -l app=prometheus-node-exporter
-terraform apply
-```
-
-2. In case you dont see the grafana dashboards in your Amazon Managed Grafana console, check on the logs on your grafana operator pod using the below command :
-
-```bash
-kubectl get pods -n grafana-operator
-```
-
-Output:
-
-```
-NAME                                READY   STATUS    RESTARTS   AGE
-grafana-operator-866d4446bb-nqq5c   1/1     Running   0          3h17m
-```
-
-```bash
-kubectl logs grafana-operator-866d4446bb-nqq5c -n grafana-operator
-```
-
-Output:
-
-```
-1.6857285045556655e+09	ERROR	error reconciling datasource	{"controller": "grafanadatasource", "controllerGroup": "grafana.integreatly.org", "controllerKind": "GrafanaDatasource", "GrafanaDatasource": {"name":"grafanadatasource-sample-amp","namespace":"grafana-operator"}, "namespace": "grafana-operator", "name": "grafanadatasource-sample-amp", "reconcileID": "72cfd60c-a255-44a1-bfbd-88b0cbc4f90c", "datasource": "grafanadatasource-sample-amp", "grafana": "external-grafana", "error": "status: 401, body: {\"message\":\"Expired API key\"}\n"}
-github.com/grafana-operator/grafana-operator/controllers.(*GrafanaDatasourceReconciler).Reconcile
-```
-
-If you observe, the the above `grafana-api-key error` in the logs, your grafana API key is expired. Please use the operational procedure to update your `grafana-api-key` :
-
-- First, lets create a new Grafana API key.
-
-```bash
-export GO_AMG_API_KEY=$(aws grafana create-workspace-api-key \
-  --key-name "grafana-operator-key-new" \
-  --key-role "ADMIN" \
-  --seconds-to-live 432000 \
-  --workspace-id <YOUR_WORKSPACE_ID> \
-  --query key \
-  --output text)
-```
-
-- Next, lets grab the Grafana API key secret name from AWS Secrets Manager. The keyname should start with `terraform-..`
-
-```bash
-aws secretsmanager list-secrets
-```
-
-- Finally, update the Grafana API key secret in AWS Secrets Manager using the above new Grafana API key:
-
-```bash
-aws secretsmanager update-secret \
-    --secret-id  <Your Secret Name> \
-    --secret-string "${GO_AMG_API_KEY}" \
-    --region <Your AWS Region>
-```
-
-## Grafana datasources and dashboards via GitOps on Amazon Managed Grafana
-
-We have upgraded out solution to use [grafana-operator](https://github.com/grafana-operator/grafana-operator#:~:text=The%20grafana%2Doperator%20is%20a,an%20easy%20and%20scalable%20way.) and [Flux](https://fluxcd.io/) to create Grafana datasources, folder and dashboards via GitOps on Amazon Managed Grafana.
-
-The grafana-operator is a Kubernetes operator built to help you manage your Grafana instances inside and outside Kubernetes. Grafana Operator makes it possible for you to manage and create Grafana dashboards, datasources etc. declaratively between multiple instances in an easy and scalable way. Using grafana-operator it will be possible to add AWS data sources such as Amazon Managed Service for Prometheus, Amazon CloudWatch, AWS X-Ray to Amazon Managed Grafana and create Grafana dashboards on Amazon Managed Grafana from your Amazon EKS cluster. This enables us to use our Kubernetes cluster to create and manage the lifecycle of resources in Amazon Managed Grafana in a Kubernetes native way. This ultimately enables us to use GitOps mechanisms using CNCF projects such as Flux  to create and manage the lifecycle of resources in Amazon Managed Grafana.
-
-GitOps is a way of managing application and infrastructure deployment so that the whole system is described declaratively in a Git repository. It is an operational model that offers you the ability to manage the state of multiple Kubernetes clusters leveraging the best practices of version control, immutable artifacts, and automation. Flux  is a declarative, GitOps-based continuous delivery tool that can be integrated into any CI/CD pipeline. It gives users the flexibility of choosing their Git provider (GitHub, GitLab, BitBucket). Now, with grafana-operator supporting the management of external Grafana instances such as Amazon Managed Grafana, operations personas can use GitOps mechanisms using CNCF projects such as Flux to create and manage the lifecycle of resources in Amazon Managed Grafana.
-
-We have setup a [GitRepository](https://fluxcd.io/flux/components/source/gitrepositories/) and [Kustomization](https://fluxcd.io/flux/components/kustomize/kustomization/) using flux to sync our GitHub Repository to add Grafana Datasources, folder and Dashboards to Amazon Managed Grafana using Grafana Operator. GitRepository defines a Source to produce an Artifact for a Git repository revision. Kustomization defines a pipeline for fetching, decrypting, building, validating and applying Kustomize overlays or plain Kubernetes manifests. we are also using [Flux Post build variable substitution](https://fluxcd.io/flux/components/kustomize/kustomization/#post-build-variable-substitution) to dynamically render variables such as AMG_AWS_REGION, AMP_ENDPOINT_URL, AMG_ENDPOINT_URL,GRAFANA_NODEEXP_DASH_URL on the YAML manifests during deployment time to avoid hardcoding on the YAML manifests stored in Git repo.
-
-We have placed our declarative code snippet to create an Amazon Managed Service For Promethes datasource and Grafana Dashboard in Amazon Managed Grafana in our [AWS Observabiity Accelerator GitHub Repository](https://github.com/aws-observability/aws-observability-accelerator/tree/main/artifacts/grafana-operator-manifests). We have setup a GitRepository to point to the AWS Observabiity Accelerator GitHub Repository and `Kustomization` for flux to sync Git Repository with artifacts in `./artifacts/grafana-operator-manifests` path in the AWS Observabiity Accelerator GitHub Repository. You can use this extension of our solution to point your own Kubernetes manifests to create Grafana Datasources and personified Grafana Dashboards of your choice using GitOps with Grafana Operator and Flux in Kubernetes native way with altering and redeploying this solution for changes to Grafana resources.

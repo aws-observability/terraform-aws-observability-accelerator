@@ -1,8 +1,8 @@
 resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
-  count = var.enable_alerting_rules ? 1 : 0
+  count = var.pattern_config.enable_alerting_rules ? 1 : 0
 
   name         = "accelerator-nginx-alerting"
-  workspace_id = var.managed_prometheus_workspace_id
+  workspace_id = var.pattern_config.managed_prometheus_workspace_id
   data         = <<EOF
 groups:
     - name: Nginx-HTTP-4xx-error-rate
@@ -38,43 +38,46 @@ groups:
 EOF
 }
 
-
 resource "kubectl_manifest" "flux_gitrepository" {
-  yaml_body  = <<YAML
+  count = var.pattern_config.enable_dashboards ? 1 : 0
+
+  yaml_body = <<YAML
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: GitRepository
 metadata:
-  name: ${var.flux_name}
+  name: ${var.pattern_config.flux_name}
   namespace: flux-system
 spec:
   interval: 5m0s
-  url: ${var.flux_gitrepository_url}
+  url: ${var.pattern_config.flux_gitrepository_url}
   ref:
-    branch: ${var.flux_gitrepository_branch}
+    branch: ${var.pattern_config.flux_gitrepository_branch}
 YAML
-  count      = var.enable_dashboards ? 1 : 0
+
 }
 
 resource "kubectl_manifest" "flux_kustomization" {
-  yaml_body  = <<YAML
+  count = var.pattern_config.enable_dashboards ? 1 : 0
+
+  yaml_body = <<YAML
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: ${var.flux_name}
+  name: ${var.pattern_config.flux_name}
   namespace: flux-system
 spec:
   interval: 1m0s
-  path: ${var.flux_kustomization_path}
+  path: ${var.pattern_config.flux_kustomization_path}
   prune: true
   sourceRef:
     kind: GitRepository
-    name: ${var.flux_name}
+    name: ${var.pattern_config.flux_name}
   postBuild:
     substitute:
-      AMG_AWS_REGION: ${var.managed_prometheus_workspace_region}
-      AMP_ENDPOINT_URL: ${var.managed_prometheus_workspace_endpoint}
-      AMG_ENDPOINT_URL: ${var.grafana_url}
-      GRAFANA_NGINX_DASH_URL: ${var.grafana_dashboard_url}
+      AMG_AWS_REGION: ${var.pattern_config.managed_prometheus_workspace_region}
+      AMP_ENDPOINT_URL: ${var.pattern_config.managed_prometheus_workspace_endpoint}
+      AMG_ENDPOINT_URL: ${var.pattern_config.grafana_url}
+      GRAFANA_NGINX_DASH_URL: ${var.pattern_config.grafana_dashboard_url}
 YAML
-  count      = var.enable_dashboards ? 1 : 0
+
 }

@@ -29,4 +29,46 @@ locals {
     irsa_iam_role_path             = var.irsa_iam_role_path
     irsa_iam_permissions_boundary  = var.irsa_iam_permissions_boundary
   }
+
+  java_pattern_config = {
+    enable_alerting_rules  = var.java_config.enable_alerting_rules
+    enable_recording_rules = var.java_config.enable_recording_rules
+    enable_dashboards      = var.java_config.enable_dashboards
+
+    scrape_sample_limit = var.java_config.scrape_sample_limit
+
+    flux_name                 = var.java_config.flux_name
+    flux_gitrepository_url    = var.java_config.flux_gitrepository_url
+    flux_gitrepository_branch = var.java_config.flux_gitrepository_branch
+    flux_kustomization_path   = var.java_config.flux_kustomization_path
+
+    managed_prometheus_workspace_id       = var.managed_prometheus_workspace_id
+    managed_prometheus_workspace_region   = var.managed_prometheus_workspace_region
+    managed_prometheus_workspace_endpoint = var.managed_prometheus_workspace_endpoint
+    prometheus_metrics_endpoint           = var.java_config.prometheus_metrics_endpoint
+
+    grafana_url           = var.grafana_url
+    grafana_dashboard_url = var.java_config.grafana_dashboard_url
+  }
+
+  nginx_pattern_config = {
+    enable_alerting_rules  = var.nginx_config.enable_alerting_rules
+    enable_recording_rules = var.nginx_config.enable_recording_rules
+    enable_dashboards      = var.java_config.enable_dashboards
+
+    scrape_sample_limit = var.nginx_config.scrape_sample_limit
+
+    flux_name                 = var.nginx_config.flux_name
+    flux_gitrepository_url    = var.nginx_config.flux_gitrepository_url
+    flux_gitrepository_branch = var.nginx_config.flux_gitrepository_branch
+    flux_kustomization_path   = var.nginx_config.flux_kustomization_path
+
+    managed_prometheus_workspace_id       = var.managed_prometheus_workspace_id
+    managed_prometheus_workspace_region   = var.managed_prometheus_workspace_region
+    managed_prometheus_workspace_endpoint = var.managed_prometheus_workspace_endpoint
+    prometheus_metrics_endpoint           = var.nginx_config.prometheus_metrics_endpoint
+
+    grafana_url           = var.grafana_url
+    grafana_dashboard_url = var.java_config.grafana_dashboard_url
+  }
 }

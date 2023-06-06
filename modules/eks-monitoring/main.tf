@@ -151,6 +151,10 @@ module "helm_addon" {
       value = var.java_config.scrape_sample_limit
     },
     {
+      name  = "javaPrometheusMetricsEndpoint"
+      value = var.java_config.prometheus_metrics_endpoint
+    },
+    {
       name  = "enable_nginx"
       value = var.enable_nginx
     },
@@ -161,7 +165,7 @@ module "helm_addon" {
     {
       name  = "nginxPrometheusMetricsEndpoint"
       value = var.nginx_config.prometheus_metrics_endpoint
-    }
+    },
   ]
 
   irsa_config = {
@@ -181,22 +185,23 @@ module "helm_addon" {
 }
 
 module "java_monitoring" {
-  source            = "./patterns/java"
-  count             = var.enable_java ? 1 : 0
-  enable_dashboards = var.enable_dashboards
+  source = "./patterns/java"
+  count  = var.enable_java ? 1 : 0
+  # enable_dashboards = var.enable_dashboards
 
-  managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
-  enable_alerting_rules           = var.java_config.enable_alerting_rules
-  enable_recording_rules          = var.java_config.enable_recording_rules
+  # managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+
+  pattern_config = local.java_pattern_config
+
 }
 
 module "nginx_monitoring" {
   source = "./patterns/nginx"
   count  = var.enable_nginx ? 1 : 0
-  enable_dashboards = var.enable_dashboards
 
-  managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
-  enable_alerting_rules           = var.nginx_config.enable_alerting_rules
+  # enable_alerting_rules = var.nginx_config.enable_alerting_rules
+
+  pattern_config = local.nginx_pattern_config
 }
 
 module "fluentbit_logs" {

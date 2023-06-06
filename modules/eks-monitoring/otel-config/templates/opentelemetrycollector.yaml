@@ -1704,6 +1704,7 @@ spec:
             {{ if .Values.enableJava }}
             - job_name: 'kubernetes-java-jmx'
               sample_limit: {{ .Values.javaScrapeSampleLimit }}
+              metrics_path: {{ .Values.javaPrometheusMetricsEndpoint }}
               kubernetes_sd_configs:
                 - role: pod
               relabel_configs:
@@ -1736,7 +1737,7 @@ spec:
             {{ if .Values.enableNginx }}
             - job_name: 'kubernetes-nginx'
               sample_limit: {{ .Values.nginxScrapeSampleLimit }}
-              metrics_path: /{{ .Values.nginxPrometheusMetricsEndpoint }}
+              metrics_path: {{ .Values.nginxPrometheusMetricsEndpoint }}
               kubernetes_sd_configs:
                 - role: pod
               relabel_configs:

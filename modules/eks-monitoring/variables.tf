@@ -244,14 +244,35 @@ variable "java_config" {
   type = object({
     enable_alerting_rules  = bool
     enable_recording_rules = bool
+    enable_dashboards      = bool
     scrape_sample_limit    = number
+
+    flux_name                 = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_path   = string
+
+    grafana_dashboard_url = string
+
+    prometheus_metrics_endpoint = string
   })
 
   default = {
     enable_alerting_rules  = true
     enable_recording_rules = true
+    enable_dashboards      = true
     scrape_sample_limit    = 1000
+
+    flux_name                 = "grafana-java-dashboards"
+    flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
+    flux_gitrepository_branch = "import-dashboards"
+    flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/java"
+
+    grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/java/default.json"
+
+    prometheus_metrics_endpoint = "/metrics"
   }
+  nullable = false
 }
 
 variable "enable_nginx" {
@@ -260,19 +281,41 @@ variable "enable_nginx" {
   default     = false
 }
 
+
 variable "nginx_config" {
   description = "Configuration object for NGINX monitoring"
   type = object({
-    enable_alerting_rules       = bool
-    scrape_sample_limit         = number
+    enable_alerting_rules  = bool
+    enable_recording_rules = bool
+    enable_dashboards      = bool
+    scrape_sample_limit    = number
+
+    flux_name                 = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_path   = string
+
+    grafana_dashboard_url = string
+
     prometheus_metrics_endpoint = string
   })
 
   default = {
-    enable_alerting_rules       = true
-    scrape_sample_limit         = 1000
-    prometheus_metrics_endpoint = "metrics"
+    enable_alerting_rules  = true
+    enable_recording_rules = true
+    enable_dashboards      = true
+    scrape_sample_limit    = 1000
+
+    flux_name                 = "grafana-nginx-dashboards"
+    flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
+    flux_gitrepository_branch = "import-dashboards"
+    flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/nginx"
+
+    grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/nginx/nginx.json"
+
+    prometheus_metrics_endpoint = "/metrics"
   }
+  nullable = false
 }
 
 variable "enable_logs" {

@@ -1,48 +1,25 @@
-variable "enable_alerting_rules" {
-  description = "Enables or disables Managed Prometheus alerting rules"
-  type        = bool
-  default     = true
-}
+variable "pattern_config" {
+  description = "Configuration object for Java/JMX monitoring"
+  type = object({
+    enable_alerting_rules  = bool
+    enable_recording_rules = bool
+    scrape_sample_limit    = number
 
-variable "enable_recording_rules" {
-  description = "Enables or disables Managed Prometheus recording rules"
-  type        = bool
-  default     = true
-}
+    enable_recording_rules = bool
 
-variable "managed_prometheus_workspace_id" {
-  description = "Amazon Managed Prometheus Workspace ID"
-  type        = string
-  default     = null
-}
+    enable_dashboards = bool
 
-variable "enable_dashboards" {
-  description = "Enables or disables curated dashboards"
-  type        = bool
-  default     = true
-}
+    flux_name                 = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_path   = string
 
-variable "flux_name" {
-  description = "Flux GitRepository and Kustomization Name"
-  type        = string
-  default     = "grafana-dashboards"
-}
+    managed_prometheus_workspace_id       = string
+    managed_prometheus_workspace_region   = string
+    managed_prometheus_workspace_endpoint = string
 
-variable "flux_gitrepository_url" {
-  description = "Flux GitRepository URL"
-  type        = string
-  default     = "https://github.com/aws-observability/aws-observability-accelerator"
+    grafana_url           = string
+    grafana_dashboard_url = string
+  })
+  nullable = false
 }
-
-variable "flux_gitrepository_branch" {
-  description = "Flux GitRepository Branch"
-  type        = string
-  default     = "main"
-}
-
-variable "flux_kustomization_path" {
-  description = "Flux Kustomization Path"
-  type        = string
-  default     = "./artifacts/grafana-operator-manifests"
-}
-

@@ -5,6 +5,11 @@ resource "aws_prometheus_workspace" "this" {
   tags  = var.tags
 }
 
+provider "grafana" {
+  url  = local.amg_ws_endpoint
+  auth = var.grafana_api_key
+}
+
 resource "aws_prometheus_alert_manager_definition" "this" {
   count = var.enable_alertmanager ? 1 : 0
 

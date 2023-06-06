@@ -22,3 +22,8 @@ output "prometheus_data_source_created" {
   description = "Boolean value indicating if the module created a prometheus data source in Amazon Managed Grafana"
   value       = var.create_prometheus_data_source
 }
+
+output "managed_grafana_workspace_endpoint" {
+  description = "Amazon Managed Grafana workspace endpoint"
+  value       = local.amg_ws_endpoint
+}

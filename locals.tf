@@ -12,7 +12,6 @@ locals {
   amp_ws_endpoint = "https://aps-workspaces.${local.amp_ws_region}.amazonaws.com/workspaces/${local.amp_ws_id}/"
 
   amg_ws_endpoint = "https://${data.aws_grafana_workspace.this.endpoint}"
-  amg_ws_id       = var.managed_grafana_workspace_id
 
   name = "aws-observability-accelerator"
 }

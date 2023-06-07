@@ -36,12 +36,11 @@ resource "aws_iam_policy" "cluster_secretstore" {
     {
       "Effect": "Allow",
       "Action": [
-        "secretsmanager:GetResourcePolicy",
-        "secretsmanager:GetSecretValue",
-        "secretsmanager:DescribeSecret",
-        "secretsmanager:ListSecretVersionIds"
+        "ssm:Describe*",
+        "ssm:Get*",
+        "ssm:List*"
       ],
-      "Resource": "${aws_secretsmanager_secret.secret.arn}"
+      "Resource": "${aws_ssm_parameter.secret.arn}"
     },
     {
       "Effect": "Allow",
@@ -75,17 +74,28 @@ YAML
   depends_on = [module.external_secrets]
 }
 
-resource "aws_secretsmanager_secret" "secret" {
-  recovery_window_in_days = 0
-  kms_key_id              = aws_kms_key.secrets.arn
-}
+# resource "aws_secretsmanager_secret" "secret" {
+#   recovery_window_in_days = 0
+#   kms_key_id              = aws_kms_key.secrets.arn
+# }
 
-resource "aws_secretsmanager_secret_version" "secret" {
-  secret_id = aws_secretsmanager_secret.secret.id
-  secret_string = jsonencode({
+# resource "aws_secretsmanager_secret_version" "secret" {
+#   secret_id = aws_secretsmanager_secret.secret.id
+#   secret_string = jsonencode({
+#     GF_SECURITY_ADMIN_APIKEY = var.grafana_api_key
+#   })
+# }
+
+resource "aws_ssm_parameter" "secret" {
+  name        = "/terraform-accelerator/grafana-api-key"
+  description = "SSM Secret to store grafana API Key"
+  type        = "SecureString"
+  value = jsonencode({
     GF_SECURITY_ADMIN_APIKEY = var.grafana_api_key
   })
-}
+  key_id = aws_kms_key.secrets.id
+  overwrite = true
+} 
 
 resource "kubectl_manifest" "secret" {
   yaml_body  = <<YAML
@@ -103,7 +113,7 @@ spec:
     name: ${var.target_secret_name}
   dataFrom:
   - extract:
-      key: ${aws_secretsmanager_secret.secret.name}
+      key: ${aws_ssm_parameter.secret.name}
 YAML
   depends_on = [module.external_secrets]
 }

@@ -210,8 +210,8 @@ variable "tracing_config" {
   })
 
   default = {
-    otlp_grpc_endpoint = "0.0.0.0:4317"
-    otlp_http_endpoint = "0.0.0.0:4318"
+    otlp_grpc_endpoint = "localhost:4317"
+    otlp_http_endpoint = "localhost:4318"
     send_batch_size    = 50
     timeout            = "30s"
   }

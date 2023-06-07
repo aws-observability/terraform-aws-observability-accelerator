@@ -113,7 +113,7 @@ See examples using this Terraform modules in the **Amazon EKS** section of [this
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | `map(string)` | `{}` | no |
 | <a name="input_target_secret_name"></a> [target\_secret\_name](#input\_target\_secret\_name) | Target secret in Kubernetes to store the Grafana API Key Secret | `string` | `"grafana-admin-credentials"` | no |
 | <a name="input_target_secret_namespace"></a> [target\_secret\_namespace](#input\_target\_secret\_namespace) | Target namespace of secret in Kubernetes to store the Grafana API Key Secret | `string` | `"grafana-operator"` | no |
-| <a name="input_tracing_config"></a> [tracing\_config](#input\_tracing\_config) | Configuration object for traces collection to AWS X-Ray | <pre>object({<br>    otlp_grpc_endpoint = string<br>    otlp_http_endpoint = string<br>    send_batch_size    = number<br>    timeout            = string<br>  })</pre> | <pre>{<br>  "otlp_grpc_endpoint": "0.0.0.0:4317",<br>  "otlp_http_endpoint": "0.0.0.0:4318",<br>  "send_batch_size": 50,<br>  "timeout": "30s"<br>}</pre> | no |
+| <a name="input_tracing_config"></a> [tracing\_config](#input\_tracing\_config) | Configuration object for traces collection to AWS X-Ray | <pre>object({<br>    otlp_grpc_endpoint = string<br>    otlp_http_endpoint = string<br>    send_batch_size    = number<br>    timeout            = string<br>  })</pre> | <pre>{<br>  "otlp_grpc_endpoint": "localhost:4317",<br>  "otlp_http_endpoint": "localhost:4318",<br>  "send_batch_size": 50,<br>  "timeout": "30s"<br>}</pre> | no |
 
 ## Outputs
 

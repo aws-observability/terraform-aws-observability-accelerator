@@ -86,6 +86,7 @@ module "eks_monitoring" {
   target_secret_namespace = "grafana-operator"
   grafana_url             = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
 
+  # control the publishing of dashboards by specifying the boolean value for the variable 'enable_dashboards', default is 'true'
   enable_dashboards = var.enable_dashboards
 
   managed_prometheus_workspace_id = module.aws_observability_accelerator.managed_prometheus_workspace_id

@@ -79,8 +79,7 @@ module "eks_monitoring" {
   eks_cluster_id = var.eks_cluster_id
 
   # control the publishing of dashboards by specifying the boolean value for the variable 'enable_dashboards', default is 'true'
-  # the intention to publish is overruled depending upon whether grafana dashboard folder is created by the observability accelerator
-  enable_dashboards = module.aws_observability_accelerator.grafana_dashboard_folder_created ? var.enable_dashboards : false
+  enable_dashboards = var.enable_dashboards
 
   managed_prometheus_workspace_id = module.aws_observability_accelerator.managed_prometheus_workspace_id
 

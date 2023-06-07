@@ -227,7 +227,7 @@ aws secretsmanager list-secrets
 ```bash
 aws secretsmanager update-secret \
     --secret-id  <Your Secret Name> \
-    --secret-string "${GO_AMG_API_KEY}" \
+    --secret-string "{\"GF_SECURITY_ADMIN_APIKEY\": \"${GO_AMG_API_KEY}\"}" \
     --region <Your AWS Region>
 ```
 

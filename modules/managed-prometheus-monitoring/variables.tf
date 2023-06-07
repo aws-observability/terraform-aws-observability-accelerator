@@ -19,3 +19,9 @@ variable "ingestion_rate_threshold" {
   type        = number
   default     = 70000
 }
+
+variable "dashboards_folder_id" {
+  description = "Grafana folder ID for automatic dashboards"
+  default     = "0"
+  type        = string
+}

@@ -96,7 +96,6 @@ module "eks_monitoring" {
 
   # reusing existing Amazon Managed Grafana workspace
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
-  grafana_api_key              = var.grafana_api_key
 
   enable_logs = true
 

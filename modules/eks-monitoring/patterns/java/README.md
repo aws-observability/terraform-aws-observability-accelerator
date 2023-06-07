@@ -22,7 +22,7 @@ Provides monitoring for Java based workloads with the following resources:
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0.0 |
-| <a name="provider_grafana"></a> [grafana](#provider\_grafana) | >= 1.25.0 |
+| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >= 1.14 |
 
 ## Modules
 
@@ -34,21 +34,15 @@ No modules.
 |------|------|
 | [aws_prometheus_rule_group_namespace.alerting_rules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
 | [aws_prometheus_rule_group_namespace.recording_rules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [grafana_dashboard.this](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/dashboard) | resource |
+| [kubectl_manifest.flux_kustomization](https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs/resources/manifest) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_dashboards_folder_id"></a> [dashboards\_folder\_id](#input\_dashboards\_folder\_id) | Grafana folder ID for automatic dashboards | `string` | n/a | yes |
-| <a name="input_enable_alerting_rules"></a> [enable\_alerting\_rules](#input\_enable\_alerting\_rules) | Enables or disables Managed Prometheus alerting rules | `bool` | `true` | no |
-| <a name="input_enable_dashboards"></a> [enable\_dashboards](#input\_enable\_dashboards) | Enables or disables curated dashboards | `bool` | `true` | no |
-| <a name="input_enable_recording_rules"></a> [enable\_recording\_rules](#input\_enable\_recording\_rules) | Enables or disables Managed Prometheus recording rules | `bool` | `true` | no |
-| <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus Workspace ID | `string` | `null` | no |
+| <a name="input_pattern_config"></a> [pattern\_config](#input\_pattern\_config) | Configuration object for Java/JMX monitoring | <pre>object({<br>    enable_alerting_rules  = bool<br>    enable_recording_rules = bool<br>    scrape_sample_limit    = number<br><br>    enable_recording_rules = bool<br><br>    enable_dashboards = bool<br><br>    flux_gitrepository_name   = string<br>    flux_gitrepository_url    = string<br>    flux_gitrepository_branch = string<br>    flux_kustomization_name   = string<br>    flux_kustomization_path   = string<br><br>    managed_prometheus_workspace_id       = string<br>    managed_prometheus_workspace_region   = string<br>    managed_prometheus_workspace_endpoint = string<br><br>    grafana_url           = string<br>    grafana_dashboard_url = string<br>  })</pre> | n/a | yes |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_grafana_dashboard_urls"></a> [grafana\_dashboard\_urls](#output\_grafana\_dashboard\_urls) | URLs for dashboards created |
+No outputs.
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

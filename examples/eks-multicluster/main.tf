@@ -34,13 +34,6 @@ module "eks_cluster_1_monitoring" {
   managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
   grafana_url                           = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
 
-  java_config = {
-    enable_alerting_rules  = true
-    enable_recording_rules = true
-    enable_dashboards      = true
-    scrape_sample_limit    = 1
-  }
-
   prometheus_config = {
     global_scrape_interval = "60s"
     global_scrape_timeout  = "15s"
@@ -78,13 +71,6 @@ module "eks_cluster_2_monitoring" {
   managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
   managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
   grafana_url                           = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
-
-  java_config = {
-    enable_alerting_rules  = false # addressed while setting up the eks_cluster_1 EKS cluster
-    enable_recording_rules = false # addressed while setting up the eks_cluster_1 EKS cluster
-    enable_dashboards      = false
-    scrape_sample_limit    = 1
-  }
 
   prometheus_config = {
     global_scrape_interval = "60s"

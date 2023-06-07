@@ -31,46 +31,50 @@ locals {
   }
 
   java_pattern_config = {
-    enable_alerting_rules  = var.java_config.enable_alerting_rules
-    enable_recording_rules = var.java_config.enable_recording_rules
-    enable_dashboards      = var.java_config.enable_dashboards
+    # disabled if options from module are disabled, by default
+    # can be overriden by providing a config
+    enable_alerting_rules  = var.enable_alerting_rules
+    enable_recording_rules = var.enable_recording_rules
+    enable_dashboards      = var.enable_dashboards # disable flux kustomization if dashboards are disabled
 
-    scrape_sample_limit = var.java_config.scrape_sample_limit
+    scrape_sample_limit = 1000
 
-    flux_kustomization_name   = var.java_config.flux_kustomization_name
-    flux_gitrepository_name   = var.java_config.flux_gitrepository_name
-    flux_gitrepository_url    = var.java_config.flux_gitrepository_url
-    flux_gitrepository_branch = var.java_config.flux_gitrepository_branch
-    flux_kustomization_path   = var.java_config.flux_kustomization_path
+    flux_gitrepository_name   = "aws-observability-accelerator"
+    flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
+    flux_gitrepository_branch = "import-dashboards"
+    flux_kustomization_name   = "grafana-dashboards-java"
+    flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/java"
 
     managed_prometheus_workspace_id       = var.managed_prometheus_workspace_id
     managed_prometheus_workspace_region   = var.managed_prometheus_workspace_region
     managed_prometheus_workspace_endpoint = var.managed_prometheus_workspace_endpoint
-    prometheus_metrics_endpoint           = var.java_config.prometheus_metrics_endpoint
+    prometheus_metrics_endpoint           = "/metrics"
 
     grafana_url           = var.grafana_url
-    grafana_dashboard_url = var.java_config.grafana_dashboard_url
+    grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/java/default.json"
   }
 
   nginx_pattern_config = {
-    enable_alerting_rules  = var.nginx_config.enable_alerting_rules
-    enable_recording_rules = var.nginx_config.enable_recording_rules
-    enable_dashboards      = var.java_config.enable_dashboards
+    # disabled if options from module are disabled, by default
+    # can be overriden by providing a config
+    enable_alerting_rules  = var.enable_alerting_rules
+    enable_recording_rules = var.enable_recording_rules
+    enable_dashboards      = var.enable_dashboards
 
-    scrape_sample_limit = var.nginx_config.scrape_sample_limit
+    scrape_sample_limit = 1000
 
-    flux_kustomization_name   = var.nginx_config.flux_kustomization_name
-    flux_gitrepository_url    = var.nginx_config.flux_gitrepository_url
-    flux_gitrepository_name   = var.nginx_config.flux_gitrepository_name
-    flux_gitrepository_branch = var.nginx_config.flux_gitrepository_branch
-    flux_kustomization_path   = var.nginx_config.flux_kustomization_path
+    flux_gitrepository_name   = "aws-observability-accelerator"
+    flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
+    flux_gitrepository_branch = "import-dashboards"
+    flux_kustomization_name   = "grafana-dashboards-nginx"
+    flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/nginx"
 
     managed_prometheus_workspace_id       = var.managed_prometheus_workspace_id
     managed_prometheus_workspace_region   = var.managed_prometheus_workspace_region
     managed_prometheus_workspace_endpoint = var.managed_prometheus_workspace_endpoint
-    prometheus_metrics_endpoint           = var.nginx_config.prometheus_metrics_endpoint
+    prometheus_metrics_endpoint           = "/metrics"
 
     grafana_url           = var.grafana_url
-    grafana_dashboard_url = var.java_config.grafana_dashboard_url
+    grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/nginx/nginx.json"
   }
 }

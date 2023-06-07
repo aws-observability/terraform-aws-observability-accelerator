@@ -148,11 +148,11 @@ module "helm_addon" {
     },
     {
       name  = "javaScrapeSampleLimit"
-      value = var.java_config.scrape_sample_limit
+      value = try(var.java_config.scrape_sample_limit, local.java_pattern_config.scrape_sample_limit)
     },
     {
       name  = "javaPrometheusMetricsEndpoint"
-      value = var.java_config.prometheus_metrics_endpoint
+      value = try(var.java_config.prometheus_metrics_endpoint, local.java_pattern_config.prometheus_metrics_endpoint)
     },
     {
       name  = "enable_nginx"
@@ -160,11 +160,11 @@ module "helm_addon" {
     },
     {
       name  = "nginxScrapeSampleLimit"
-      value = var.nginx_config.scrape_sample_limit
+      value = try(var.nginx_config.scrape_sample_limit, local.nginx_pattern_config.scrape_sample_limit)
     },
     {
       name  = "nginxPrometheusMetricsEndpoint"
-      value = var.nginx_config.prometheus_metrics_endpoint
+      value = try(var.nginx_config.prometheus_metrics_endpoint, local.nginx_pattern_config.prometheus_metrics_endpoint)
     },
   ]
 
@@ -188,7 +188,7 @@ module "java_monitoring" {
   source = "./patterns/java"
   count  = var.enable_java ? 1 : 0
 
-  pattern_config = local.java_pattern_config
+  pattern_config = coalesce(var.java_config, local.java_pattern_config)
 
 }
 
@@ -196,7 +196,7 @@ module "nginx_monitoring" {
   source = "./patterns/nginx"
   count  = var.enable_nginx ? 1 : 0
 
-  pattern_config = local.nginx_pattern_config
+  pattern_config = coalesce(var.nginx_config, local.nginx_pattern_config)
 }
 
 module "fluentbit_logs" {

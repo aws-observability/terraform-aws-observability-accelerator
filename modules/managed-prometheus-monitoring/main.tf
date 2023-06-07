@@ -14,12 +14,12 @@ resource "grafana_data_source" "cloudwatch" {
 
   # Giving priority to Managed Prometheus datasources
   is_default = false
-  json_data {
+  json_data_encoded = jsonencode({
     default_region  = var.aws_region
     sigv4_auth      = true
     sigv4_auth_type = "workspace-iam-role"
     sigv4_region    = var.aws_region
-  }
+  })
 }
 
 data "http" "dashboard" {

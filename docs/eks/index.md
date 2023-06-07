@@ -14,7 +14,7 @@ The Amazon EKS infrastructure Terraform modules focuses on metrics collection to
 Managed Service for Prometheus using the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) for Amazon EKS. It deploys the [node exporter](https://github.com/prometheus/node_exporter) and [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics) in your cluster.
 
 It provides default dashboards to get a comprehensible visibility on your nodes,
-namespaces, pods, and kubelet operations health. Finally, you get curated Prometheus recording rules
+namespaces, pods, and Kubelet operations health. Finally, you get curated Prometheus recording rules
 and alerts to operate your cluster.
 
 Additionally, you can optionally collect custom Prometheus metrics from your applications running
@@ -72,9 +72,9 @@ aws amp create-workspace --alias observability-accelerator --query '.workspaceId
 
 #### 5. Amazon Managed Grafana workspace
 
-To run this example you need an Amazon Managed Grafana workspace. If you have
+To visualize metrics collected, you need an Amazon Managed Grafana workspace. If you have
 an existing workspace, create an environment variable as described below.
-To create a new workspace, visit our supporting example for Grafana.
+To create a new workspace, visit [our supporting example for Grafana](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/managed-grafana/)
 
 !!! note
     For the URL `https://g-xyz.grafana-workspace.eu-central-1.amazonaws.com`, the workspace ID would be `g-xyz`
@@ -91,8 +91,14 @@ run the `apply` or `destroy` command.
 
 Ensure you have necessary IAM permissions (`CreateWorkspaceApiKey, DeleteWorkspaceApiKey`)
 
+!!! note
+    Starting version v2.5.x and above, we use Grafana Operator and External Secrets to
+    manage Grafana contents. Your API Key will be stored securely on AWS Secrets Manager
+    and the Grafana Operator will use it to sync dashboards, folders and data sources.
+    Read more [here](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/).
+
 ```bash
-export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 1200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
+export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 7200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
 ```
 
 ## Deploy
@@ -105,10 +111,10 @@ terraform apply
 
 ## Visualization
 
-#### 1. Prometheus datasource on Grafana
+#### 1. Prometheus data source on Grafana
 
 Make sure to open the link in the output. After a successful deployment, this will open
-the Prometheus datasource configuration on Grafana.
+the Prometheus data source configuration on Grafana.
 Click `Save & test` and you should see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
 
 ```bash
@@ -135,7 +141,7 @@ Open the Amazon Managed Service for Prometheus console and view the details of y
     To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
 
 
-## Custom metrics collection
+## Custom Prometheus metrics collection
 
 In addition to the cluster metrics, if you are interested in collecting Prometheus
 metrics from your pods, you can use setup `custom metrics collection`.
@@ -169,6 +175,63 @@ sum(up{job="custom-metrics"}) by (container_name, cluster, nodename)
 <img width="2560" alt="Screenshot 2023-01-31 at 11 16 21" src="https://user-images.githubusercontent.com/10175027/215869004-e05f557d-c81a-41fb-a452-ede9f986cb27.png">
 
 ## Troubleshooting
+
+### 1. Grafana dashboards missing or Grafana API key expired
+
+In case you don't see the grafana dashboards in your Amazon Managed Grafana console, check on the logs on your grafana operator pod using the below command :
+
+```bash
+kubectl get pods -n grafana-operator
+```
+
+Output:
+
+```console
+NAME                                READY   STATUS    RESTARTS   AGE
+grafana-operator-866d4446bb-nqq5c   1/1     Running   0          3h17m
+```
+
+```bash
+kubectl logs grafana-operator-866d4446bb-nqq5c -n grafana-operator
+```
+
+Output:
+
+```console
+1.6857285045556655e+09	ERROR	error reconciling datasource	{"controller": "grafanadatasource", "controllerGroup": "grafana.integreatly.org", "controllerKind": "GrafanaDatasource", "GrafanaDatasource": {"name":"grafanadatasource-sample-amp","namespace":"grafana-operator"}, "namespace": "grafana-operator", "name": "grafanadatasource-sample-amp", "reconcileID": "72cfd60c-a255-44a1-bfbd-88b0cbc4f90c", "datasource": "grafanadatasource-sample-amp", "grafana": "external-grafana", "error": "status: 401, body: {\"message\":\"Expired API key\"}\n"}
+github.com/grafana-operator/grafana-operator/controllers.(*GrafanaDatasourceReconciler).Reconcile
+```
+
+If you observe, the the above `grafana-api-key error` in the logs, your grafana API key is expired. Please use the operational procedure to update your `grafana-api-key` :
+
+- First, lets create a new Grafana API key.
+
+```bash
+export GO_AMG_API_KEY=$(aws grafana create-workspace-api-key \
+  --key-name "grafana-operator-key-new" \
+  --key-role "ADMIN" \
+  --seconds-to-live 432000 \
+  --workspace-id <YOUR_WORKSPACE_ID> \
+  --query key \
+  --output text)
+```
+
+- Next, lets grab the Grafana API key secret name from AWS Secrets Manager. The keyname should start with `terraform-..`
+
+```bash
+aws secretsmanager list-secrets
+```
+
+- Finally, update the Grafana API key secret in AWS Secrets Manager using the above new Grafana API key:
+
+```bash
+aws secretsmanager update-secret \
+    --secret-id  <Your Secret Name> \
+    --secret-string "${GO_AMG_API_KEY}" \
+    --region <Your AWS Region>
+```
+
+### 2. Upgrade from 2.1.0 or earlier
 
 When you upgrade the eks-monitoring module from v2.1.0 or earlier, the following error may occur.
 

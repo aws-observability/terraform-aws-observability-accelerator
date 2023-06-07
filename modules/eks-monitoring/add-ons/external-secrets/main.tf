@@ -63,7 +63,7 @@ metadata:
 spec:
   provider:
     aws:
-      service: SecretsManager
+      service: ParameterStore
       region: ${data.aws_region.current.name}
       auth:
         jwt:

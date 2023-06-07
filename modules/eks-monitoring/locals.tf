@@ -37,7 +37,8 @@ locals {
 
     scrape_sample_limit = var.java_config.scrape_sample_limit
 
-    flux_name                 = var.java_config.flux_name
+    flux_kustomization_name   = var.java_config.flux_kustomization_name
+    flux_gitrepository_name   = var.java_config.flux_gitrepository_name
     flux_gitrepository_url    = var.java_config.flux_gitrepository_url
     flux_gitrepository_branch = var.java_config.flux_gitrepository_branch
     flux_kustomization_path   = var.java_config.flux_kustomization_path
@@ -58,8 +59,9 @@ locals {
 
     scrape_sample_limit = var.nginx_config.scrape_sample_limit
 
-    flux_name                 = var.nginx_config.flux_name
+    flux_kustomization_name   = var.nginx_config.flux_kustomization_name
     flux_gitrepository_url    = var.nginx_config.flux_gitrepository_url
+    flux_gitrepository_name   = var.nginx_config.flux_gitrepository_name
     flux_gitrepository_branch = var.nginx_config.flux_gitrepository_branch
     flux_kustomization_path   = var.nginx_config.flux_kustomization_path
 

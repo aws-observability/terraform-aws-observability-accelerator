@@ -9,9 +9,10 @@ variable "pattern_config" {
 
     enable_dashboards = bool
 
-    flux_name                 = string
+    flux_gitrepository_name   = string
     flux_gitrepository_url    = string
     flux_gitrepository_branch = string
+    flux_kustomization_name   = string
     flux_kustomization_path   = string
 
     managed_prometheus_workspace_id       = string

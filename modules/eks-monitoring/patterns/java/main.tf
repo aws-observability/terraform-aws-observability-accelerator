@@ -32,23 +32,6 @@ groups:
 EOF
 }
 
-resource "kubectl_manifest" "flux_gitrepository" {
-  count = var.pattern_config.enable_dashboards ? 1 : 0
-
-  yaml_body = <<YAML
-apiVersion: source.toolkit.fluxcd.io/v1beta2
-kind: GitRepository
-metadata:
-  name: ${var.pattern_config.flux_name}
-  namespace: flux-system
-spec:
-  interval: 5m0s
-  url: ${var.pattern_config.flux_gitrepository_url}
-  ref:
-    branch: ${var.pattern_config.flux_gitrepository_branch}
-YAML
-}
-
 resource "kubectl_manifest" "flux_kustomization" {
   count = var.pattern_config.enable_dashboards ? 1 : 0
 
@@ -56,7 +39,7 @@ resource "kubectl_manifest" "flux_kustomization" {
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: ${var.pattern_config.flux_name}
+  name: ${var.pattern_config.flux_kustomization_name}
   namespace: flux-system
 spec:
   interval: 1m0s
@@ -64,7 +47,7 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: ${var.pattern_config.flux_name}
+    name: ${var.pattern_config.flux_gitrepository_name}
   postBuild:
     substitute:
       AMG_AWS_REGION: ${var.pattern_config.managed_prometheus_workspace_region}

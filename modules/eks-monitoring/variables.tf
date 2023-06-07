@@ -69,10 +69,16 @@ variable "enable_dashboards" {
   default     = true
 }
 
-variable "flux_name" {
-  description = "Flux GitRepository and Kustomization Name"
+variable "flux_kustomization_name" {
+  description = "Flux Kustomization name"
   type        = string
-  default     = "grafana-dashboards"
+  default     = "grafana-dashboards-infrastructure"
+}
+
+variable "flux_gitrepository_name" {
+  description = "Flux GitRepository name"
+  type        = string
+  default     = "aws-observability-accelerator"
 }
 
 variable "flux_gitrepository_url" {
@@ -84,13 +90,13 @@ variable "flux_gitrepository_url" {
 variable "flux_gitrepository_branch" {
   description = "Flux GitRepository Branch"
   type        = string
-  default     = "main"
+  default     = "import-dashboards"
 }
 
 variable "flux_kustomization_path" {
   description = "Flux Kustomization Path"
   type        = string
-  default     = "./artifacts/grafana-operator-manifests"
+  default     = "./artifacts/grafana-operator-manifests/eks/infrastructure"
 }
 
 variable "enable_kube_state_metrics" {
@@ -247,9 +253,11 @@ variable "java_config" {
     enable_dashboards      = bool
     scrape_sample_limit    = number
 
-    flux_name                 = string
+
+    flux_gitrepository_name   = string
     flux_gitrepository_url    = string
     flux_gitrepository_branch = string
+    flux_kustomization_name   = string
     flux_kustomization_path   = string
 
     grafana_dashboard_url = string
@@ -263,9 +271,10 @@ variable "java_config" {
     enable_dashboards      = true
     scrape_sample_limit    = 1000
 
-    flux_name                 = "grafana-java-dashboards"
+    flux_gitrepository_name   = "aws-observability-accelerator"
     flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
     flux_gitrepository_branch = "import-dashboards"
+    flux_kustomization_name   = "grafana-dashboards-java"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/java"
 
     grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/java/default.json"
@@ -290,9 +299,10 @@ variable "nginx_config" {
     enable_dashboards      = bool
     scrape_sample_limit    = number
 
-    flux_name                 = string
+    flux_gitrepository_name   = string
     flux_gitrepository_url    = string
     flux_gitrepository_branch = string
+    flux_kustomization_name   = string
     flux_kustomization_path   = string
 
     grafana_dashboard_url = string
@@ -306,9 +316,10 @@ variable "nginx_config" {
     enable_dashboards      = true
     scrape_sample_limit    = 1000
 
-    flux_name                 = "grafana-nginx-dashboards"
+    flux_gitrepository_name   = "aws-observability-accelerator"
     flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
     flux_gitrepository_branch = "import-dashboards"
+    flux_kustomization_name   = "grafana-dashboards-nginx"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/nginx"
 
     grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/nginx/nginx.json"

@@ -74,18 +74,6 @@ YAML
   depends_on = [module.external_secrets]
 }
 
-# resource "aws_secretsmanager_secret" "secret" {
-#   recovery_window_in_days = 0
-#   kms_key_id              = aws_kms_key.secrets.arn
-# }
-
-# resource "aws_secretsmanager_secret_version" "secret" {
-#   secret_id = aws_secretsmanager_secret.secret.id
-#   secret_string = jsonencode({
-#     GF_SECURITY_ADMIN_APIKEY = var.grafana_api_key
-#   })
-# }
-
 resource "aws_ssm_parameter" "secret" {
   name        = "/terraform-accelerator/grafana-api-key"
   description = "SSM Secret to store grafana API Key"
@@ -93,9 +81,9 @@ resource "aws_ssm_parameter" "secret" {
   value = jsonencode({
     GF_SECURITY_ADMIN_APIKEY = var.grafana_api_key
   })
-  key_id = aws_kms_key.secrets.id
+  key_id    = aws_kms_key.secrets.id
   overwrite = true
-} 
+}
 
 resource "kubectl_manifest" "secret" {
   yaml_body  = <<YAML

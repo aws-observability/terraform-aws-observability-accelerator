@@ -36,9 +36,6 @@ spec:
           global:
             scrape_interval: {{ .Values.globalScrapeInterval }}
             scrape_timeout: {{ .Values.globalScrapeTimeout }}
-            external_labels:
-              cluster: {{ .Values.ekscluster }}
-              region: {{ .Values.region }}
           scrape_configs:
             - job_name: 'kubernetes-kubelet'
               scrape_interval: {{ .Values.globalScrapeInterval }}
@@ -1776,6 +1773,8 @@ spec:
         endpoint: {{ .Values.ampurl }}
         auth:
           authenticator: sigv4auth
+        resource_to_telemetry_conversion:
+          enabled: true
       logging:
         loglevel: warn
     extensions:
@@ -1791,6 +1790,17 @@ spec:
       batch/metrics:
         timeout: 30s
         send_batch_size: 500
+      attributes/metrics:
+        actions:
+          - key: cluster
+            action: upsert
+            value: {{ .Values.ekscluster }}
+          - key: region
+            action: upsert
+            value: {{ .Values.region }}
+          - key: account_id
+            action: upsert
+            value: {{ .Values.accountId }}
     {{ if .Values.enableTracing }}
       batch/traces:
         timeout: {{ .Values.tracingTimeout }}
@@ -1801,7 +1811,7 @@ spec:
       pipelines:
         metrics:
           receivers: [prometheus, otlp]
-          processors: [batch/metrics]
+          processors: [batch/metrics, attributes/metrics]
           exporters: [logging, prometheusremotewrite]
         {{ if .Values.enableTracing }}
         traces:

@@ -416,6 +416,7 @@ variable "enable_external_secrets" {
 variable "grafana_api_key" {
   description = "Grafana API key for the Amazon Managed Grafana workspace"
   type        = string
+  default     = ""
 }
 
 variable "grafana_url" {

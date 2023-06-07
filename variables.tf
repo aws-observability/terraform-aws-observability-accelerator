@@ -27,12 +27,6 @@ variable "enable_alertmanager" {
   default     = false
 }
 
-variable "create_prometheus_data_source" {
-  description = "Boolean flag to enable Amazon Managed Grafana datasource"
-  type        = bool
-  default     = true
-}
-
 variable "tags" {
   description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
   type        = map(string)

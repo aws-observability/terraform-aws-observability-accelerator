@@ -111,25 +111,40 @@ terraform apply
 
 ## Visualization
 
-#### 1. Prometheus data source on Grafana
 
-Make sure to open the link in the output. After a successful deployment, this will open
-the Prometheus data source configuration on Grafana.
-Click `Save & test` and you should see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
+#### 1. Grafana dashboards
 
-```bash
-terraform output grafana_prometheus_datasource_test
-```
-
-#### 2. Grafana dashboards
-
-Go to the Dashboards panel of your Grafana workspace. You should see a list of dashboards under the `Observability Accelerator Dashboards`
-
+Login to your Grafana workspace and navigate to the Dashboards panel. You should see a list of dashboards under the `Observability Accelerator Dashboards`
 <img width="1540" alt="image" src="https://user-images.githubusercontent.com/10175027/190000716-29e16698-7c90-49d6-8c37-79ca1790e2cc.png">
 
 Open a specific dashboard and you should be able to view its visualization
-
 <img width="2056" alt="cluster headlines" src="https://user-images.githubusercontent.com/10175027/199110753-9bc7a9b7-1b45-4598-89d3-32980154080e.png">
+
+With v2.5 and above, the dashboards are managed with a Grafana Operator running in your cluster.
+From the cluster to view all dashboards as Kubernetes objects, run
+
+```console
+kubectl get grafanadashboards -A
+NAMESPACE          NAME                                   AGE
+grafana-operator   cluster-grafanadashboard               138m
+grafana-operator   java-grafanadashboard                  143m
+grafana-operator   kubelet-grafanadashboard               13h
+grafana-operator   namespace-workloads-grafanadashboard   13h
+grafana-operator   nginx-grafanadashboard                 134m
+grafana-operator   node-exporter-grafanadashboard         13h
+grafana-operator   nodes-grafanadashboard                 13h
+grafana-operator   workloads-grafanadashboard             13h
+```
+
+You can inspect more details per dashboard using this command
+
+```console
+kubectl describe grafanadashboards cluster-grafanadashboard -n grafana-operator
+```
+
+Grafana Operator and Flux always work together to synchronize your dashboards with Git.
+If you delete your dashboards by accident, they will be re-provisioned automatically.
+
 
 #### 3. Amazon Managed Service for Prometheus rules and alerts
 
@@ -229,6 +244,12 @@ aws secretsmanager update-secret \
     --secret-id  <Your Secret Name> \
     --secret-string "{\"GF_SECURITY_ADMIN_APIKEY\": \"${GO_AMG_API_KEY}\"}" \
     --region <Your AWS Region>
+```
+
+- If the issue persists, you can force the synchronization by deleting the `externalsecret` Kubernetes object.
+
+```bash
+kubectl delete externalsecret/external-secrets-sm -n grafana-operator
 ```
 
 ### 2. Upgrade from 2.1.0 or earlier

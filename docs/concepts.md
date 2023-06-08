@@ -39,22 +39,24 @@ The grafana-operator is a Kubernetes operator built to help you manage your Graf
 
 GitOps is a way of managing application and infrastructure deployment so that the whole system is described declaratively in a Git repository. It is an operational model that offers you the ability to manage the state of multiple Kubernetes clusters leveraging the best practices of version control, immutable artifacts, and automation. Flux  is a declarative, GitOps-based continuous delivery tool that can be integrated into any CI/CD pipeline. It gives users the flexibility of choosing their Git provider (GitHub, GitLab, BitBucket). Now, with grafana-operator supporting the management of external Grafana instances such as Amazon Managed Grafana, operations personas can use GitOps mechanisms using CNCF projects such as Flux to create and manage the lifecycle of resources in Amazon Managed Grafana.
 
-We have setup a [GitRepository](https://fluxcd.io/flux/components/source/gitrepositories/) and [Kustomization](https://fluxcd.io/flux/components/kustomize/kustomization/) using flux to sync our GitHub Repository to add Grafana Datasources, folder and Dashboards to Amazon Managed Grafana using Grafana Operator. GitRepository defines a Source to produce an Artifact for a Git repository revision. Kustomization defines a pipeline for fetching, decrypting, building, validating and applying Kustomize overlays or plain Kubernetes manifests. we are also using [Flux Post build variable substitution](https://fluxcd.io/flux/components/kustomize/kustomization/#post-build-variable-substitution) to dynamically render variables such as AMG_AWS_REGION, AMP_ENDPOINT_URL, AMG_ENDPOINT_URL,GRAFANA_NODEEXP_DASH_URL on the YAML manifests during deployment time to avoid hardcoding on the YAML manifests stored in Git repo.
+We have setup a [GitRepository](https://fluxcd.io/flux/components/source/gitrepositories/) and [Kustomization](https://fluxcd.io/flux/components/kustomize/kustomization/) using Flux to sync our GitHub Repository to add Grafana Datasources, folder and Dashboards to Amazon Managed Grafana using Grafana Operator. GitRepository defines a Source to produce an Artifact for a Git repository revision. Kustomization defines a pipeline for fetching, decrypting, building, validating and applying Kustomize overlays or plain Kubernetes manifests. we are also using [Flux Post build variable substitution](https://fluxcd.io/flux/components/kustomize/kustomization/#post-build-variable-substitution) to dynamically render variables such as AMG_AWS_REGION, AMP_ENDPOINT_URL, AMG_ENDPOINT_URL,GRAFANA_NODEEXP_DASH_URL on the YAML manifests during deployment time to avoid hardcoding on the YAML manifests stored in Git repo.
 
-We have placed our declarative code snippet to create an Amazon Managed Service For Promethes datasource and Grafana Dashboard in Amazon Managed Grafana in our [AWS Observabiity Accelerator GitHub Repository](https://github.com/aws-observability/aws-observability-accelerator/tree/main/artifacts/grafana-operator-manifests). We have setup a GitRepository to point to the AWS Observabiity Accelerator GitHub Repository and `Kustomization` for flux to sync Git Repository with artifacts in `./artifacts/grafana-operator-manifests` path in the AWS Observabiity Accelerator GitHub Repository. You can use this extension of our solution to point your own Kubernetes manifests to create Grafana Datasources and personified Grafana Dashboards of your choice using GitOps with Grafana Operator and Flux in Kubernetes native way with altering and redeploying this solution for changes to Grafana resources.
+We have placed our declarative code snippet to create an Amazon Managed Service For Promethes datasource and Grafana Dashboard in Amazon Managed Grafana in our [AWS Observabiity Accelerator GitHub Repository](https://github.com/aws-observability/aws-observability-accelerator). We have setup a GitRepository to point to the AWS Observabiity Accelerator GitHub Repository and `Kustomization` for flux to sync Git Repository with artifacts in `./artifacts/grafana-operator-manifests/*` path in the AWS Observabiity Accelerator GitHub Repository. You can use this extension of our solution to point your own Kubernetes manifests to create Grafana Datasources and personified Grafana Dashboards of your choice using GitOps with Grafana Operator and Flux in Kubernetes native way with altering and redeploying this solution for changes to Grafana resources.
 
 
 
-## v2.x changes
+## Release notes
 
-v2.x [releases](https://github.com/aws-observability/terraform-aws-observability-accelerator/releases) introduce
-couple of breaking changes compared to previous versions:
+We encourage you to use our [release versions](https://github.com/aws-observability/terraform-aws-observability-accelerator/releases)
+as much as possible to avoid breaking changes when deploying Terraform modules. You can
+read also our change log on the releases page. Here's an example of using a fixed version:
 
-- `modules/workloads/infra` module moves to `modules/eks-monitoring`
-- EKS configuration options moves from the base  module to the `eks-monitoring` module
-- EKS workload modules **java,nginx** merge into `eks-monitoring` as configuration options (patterns),
-see [examples](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples)
-- Examples have been updated to reflect these changes
+```hcl
+module "eks_monitoring" {
+    source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/managed-prometheus-monitoring?ref=v2.5.0"
+}
+```
+
 
 ## Base module
 
@@ -138,4 +140,4 @@ classDiagram
 
 If you are new to AWS Observability services, or want to dive deeper into them,
 check our [One Observability Workshop](https://catalog.workshops.aws/observability/)
-for a hands-on experience in a self-paced environement or at an AWS venue.
+for a hands-on experience in a self-paced environment or at an AWS venue.

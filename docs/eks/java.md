@@ -32,7 +32,7 @@ Make sure to refresh your temporary Grafana API key
 
 ```bash
 export TF_VAR_managed_grafana_workspace_id=g-xxx
-export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 1200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
+export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 7200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
 ```
 
 ## Deploy

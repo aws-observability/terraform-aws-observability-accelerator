@@ -36,9 +36,11 @@ resource "aws_iam_policy" "cluster_secretstore" {
     {
       "Effect": "Allow",
       "Action": [
-        "ssm:Describe*",
-        "ssm:Get*",
-        "ssm:List*"
+        "ssm:DescribeParameters",
+        "ssm:GetParameter",
+        "ssm:GetParameters",
+        "ssm:GetParametersByPath",
+        "ssm:GetParameterHistory"
       ],
       "Resource": "${aws_ssm_parameter.secret.arn}"
     },

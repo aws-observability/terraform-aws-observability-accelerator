@@ -231,18 +231,13 @@ export GO_AMG_API_KEY=$(aws grafana create-workspace-api-key \
   --output text)
 ```
 
-- Next, lets grab the Grafana API key secret name from AWS Secrets Manager. The keyname should start with `terraform-..`
-
-```bash
-aws secretsmanager list-secrets
-```
-
 - Finally, update the Grafana API key secret in AWS Secrets Manager using the above new Grafana API key:
 
 ```bash
-aws secretsmanager update-secret \
-    --secret-id  <Your Secret Name> \
-    --secret-string "{\"GF_SECURITY_ADMIN_APIKEY\": \"${GO_AMG_API_KEY}\"}" \
+aws aws ssm put-parameter \
+    --name "/terraform-accelerator/grafana-api-key" \
+    --type "SecureString" \
+    --value "{\"GF_SECURITY_ADMIN_APIKEY\": \"${GO_AMG_API_KEY}\"}" \
     --region <Your AWS Region>
 ```
 

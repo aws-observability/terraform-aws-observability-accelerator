@@ -353,7 +353,7 @@ variable "go_config" {
     helm_name          = "grafana-operator"
     k8s_namespace      = "grafana-operator"
     helm_release_name  = "grafana-operator"
-    helm_chart_version = "v5.0.0-rc1"
+    helm_chart_version = "v5.0.0-rc3"
   }
   nullable = false
 }

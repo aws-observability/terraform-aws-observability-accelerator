@@ -26,7 +26,7 @@ traces collection, dashboards and alerts for monitoring:
 - Java/JMX workloads (running on Amazon EKS)
 - Amazon Managed Service for Prometheus workspaces with Amazon CloudWatch
 - [Grafana Operator](https://github.com/grafana-operator/grafana-operator) and [Flux CD](https://fluxcd.io/) to manage Grafana contents (AWS data sources, Grafana Dashboards) with GitOps
-- External Secrets Operator to retrieve and Sync the Grafana API keys
+- External Secrets Operator to retrieve and sync the Grafana API keys
 
 These modules can be directly configured in your existing Terraform
 configurations or ready to be deployed in our packaged

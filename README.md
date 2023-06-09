@@ -17,7 +17,7 @@ your custom applications.
 You also can monitor your Amazon Managed Service for Prometheus workspaces ingestion,
 costs, active series with [this module](./modules/managed-prometheus-monitoring).
 
-<img width="1501" alt="image" src="docs/images/dark-o11y-accelerator-amp-xray.png">
+![image](https://github.com/aws-observability/terraform-aws-observability-accelerator/assets/10175027/002a0f0a-6256-4be3-9e38-6044e4b5fb7b)
 
 ## Documentation
 

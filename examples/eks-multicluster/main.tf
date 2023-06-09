@@ -22,7 +22,7 @@ module "eks_cluster_1_monitoring" {
 
   # This configuration section results in actions performed on AMG and AMP; and it needs to be done just once
   # And hence, this in performed in conjunction with the setup of the eks_cluster_1 EKS cluster
-  enable_dashboards       = false
+  enable_dashboards       = true
   enable_external_secrets = true
   enable_fluxcd           = true
   enable_alerting_rules   = true

@@ -90,7 +90,7 @@ variable "flux_gitrepository_url" {
 variable "flux_gitrepository_branch" {
   description = "Flux GitRepository Branch"
   type        = string
-  default     = "import-dashboards"
+  default     = "main"
 }
 
 variable "flux_kustomization_path" {

@@ -41,7 +41,7 @@ locals {
 
     flux_gitrepository_name   = "aws-observability-accelerator"
     flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
-    flux_gitrepository_branch = "import-dashboards"
+    flux_gitrepository_branch = "main"
     flux_kustomization_name   = "grafana-dashboards-java"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/java"
 
@@ -65,7 +65,7 @@ locals {
 
     flux_gitrepository_name   = "aws-observability-accelerator"
     flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
-    flux_gitrepository_branch = "import-dashboards"
+    flux_gitrepository_branch = "main"
     flux_kustomization_name   = "grafana-dashboards-nginx"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/nginx"
 

@@ -27,10 +27,10 @@ variable "enable_alertmanager" {
   default     = false
 }
 
-variable "managed_grafana_workspace_id" {
-  description = "Amazon Managed Grafana Workspace ID"
-  type        = string
-  default     = ""
+variable "tags" {
+  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
+  type        = map(string)
+  default     = {}
 }
 
 variable "grafana_api_key" {
@@ -38,20 +38,7 @@ variable "grafana_api_key" {
   type        = string
 }
 
-variable "create_prometheus_data_source" {
-  description = "Boolean flag to enable Amazon Managed Grafana datasource"
-  type        = bool
-  default     = true
-}
-
-variable "create_dashboard_folder" {
-  description = "Boolean flag to enable Amazon Managed Grafana folder and dashboards"
-  type        = bool
-  default     = true
-}
-
-variable "tags" {
-  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
-  type        = map(string)
-  default     = {}
+variable "managed_grafana_workspace_id" {
+  description = "Amazon Managed Grafana Workspace ID"
+  type        = string
 }

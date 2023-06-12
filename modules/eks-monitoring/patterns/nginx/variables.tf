@@ -1,16 +1,26 @@
-variable "managed_prometheus_workspace_id" {
-  description = "Amazon Managed Prometheus Workspace ID"
-  type        = string
-  default     = null
-}
+variable "pattern_config" {
+  description = "Configuration object for Java/JMX monitoring"
+  type = object({
+    enable_alerting_rules  = bool
+    enable_recording_rules = bool
+    scrape_sample_limit    = number
 
-variable "dashboards_folder_id" {
-  type        = string
-  description = "Grafana folder ID for automatic dashboards"
-}
+    enable_recording_rules = bool
 
-variable "enable_alerting_rules" {
-  type        = bool
-  default     = true
-  description = "Enables or disables Managed Prometheus alerting rules"
+    enable_dashboards = bool
+
+    flux_gitrepository_name   = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_name   = string
+    flux_kustomization_path   = string
+
+    managed_prometheus_workspace_id       = string
+    managed_prometheus_workspace_region   = string
+    managed_prometheus_workspace_endpoint = string
+
+    grafana_url           = string
+    grafana_dashboard_url = string
+  })
+  nullable = false
 }

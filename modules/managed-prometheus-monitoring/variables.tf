@@ -1,8 +1,3 @@
-variable "dashboards_folder_id" {
-  description = "Grafana folder ID for automatic dashboards"
-  type        = string
-}
-
 variable "aws_region" {
   description = "AWS Region"
   type        = string
@@ -23,4 +18,10 @@ variable "ingestion_rate_threshold" {
   description = "Threshold for active series metric alarm"
   type        = number
   default     = 70000
+}
+
+variable "dashboards_folder_id" {
+  description = "Grafana folder ID for automatic dashboards"
+  default     = "0"
+  type        = string
 }

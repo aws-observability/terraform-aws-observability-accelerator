@@ -50,6 +50,8 @@ module "aws_observability_accelerator" {
   enable_alertmanager = true
 
   # reusing existing Amazon Managed Grafana workspace
+  # This is not needed anymore but kept here for a two step transition into
+  # removing the Terraform Grafana provider
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
   grafana_api_key              = var.grafana_api_key
 
@@ -85,10 +87,8 @@ module "eks_monitoring" {
   grafana_url             = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
 
   # control the publishing of dashboards by specifying the boolean value for the variable 'enable_dashboards', default is 'true'
-  # the intention to publish is overruled depending upon whether grafana dashboard folder is created by the observability accelerator
-  enable_dashboards = module.aws_observability_accelerator.grafana_dashboard_folder_created ? var.enable_dashboards : false
+  enable_dashboards = var.enable_dashboards
 
-  dashboards_folder_id            = module.aws_observability_accelerator.grafana_dashboards_folder_id
   managed_prometheus_workspace_id = module.aws_observability_accelerator.managed_prometheus_workspace_id
 
   managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint

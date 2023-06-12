@@ -51,11 +51,6 @@ variable "managed_prometheus_workspace_region" {
   default     = null
 }
 
-variable "dashboards_folder_id" {
-  description = "Grafana folder ID for automatic dashboards"
-  type        = string
-}
-
 variable "enable_alerting_rules" {
   description = "Enables or disables Managed Prometheus alerting rules"
   type        = bool
@@ -74,10 +69,16 @@ variable "enable_dashboards" {
   default     = true
 }
 
-variable "flux_name" {
-  description = "Flux GitRepository and Kustomization Name"
+variable "flux_kustomization_name" {
+  description = "Flux Kustomization name"
   type        = string
-  default     = "grafana-dashboards"
+  default     = "grafana-dashboards-infrastructure"
+}
+
+variable "flux_gitrepository_name" {
+  description = "Flux GitRepository name"
+  type        = string
+  default     = "aws-observability-accelerator"
 }
 
 variable "flux_gitrepository_url" {
@@ -95,7 +96,7 @@ variable "flux_gitrepository_branch" {
 variable "flux_kustomization_path" {
   description = "Flux Kustomization Path"
   type        = string
-  default     = "./artifacts/grafana-operator-manifests"
+  default     = "./artifacts/grafana-operator-manifests/eks/infrastructure"
 }
 
 variable "enable_kube_state_metrics" {
@@ -249,14 +250,23 @@ variable "java_config" {
   type = object({
     enable_alerting_rules  = bool
     enable_recording_rules = bool
+    enable_dashboards      = bool
     scrape_sample_limit    = number
+
+
+    flux_gitrepository_name   = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_name   = string
+    flux_kustomization_path   = string
+
+    grafana_dashboard_url = string
+
+    prometheus_metrics_endpoint = string
   })
 
-  default = {
-    enable_alerting_rules  = true
-    enable_recording_rules = true
-    scrape_sample_limit    = 1000
-  }
+  # defaults are pre-computed in locals.tf, provide a full definition to override
+  default = null
 }
 
 variable "enable_nginx" {
@@ -265,19 +275,28 @@ variable "enable_nginx" {
   default     = false
 }
 
+
 variable "nginx_config" {
   description = "Configuration object for NGINX monitoring"
   type = object({
-    enable_alerting_rules       = bool
-    scrape_sample_limit         = number
+    enable_alerting_rules  = bool
+    enable_recording_rules = bool
+    enable_dashboards      = bool
+    scrape_sample_limit    = number
+
+    flux_gitrepository_name   = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_name   = string
+    flux_kustomization_path   = string
+
+    grafana_dashboard_url = string
+
     prometheus_metrics_endpoint = string
   })
 
-  default = {
-    enable_alerting_rules       = true
-    scrape_sample_limit         = 1000
-    prometheus_metrics_endpoint = "metrics"
-  }
+  # defaults are pre-computed in locals.tf, provide a full definition to override
+  default = null
 }
 
 variable "enable_logs" {
@@ -353,7 +372,7 @@ variable "go_config" {
     helm_name          = "grafana-operator"
     k8s_namespace      = "grafana-operator"
     helm_release_name  = "grafana-operator"
-    helm_chart_version = "v5.0.0-rc1"
+    helm_chart_version = "v5.0.0-rc3"
   }
   nullable = false
 }
@@ -367,6 +386,7 @@ variable "enable_external_secrets" {
 variable "grafana_api_key" {
   description = "Grafana API key for the Amazon Managed Grafana workspace"
   type        = string
+  default     = ""
 }
 
 variable "grafana_url" {

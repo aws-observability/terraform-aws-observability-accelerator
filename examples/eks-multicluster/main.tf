@@ -43,7 +43,6 @@ module "eks_cluster_1_monitoring" {
     aws        = aws.eks_cluster_1
     kubernetes = kubernetes.eks_cluster_1
     helm       = helm.eks_cluster_1
-    grafana    = grafana
   }
 
   depends_on = [
@@ -81,7 +80,6 @@ module "eks_cluster_2_monitoring" {
     aws        = aws.eks_cluster_2
     kubernetes = kubernetes.eks_cluster_2
     helm       = helm.eks_cluster_2
-    grafana    = grafana
   }
 
   depends_on = [

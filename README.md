@@ -25,7 +25,7 @@ costs, active series with [this module](./modules/managed-prometheus-monitoring)
 To explore the complete project documentation, please visit our [documentation site.](https://aws-observability.github.io/terraform-aws-observability-accelerator/)
 
 
-## Migration to v2.5
+## ⚠️ Migration to v2.5
 
 If you are migrating from earlier versions to v2.5, please follow this guide.
 

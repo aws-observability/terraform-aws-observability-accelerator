@@ -27,7 +27,7 @@ variable "grafana_api_key" {
 }
 
 variable "enable_dashboards" {
-  description = "Enables or disables curated dashboards"
+  description = "Enables or disables curated dashboards. Dashboards are managed by the Grafana Operator"
   type        = bool
   default     = true
 }

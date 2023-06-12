@@ -14,7 +14,7 @@ your custom applications.
 You also can monitor your Amazon Managed Service for Prometheus workspaces ingestion,
 costs, active series with [this module](https://aws-observability.github.io/terraform-aws-observability-accelerator/workloads/managed-prometheus/).
 
-<img width="1501" alt="image" src="images/dark-o11y-accelerator-amp-xray.png">
+![image](https://github.com/aws-observability/terraform-aws-observability-accelerator/assets/10175027/e83f8709-f754-4192-90f2-e3de96d2e26c)
 
 ## Getting started
 
@@ -25,9 +25,8 @@ traces collection, dashboards and alerts for monitoring:
 - NGINX workloads (running on Amazon EKS)
 - Java/JMX workloads (running on Amazon EKS)
 - Amazon Managed Service for Prometheus workspaces with Amazon CloudWatch
-- Installs Grafana Operator to add AWS data sources and create Grafana Dashboards to Amazon Managed Grafana.
-- Installs FluxCD to perform GitOps sync of a Git Repo to EKS Cluster. We will use this later for creating Grafana Dashboards and AWS datasources to Amazon Managed Grafana.
-- Installs External Secrets Operator to retrieve and Sync the Grafana API keys.
+- [Grafana Operator](https://github.com/grafana-operator/grafana-operator) and [Flux CD](https://fluxcd.io/) to manage Grafana contents (AWS data sources, Grafana Dashboards) with GitOps
+- External Secrets Operator to retrieve and sync the Grafana API keys
 
 These modules can be directly configured in your existing Terraform
 configurations or ready to be deployed in our packaged

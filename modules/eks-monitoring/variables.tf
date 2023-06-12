@@ -51,11 +51,6 @@ variable "managed_prometheus_workspace_region" {
   default     = null
 }
 
-variable "dashboards_folder_id" {
-  description = "Grafana folder ID for automatic dashboards"
-  type        = string
-}
-
 variable "enable_alerting_rules" {
   description = "Enables or disables Managed Prometheus alerting rules"
   type        = bool
@@ -72,6 +67,36 @@ variable "enable_dashboards" {
   description = "Enables or disables curated dashboards"
   type        = bool
   default     = true
+}
+
+variable "flux_kustomization_name" {
+  description = "Flux Kustomization name"
+  type        = string
+  default     = "grafana-dashboards-infrastructure"
+}
+
+variable "flux_gitrepository_name" {
+  description = "Flux GitRepository name"
+  type        = string
+  default     = "aws-observability-accelerator"
+}
+
+variable "flux_gitrepository_url" {
+  description = "Flux GitRepository URL"
+  type        = string
+  default     = "https://github.com/aws-observability/aws-observability-accelerator"
+}
+
+variable "flux_gitrepository_branch" {
+  description = "Flux GitRepository Branch"
+  type        = string
+  default     = "main"
+}
+
+variable "flux_kustomization_path" {
+  description = "Flux Kustomization Path"
+  type        = string
+  default     = "./artifacts/grafana-operator-manifests/eks/infrastructure"
 }
 
 variable "enable_kube_state_metrics" {
@@ -186,8 +211,8 @@ variable "tracing_config" {
   })
 
   default = {
-    otlp_grpc_endpoint = "0.0.0.0:4317"
-    otlp_http_endpoint = "0.0.0.0:4318"
+    otlp_grpc_endpoint = "localhost:4317"
+    otlp_http_endpoint = "localhost:4318"
     send_batch_size    = 50
     timeout            = "30s"
   }
@@ -225,14 +250,23 @@ variable "java_config" {
   type = object({
     enable_alerting_rules  = bool
     enable_recording_rules = bool
+    enable_dashboards      = bool
     scrape_sample_limit    = number
+
+
+    flux_gitrepository_name   = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_name   = string
+    flux_kustomization_path   = string
+
+    grafana_dashboard_url = string
+
+    prometheus_metrics_endpoint = string
   })
 
-  default = {
-    enable_alerting_rules  = true
-    enable_recording_rules = true
-    scrape_sample_limit    = 1000
-  }
+  # defaults are pre-computed in locals.tf, provide a full definition to override
+  default = null
 }
 
 variable "enable_nginx" {
@@ -241,19 +275,28 @@ variable "enable_nginx" {
   default     = false
 }
 
+
 variable "nginx_config" {
   description = "Configuration object for NGINX monitoring"
   type = object({
-    enable_alerting_rules       = bool
-    scrape_sample_limit         = number
+    enable_alerting_rules  = bool
+    enable_recording_rules = bool
+    enable_dashboards      = bool
+    scrape_sample_limit    = number
+
+    flux_gitrepository_name   = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_name   = string
+    flux_kustomization_path   = string
+
+    grafana_dashboard_url = string
+
     prometheus_metrics_endpoint = string
   })
 
-  default = {
-    enable_alerting_rules       = true
-    scrape_sample_limit         = 1000
-    prometheus_metrics_endpoint = "metrics"
-  }
+  # defaults are pre-computed in locals.tf, provide a full definition to override
+  default = null
 }
 
 variable "enable_istio" {
@@ -350,7 +393,7 @@ variable "go_config" {
     helm_name          = "grafana-operator"
     k8s_namespace      = "grafana-operator"
     helm_release_name  = "grafana-operator"
-    helm_chart_version = "v5.0.0-rc1"
+    helm_chart_version = "v5.0.0-rc3"
   }
   nullable = false
 }
@@ -364,6 +407,48 @@ variable "enable_external_secrets" {
 variable "grafana_api_key" {
   description = "Grafana API key for the Amazon Managed Grafana workspace"
   type        = string
+  default     = ""
+}
+
+variable "grafana_url" {
+  description = "Endpoint URL of Amazon Managed Grafana workspace"
+  type        = string
+}
+
+variable "grafana_cluster_dashboard_url" {
+  description = "Dashboard URL for Cluster Grafana Dashboard JSON"
+  type        = string
+  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/cluster.json"
+}
+
+variable "grafana_kubelet_dashboard_url" {
+  description = "Dashboard URL for Kubelet Grafana Dashboard JSON"
+  type        = string
+  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/kubelet.json"
+}
+
+variable "grafana_namespace_workloads_dashboard_url" {
+  description = "Dashboard URL for Namespace Workloads Grafana Dashboard JSON"
+  type        = string
+  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/namespace-workloads.json"
+}
+
+variable "grafana_node_exporter_dashboard_url" {
+  description = "Dashboard URL for Node Exporter Grafana Dashboard JSON"
+  type        = string
+  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/nodeexporter-nodes.json"
+}
+
+variable "grafana_nodes_dashboard_url" {
+  description = "Dashboard URL for Nodes Grafana Dashboard JSON"
+  type        = string
+  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/nodes.json"
+}
+
+variable "grafana_workloads_dashboard_url" {
+  description = "Dashboard URL for Workloads Grafana Dashboard JSON"
+  type        = string
+  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/workloads.json"
 }
 
 variable "target_secret_name" {

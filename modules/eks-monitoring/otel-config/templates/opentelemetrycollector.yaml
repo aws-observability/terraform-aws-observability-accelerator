@@ -25,22 +25,17 @@ spec:
           fieldPath: "metadata.namespace"
   config: |
     receivers:
-      {{ if .Values.enableTracing }}
       otlp:
         protocols:
           grpc:
             endpoint: {{ .Values.otlpGrpcEndpoint }}
           http:
             endpoint: {{ .Values.otlpHttpEndpoint }}
-      {{ end }}
       prometheus:
         config:
           global:
             scrape_interval: {{ .Values.globalScrapeInterval }}
             scrape_timeout: {{ .Values.globalScrapeTimeout }}
-            external_labels:
-              cluster: {{ .Values.ekscluster }}
-              region: {{ .Values.region }}
           scrape_configs:
             - job_name: 'kubernetes-kubelet'
               scrape_interval: {{ .Values.globalScrapeInterval }}
@@ -1706,6 +1701,7 @@ spec:
             {{ if .Values.enableJava }}
             - job_name: 'kubernetes-java-jmx'
               sample_limit: {{ .Values.javaScrapeSampleLimit }}
+              metrics_path: {{ .Values.javaPrometheusMetricsEndpoint }}
               kubernetes_sd_configs:
                 - role: pod
               relabel_configs:
@@ -1738,7 +1734,7 @@ spec:
             {{ if .Values.enableNginx }}
             - job_name: 'kubernetes-nginx'
               sample_limit: {{ .Values.nginxScrapeSampleLimit }}
-              metrics_path: /{{ .Values.nginxPrometheusMetricsEndpoint }}
+              metrics_path: {{ .Values.nginxPrometheusMetricsEndpoint }}
               kubernetes_sd_configs:
                 - role: pod
               relabel_configs:
@@ -1838,6 +1834,8 @@ spec:
         endpoint: {{ .Values.ampurl }}
         auth:
           authenticator: sigv4auth
+        resource_to_telemetry_conversion:
+          enabled: true
       logging:
         loglevel: warn
     extensions:
@@ -1853,6 +1851,17 @@ spec:
       batch/metrics:
         timeout: 30s
         send_batch_size: 500
+      attributes/metrics:
+        actions:
+          - key: cluster
+            action: upsert
+            value: {{ .Values.ekscluster }}
+          - key: region
+            action: upsert
+            value: {{ .Values.region }}
+          - key: account_id
+            action: upsert
+            value: {{ .Values.accountId }}
     {{ if .Values.enableTracing }}
       batch/traces:
         timeout: {{ .Values.tracingTimeout }}
@@ -1862,8 +1871,8 @@ spec:
       extensions: [pprof, zpages, health_check, sigv4auth]
       pipelines:
         metrics:
-          receivers: [prometheus]
-          processors: [batch/metrics]
+          receivers: [prometheus, otlp]
+          processors: [batch/metrics, attributes/metrics]
           exporters: [logging, prometheusremotewrite]
         {{ if .Values.enableTracing }}
         traces:

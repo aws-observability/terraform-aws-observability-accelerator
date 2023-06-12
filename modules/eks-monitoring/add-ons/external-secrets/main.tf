@@ -1,5 +1,5 @@
 module "external_secrets" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/external-secrets?ref=v4.28.0"
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/external-secrets?ref=v4.32.0"
   count  = var.enable_external_secrets ? 1 : 0
 
   helm_config   = var.helm_config
@@ -17,7 +17,7 @@ resource "aws_kms_key" "secrets" {
 }
 
 module "cluster_secretstore_role" {
-  source                      = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/irsa?ref=v4.28.0"
+  source                      = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/irsa?ref=v4.32.0"
   kubernetes_namespace        = local.namespace
   create_kubernetes_namespace = false
   kubernetes_service_account  = local.cluster_secretstore_sa
@@ -36,12 +36,13 @@ resource "aws_iam_policy" "cluster_secretstore" {
     {
       "Effect": "Allow",
       "Action": [
-        "secretsmanager:GetResourcePolicy",
-        "secretsmanager:GetSecretValue",
-        "secretsmanager:DescribeSecret",
-        "secretsmanager:ListSecretVersionIds"
+        "ssm:DescribeParameters",
+        "ssm:GetParameter",
+        "ssm:GetParameters",
+        "ssm:GetParametersByPath",
+        "ssm:GetParameterHistory"
       ],
-      "Resource": "${aws_secretsmanager_secret.secret.arn}"
+      "Resource": "${aws_ssm_parameter.secret.arn}"
     },
     {
       "Effect": "Allow",
@@ -64,7 +65,7 @@ metadata:
 spec:
   provider:
     aws:
-      service: SecretsManager
+      service: ParameterStore
       region: ${data.aws_region.current.name}
       auth:
         jwt:
@@ -75,16 +76,14 @@ YAML
   depends_on = [module.external_secrets]
 }
 
-resource "aws_secretsmanager_secret" "secret" {
-  recovery_window_in_days = 0
-  kms_key_id              = aws_kms_key.secrets.arn
-}
-
-resource "aws_secretsmanager_secret_version" "secret" {
-  secret_id = aws_secretsmanager_secret.secret.id
-  secret_string = jsonencode({
+resource "aws_ssm_parameter" "secret" {
+  name        = "/terraform-accelerator/grafana-api-key"
+  description = "SSM Secret to store grafana API Key"
+  type        = "SecureString"
+  value = jsonencode({
     GF_SECURITY_ADMIN_APIKEY = var.grafana_api_key
   })
+  key_id = aws_kms_key.secrets.id
 }
 
 resource "kubectl_manifest" "secret" {
@@ -103,7 +102,7 @@ spec:
     name: ${var.target_secret_name}
   dataFrom:
   - extract:
-      key: ${aws_secretsmanager_secret.secret.name}
+      key: ${aws_ssm_parameter.secret.name}
 YAML
   depends_on = [module.external_secrets]
 }

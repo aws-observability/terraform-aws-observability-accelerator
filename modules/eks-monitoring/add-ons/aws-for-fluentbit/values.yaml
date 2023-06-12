@@ -13,4 +13,4 @@ cloudWatchLogs:
   logGroupTemplate: /aws/eks/observability-accelerator/${cluster_name}/$kubernetes['namespace_name']
   logStreamTemplate: $kubernetes['container_name'].$kubernetes['pod_name']
   log_key: log
-  log_retention_days: ${log_retention_days}
+  logRetentionDays: ${log_retention_days}

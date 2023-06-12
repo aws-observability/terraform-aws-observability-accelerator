@@ -27,8 +27,8 @@ nav:
   - Concepts: concepts.md
   - Amazon EKS:
       - Infrastructure monitoring: eks/index.md
+      - Multicluster monitoring: eks/multicluster.md
       - Java/JMX: eks/java.md
-      - Multicluster: eks/multicluster.md
       - Nginx: eks/nginx.md
       - Viewing logs: eks/logs.md
       - Teardown: eks/destroy.md

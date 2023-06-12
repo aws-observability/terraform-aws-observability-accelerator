@@ -11,7 +11,7 @@ Using the example [eks-cluster-with-vpc](https://aws-observability.github.io/ter
    1. `eks-cluster-1`
    2. `eks-cluster-2`
 
-#### 2. Amazon Managed Serivce for Prometheus (AMP) workspace
+#### 2. Amazon Managed Service for Prometheus (AMP) workspace
 
 We recommend that you create a new AMP workspace. To do that you can run the following command.
 
@@ -48,7 +48,7 @@ Ensure you have the following necessary IAM permissions
 * `grafana.DeleteWorkspaceApiKey`
 
 ```sh
-export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 1200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
+export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 7200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
 ```
 
 ## Setup
@@ -70,8 +70,8 @@ Verify by looking at the file `variables.tf` that there are two EKS clusters tar
 
 The difference in deployment between these clusters is that Terraform, when setting up the EKS cluster behind variable `eks_cluster_1_id` for observability, also sets up:
 
-* Dashboard folder and files in `AMG`
-* Prometheus and Java, alerting and recording rules in `AMP`
+* Dashboard folder and files in Amazon Managed Grafana
+* Prometheus and Java, alerting and recording rules in Amazon Managed Service for Prometheus
 
 !!! warning
     To override the defaults, create a `terraform.tfvars` and change the default values of the variables.

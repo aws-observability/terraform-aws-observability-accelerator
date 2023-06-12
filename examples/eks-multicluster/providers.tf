@@ -39,8 +39,3 @@ provider "aws" {
   region = var.eks_cluster_2_region
   alias  = "eks_cluster_2"
 }
-
-provider "grafana" {
-  url  = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
-  auth = var.grafana_api_key
-}

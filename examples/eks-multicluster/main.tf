@@ -3,7 +3,6 @@ module "aws_observability_accelerator" {
   aws_region                          = var.eks_cluster_1_region
   enable_managed_prometheus           = false
   enable_alertmanager                 = true
-  grafana_api_key                     = var.grafana_api_key
   managed_prometheus_workspace_region = null
   managed_prometheus_workspace_id     = var.managed_prometheus_workspace_id
   managed_grafana_workspace_id        = var.managed_grafana_workspace_id
@@ -44,7 +43,6 @@ module "eks_cluster_1_monitoring" {
     aws        = aws.eks_cluster_1
     kubernetes = kubernetes.eks_cluster_1
     helm       = helm.eks_cluster_1
-    grafana    = grafana
   }
 
   depends_on = [
@@ -82,7 +80,6 @@ module "eks_cluster_2_monitoring" {
     aws        = aws.eks_cluster_2
     kubernetes = kubernetes.eks_cluster_2
     helm       = helm.eks_cluster_2
-    grafana    = grafana
   }
 
   depends_on = [

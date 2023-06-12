@@ -78,7 +78,6 @@ module "aws_observability_accelerator" {
 
   # As Grafana shares a different lifecycle, we recommend using an existing workspace.
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
-  grafana_api_key              = var.grafana_api_key
 }
 ```
 
@@ -100,7 +99,6 @@ module "aws_observability_accelerator" {
   managed_prometheus_workspace_id  = "ws-abcd123..."
 
   managed_grafana_workspace_id = "g-abcdef123"
-  grafana_api_key              = var.grafana_api_key
 }
 ```
 

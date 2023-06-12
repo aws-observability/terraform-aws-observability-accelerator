@@ -50,21 +50,9 @@ module "aws_observability_accelerator" {
   enable_alertmanager = true
 
   # reusing existing Amazon Managed Grafana workspace
-  # This is not needed anymore but kept here for a two step transition into
-  # removing the Terraform Grafana provider
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
-  grafana_api_key              = var.grafana_api_key
 
   tags = local.tags
-}
-
-# https://www.terraform.io/language/modules/develop/providers
-# A module intended to be called by one or more other modules must not contain
-# any provider blocks.
-# This allows forcing dependency between base and workloads module
-provider "grafana" {
-  url  = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
-  auth = var.grafana_api_key
 }
 
 module "eks_monitoring" {

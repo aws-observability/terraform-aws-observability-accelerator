@@ -33,11 +33,6 @@ variable "tags" {
   default     = {}
 }
 
-variable "grafana_api_key" {
-  description = "Grafana API key for the Amazon Managed Grafana workspace"
-  type        = string
-}
-
 variable "managed_grafana_workspace_id" {
   description = "Amazon Managed Grafana Workspace ID"
   type        = string

@@ -83,8 +83,7 @@ resource "aws_ssm_parameter" "secret" {
   value = jsonencode({
     GF_SECURITY_ADMIN_APIKEY = var.grafana_api_key
   })
-  key_id    = aws_kms_key.secrets.id
-  overwrite = true
+  key_id = aws_kms_key.secrets.id
 }
 
 resource "kubectl_manifest" "secret" {

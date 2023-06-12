@@ -256,6 +256,27 @@ variable "nginx_config" {
   }
 }
 
+variable "enable_istio" {
+  description = "Enable ISTIO workloads monitoring, alerting and default dashboards"
+  type        = bool
+  default     = false
+}
+
+variable "istio_config" {
+  description = "Configuration object for NGINX monitoring"
+  type = object({
+    enable_alerting_rules       = bool
+    scrape_sample_limit         = number
+    prometheus_metrics_endpoint = string
+  })
+
+  default = {
+    enable_alerting_rules       = true
+    scrape_sample_limit         = 1000
+    prometheus_metrics_endpoint = "metrics"
+  }
+}
+
 variable "enable_logs" {
   description = "Using AWS For FluentBit to collect cluster and application logs to Amazon CloudWatch"
   type        = bool

@@ -48,14 +48,8 @@ module "aws_observability_accelerator" {
 
   # reusing existing Amazon Managed Grafana workspace
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
-  grafana_api_key              = var.grafana_api_key
 
   tags = local.tags
-}
-
-provider "grafana" {
-  url  = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
-  auth = var.grafana_api_key
 }
 
 module "eks_monitoring" {

@@ -18,10 +18,6 @@ terraform {
       source  = "hashicorp/helm"
       version = ">= 2.4.1"
     }
-    grafana = {
-      source  = "grafana/grafana"
-      version = ">= 1.25.0"
-    }
   }
 
   # ##  Used for end-to-end testing on project; update to suit your needs

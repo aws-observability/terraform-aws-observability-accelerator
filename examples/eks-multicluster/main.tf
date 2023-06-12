@@ -3,7 +3,6 @@ module "aws_observability_accelerator" {
   aws_region                          = var.eks_cluster_1_region
   enable_managed_prometheus           = false
   enable_alertmanager                 = true
-  grafana_api_key                     = var.grafana_api_key
   managed_prometheus_workspace_region = null
   managed_prometheus_workspace_id     = var.managed_prometheus_workspace_id
   managed_grafana_workspace_id        = var.managed_grafana_workspace_id

@@ -12,7 +12,6 @@ Provides monitoring for Java based workloads with the following resources:
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0 |
-| <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | >= 1.25.0 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.4.1 |
 | <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >= 1.14 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.10 |

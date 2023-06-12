@@ -24,6 +24,26 @@ costs, active series with [this module](./modules/managed-prometheus-monitoring)
 
 To explore the complete project documentation, please visit our [documentation site.](https://aws-observability.github.io/terraform-aws-observability-accelerator/)
 
+
+## Migration to v2.5
+
+If you are migrating from earlier versions to v2.5, please follow this guide.
+
+v2.5.0 removes the dependency to the Terraform Grafana provider in the EKS
+monitoring module. As Grafana Operator manages and syncs the Grafana contents,
+Terraform is not required anymore in this context.
+
+However, if you migrate from earlier versions, you might leave some data orphans
+as the Grafana provider is dropped. Terraform will throw an error. We have
+released [v2.5.0-rc.1](https://github.com/aws-observability/terraform-aws-observability-accelerator/releases/tag/v2.5.0-rc.1)
+which removes all the Grafana resources provisioned by Terraform in the EKS
+context, without removing the provider configurations.
+
+- Step 1: migrate to [v2.5.0-rc.1](https://github.com/aws-observability/terraform-aws-observability-accelerator/releases/tag/v2.5.0-rc.1)
+and run `apply`
+- Step 2: migrate to `v2.5.0` or above
+
+
 ## Getting started
 
 To quick start with a complete workflow and view Amazon EKS infrastructure dashboards,
@@ -57,7 +77,6 @@ module "aws_observability_accelerator" {
 
   # As Grafana shares a different lifecycle, we recommend using an existing workspace.
   managed_grafana_workspace_id = var.managed_grafana_workspace_id
-  grafana_api_key              = var.grafana_api_key
 }
 ```
 
@@ -79,7 +98,6 @@ module "aws_observability_accelerator" {
   managed_prometheus_workspace_id  = "ws-abcd123..."
 
   managed_grafana_workspace_id = "g-abcdef123"
-  grafana_api_key              = var.grafana_api_key
 }
 ```
 
@@ -153,7 +171,6 @@ If you are interested in contributing, see the
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0 |
 | <a name="requirement_awscc"></a> [awscc](#requirement\_awscc) | >= 0.24.0 |
-| <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | >= 1.25.0 |
 
 ## Providers
 
@@ -181,7 +198,6 @@ No modules.
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS Region | `string` | n/a | yes |
 | <a name="input_enable_alertmanager"></a> [enable\_alertmanager](#input\_enable\_alertmanager) | Creates Amazon Managed Service for Prometheus AlertManager for all workloads | `bool` | `false` | no |
 | <a name="input_enable_managed_prometheus"></a> [enable\_managed\_prometheus](#input\_enable\_managed\_prometheus) | Creates a new Amazon Managed Service for Prometheus Workspace | `bool` | `true` | no |
-| <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | Grafana API key for the Amazon Managed Grafana workspace | `string` | n/a | yes |
 | <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana Workspace ID | `string` | n/a | yes |
 | <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Service for Prometheus Workspace ID | `string` | `""` | no |
 | <a name="input_managed_prometheus_workspace_region"></a> [managed\_prometheus\_workspace\_region](#input\_managed\_prometheus\_workspace\_region) | Region where Amazon Managed Service for Prometheus is deployed | `string` | `null` | no |

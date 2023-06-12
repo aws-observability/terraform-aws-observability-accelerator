@@ -6,10 +6,6 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 4.0.0"
     }
-    grafana = {
-      source  = "grafana/grafana"
-      version = ">= 1.25.0"
-    }
   }
 
   # ##  Used for end-to-end testing on project; update to suit your needs

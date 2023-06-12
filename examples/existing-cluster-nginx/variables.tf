@@ -20,7 +20,7 @@ variable "managed_grafana_workspace_id" {
 }
 
 variable "grafana_api_key" {
-  description = "API key for authorizing the Grafana provider to make changes to Amazon Managed Grafana"
+  description = "API key for external-secrets to create secrets for grafana-operator"
   type        = string
   sensitive   = true
 }

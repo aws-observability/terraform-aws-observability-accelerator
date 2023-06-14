@@ -17,6 +17,7 @@ customMetricsDroppedSeriesPrefixes: ${custom_metrics_dropped_series_prefixes}
 
 enableJava: ${enable_java}
 javaScrapeSampleLimit: ${java_scrape_sample_limit}
+javaPrometheusMetricsEndpoint: ${java_prometheus_metrics_endpoint}
 
 enableNginx: ${enable_nginx}
 nginxScrapeSampleLimit: ${nginx_scrape_sample_limit}

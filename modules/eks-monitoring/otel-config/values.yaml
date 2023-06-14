@@ -1,6 +1,7 @@
 ampurl: ${amp_url}
 region: ${region}
 ekscluster: ${eks_cluster}
+accountId: ${account_id}
 
 globalScrapeTimeout: ${global_scrape_timeout}
 globalScrapeSampleLimit: ${global_scrape_sample_limit}

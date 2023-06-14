@@ -384,14 +384,15 @@ variable "enable_external_secrets" {
 }
 
 variable "grafana_api_key" {
-  description = "Grafana API key for the Amazon Managed Grafana workspace"
+  description = "Grafana API key for the Amazon Managed Grafana workspace. Required if `enable_external_secrets = true`"
   type        = string
   default     = ""
 }
 
 variable "grafana_url" {
-  description = "Endpoint URL of Amazon Managed Grafana workspace"
+  description = "Endpoint URL of Amazon Managed Grafana workspace. Required if `enable_grafana_operator = true`"
   type        = string
+  default     = ""
 }
 
 variable "grafana_cluster_dashboard_url" {

@@ -68,7 +68,6 @@ module "eks_cluster_2_monitoring" {
   managed_prometheus_workspace_id       = module.aws_observability_accelerator.managed_prometheus_workspace_id
   managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
   managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
-  grafana_url                           = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
 
   prometheus_config = {
     global_scrape_interval = "60s"

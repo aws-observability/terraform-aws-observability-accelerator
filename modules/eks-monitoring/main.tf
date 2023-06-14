@@ -78,7 +78,6 @@ module "helm_addon" {
     {
       name        = local.name
       chart       = "${path.module}/otel-config"
-      version     = "0.4.0"
       namespace   = local.namespace
       description = "ADOT helm Chart deployment configuration"
     },
@@ -143,7 +142,7 @@ module "helm_addon" {
       value = format("(%s.*)$", join(".*|", var.custom_metrics_config.dropped_series_prefixes))
     },
     {
-      name  = "enable_java"
+      name  = "enableJava"
       value = var.enable_java
     },
     {
@@ -155,7 +154,7 @@ module "helm_addon" {
       value = try(var.java_config.prometheus_metrics_endpoint, local.java_pattern_config.prometheus_metrics_endpoint)
     },
     {
-      name  = "enable_nginx"
+      name  = "enableNginx"
       value = var.enable_nginx
     },
     {

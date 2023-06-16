@@ -93,7 +93,7 @@ Ensure you have necessary IAM permissions (`CreateWorkspaceApiKey, DeleteWorkspa
 
 !!! note
     Starting version v2.5.x and above, we use Grafana Operator and External Secrets to
-    manage Grafana contents. Your API Key will be stored securely on AWS SSM Paramter Store
+    manage Grafana contents. Your API Key will be stored securely on AWS SSM Parameter Store
     and the Grafana Operator will use it to sync dashboards, folders and data sources.
     Read more [here](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/).
 

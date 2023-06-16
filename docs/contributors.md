@@ -9,12 +9,12 @@ Our goal is to make it easier to use AWS Open Source Observability Services.
 The core team include the following people:
 
 * Abhi Khanna
+* Elamaran Shanmugam
 * Imaya Kumar Jagannathan
 * Jerome DECQ
 * Kevin Lewin
 * Michael Hausenblas
 * Munish Dabra
-* Ramesh Kumar Venkatraman
 * Rodrigue Koffi
 * Toshal Dudhwhala
 * Vara Bonthu

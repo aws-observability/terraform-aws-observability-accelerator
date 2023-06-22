@@ -174,7 +174,7 @@ custom_metrics_config = {
     ports = [8000, 8080]
 
     # list of series prefixes you want to discard from ingestion
-    dropped_series_prefix = ["go_gcc"]
+    dropped_series_prefixes = ["go_gcc"]
 }
 ```
 

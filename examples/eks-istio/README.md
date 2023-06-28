@@ -1,7 +1,7 @@
-# Existing Cluster with the AWS Observability accelerator base module and Istio monitoring
+# Existing Cluster with the AWS Observability accelerator base module, Tetrate Istio Add-on and Istio monitoring
 
-This example demonstrates how to use the AWS Observability Accelerator Terraform
-modules with Istio monitoring enabled.
+This example demonstrates how to use Terraform modules for AWS Observability Accelerator, EKS Blueprints with the Tetrate Istio Add-on and EKS monitoring for Istio.
+
 The current example deploys the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html)
 for Amazon EKS with its requirements and make use of an existing Amazon Managed Grafana workspace.
 It creates a new Amazon Managed Service for Prometheus workspace unless provided with an existing one to reuse.
@@ -9,9 +9,9 @@ It creates a new Amazon Managed Service for Prometheus workspace unless provided
 It uses the `EKS monitoring` [module](../../modules/eks-monitoring/)
 to provide an existing EKS cluster with an OpenTelemetry collector,
 curated Grafana dashboards, Prometheus alerting and recording rules with multiple
-configuration options on the cluster infrastructure.
+configuration options for Istio.
 
-View the full documentation for this example [here](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/)
+View the full documentation for this example [here](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/istio)
 
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
@@ -37,6 +37,7 @@ View the full documentation for this example [here](https://aws-observability.gi
 |------|--------|---------|
 | <a name="module_aws_observability_accelerator"></a> [aws\_observability\_accelerator](#module\_aws\_observability\_accelerator) | ../../ | n/a |
 | <a name="module_eks_monitoring"></a> [eks\_monitoring](#module\_eks\_monitoring) | ../../modules/eks-monitoring | n/a |
+| <a name="module_eks_blueprints_kubernetes_addons"></a> [eks\_blueprints\_kubernetes\_addons](#module\_eks\_blueprints\_kubernetes\_addons) | github.com/aws-ia/terraform-aws-eks-blueprints/modules/kubernetes-addons | n/a |
 
 ## Resources
 

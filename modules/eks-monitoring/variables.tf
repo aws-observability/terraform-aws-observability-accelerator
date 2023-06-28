@@ -33,6 +33,12 @@ variable "irsa_iam_permissions_boundary" {
   default     = null
 }
 
+variable "adot_loglevel" {
+  description = "Verbosity level for ADOT collector logs"
+  type        = string
+  default     = "warn"
+}
+
 variable "managed_prometheus_workspace_endpoint" {
   description = "Amazon Managed Prometheus Workspace Endpoint"
   type        = string

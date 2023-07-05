@@ -1,8 +1,10 @@
 resource "aws_prometheus_rule_group_namespace" "recording_rules" {
+  count = var.pattern_config.enable_recording_rules ? 1 : 0
+
   name         = "accelerator-istio-rules"
-  workspace_id = var.managed_prometheus_workspace_id
+  workspace_id = var.pattern_config.managed_prometheus_workspace_id
   data         = <<EOF
-groups:
+ groups:
   - name: "istio.recording-rules"
     interval: 5s
     rules:
@@ -65,10 +67,10 @@ EOF
 }
 
 resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
-  count = var.enable_alerting_rules ? 1 : 0
+  count = var.pattern_config.enable_alerting_rules ? 1 : 0
 
   name         = "accelerator-istio-alerting"
-  workspace_id = var.managed_prometheus_workspace_id
+  workspace_id = var.pattern_config.managed_prometheus_workspace_id
   data         = <<EOF
   groups:
     - name: "istio.basic.alerting-rules"
@@ -183,37 +185,31 @@ resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
           expr: >
             sum(rate(istio_requests_total{reporter="source", source_workload="istio-ingressgateway",response_code="200",destination_service_namespace=~"service-graph.*"}[5m])) < 1490
           for: 30m
-    
-
-EOF
+    EOF
 }
 
+resource "kubectl_manifest" "flux_kustomization" {
+  count = var.pattern_config.enable_dashboards ? 1 : 0
 
-
-
-/*
-resource "grafana_dashboard" "istiomeshdashboard" {
-  count       = var.enable_dashboards ? 1 : 0
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/istio-mesh-dashboard.json")
-}
-*/
-resource "grafana_dashboard" "istioservicedashboard" {
-  count       = var.enable_dashboards ? 1 : 0
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/istio-service-dashboard.json")
-}
-
-
-resource "grafana_dashboard" "istiocontrolplanedashboard" {
-  count       = var.enable_dashboards ? 1 : 0
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/istio-control-plane-dashboard.json")
-}
-
-resource "grafana_dashboard" "istioperformancedashboard" {
-  count       = var.enable_dashboards ? 1 : 0
-  folder      = var.dashboards_folder_id
-  config_json = file("${path.module}/dashboards/istio-performance-dashboard.json")
+  yaml_body = <<YAML
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: ${var.pattern_config.flux_kustomization_name}
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ${var.pattern_config.flux_kustomization_path}
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ${var.pattern_config.flux_gitrepository_name}
+  postBuild:
+    substitute:
+      AMG_AWS_REGION: ${var.pattern_config.managed_prometheus_workspace_region}
+      AMP_ENDPOINT_URL: ${var.pattern_config.managed_prometheus_workspace_endpoint}
+      AMG_ENDPOINT_URL: ${var.pattern_config.grafana_url}
+      GRAFANA_ISTIO_JMX_DASH_URL: ${var.pattern_config.grafana_dashboard_url}
+YAML
 }
 

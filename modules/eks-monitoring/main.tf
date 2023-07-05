@@ -165,6 +165,18 @@ module "helm_addon" {
       name  = "nginxPrometheusMetricsEndpoint"
       value = try(var.nginx_config.prometheus_metrics_endpoint, local.nginx_pattern_config.prometheus_metrics_endpoint)
     },
+    {
+      name  = "enableIstio"
+      value = var.enable_istio
+    },
+    {
+      name  = "istioScrapeSampleLimit"
+      value = try(var.istio_config.scrape_sample_limit, local.istio_pattern_config.scrape_sample_limit)
+    },
+    {
+      name  = "istioPrometheusMetricsEndpoint"
+      value = try(var.istio_config.prometheus_metrics_endpoint, local.istio_pattern_config.prometheus_metrics_endpoint)
+    }
   ]
 
   irsa_config = {

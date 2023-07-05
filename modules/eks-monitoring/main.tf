@@ -198,6 +198,13 @@ module "nginx_monitoring" {
   pattern_config = coalesce(var.nginx_config, local.nginx_pattern_config)
 }
 
+module "istio_monitoring" {
+  source = "./patterns/istio"
+  count  = var.enable_istio ? 1 : 0
+
+  pattern_config = coalesce(var.nginx_config, local.istio_pattern_config)
+}
+
 module "fluentbit_logs" {
   source = "./add-ons/aws-for-fluentbit"
   count  = var.enable_logs ? 1 : 0

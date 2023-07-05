@@ -18,13 +18,9 @@ terraform {
       source  = "hashicorp/helm"
       version = ">= 2.4.1"
     }
+    grafana = {
+      source  = "grafana/grafana"
+      version = ">= 1.25.0"
+    }
   }
-
-  # ##  Used for end-to-end testing on project; update to suit your needs
-  # backend "s3" {
-  #   bucket = "aws-observability-accelerator-terraform-states"
-  #   region = "us-west-2"
-  #   key    = "e2e/eks-istio/terraform.tfstate"
-  # }
-
 }

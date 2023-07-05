@@ -1763,6 +1763,67 @@ spec:
                 - regex: exported_host
                   action: labeldrop
             {{ end }}
+            
+         {{ if .Values.enableIstio }}
+            - honor_labels: true
+              job_name: kubernetes-istio
+              kubernetes_sd_configs:
+              - role: pod
+              relabel_configs:
+              - action: keep
+                regex: true
+                source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+              - action: drop
+                regex: true
+                source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_scrape_slow
+              - action: replace
+                regex: (https?)
+                source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_scheme
+                target_label: __scheme__
+              - action: replace
+                regex: (.+)
+                source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_path
+                target_label: __metrics_path__
+              - action: replace
+                regex: (\d+);(([A-Fa-f0-9]{1,4}::?){1,7}[A-Fa-f0-9]{1,4})
+                replacement: '[$$2]:$$1'
+                source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_port
+                - __meta_kubernetes_pod_ip
+                target_label: __address__
+              - action: replace
+                regex: (\d+);((([0-9]+?)(\.|$)){4})
+                replacement: $$2:$$1
+                source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_port
+                - __meta_kubernetes_pod_ip
+                target_label: __address__
+              - action: labelmap
+                regex: __meta_kubernetes_pod_annotation_prometheus_io_param_(.+)
+                replacement: __param_$1
+              - action: labelmap
+                regex: __meta_kubernetes_pod_label_(.+)
+              - action: replace
+                source_labels:
+                - __meta_kubernetes_namespace
+                target_label: namespace
+              - action: replace
+                source_labels:
+                - __meta_kubernetes_pod_name
+                target_label: pod
+              - action: keep
+                source_labels: [ __address__ ]
+                regex: '.*:15020$$'
+              - action: drop
+                regex: Pending|Succeeded|Failed|Completed
+                source_labels:
+                - __meta_kubernetes_pod_phase
+            {{ end }}
+
 
     exporters:
       {{ if .Values.enableTracing }}

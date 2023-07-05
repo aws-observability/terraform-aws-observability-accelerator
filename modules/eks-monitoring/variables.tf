@@ -299,6 +299,36 @@ variable "nginx_config" {
   default = null
 }
 
+variable "enable_istio" {
+  description = "Enable ISTIO workloads monitoring, alerting and default dashboards"
+  type        = bool
+  default     = false
+}
+
+
+variable "istio_config" {
+  description = "Configuration object for ISTIO monitoring"
+  type = object({
+    enable_alerting_rules  = bool
+    enable_recording_rules = bool
+    enable_dashboards      = bool
+    scrape_sample_limit    = number
+
+    flux_gitrepository_name   = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_name   = string
+    flux_kustomization_path   = string
+
+    grafana_dashboard_url = string
+
+    prometheus_metrics_endpoint = string
+  })
+
+  # defaults are pre-computed in locals.tf, provide a full definition to override
+  default = null
+}
+
 variable "enable_logs" {
   description = "Using AWS For FluentBit to collect cluster and application logs to Amazon CloudWatch"
   type        = bool

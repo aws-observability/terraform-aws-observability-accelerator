@@ -137,7 +137,7 @@ variable "ksm_config" {
     helm_values        = {}
     k8s_namespace      = "kube-system"
 
-    scrape_interval = "60s"
+    scrape_interval = "2m"
     scrape_timeout  = "15s"
   }
   nullable = false

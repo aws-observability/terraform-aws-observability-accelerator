@@ -16,7 +16,7 @@ The core team include the following people:
 * Michael Hausenblas
 * Munish Dabra
 * Rodrigue Koffi
-* Toshal Dudhwhala
+* Toshal Dudhwala
 * Vara Bonthu
 * Vikram Venkataraman
 

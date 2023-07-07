@@ -106,6 +106,10 @@ module "helm_addon" {
       value = var.prometheus_config.global_scrape_timeout
     },
     {
+      name  = "adotLoglevel"
+      value = var.adot_loglevel
+    },
+    {
       name  = "accountId"
       value = local.context.aws_caller_identity_account_id
     },

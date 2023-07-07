@@ -14,3 +14,17 @@ cloudWatchLogs:
   logStreamTemplate: $kubernetes['container_name'].$kubernetes['pod_name']
   logKey: log
   logRetentionDays: ${log_retention_days}
+
+input:
+  enabled: false
+
+additionalInputs: |
+  [INPUT]
+      Name              tail
+      Tag               kube.*
+      Path              /var/log/containers/*.log
+      DB                /var/log/flb_kube.db
+      Mem_Buf_Limit     5MB
+      Skip_Long_Lines   On
+      Refresh_Interval  10
+      multiline.parser  cri, docker, go, java, python

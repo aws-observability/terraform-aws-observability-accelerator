@@ -195,7 +195,7 @@ variable "prometheus_config" {
   })
 
   default = {
-    global_scrape_interval = "60s"
+    global_scrape_interval = "120s"
     global_scrape_timeout  = "15s"
   }
   nullable = false

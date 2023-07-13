@@ -12,5 +12,19 @@ cloudWatchLogs:
   logGroupName: /aws/eks/observability-accelerator/workloads
   logGroupTemplate: /aws/eks/observability-accelerator/${cluster_name}/$kubernetes['namespace_name']
   logStreamTemplate: $kubernetes['container_name'].$kubernetes['pod_name']
-  log_key: log
+  logKey: log
   logRetentionDays: ${log_retention_days}
+
+input:
+  enabled: false
+
+additionalInputs: |
+  [INPUT]
+      Name              tail
+      Tag               kube.*
+      Path              /var/log/containers/*.log
+      DB                /var/log/flb_kube.db
+      Mem_Buf_Limit     5MB
+      Skip_Long_Lines   On
+      Refresh_Interval  ${refresh_interval}
+      multiline.parser  cri, docker, go, java, python

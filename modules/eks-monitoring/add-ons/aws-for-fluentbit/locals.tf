@@ -33,6 +33,7 @@ locals {
     aws_region         = var.addon_context.aws_region_name
     cluster_name       = var.addon_context.eks_cluster_id
     log_retention_days = var.cw_log_retention_days
+    refresh_interval   = var.refresh_interval
     service_account    = local.service_account
   })]
 

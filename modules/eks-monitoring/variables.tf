@@ -90,7 +90,7 @@ variable "flux_gitrepository_name" {
 variable "flux_gitrepository_url" {
   description = "Flux GitRepository URL"
   type        = string
-  default     = "https://github.com/aws-observability/aws-observability-accelerator"
+  default     = "https://github.com/dms486/aws-observability-accelerator"
 }
 
 variable "flux_gitrepository_branch" {

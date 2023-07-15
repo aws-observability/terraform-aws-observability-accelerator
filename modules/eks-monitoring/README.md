@@ -65,7 +65,7 @@ See examples using this Terraform modules in the **Amazon EKS** section of [this
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_adot_loglevel"></a> [adot\_loglevel](#input\_adot\_loglevel) | Verbosity level for ADOT collector logs | `string` | `"warn"` | no |
+| <a name="input_adot_loglevel"></a> [adot\_loglevel](#input\_adot\_loglevel) | Verbosity level for ADOT collector logs. This accepts (detailed\|normal\|basic), see https://aws-otel.github.io/docs/components/misc-exporters for mor infos. | `string` | `"normal"` | no |
 | <a name="input_custom_metrics_config"></a> [custom\_metrics\_config](#input\_custom\_metrics\_config) | Configuration object to enable custom metrics collection | <pre>object({<br>    ports = list(number)<br>    # paths = optional(list(string), ["/metrics"])<br>    # list of samples to be dropped by label prefix, ex: go_ -> discards go_.*<br>    dropped_series_prefixes = list(string)<br>  })</pre> | <pre>{<br>  "dropped_series_prefixes": [<br>    "unspecified"<br>  ],<br>  "ports": []<br>}</pre> | no |
 | <a name="input_eks_cluster_id"></a> [eks\_cluster\_id](#input\_eks\_cluster\_id) | EKS Cluster Id | `string` | n/a | yes |
 | <a name="input_enable_alerting_rules"></a> [enable\_alerting\_rules](#input\_enable\_alerting\_rules) | Enables or disables Managed Prometheus alerting rules | `bool` | `true` | no |

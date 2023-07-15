@@ -1489,7 +1489,7 @@ spec:
         resource_to_telemetry_conversion:
           enabled: true
       logging:
-        loglevel: {{ .Values.adotLoglevel }}
+        verbosity: {{ .Values.adotLoglevel }}
     extensions:
       sigv4auth:
         region: {{ .Values.region }}

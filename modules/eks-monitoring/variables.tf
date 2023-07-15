@@ -34,9 +34,9 @@ variable "irsa_iam_permissions_boundary" {
 }
 
 variable "adot_loglevel" {
-  description = "Verbosity level for ADOT collector logs"
+  description = "Verbosity level for ADOT collector logs. This accepts (detailed|normal|basic), see https://aws-otel.github.io/docs/components/misc-exporters for mor infos."
   type        = string
-  default     = "warn"
+  default     = "normal"
 }
 
 variable "managed_prometheus_workspace_endpoint" {

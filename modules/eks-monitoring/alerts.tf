@@ -160,14 +160,6 @@ groups:
         annotations:
           description: File descriptors limit at {{ $labels.instance }} is currently at {{ printf "%.2f" $value }}%.
           summary: Kernel is predicted to exhaust file descriptors limit soon.
-      - alert: KubeSchedulerDown
-        expr: absent(up{job="kube-scheduler"} == 1)
-        for: 15m
-        labels:
-          severity: critical
-        annotations:
-          description: KubeScheduler has disappeared from Prometheus target discovery.
-          summary: Target disappeared from Prometheus target discovery.
   - name: infra-alerts-02
     rules:
       - alert: KubeNodeNotReady
@@ -270,14 +262,6 @@ groups:
         annotations:
           description: Kubelet has disappeared from Prometheus target discovery.
           summary: Target disappeared from Prometheus target discovery.
-      - alert: KubeProxyDown
-        expr: absent(up{job="kube-proxy"} == 1)
-        for: 15m
-        labels:
-          severity: critical
-        annotations:
-          description: KubeProxy has disappeared from Prometheus target discovery.
-          summary: Target disappeared from Prometheus target discovery.
       - alert: KubeVersionMismatch
         expr: count by(cluster) (count by(git_version, cluster) (label_replace(kubernetes_build_info{job!~"kube-dns|coredns"}, "git_version", "$1", "git_version", "(v[0-9]*.[0-9]*).*"))) > 1
         for: 15m
@@ -294,14 +278,6 @@ groups:
         annotations:
           description: Kubernetes API server client '{{ $labels.job }}/{{ $labels.instance }}' is experiencing {{ $value | humanizePercentage }} errors.'
           summary: Kubernetes API server client is experiencing errors.
-      - alert: KubeControllerManagerDown
-        expr: absent(up{job="kube-controller-manager"} == 1)
-        for: 15m
-        labels:
-          severity: critical
-        annotations:
-          description: KubeControllerManager has disappeared from Prometheus target discovery.
-          summary: Target disappeared from Prometheus target discovery.
       - alert: KubeClientCertificateExpiration
         expr: apiserver_client_certificate_expiration_seconds_count{job="apiserver"} > 0 and on(job) histogram_quantile(0.01, sum by(job, le) (rate(apiserver_client_certificate_expiration_seconds_bucket{job="apiserver"}[5m]))) < 604800
         labels:
@@ -334,7 +310,7 @@ groups:
           description: Kubernetes aggregated API {{ $labels.name }}/{{ $labels.namespace }} has been only {{ $value | humanize }}% available over the last 10m.
           summary: Kubernetes aggregated API is down.
       - alert: KubeAPIDown
-        expr: absent(up{job="apiserver"} == 1)
+        expr: absent(up{job="kube-admin"} == 1)
         for: 15m
         labels:
           severity: critical

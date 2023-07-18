@@ -9,7 +9,7 @@ import (
 func TestExamplesBasic(t *testing.T) {
 
 	terraformOptions := &terraform.Options{
-		TerraformDir: "../examples/basic",
+		TerraformDir: "../examples/existing-cluster-with-base-and-infra",
 		// Vars: map[string]interface{}{
 		// 	"myvar":     "test",
 		// 	"mylistvar": []string{"list_item_1"},

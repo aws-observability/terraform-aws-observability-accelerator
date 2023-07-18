@@ -19,11 +19,11 @@ variable "pattern_config" {
     managed_prometheus_workspace_region   = string
     managed_prometheus_workspace_endpoint = string
 
-    grafana_url           = string
-    grafana_istio_cp_dashboard_url = string
-    grafana_istio_mesh_dashboard_url = string
+    grafana_url                             = string
+    grafana_istio_cp_dashboard_url          = string
+    grafana_istio_mesh_dashboard_url        = string
     grafana_istio_performance_dashboard_url = string
-    grafana_istio_service_dashboard_url = string
+    grafana_istio_service_dashboard_url     = string
   })
   nullable = false
 }

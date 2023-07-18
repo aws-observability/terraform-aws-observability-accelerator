@@ -218,7 +218,7 @@ module "istio_monitoring" {
   source = "./patterns/istio"
   count  = var.enable_istio ? 1 : 0
 
-  pattern_config = coalesce(var.nginx_config, local.istio_pattern_config)
+  pattern_config = coalesce(var.istio_config, local.istio_pattern_config)
 }
 
 module "fluentbit_logs" {

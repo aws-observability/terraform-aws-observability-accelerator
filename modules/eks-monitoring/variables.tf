@@ -90,7 +90,7 @@ variable "flux_gitrepository_name" {
 variable "flux_gitrepository_url" {
   description = "Flux GitRepository URL"
   type        = string
-  default     = "https://github.com/dms486/aws-observability-accelerator"
+  default     = "https://github.com/aws-observability/aws-observability-accelerator"
 }
 
 variable "flux_gitrepository_branch" {
@@ -326,7 +326,11 @@ variable "istio_config" {
     flux_kustomization_name   = string
     flux_kustomization_path   = string
 
-    grafana_dashboard_url = string
+    grafana_url                             = string
+    grafana_istio_cp_dashboard_url          = string
+    grafana_istio_mesh_dashboard_url        = string
+    grafana_istio_performance_dashboard_url = string
+    grafana_istio_service_dashboard_url     = string
 
     prometheus_metrics_endpoint = string
   })

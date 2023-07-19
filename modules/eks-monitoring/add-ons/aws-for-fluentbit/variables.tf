@@ -10,6 +10,13 @@ variable "cw_log_retention_days" {
   default     = 90
 }
 
+variable "refresh_interval" {
+  description = "FluentBit input refresh interval"
+  type        = number
+  default     = 60
+}
+
+
 variable "manage_via_gitops" {
   type        = bool
   description = "Determines if the add-on should be managed via GitOps."

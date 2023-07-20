@@ -215,4 +215,3 @@ spec:
       GRAFANA_ISTIO_SERVICE_DASH_URL: ${var.pattern_config.grafana_istio_service_dashboard_url}
 YAML
 }
-

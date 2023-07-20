@@ -1561,7 +1561,7 @@ spec:
                 - regex: exported_host
                   action: labeldrop
             {{ end }}
-            
+
          {{ if .Values.enableIstio }}
             - honor_labels: true
               job_name: kubernetes-istio

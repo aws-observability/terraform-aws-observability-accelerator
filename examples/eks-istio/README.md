@@ -130,7 +130,7 @@ Open the Amazon Managed Service for Prometheus console and view the details of y
 
 In this section we will deploy sample application and extract metrics using AWS OpenTelemetry collector
 
-### Deploy the Bookinfo Application 
+### Deploy the Bookinfo Application
 
 ```sh
 #https://istio.io/latest/docs/examples/bookinfo/
@@ -195,8 +195,8 @@ add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_aws_observability_accelerator"></a> [aws\_observability\_accelerator](#module\_aws\_observability\_accelerator) | ../../ | n/a |
+| <a name="module_eks_blueprints_kubernetes_addons"></a> [eks\_blueprints\_kubernetes\_addons](#module\_eks\_blueprints\_kubernetes\_addons) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons | v4.32.0 |
 | <a name="module_eks_monitoring"></a> [eks\_monitoring](#module\_eks\_monitoring) | ../../modules/eks-monitoring | n/a |
-| <a name="module_eks_blueprints_kubernetes_addons"></a> [eks\_blueprints\_kubernetes\_addons](#module\_eks\_blueprints\_kubernetes\_addons) | github.com/aws-ia/terraform-aws-eks-blueprints/modules/kubernetes-addons | n/a |
 
 ## Resources
 
@@ -223,4 +223,6 @@ add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws
 | <a name="output_aws_region"></a> [aws\_region](#output\_aws\_region) | AWS Region |
 | <a name="output_eks_cluster_id"></a> [eks\_cluster\_id](#output\_eks\_cluster\_id) | EKS Cluster Id |
 | <a name="output_eks_cluster_version"></a> [eks\_cluster\_version](#output\_eks\_cluster\_version) | EKS Cluster version |
+| <a name="output_managed_prometheus_workspace_endpoint"></a> [managed\_prometheus\_workspace\_endpoint](#output\_managed\_prometheus\_workspace\_endpoint) | Amazon Managed Prometheus workspace endpoint |
+| <a name="output_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#output\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus workspace ID |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

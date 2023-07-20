@@ -67,7 +67,7 @@ Open the Amazon Managed Service for Prometheus console and view the details of y
 
 In this section we will deploy sample application and extract metrics using AWS OpenTelemetry collector
 
-### 1. Deploy the Bookinfo Application 
+### 1. Deploy the Bookinfo Application
 
 ```sh
 #https://istio.io/latest/docs/examples/bookinfo/

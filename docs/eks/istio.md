@@ -20,7 +20,7 @@ module "eks_monitoring" {
 }
 ```
 
-You can further customize the NGINX pattern by providing `nginx_config` [options](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/modules/eks-monitoring/README.md#input_nginx_config).
+You can further customize the ISTIO pattern by providing `istio_config` [options](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/modules/eks-monitoring/README.md#input_istio_config).
 
 ### 2. Grafana API key
 

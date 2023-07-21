@@ -188,7 +188,7 @@ Grafana explorer view and select the X-Ray data source. If you type the query
 below, and select `Trace List` for **Query Type**, you should see the list
 of traces occured in the selected timeframe.
 
-> image traces on grafana
+<img width="1721" alt="Screenshot 2023-07-20 at 21 42 30" src="https://github.com/aws-observability/terraform-aws-observability-accelerator/assets/10175027/bd992a77-05fb-47d2-8ed4-af05d96e951d">
 
 You can add the service map to a dashbaord, for example a service focused
 dashbaord. You can click on any of the traces to view a node map and the traces

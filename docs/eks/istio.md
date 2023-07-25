@@ -88,6 +88,14 @@ kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
 ```sh
 kubectl apply -f samples/bookinfo/networking/bookinfo-gateway.yaml
 ```
+8. Validate that there are no issues with the Istio configuration
+```sh
+istioctl analyze
+```
+9. Get the DNS name of the load balancer for the Istio gateway
+```sh
+GATEWAY_URL=$(kubectl get svc istio-ingressgateway -n istio-system -o=jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+```
 Additional details can be found on Istio's [Getting Started](https://istio.io/latest/docs/setup/getting-started/) documentation
 
 ### 2. Start some sample ISTIO traffic by entering the following command.

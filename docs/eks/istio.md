@@ -98,17 +98,14 @@ GATEWAY_URL=$(kubectl get svc istio-ingressgateway -n istio-system -o=jsonpath='
 ```
 Additional details can be found on Istio's [Getting Started](https://istio.io/latest/docs/setup/getting-started/) documentation
 
-### 2. Start some sample ISTIO traffic by entering the following command.
+### 2. Generate traffic for the Istio Bookinfo sample application by entering the following command.
 
+For the Bookinfo sample application, visit http://$GATEWAY_URL/productpage in your web browser. To see trace data, you must send requests to your service. The number of requests depends on Istio’s sampling rate and can be configured using the Telemetry API. With the default sampling rate of 1%, you need to send at least 100 requests before the first trace is visible. To send a 100 requests to the productpage service, use the following command:
 ```sh
-#For the Bookinfo sample application, visit http://$GATEWAY_URL/productpage in your web browser or issue the following command:
-
-#To see trace data, you must send requests to your service. The number of requests depends on Istio’s sampling rate and can be configured using the Telemetry API. With the default sampling rate of 1%, you need to send at least 100 requests before the first trace is visible. To send a 100 requests to the productpage service, use the following command:
-
 $ for i in $(seq 1 100); do curl -s -o /dev/null "http://$GATEWAY_URL/productpage"; done
 ```
 
-### 7. Visualize the Application's dashboard
+### 3. Visualize the Application's dashboard
 
 Log back into your Amazon Managed Grafana workspace and navigate to the dashboard side panel. Click on the `Observability Accelerator Dashboards` folder and open the `Istio Service` Dashboard. Use the Service dropdown menu to select the `reviews.default.svc.cluster.local` service. This gives details about metrics for the service, client workloads (workloads that are calling this service), and service workloads (workloads that are providing this service).
 

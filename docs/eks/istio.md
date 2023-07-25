@@ -98,7 +98,7 @@ GATEWAY_URL=$(kubectl get svc istio-ingressgateway -n istio-system -o=jsonpath='
 ```
 Additional details can be found on Istio's [Getting Started](https://istio.io/latest/docs/setup/getting-started/) documentation
 
-### 2. Generate traffic for the Istio Bookinfo sample application by entering the following command.
+### 2. Generate traffic for the Istio Bookinfo sample application
 
 For the Bookinfo sample application, visit `http://$GATEWAY_URL/productpage` in your web browser. To see trace data, you must send requests to your service. The number of requests depends on Istio’s sampling rate and can be configured using the Telemetry API. With the default sampling rate of 1%, you need to send at least 100 requests before the first trace is visible. To send a 100 requests to the productpage service, use the following command:
 ```sh

@@ -67,7 +67,7 @@ export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "
 
 ## Deploy
 
-Simply run this command to deploy.
+Simply run this command to deploy (if using a variable definition file)
 
 ```sh
 terraform apply -var-file=terraform.tfvars

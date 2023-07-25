@@ -44,7 +44,7 @@ terraform apply
 
 ## Visualization
 
-1. Grafana dashboards
+### 1. Grafana dashboards
 
 Go to the Dashboards panel of your Grafana workspace. You will see a list of dashboards under the `Observability Accelerator Dashboards`
 
@@ -54,7 +54,7 @@ Open one of the ISTIO dasbhoards and you will be able to view its visualization
 
 <img width="1850" alt="image" src="https://user-images.githubusercontent.com/47993564/236842708-72225322-4f97-44cc-aac0-40a3356e50c6.jpeg">
 
-2. Amazon Managed Service for Prometheus rules and alerts
+### 2. Amazon Managed Service for Prometheus rules and alerts
 
 Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you will find new rules deployed.
 

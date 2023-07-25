@@ -1,9 +1,17 @@
 # Monitor Istio running on Amazon EKS
 
+## Existing Cluster with the AWS Observability accelerator base module, Tetrate Istio Add-on and Istio monitoring
 
-In addition to EKS infrastructure monitoring, the current example provides
+This example demonstrates how to use Terraform modules for AWS Observability Accelerator, EKS Blueprints with the Tetrate Istio Add-on and EKS monitoring for Istio.
+
+The current example deploys the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html)
+for Amazon EKS with its requirements and make use of an existing Amazon Managed Grafana workspace.
+It creates a new Amazon Managed Service for Prometheus workspace unless provided with an existing one to reuse.
+
+It uses the `EKS monitoring` [module](../../modules/eks-monitoring/)
+to provide an existing EKS cluster with an OpenTelemetry collector,
 curated Grafana dashboards, Prometheus alerting and recording rules with multiple
-configuration options for Istio based workloads on EKS.
+configuration options for Istio.
 
 ## Prerequisites
 

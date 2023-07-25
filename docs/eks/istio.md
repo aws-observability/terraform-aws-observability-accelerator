@@ -95,7 +95,17 @@ or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws
 
 ## Visualization
 
-### 1. Grafana dashboards
+### 1. Prometheus datasource on Grafana
+
+Make sure to open the link in the output. After a successful deployment, this will open
+the Prometheus datasource configuration on Grafana.
+Click `Save & test` and you should see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
+
+```bash
+terraform output grafana_prometheus_datasource_test
+```
+
+### 2. Grafana dashboards
 
 Go to the Dashboards panel of your Grafana workspace. You will see a list of Istio dashboards under the `Observability Accelerator Dashboards`
 
@@ -105,7 +115,7 @@ Open one of the Istio dasbhoards and you will be able to view its visualization
 
 <img width="1850" alt="image" src="https://user-images.githubusercontent.com/47993564/236842708-72225322-4f97-44cc-aac0-40a3356e50c6.jpeg">
 
-### 2. Amazon Managed Service for Prometheus rules and alerts
+### 3. Amazon Managed Service for Prometheus rules and alerts
 
 Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you will find new rules deployed.
 

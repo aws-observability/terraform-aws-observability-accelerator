@@ -43,11 +43,11 @@ terraform apply
 
 ### 1. Grafana dashboards
 
-Go to the Dashboards panel of your Grafana workspace. You will see a list of dashboards under the `Observability Accelerator Dashboards`
+Go to the Dashboards panel of your Grafana workspace. You will see a list of Istio dashboards under the `Observability Accelerator Dashboards`
 
 <img width="1208" alt="image" src="https://user-images.githubusercontent.com/47993564/236841811-fdd5a07c-6e5e-4654-a735-80f92f5bee56.jpeg">
 
-Open one of the ISTIO dasbhoards and you will be able to view its visualization
+Open one of the Istio dasbhoards and you will be able to view its visualization
 
 <img width="1850" alt="image" src="https://user-images.githubusercontent.com/47993564/236842708-72225322-4f97-44cc-aac0-40a3356e50c6.jpeg">
 

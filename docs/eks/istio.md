@@ -69,9 +69,26 @@ In this section we will deploy sample application and extract metrics using AWS 
 
 ### 1. Deploy the Bookinfo Application
 
+1. Go to the [Istio release](https://github.com/istio/istio/releases) to download the installation file for your OS and version of Istio. Install and configure the istioctl client for your environment.
+2. Ensure you have downloaded and installed [kubectl](https://kubernetes.io/docs/tasks/tools/) for your OS. Make sure the version matches the version of your EKS cluster.
+3. Using the AWS CLI, configure kubectl so you can connect to your EKS cluster. Update for your region and EKS cluster name
 ```sh
-#https://istio.io/latest/docs/examples/bookinfo/
+aws eks update-kubeconfig --region us-east-1 --name eks-blueprint
 ```
+4. Label the default namespace for automatic Istio sidecar injection
+```sh
+kubectl label namespace default istio-injection=enabled
+```
+5. Navigate to the Istio folder location
+6. Deploy the Bookinfo sample application
+```sh
+kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
+```
+7. Connect the Bookinfo application with the Istio gateway
+```sh
+kubectl apply -f samples/bookinfo/networking/bookinfo-gateway.yaml
+```
+Additional details can be found on Istio's [Getting Started](https://istio.io/latest/docs/setup/getting-started/) documentation
 
 ### 2. Start some sample ISTIO traffic by entering the following command.
 

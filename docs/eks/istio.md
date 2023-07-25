@@ -51,7 +51,7 @@ To run this example you need an Amazon Managed Grafana workspace. If you have
 an existing workspace, create an environment variable
 `export TF_VAR_managed_grafana_workspace_id=g-xxx`.
 
-To create a new one, visit [this example](../managed-grafana-workspace).
+To create a new one, visit [this example](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/managed-grafana/).
 
 > In the URL `https://g-xyz.grafana-workspace.eu-central-1.amazonaws.com`, the workspace ID would be `g-xyz`
 

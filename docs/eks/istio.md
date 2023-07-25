@@ -15,6 +15,50 @@ Ensure that you have the following tools installed locally:
 
 ## Setup
 
+This example uses a local terraform state. If you need states to be saved remotely,
+on Amazon S3 for example, visit the [terraform remote states](https://www.terraform.io/language/state/remote) documentation
+
+### 1. Clone the repo using the command below
+
+```
+git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
+```
+
+### 2. Initialize terraform
+
+```console
+cd examples/eks-istio
+terraform init
+```
+
+### 3. Amazon EKS Cluster
+
+To run this example, you need to provide your EKS cluster name.
+If you don't have a cluster ready, visit [this example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/v4.13.1/examples/eks-cluster-with-new-vpc)
+first to create a new one.
+
+Add your cluster name for `eks_cluster_id="..."` to the `terraform.tfvars` or use an environment variable `export TF_VAR_eks_cluster_id=xxx`.
+
+### 4. Amazon Managed Grafana workspace
+
+To run this example you need an Amazon Managed Grafana workspace. If you have
+an existing workspace, create an environment variable
+`export TF_VAR_managed_grafana_workspace_id=g-xxx`.
+
+To create a new one, visit [this example](../managed-grafana-workspace).
+
+> In the URL `https://g-xyz.grafana-workspace.eu-central-1.amazonaws.com`, the workspace ID would be `g-xyz`
+
+### 5. <a name="apikey"></a> Grafana API Key
+
+Amazon Managed Service for Grafana provides a control plane API for generating Grafana API keys. We will provide to Terraform
+a short lived API key to run the `apply` or `destroy` command.
+Ensure you have necessary IAM permissions (`CreateWorkspaceApiKey, DeleteWorkspaceApiKey`)
+
+```sh
+export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 1200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
+```
+
 ### 1. Add Istio metrics, dashboards and alerts
 
 From the [EKS cluster monitoring example's](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/) configuration,

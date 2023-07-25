@@ -39,9 +39,6 @@ Simply run this command to deploy.
 terraform apply
 ```
 
-!!! note
-    To see the complete ISTIO example, open the [example on the repository](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples/eks-istio)
-
 ## Visualization
 
 ### 1. Grafana dashboards
@@ -69,30 +66,28 @@ In this section we will deploy a sample application and extract metrics using th
 
 ### 1. Deploy the Bookinfo Application
 
-1. Go to the [Istio release](https://github.com/istio/istio/releases) to download the installation file for your OS and version of Istio. Install and configure the istioctl client for your environment.
-2. Ensure you have downloaded and installed [kubectl](https://kubernetes.io/docs/tasks/tools/) for your OS. Make sure the version matches the version of your EKS cluster.
-3. Using the AWS CLI, configure kubectl so you can connect to your EKS cluster. Update for your region and EKS cluster name
+1. Using the AWS CLI, configure kubectl so you can connect to your EKS cluster. Update for your region and EKS cluster name
 ```sh
 aws eks update-kubeconfig --region us-east-1 --name eks-blueprint
 ```
-4. Label the default namespace for automatic Istio sidecar injection
+2. Label the default namespace for automatic Istio sidecar injection
 ```sh
 kubectl label namespace default istio-injection=enabled
 ```
-5. Navigate to the Istio folder location
-6. Deploy the Bookinfo sample application
+3. Navigate to the Istio folder location
+4. Deploy the Bookinfo sample application
 ```sh
 kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
 ```
-7. Connect the Bookinfo application with the Istio gateway
+5. Connect the Bookinfo application with the Istio gateway
 ```sh
 kubectl apply -f samples/bookinfo/networking/bookinfo-gateway.yaml
 ```
-8. Validate that there are no issues with the Istio configuration
+6. Validate that there are no issues with the Istio configuration
 ```sh
 istioctl analyze
 ```
-9. Get the DNS name of the load balancer for the Istio gateway
+7. Get the DNS name of the load balancer for the Istio gateway
 ```sh
 GATEWAY_URL=$(kubectl get svc istio-ingressgateway -n istio-system -o=jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 ```

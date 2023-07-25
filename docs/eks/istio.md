@@ -5,6 +5,14 @@ In addition to EKS infrastructure monitoring, the current example provides
 curated Grafana dashboards, Prometheus alerting and recording rules with multiple
 configuration options for Istio based workloads on EKS.
 
+## Prerequisites
+
+Ensure that you have the following tools installed locally:
+
+1. [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+2. [kubectl](https://kubernetes.io/docs/tasks/tools/)
+3. [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+
 ## Setup
 
 ### 1. Add Istio metrics, dashboards and alerts

@@ -1,7 +1,5 @@
 # Monitor Istio running on Amazon EKS
 
-## Existing Cluster with the AWS Observability accelerator base module, Tetrate Istio Add-on and Istio monitoring
-
 This example demonstrates how to use Terraform modules for AWS Observability Accelerator, EKS Blueprints with the Tetrate Istio Add-on and EKS monitoring for Istio.
 
 The current example deploys the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html)

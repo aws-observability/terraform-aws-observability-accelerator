@@ -13,16 +13,6 @@ configuration options for Istio.
 
 View the full documentation for this example [here](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/istio)
 
-
-## Prerequisites
-
-Ensure that you have the following tools installed locally:
-
-1. [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-2. [kubectl](https://kubernetes.io/docs/tasks/tools/)
-3. [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
-
-
 ## Setup
 
 This example uses a local terraform state. If you need states to be saved remotely,

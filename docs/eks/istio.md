@@ -79,6 +79,20 @@ or if you had setup environment variables, run
 terraform apply
 ```
 
+## Additional configuration
+
+For the purpose of the example, we have provided default values for some of the variables.
+
+1. AWS Region
+
+Specify the AWS Region where the resources will be deployed. Edit the `terraform.tfvars` file and modify `aws_region="..."`. You can also use environement variables `export TF_VAR_aws_region=xxx`.
+
+
+2. Amazon Managed Service for Prometheus workspace
+
+If you have an existing workspace, add `managed_prometheus_workspace_id=ws-xxx`
+or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws-xxx`.
+
 ## Visualization
 
 ### 1. Grafana dashboards

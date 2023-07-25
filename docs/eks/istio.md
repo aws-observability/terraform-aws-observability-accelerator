@@ -3,14 +3,14 @@
 
 In addition to EKS infrastructure monitoring, the current example provides
 curated Grafana dashboards, Prometheus alerting and recording rules with multiple
-configuration options for ISTIO based workloads on EKS.
+configuration options for Istio based workloads on EKS.
 
 ## Setup
 
-### 1. Add ISTIO metrics, dashboards and alerts
+### 1. Add Istio metrics, dashboards and alerts
 
 From the [EKS cluster monitoring example's](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/) configuration,
-simply enable the ISTIO pattern's flag.
+simply enable the Istio pattern's flag.
 
 ```hcl
 

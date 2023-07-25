@@ -132,7 +132,7 @@ In this section we will deploy a sample application and extract metrics using th
 
 1. Using the AWS CLI, configure kubectl so you can connect to your EKS cluster. Update for your region and EKS cluster name
 ```sh
-aws eks update-kubeconfig --region us-east-1 --name eks-blueprint
+aws eks update-kubeconfig --region <enter-your-region> --name <cluster-name>
 ```
 2. Label the default namespace for automatic Istio sidecar injection
 ```sh

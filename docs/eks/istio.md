@@ -110,6 +110,6 @@ $ for i in $(seq 1 100); do curl -s -o /dev/null "http://$GATEWAY_URL/productpag
 
 ### 7. Visualize the Application's dashboard
 
-Log back into your Amazon Managed Grafana workspace and navigate to the dashboard side panel, click on the `Observability Accelerator Dashboards` folder and open the `Istio Service` Dashboard. Use the Service dropdown menu to select the "reviews.default.svc.cluster.local" service. This gives details about metrics for the service, client workloads (workloads that are calling this service), and service workloads (workloads that are providing this service).
+Log back into your Amazon Managed Grafana workspace and navigate to the dashboard side panel, click on the `Observability Accelerator Dashboards` folder and open the `Istio Service` Dashboard. Use the Service dropdown menu to select the `reviews.default.svc.cluster.local` service. This gives details about metrics for the service, client workloads (workloads that are calling this service), and service workloads (workloads that are providing this service).
 
 Explore the Istio Control Plan, Mesh, and Performance dasbhoards as well.

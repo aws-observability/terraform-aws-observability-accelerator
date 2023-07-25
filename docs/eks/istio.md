@@ -59,30 +59,6 @@ Ensure you have necessary IAM permissions (`CreateWorkspaceApiKey, DeleteWorkspa
 export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 1200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
 ```
 
-### 1. Add Istio metrics, dashboards and alerts
-
-From the [EKS cluster monitoring example's](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/) configuration,
-simply enable the Istio pattern's flag.
-
-```hcl
-
-module "eks_monitoring" {
-   ...
-   enable_istio = true
-}
-```
-
-You can further customize the Istio pattern by providing `istio_config` [options](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/modules/eks-monitoring/README.md#input_istio_config).
-
-### 2. Grafana API key
-
-Make sure to refresh your temporary Grafana API key
-
-```bash
-export TF_VAR_managed_grafana_workspace_id=g-xxx
-export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 1200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
-```
-
 ## Deploy
 
 Simply run this command to deploy.

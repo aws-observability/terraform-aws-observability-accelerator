@@ -65,7 +65,7 @@ Open the Amazon Managed Service for Prometheus console and view the details of y
 
 ## Deploy an example application to visualize metrics
 
-In this section we will deploy sample application and extract metrics using AWS OpenTelemetry collector
+In this section we will deploy a sample application and extract metrics using the AWS OpenTelemetry collector
 
 ### 1. Deploy the Bookinfo Application
 
@@ -101,7 +101,7 @@ Additional details can be found on Istio's [Getting Started](https://istio.io/la
 ### 2. Start some sample ISTIO traffic by entering the following command.
 
 ```sh
-#For the Bookinfo sample, visit http://$GATEWAY_URL/productpage in your web browser or issue the following command:
+#For the Bookinfo sample application, visit http://$GATEWAY_URL/productpage in your web browser or issue the following command:
 
 #To see trace data, you must send requests to your service. The number of requests depends on Istio’s sampling rate and can be configured using the Telemetry API. With the default sampling rate of 1%, you need to send at least 100 requests before the first trace is visible. To send a 100 requests to the productpage service, use the following command:
 
@@ -110,6 +110,6 @@ $ for i in $(seq 1 100); do curl -s -o /dev/null "http://$GATEWAY_URL/productpag
 
 ### 7. Visualize the Application's dashboard
 
-Log back into your Managed Grafana Workspace and navigate to the dashboard side panel, click on `Observability Accelerator Dashboards` Folder and open the `ISTIO Service` Dashboard.  This gives details about metrics for the service and then client workloads (workloads that are calling this service) and service workloads (workloads that are providing this service) for that service.
+Log back into your Amazon Managed Grafana workspace and navigate to the dashboard side panel, click on the `Observability Accelerator Dashboards` folder and open the `Istio Service` Dashboard. Use the Service dropdown menu to select the "reviews.default.svc.cluster.local" service. This gives details about metrics for the service, client workloads (workloads that are calling this service), and service workloads (workloads that are providing this service).
 
-Explore the Istio Performance and Control Plane dasbhoards as well.  
+Explore the Istio Control Plan, Mesh, and Performance dasbhoards as well.

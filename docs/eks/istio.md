@@ -18,6 +18,7 @@ Ensure that you have the following tools installed locally:
 1. [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 2. [kubectl](https://kubernetes.io/docs/tasks/tools/)
 3. [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+4. [istioctl](https://istio.io/latest/docs/setup/getting-started/#download)
 
 ## Setup
 
@@ -95,27 +96,17 @@ or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws
 
 ## Visualization
 
-### 1. Prometheus datasource on Grafana
-
-Make sure to open the link in the output. After a successful deployment, this will open
-the Prometheus datasource configuration on Grafana.
-Click `Save & test` and you should see a notification confirming that the Amazon Managed Service for Prometheus workspace is ready to be used on Grafana.
-
-```bash
-terraform output grafana_prometheus_datasource_test
-```
-
-### 2. Grafana dashboards
+### 1. Grafana dashboards
 
 Go to the Dashboards panel of your Grafana workspace. You will see a list of Istio dashboards under the `Observability Accelerator Dashboards`
 
-<img width="1208" alt="image" src="https://user-images.githubusercontent.com/47993564/236841811-fdd5a07c-6e5e-4654-a735-80f92f5bee56.jpeg">
+<img width="1208" alt="image" src="../images/istio-dashboards.png">
 
 Open one of the Istio dasbhoards and you will be able to view its visualization
 
 <img width="1850" alt="image" src="https://user-images.githubusercontent.com/47993564/236842708-72225322-4f97-44cc-aac0-40a3356e50c6.jpeg">
 
-### 3. Amazon Managed Service for Prometheus rules and alerts
+### 2. Amazon Managed Service for Prometheus rules and alerts
 
 Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you will find new rules deployed.
 
@@ -161,7 +152,7 @@ Additional details can be found on Istio's [Getting Started](https://istio.io/la
 
 For the Bookinfo sample application, visit `http://$GATEWAY_URL/productpage` in your web browser. To see trace data, you must send requests to your service. The number of requests depends on Istio’s sampling rate and can be configured using the Telemetry API. With the default sampling rate of 1%, you need to send at least 100 requests before the first trace is visible. To send a 100 requests to the productpage service, use the following command:
 ```sh
-$ for i in $(seq 1 100); do curl -s -o /dev/null "http://$GATEWAY_URL/productpage"; done
+for i in $(seq 1 100); do curl -s -o /dev/null "http://$GATEWAY_URL/productpage"; done
 ```
 
 ### 3. Explore the Istio dashboards

@@ -117,7 +117,7 @@ Open the Amazon Managed Service for Prometheus console and view the details of y
 
 ## Deploy an example application to visualize metrics
 
-In this section we will deploy a sample application and extract metrics using the AWS OpenTelemetry collector
+In this section we will deploy Istio's Bookinfo sample application and extract metrics using the AWS OpenTelemetry collector. When downloading and configuring `istioctl`, there are samples included in the Istio package directory. The deployment files for Bookinfo are found in the `samples` folder. Additional details can be found on Istio's [Getting Started](https://istio.io/latest/docs/setup/getting-started/) documentation
 
 ### 1. Deploy the Bookinfo Application
 
@@ -129,7 +129,10 @@ aws eks update-kubeconfig --region <enter-your-region> --name <cluster-name>
 ```sh
 kubectl label namespace default istio-injection=enabled
 ```
-3. Navigate to the Istio folder location
+3. Navigate to the Istio folder location. For example, if using Istio v1.18.2 in Downloads folder:
+```sh
+cd ~/Downloads/istio-1.18.2
+```
 4. Deploy the Bookinfo sample application
 ```sh
 kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
@@ -146,7 +149,6 @@ istioctl analyze
 ```sh
 GATEWAY_URL=$(kubectl get svc istio-ingressgateway -n istio-system -o=jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 ```
-Additional details can be found on Istio's [Getting Started](https://istio.io/latest/docs/setup/getting-started/) documentation
 
 ### 2. Generate traffic for the Istio Bookinfo sample application
 
@@ -166,6 +168,8 @@ Explore the Istio Control Plane, Mesh, and Performance dashboards as well.
 To teardown and remove the resources created in this example:
 
 ```sh
+kubectl delete -f samples/bookinfo/networking/bookinfo-gateway.yaml
+kubectl delete -f samples/bookinfo/platform/kube/bookinfo.yaml
 terraform destroy
 ```
 

@@ -100,7 +100,7 @@ or use an environment variable `export TF_VAR_managed_prometheus_workspace_id=ws
 
 Go to the Dashboards panel of your Grafana workspace. You will see a list of Istio dashboards under the `Observability Accelerator Dashboards`
 
-<img width="1208" alt="image" src="../images/istio-dashboards.png">
+<img width="1208" alt="image" src="https://github.com/aws-observability/terraform-aws-observability-accelerator/assets/34757337/19b589b4-00f6-465d-a562-1da39e8b9b8c">
 
 Open one of the Istio dasbhoards and you will be able to view its visualization
 
@@ -172,15 +172,3 @@ kubectl delete -f samples/bookinfo/networking/bookinfo-gateway.yaml
 kubectl delete -f samples/bookinfo/platform/kube/bookinfo.yaml
 terraform destroy
 ```
-
-## Advanced configuration
-
-1. Cross-region Amazon Managed Prometheus workspace
-
-If your existing Amazon Managed Prometheus workspace is in another AWS Region,
-add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws-xxx`.
-
-2. Cross-region Amazon Managed Grafana workspace
-
-If your existing Amazon Managed Prometheus workspace is in another AWS Region,
-add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws-xxx`.

@@ -30,6 +30,7 @@ nav:
       - Multicluster monitoring: eks/multicluster.md
       - Java/JMX: eks/java.md
       - Nginx: eks/nginx.md
+      - Istio: eks/istio.md
       - Viewing logs: eks/logs.md
       - Teardown: eks/destroy.md
   - Monitoring Managed Service for Prometheus Workspaces: workloads/managed-prometheus.md

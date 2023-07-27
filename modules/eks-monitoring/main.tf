@@ -169,6 +169,18 @@ module "helm_addon" {
       name  = "nginxPrometheusMetricsEndpoint"
       value = try(var.nginx_config.prometheus_metrics_endpoint, local.nginx_pattern_config.prometheus_metrics_endpoint)
     },
+    {
+      name  = "enableIstio"
+      value = var.enable_istio
+    },
+    {
+      name  = "istioScrapeSampleLimit"
+      value = try(var.istio_config.scrape_sample_limit, local.istio_pattern_config.scrape_sample_limit)
+    },
+    {
+      name  = "istioPrometheusMetricsEndpoint"
+      value = try(var.istio_config.prometheus_metrics_endpoint, local.istio_pattern_config.prometheus_metrics_endpoint)
+    }
   ]
 
   irsa_config = {
@@ -200,6 +212,13 @@ module "nginx_monitoring" {
   count  = var.enable_nginx ? 1 : 0
 
   pattern_config = coalesce(var.nginx_config, local.nginx_pattern_config)
+}
+
+module "istio_monitoring" {
+  source = "./patterns/istio"
+  count  = var.enable_istio ? 1 : 0
+
+  pattern_config = coalesce(var.istio_config, local.istio_pattern_config)
 }
 
 module "fluentbit_logs" {

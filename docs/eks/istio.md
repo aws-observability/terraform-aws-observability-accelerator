@@ -6,7 +6,7 @@ The current example deploys the [AWS Distro for OpenTelemetry Operator](https://
 for Amazon EKS with its requirements and make use of an existing Amazon Managed Grafana workspace.
 It creates a new Amazon Managed Service for Prometheus workspace unless provided with an existing one to reuse.
 
-It uses the `EKS monitoring` [module](../../modules/eks-monitoring/)
+It uses the `EKS monitoring` [module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring)
 to provide an existing EKS cluster with an OpenTelemetry collector,
 curated Grafana dashboards, Prometheus alerting and recording rules with multiple
 configuration options for Istio.

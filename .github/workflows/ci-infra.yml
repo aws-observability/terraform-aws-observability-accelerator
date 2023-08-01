@@ -1,0 +1,30 @@
+name: CI Infra Test
+on: push
+jobs:
+  go-tests:
+    name: Run Infra Terratest
+    runs-on: ubuntu-latest
+    env:
+        TF_VAR_aws_region: us-west-2
+        TF_VAR_eks_cluster_id: single-new-eks-observability-accelerator
+        TF_VAR_managed_grafana_workspace_id: g-7b4a7f4248
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-go@v1
+        with:
+          go-version: 1.19
+      - uses: autero1/action-terraform@v1.1.0
+        with:
+          terraform_version: 1.2.8
+      - name: Setup kubeconfig
+        run: aws eks update-kubeconfig --name single-new-eks-observability-accelerator --region us-west-2 --role-arn arn:aws:iam::147084596884:role/single-new-eks-observabil-singleneweksobservabilit-LNVKN2W9E6PA
+      - name: Get kubeconfig token
+        run: single-new-eks-observability-accelerator.singleneweksobservabilityacceleratorGetTokenCommand5D9199D7 = aws eks get-token --cluster-name single-new-eks-observability-accelerator --region us-west-2 --role-arn arn:aws:iam::147084596884:role/single-new-eks-observabil-singleneweksobservabilit-LNVKN2W9E6PA
+      - name: Grafana Workspace Auth
+        run: export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 7200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
+      - name: Download Go Modules
+        working-directory: test
+        run: go mod download
+      - name: Run Go Tests
+        working-directory: test
+        run: go test -v -timeout 30m

@@ -31,6 +31,13 @@ spec:
             endpoint: {{ .Values.otlpGrpcEndpoint }}
           http:
             endpoint: {{ .Values.otlpHttpEndpoint }}
+      prometheus/1:
+        config:
+          scrape_configs:
+          - job_name: otel-collector-metrics
+            scrape_interval: 10s
+            static_configs:
+              - targets: ['localhost:8888']
       prometheus:
         config:
           global:
@@ -1636,6 +1643,7 @@ spec:
           enabled: true
       logging:
         loglevel: {{ .Values.adotLoglevel }}
+
     extensions:
       sigv4auth:
         region: {{ .Values.region }}
@@ -1672,9 +1680,17 @@ spec:
           receivers: [prometheus, otlp]
           processors: [batch/metrics, attributes/metrics]
           exporters: [logging, prometheusremotewrite]
+        metrics/1:
+         receivers: [prometheus/1]
+         processors: []
+         exporters: [prometheusremotewrite]
         {{ if .Values.enableTracing }}
         traces:
           receivers: [otlp]
           processors: [batch/traces]
           exporters: [logging, awsxray]
         {{ end }}
+      telemetry:
+        metrics:
+          address: 0.0.0.0:8888
+          level: basic

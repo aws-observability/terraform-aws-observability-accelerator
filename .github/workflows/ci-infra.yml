@@ -1,1 +1,80 @@
+name: ci-terratest
+
+on:
+  # this will allow to run test on main and not modify the status badge when opening a PR
+  push:
+  workflow_dispatch:
+
+concurrency:
+  group: "${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  terratest:
+    name: terratest
+    runs-on: ubuntu-latest
+    # Skip running on forks since it won't have access to secrets
+    if: github.repository == 'aws-observability/terraform-aws-observability-accelerator'
+
+    # These permissions are needed to interact with GitHub's OIDC Token endpoint.
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Remove default Terraform
+        run: rm -rf $(which terraform)
+
+      - name: checkout-merge
+        if: "contains(github.event_name, 'pull_request')"
+        uses: actions/checkout@v3
+        with:
+          ref: refs/pull/${{github.event.pull_request.number}}/merge
+
+      - name: checkout
+        if: "!contains(github.event_name, 'pull_request')"
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v2
+        if: steps.changes.outputs.src== 'true'
+        with:
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          aws-region: us-west-2
+          role-duration-seconds: 3600
+          role-session-name: GithubActions-Session
+
+      - name: Terratest from CodeBuild
+        if: steps.changes.outputs.src== 'true'
+        uses: aws-actions/aws-codebuild-run-build@v1
+        env:
+          TF_VAR_aws_region: us-west-2
+          TF_VAR_managed_grafana_workspace_id: ${{ secrets.GRAFANA_WORKSPACE_ID }}
+          TF_VAR_eks_cluster_id: e2e-tests
+          TF_VAR_eks_cluster_1_id: e2e-tests
+          TF_VAR_eks_cluster_2_id: e2e-tests
+          TF_VAR_managed_prometheus_workspace_ids: ${{ secrets.PROMETHEUS_WORKSPACE_ID }}
+        with:
+          project-name: terratest-ci-infra
+          disable-source-override: false
+          env-vars-for-codebuild: |
+            TF_VAR_aws_region,
+            TF_VAR_managed_grafana_workspace_id,
+            TF_VAR_eks_cluster_id,
+            TF_VAR_managed_prometheus_workspace_ids,
+            TF_VAR_eks_cluster_1_id,
+            TF_VAR_eks_cluster_2_id
+          buildspec-override: |
+            version: 0.2
+            phases:
+              build:
+                commands:
+                   - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+                   - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+                   - sudo apt-get update && sudo apt-get install terraform
+                   - terraform -version
+                   - aws --version
+                   - export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 7200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
+                   - cd test
+                   - go test -v -timeout 30m
 

@@ -48,9 +48,9 @@ jobs:
         env:
           TF_VAR_aws_region: us-west-2
           TF_VAR_managed_grafana_workspace_id: ${{ secrets.GRAFANA_WORKSPACE_ID }}
-          TF_VAR_eks_cluster_id: e2e-tests
-          TF_VAR_eks_cluster_1_id: e2e-tests
-          TF_VAR_eks_cluster_2_id: e2e-tests
+          TF_VAR_eks_cluster_id: terratest
+          TF_VAR_eks_cluster_1_id: terratest
+          TF_VAR_eks_cluster_2_id: terratest
           TF_VAR_managed_prometheus_workspace_ids: ${{ secrets.PROMETHEUS_WORKSPACE_ID }}
         with:
           project-name: terratest-ci-infra
@@ -71,7 +71,9 @@ jobs:
                    - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
                    - sudo apt-get update && sudo apt-get install terraform
                    - terraform -version
+                   - sudo apt-get install -y jq
                    - aws --version
+                   - aws sts assume-role --role-arn arn:aws:iam::147084596884:role/cluster-create-role --role-session-name terratest | jq -r ". | {AWS_SECRET_ACCESS_KEY: .Credentials.SecretAccessKey, AWS_ACCESS_KEY_ID: .Credentials.AccessKeyId, AWS_SESSION_TOKEN: .Credentials.SessionToken} | to_entries|map(\"export \(.key)=\(.value|tostring)\")|.[]"
                    - aws eks update-kubeconfig --name $TF_VAR_eks_cluster_id --region us-west-2
                    - aws eks get-token --cluster-name $TF_VAR_eks_cluster_id --region us-west-2
                    - export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 7200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`

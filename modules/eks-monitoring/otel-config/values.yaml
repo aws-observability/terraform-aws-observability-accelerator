@@ -13,8 +13,7 @@ tracingTimeout: ${tracing_timeout}
 tracingSendBatchSize: ${tracing_send_batch_size}
 
 enableCustomMetrics: ${enable_custom_metrics}
-customMetricsPorts: ${custom_metrics_ports}
-customMetricsDroppedSeriesPrefixes: ${custom_metrics_dropped_series_prefixes}
+customMetrics: ${custom_metrics}
 
 enableJava: ${enable_java}
 javaScrapeSampleLimit: ${java_scrape_sample_limit}

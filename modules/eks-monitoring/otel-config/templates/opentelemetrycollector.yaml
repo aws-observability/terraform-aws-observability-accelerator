@@ -83,7 +83,7 @@ spec:
                 regex: $K8S_NODE_NAME
                 source_labels: [__meta_kubernetes_node_name]
               {{ end }}
-            - job_name: 'kube-admin'
+            - job_name: 'apiserver'
               scheme: https
               tls_config:
                 ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -100,7 +100,7 @@ spec:
               metric_relabel_configs:
               - action: keep
                 source_labels: [__name__]
-                regex: 'apiserver_(request_duration_seconds|storage_list_duration_seconds|admission_controller_admission_duration_seconds|flowcontrol_request_wait_duration_seconds).*|apiserver_(admission_webhook_fail_open_count|tls_handshake_errors_total|request_total|storage_db_total_size_in_bytes)|rest_client_request_duration_seconds.*|rest_client_requests_total|etcd_(request_duration_seconds|db_total_size_in_bytes).*|workqueue_(adds_total|queue_duration_seconds|work_duration_seconds).*'
+                regex: 'apiserver_(request_duration_seconds|request_slo_duration_seconds|storage_list_duration_seconds|admission_controller_admission_duration_seconds|flowcontrol_request_concurrency_limit|flowcontrol_current_executing_requests|flowcontrol_request_wait_duration_seconds).*|apiserver_(admission_webhook_fail_open_count|tls_handshake_errors_total|request_total|storage_db_total_size_in_bytes)|rest_client_request_duration_seconds.*|rest_client_requests_total|etcd_(request_duration_seconds|db_total_size_in_bytes).*|workqueue_(depth|adds_total|queue_duration_seconds|work_duration_seconds).*|process_resident_memory_bytes|process_cpu_seconds_total|go_goroutines'
             - job_name: serviceMonitor/default/kube-prometheus-stack-prometheus-node-exporter/0
               honor_timestamps: true
               scrape_interval: {{ .Values.globalScrapeInterval }}

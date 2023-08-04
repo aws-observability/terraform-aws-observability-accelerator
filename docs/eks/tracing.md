@@ -43,7 +43,7 @@ cluster.
 
 !!! warning
     The following steps require that you have an EKS cluster ready. To deploy
-    an EKS cluster, please visit our example.
+    an EKS cluster, please visit [our example](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/new-eks-cluster/).
 
 ### Building container image
 
@@ -101,7 +101,7 @@ spec:
           image: "${ECR_REPOSITORY_URI}:latest" # make sure to replace this variable
           imagePullPolicy: Always
           env:
-          - name: OTLPENDPOINTGRPC
+          - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
             value: adot-collector.adot-collector-kubeprometheus.svc.cluster.local:4317
           resources:
             limits:

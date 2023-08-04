@@ -34,6 +34,8 @@ nav:
       - Viewing logs: eks/logs.md
       - Tracing: eks/tracing.md
       - Teardown: eks/destroy.md
+  - CloudWatch Container Insights:
+      - EKS container insights: cwci/index.md
   - Monitoring Managed Service for Prometheus Workspaces: workloads/managed-prometheus.md
   - Supporting Examples:
       - EKS Cluster with VPC: helpers/new-eks-cluster.md

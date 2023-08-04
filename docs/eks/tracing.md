@@ -67,7 +67,7 @@ cluster.
 
     ``` console
     export ECR_REPOSITORY_URI=$(aws ecr create-repository --repository go-sample-app --query repository.repositoryUri --output text)
-    aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 339743103717.dkr.ecr.eu-central-1.amazonaws.com
+    aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URI
     docker tag go-sample-app:latest "${ECR_REPOSITORY_URI}:latest"
     docker push "${ECR_REPOSITORY_URI}:latest"
     ```
@@ -77,10 +77,6 @@ cluster.
 
 
 ``` yaml title="eks.yaml" linenums="1"
-# From your terminal run: cat > eks.yaml <<EOF
-# paste the following content and type EOF. This should
-# replace the ECR_REPOSITORY_URI variable
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:

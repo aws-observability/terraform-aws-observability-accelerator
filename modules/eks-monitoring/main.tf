@@ -142,12 +142,8 @@ module "helm_addon" {
       value = var.enable_custom_metrics
     },
     {
-      name  = "customMetricsPorts"
-      value = format(".*:(%s)$", join("|", var.custom_metrics_config.ports))
-    },
-    {
-      name  = "customMetricsDroppedSeriesPrefixes"
-      value = format("(%s.*)$", join(".*|", var.custom_metrics_config.dropped_series_prefixes))
+      name  = "custom_metrics"
+      value = yamlencode(var.custom_metrics_config)
     },
     {
       name  = "enableJava"

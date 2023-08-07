@@ -29,16 +29,28 @@ Contributions via pull requests are much appreciated. Before sending us a pull r
 
 To send us a pull request, please:
 
-1. Fork the repository.
-2. Modify the source; please focus on the specific change you are contributing. If you also reformat all the code, it will be hard for us to focus on your change.
-3. Ensure local tests pass.
-4. Commit to your fork using clear commit messages.
-5. Send us a pull request, answering any default questions in the pull request interface.
-6. Pay attention to any automated CI failures reported in the pull request, and stay involved in the conversation.
+1. Fork the repository
+2. Modify the source; please focus on the specific change you are contributing. If you also reformat all the code, it will be hard for us to focus on your change
+3. Ensure local tests pass
+4. Commit to your fork using clear commit messages
+5. [Install and run](https://pre-commit.com/) `pre-commit run -a` to generate docs and fix some issues before opening
+6. Send us a pull request, answering any default questions in the pull request interface
+7. When opening your PR, think about its name. We will squash your commits and the PR title will become a commit message
+8. Pay attention to any automated CI failures reported in the pull request, and stay involved in the conversation
 
 GitHub provides additional document on [forking a repository](https://help.github.com/articles/fork-a-repo/) and
 [creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
 
+
+## Documentation with mkdocs
+
+Some features require documentation in our [GitHub pages site](https://aws-observability.github.io/terraform-aws-observability-accelerator/). We use [mkdocs](https://www.mkdocs.org/) which supports Markdown plus some [additional features](https://squidfunk.github.io/mkdocs-material/reference/). When working on your local copy you might want to check your changes before submitting. Here's a couple of steps to follow when adding documentation:
+
+1. [Install](https://www.mkdocs.org/user-guide/installation/) mkdocs
+2. If you add a new page, define the page in the [mkdocs.yml](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/mkdocs.yml) file
+3. Create the corresponding file in [/docs](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/docs), matching the structure defined in `mkdocs.yml`
+4. Render locally using `mkdocs serve`
+5. Run [pre-commit](https://pre-commit.com/) before sending your pull request
 
 ## Finding contributions to work on
 Looking at the existing issues is a great way to find something to contribute on. As our projects, by default, use the default GitHub issue labels (enhancement/bug/duplicate/help wanted/invalid/question/wontfix), looking at any 'help wanted' issues is a great place to start.

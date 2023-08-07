@@ -255,7 +255,7 @@ module "managed-service-grafana" {
   name              = var.monitoring.amg_name
   description       = "Amazon Managed Grafana for centralized prometheus monitoring"
   grafana_version   = var.monitoring.amg_version
-  associate_license = var.monitoring.grafana_enterprise
+  associate_license = false
   data_sources      = ["PROMETHEUS"]
 }
 

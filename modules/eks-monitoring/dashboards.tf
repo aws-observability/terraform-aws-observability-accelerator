@@ -39,6 +39,7 @@ spec:
       GRAFANA_CLUSTER_DASH_URL: ${var.grafana_cluster_dashboard_url}
       GRAFANA_APISERVER_BASIC_DASH_URL: ${var.grafana_apiserver_basic_dashboard_url}
       GRAFANA_APISERVER_ADVANCED_DASH_URL: ${var.grafana_apiserver_advanced_dashboard_url}
+      GRAFANA_APISERVER_TROUBLESHOOTING_DASH_URL: ${var.grafana_apiserver_troubleshooting_dashboard_url}
       GRAFANA_KUBELET_DASH_URL: ${var.grafana_kubelet_dashboard_url}
       GRAFANA_NSWRKLDS_DASH_URL: ${var.grafana_namespace_workloads_dashboard_url}
       GRAFANA_NODEEXP_DASH_URL: ${var.grafana_node_exporter_dashboard_url}

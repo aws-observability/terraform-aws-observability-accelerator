@@ -32,6 +32,7 @@ nav:
       - Nginx: eks/nginx.md
       - Istio: eks/istio.md
       - Viewing logs: eks/logs.md
+      - Tracing: eks/tracing.md
       - Teardown: eks/destroy.md
   - Monitoring Managed Service for Prometheus Workspaces: workloads/managed-prometheus.md
   - Supporting Examples:
@@ -47,6 +48,8 @@ markdown_extensions:
   - codehilite
   - footnotes
   - pymdownx.critic
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid

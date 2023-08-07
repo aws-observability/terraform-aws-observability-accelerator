@@ -34,9 +34,9 @@ variable "irsa_iam_permissions_boundary" {
 }
 
 variable "adot_loglevel" {
-  description = "Verbosity level for ADOT collector logs"
+  description = "Verbosity level for ADOT collector logs. This accepts (detailed|normal|basic), see https://aws-otel.github.io/docs/components/misc-exporters for mor infos."
   type        = string
-  default     = "warn"
+  default     = "normal"
 }
 
 variable "managed_prometheus_workspace_endpoint" {
@@ -202,9 +202,9 @@ variable "prometheus_config" {
 }
 
 variable "enable_tracing" {
-  description = "(Experimental) Enables tracing with AWS X-Ray. This changes the deploy mode of the collector to daemon set. Requirement: adot add-on <= 0.58-build.0"
+  description = "Enables tracing with OTLP traces receiver to X-Ray"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "tracing_config" {

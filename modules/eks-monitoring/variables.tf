@@ -232,17 +232,16 @@ variable "enable_custom_metrics" {
 
 variable "custom_metrics_config" {
   description = "Configuration object to enable custom metrics collection"
-  type = object({
-    ports = list(number)
-    # paths = optional(list(string), ["/metrics"])
-    # list of samples to be dropped by label prefix, ex: go_ -> discards go_.*
-    dropped_series_prefixes = list(string)
-  })
+  type = map(object({
+    enableBasicAuth       = bool
+    path                  = string
+    basicAuthUsername     = string
+    basicAuthPassword     = string
+    ports                 = string
+    droppedSeriesPrefixes = string
+  }))
 
-  default = {
-    ports                   = []
-    dropped_series_prefixes = ["unspecified"]
-  }
+  default = null
 }
 
 variable "enable_java" {

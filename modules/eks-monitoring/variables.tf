@@ -453,7 +453,6 @@ variable "grafana_apiserver_advanced_dashboard_url" {
   default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/apiserver-advanced.json"
 }
 
-
 variable "grafana_apiserver_troubleshooting_dashboard_url" {
   description = "Dashboard URL for Kube-apiserver (troubleshooting) Grafana Dashboard JSON"
   type        = string

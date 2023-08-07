@@ -83,126 +83,31 @@ spec:
                 regex: $K8S_NODE_NAME
                 source_labels: [__meta_kubernetes_node_name]
               {{ end }}
-            - job_name: 'serviceMonitor/prometheus/kube-prometheus-stack-apiserver/0'
-              honor_timestamps: true
-              metrics_path: /metrics
+            - job_name: 'apiserver'
               scheme: https
-              authorization:
-                type: Bearer
-                credentials_file: /var/run/secrets/kubernetes.io/serviceaccount/token
               tls_config:
                 ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-                server_name: kubernetes
-                insecure_skip_verify: false
-              follow_redirects: true
-              enable_http2: true
+                insecure_skip_verify: true
+              bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+              kubernetes_sd_configs:
+              - role: endpoints
               relabel_configs:
-              - source_labels: [job]
-                separator: ;
-                regex: (.*)
-                target_label: __tmp_prometheus_job_name
-                replacement: $1
-                action: replace
-              - source_labels: [__meta_kubernetes_service_label_component, __meta_kubernetes_service_labelpresent_component]
-                separator: ;
-                regex: (apiserver);true
-                replacement: $1
+              - source_labels:
+                  [
+                    __meta_kubernetes_namespace,
+                    __meta_kubernetes_service_name,
+                    __meta_kubernetes_endpoint_port_name,
+                  ]
                 action: keep
-              - source_labels: [__meta_kubernetes_service_label_provider, __meta_kubernetes_service_labelpresent_provider]
-                separator: ;
-                regex: (kubernetes);true
-                replacement: $1
-                action: keep
-              - source_labels: [__meta_kubernetes_endpoint_port_name]
-                separator: ;
-                regex: https
-                replacement: $1
-                action: keep
-              - source_labels: [__meta_kubernetes_endpoint_address_target_kind, __meta_kubernetes_endpoint_address_target_name]
-                separator: ;
-                regex: Node;(.*)
-                target_label: node
-                replacement: ${1}
-                action: replace
-              - source_labels: [__meta_kubernetes_endpoint_address_target_kind, __meta_kubernetes_endpoint_address_target_name]
-                separator: ;
-                regex: Pod;(.*)
-                target_label: pod
-                replacement: ${1}
-                action: replace
-              - source_labels: [__meta_kubernetes_namespace]
-                separator: ;
-                regex: (.*)
-                target_label: namespace
-                replacement: $1
-                action: replace
-              - source_labels: [__meta_kubernetes_service_name]
-                separator: ;
-                regex: (.*)
-                target_label: service
-                replacement: $1
-                action: replace
-              - source_labels: [__meta_kubernetes_pod_name]
-                separator: ;
-                regex: (.*)
-                target_label: pod
-                replacement: $1
-                action: replace
-              - source_labels: [__meta_kubernetes_pod_container_name]
-                separator: ;
-                regex: (.*)
-                target_label: container
-                replacement: $1
-                action: replace
-              - source_labels: [__meta_kubernetes_pod_phase]
-                separator: ;
-                regex: (Failed|Succeeded)
-                replacement: $1
-                action: drop
-              - source_labels: [__meta_kubernetes_service_name]
-                separator: ;
-                regex: (.*)
-                target_label: job
-                replacement: ${1}
-                action: replace
-              - source_labels: [__meta_kubernetes_service_label_component]
-                separator: ;
-                regex: (.+)
-                target_label: job
-                replacement: ${1}
-                action: replace
-              - separator: ;
-                regex: (.*)
-                target_label: endpoint
-                replacement: https
-                action: replace
-              - source_labels: [__address__]
-                separator: ;
-                regex: (.*)
-                modulus: 1
-                target_label: __tmp_hash
-                replacement: $1
-                action: hashmod
-              - source_labels: [__tmp_hash]
-                separator: ;
-                regex: "0"
-                replacement: $1
-                action: keep
+                regex: default;kubernetes;https
               metric_relabel_configs:
+              - action: keep
+                source_labels: [__name__]
               - source_labels: [__name__, le]
                 separator: ;
                 regex: apiserver_request_duration_seconds_bucket;(0.15|0.2|0.3|0.35|0.4|0.45|0.6|0.7|0.8|0.9|1.25|1.5|1.75|2|3|3.5|4|4.5|6|7|8|9|15|25|40|50)
                 replacement: $1
                 action: drop
-              kubernetes_sd_configs:
-              - role: endpoints
-                kubeconfig_file: ""
-                follow_redirects: true
-                enable_http2: true
-                namespaces:
-                  own_namespace: false
-                  names:
-                  - default
             - job_name: serviceMonitor/default/kube-prometheus-stack-prometheus-node-exporter/0
               honor_timestamps: true
               scrape_interval: {{ .Values.globalScrapeInterval }}

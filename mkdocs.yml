@@ -7,8 +7,8 @@ repo_name: "aws-observability/terraform-aws-observability-accelerator"
 repo_url: "https://github.com/aws-observability/terraform-aws-observability-accelerator"
 
 theme:
-  logo: ../images/aws-logo.png
-  favicon: ../images/aws-favicon.png
+  logo: images/aws-logo.png
+  favicon: images/aws-favicon.png
   name: material
   font:
     text: ember

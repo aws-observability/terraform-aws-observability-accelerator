@@ -1471,13 +1471,21 @@ spec:
                   regex: $K8S_NODE_NAME
                   source_labels: [__meta_kubernetes_endpoint_node_name]
                 {{ end }}
-            - job_name: "custom-metrics"
+            {{ if .Values.enableCustomMetrics }}
+            {{- range $k, $v := fromYaml .Values.customMetrics }}
+            - job_name: "{{ $k }}"
               kubernetes_sd_configs:
                 - role: pod
+              metrics_path: '{{ $v.path }}'
+              {{ if $v.enableBasicAuth }}
+              basic_auth:
+                username: '{{ $v.basicAuthUsername }}'
+                password: '{{ $v.basicAuthPassword }}'
+              {{ end }}
               relabel_configs:
                 - source_labels: [ __address__ ]
                   action: keep
-                  regex: '{{ .Values.customMetricsPorts }}'
+                  regex: '{{ $v.ports }}'
                 - action: replace
                   source_labels: [__meta_kubernetes_pod_node_name]
                   target_label: nodename
@@ -1493,16 +1501,17 @@ spec:
                 - action: replace
                   source_labels: [__meta_kubernetes_pod_controller_kind]
                   target_label: pod_controller_kind
-                {{ if .Values.enableTracing }}
+                {{ if $.Values.enableTracing }}
                 - action: keep
                   regex: $K8S_NODE_NAME
                   source_labels: [__meta_kubernetes_pod_node_name]
                 {{ end }}
               metric_relabel_configs:
                 - source_labels: [ __name__ ]
-                  regex: '{{ .Values.customMetricsDroppedSeriesPrefixes }}'
+                  regex: '{{ $v.droppedSeriesPrefixes }}'
                   action: drop
-
+            {{- end }}
+            {{ end }}
             {{ if .Values.enableJava }}
             - job_name: 'kubernetes-java-jmx'
               sample_limit: {{ .Values.javaScrapeSampleLimit }}

@@ -170,11 +170,14 @@ In the module `module "workloads_infra" {` add the following config (make sure t
 enable_custom_metrics = true
 
 custom_metrics_config = {
-    # list of applications ports (example)
-    ports = [8000, 8080]
-
-    # list of series prefixes you want to discard from ingestion
-    dropped_series_prefixes = ["go_gcc"]
+    custom_app_1 = {
+        enableBasicAuth       = true
+        path                  = "/metrics"
+        basicAuthUsername     = "username"
+        basicAuthPassword     = "password"
+        ports                 = ".*:(8080)$"
+        droppedSeriesPrefixes = "(unspecified.*)$"
+    }
 }
 ```
 

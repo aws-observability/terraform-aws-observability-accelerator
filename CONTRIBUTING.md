@@ -46,7 +46,7 @@ GitHub provides additional document on [forking a repository](https://help.githu
 
 Some features require documentation in our [GitHub pages site](https://aws-observability.github.io/terraform-aws-observability-accelerator/). We use [mkdocs](https://www.mkdocs.org/) which supports Markdown plus some [additional features](https://squidfunk.github.io/mkdocs-material/reference/). When working on your local copy you might want to check your changes before submitting. Here's a couple of steps to follow when adding documentation:
 
-1. [Install](https://www.mkdocs.org/user-guide/installation/) mkdocs
+1. [Install](https://squidfunk.github.io/mkdocs-material/getting-started/) mkdocs
 2. If you add a new page, define the page in the [mkdocs.yml](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/mkdocs.yml) file
 3. Create the corresponding file in [/docs](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/docs), matching the structure defined in `mkdocs.yml`
 4. Render locally using `mkdocs serve`

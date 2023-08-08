@@ -31,7 +31,7 @@ locals {
     name = local.name
     chart = local.name
     repository = "https://aws-observability.github.io/aws-otel-helm-charts"
-    version = "0.17.0"
+    version = var.adot_otel_helm_chart_verison
     namespace = "amazon-metrics"
     values = local.default_helm_values
     description = "ADOT Helm Chart Deployment Configuration for Container Insights"

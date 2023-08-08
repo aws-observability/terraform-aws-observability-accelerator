@@ -2,5 +2,5 @@ apiVersion: v2
 name: opentelemetry
 description: A Helm chart to install otel operator
 type: application
-version: 0.6.0
-appVersion: 0.6.0
+version: 0.7.0
+appVersion: 0.7.0

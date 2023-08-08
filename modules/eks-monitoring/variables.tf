@@ -34,9 +34,9 @@ variable "irsa_iam_permissions_boundary" {
 }
 
 variable "adot_loglevel" {
-  description = "Verbosity level for ADOT collector logs"
+  description = "Verbosity level for ADOT collector logs. This accepts (detailed|normal|basic), see https://aws-otel.github.io/docs/components/misc-exporters for mor infos."
   type        = string
-  default     = "warn"
+  default     = "normal"
 }
 
 variable "managed_prometheus_workspace_endpoint" {
@@ -202,9 +202,9 @@ variable "prometheus_config" {
 }
 
 variable "enable_tracing" {
-  description = "(Experimental) Enables tracing with AWS X-Ray. This changes the deploy mode of the collector to daemon set. Requirement: adot add-on <= 0.58-build.0"
+  description = "Enables tracing with OTLP traces receiver to X-Ray"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "tracing_config" {
@@ -232,17 +232,16 @@ variable "enable_custom_metrics" {
 
 variable "custom_metrics_config" {
   description = "Configuration object to enable custom metrics collection"
-  type = object({
-    ports = list(number)
-    # paths = optional(list(string), ["/metrics"])
-    # list of samples to be dropped by label prefix, ex: go_ -> discards go_.*
-    dropped_series_prefixes = list(string)
-  })
+  type = map(object({
+    enableBasicAuth       = bool
+    path                  = string
+    basicAuthUsername     = string
+    basicAuthPassword     = string
+    ports                 = string
+    droppedSeriesPrefixes = string
+  }))
 
-  default = {
-    ports                   = []
-    dropped_series_prefixes = ["unspecified"]
-  }
+  default = null
 }
 
 variable "enable_java" {

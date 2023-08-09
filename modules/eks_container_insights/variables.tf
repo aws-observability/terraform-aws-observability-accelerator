@@ -20,7 +20,7 @@ variable "service_exporters" {
     type = string
     description = "exporter for adot-ci setup"
     default  = "awsemf"
-    }
+}
 
 variable "irsa_policies" {
   description = "Additional IAM policies for a IAM role for service accounts"
@@ -31,24 +31,6 @@ variable "irsa_policies" {
 variable "eks_cluster_id" {
   description = "EKS Cluster Id"
   type        = string
-}
-
-variable "tags" {
-  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
-  type        = map(string)
-  default     = {}
-}
-
-variable "irsa_iam_role_path" {
-  description = "IAM role path for IRSA roles"
-  type        = string
-  default     = "/"
-}
-
-variable "irsa_iam_permissions_boundary" {
-  description = "IAM permissions boundary for IRSA roles"
-  type        = string
-  default     = null
 }
 
 variable "adot_otel_helm_chart_verison" {

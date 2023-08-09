@@ -18,5 +18,3 @@ adotCollector:
         exporters: ${service_exporters}
   sidecar:
     regionS3: ${aws_region}
-
-

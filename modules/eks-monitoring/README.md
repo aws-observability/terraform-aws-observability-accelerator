@@ -66,7 +66,7 @@ See examples using this Terraform modules in the **Amazon EKS** section of [this
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_adot_loglevel"></a> [adot\_loglevel](#input\_adot\_loglevel) | Verbosity level for ADOT collector logs | `string` | `"warn"` | no |
+| <a name="input_adot_loglevel"></a> [adot\_loglevel](#input\_adot\_loglevel) | Verbosity level for ADOT collector logs. This accepts (detailed\|normal\|basic), see https://aws-otel.github.io/docs/components/misc-exporters for mor infos. | `string` | `"normal"` | no |
 | <a name="input_custom_metrics_config"></a> [custom\_metrics\_config](#input\_custom\_metrics\_config) | Configuration object to enable custom metrics collection | <pre>map(object({<br>    enableBasicAuth       = bool<br>    path                  = string<br>    basicAuthUsername     = string<br>    basicAuthPassword     = string<br>    ports                 = string<br>    droppedSeriesPrefixes = string<br>  }))</pre> | `null` | no |
 | <a name="input_eks_cluster_id"></a> [eks\_cluster\_id](#input\_eks\_cluster\_id) | EKS Cluster Id | `string` | n/a | yes |
 | <a name="input_enable_alerting_rules"></a> [enable\_alerting\_rules](#input\_enable\_alerting\_rules) | Enables or disables Managed Prometheus alerting rules | `bool` | `true` | no |
@@ -84,7 +84,7 @@ See examples using this Terraform modules in the **Amazon EKS** section of [this
 | <a name="input_enable_nginx"></a> [enable\_nginx](#input\_enable\_nginx) | Enable NGINX workloads monitoring, alerting and default dashboards | `bool` | `false` | no |
 | <a name="input_enable_node_exporter"></a> [enable\_node\_exporter](#input\_enable\_node\_exporter) | Enables or disables Node exporter. Disabling this might affect some data in the dashboards | `bool` | `true` | no |
 | <a name="input_enable_recording_rules"></a> [enable\_recording\_rules](#input\_enable\_recording\_rules) | Enables or disables Managed Prometheus recording rules | `bool` | `true` | no |
-| <a name="input_enable_tracing"></a> [enable\_tracing](#input\_enable\_tracing) | (Experimental) Enables tracing with AWS X-Ray. This changes the deploy mode of the collector to daemon set. Requirement: adot add-on <= 0.58-build.0 | `bool` | `false` | no |
+| <a name="input_enable_tracing"></a> [enable\_tracing](#input\_enable\_tracing) | Enables tracing with OTLP traces receiver to X-Ray | `bool` | `true` | no |
 | <a name="input_flux_config"></a> [flux\_config](#input\_flux\_config) | FluxCD configuration | <pre>object({<br>    create_namespace   = bool<br>    k8s_namespace      = string<br>    helm_chart_name    = string<br>    helm_chart_version = string<br>    helm_release_name  = string<br>    helm_repo_url      = string<br>    helm_settings      = map(string)<br>    helm_values        = map(any)<br>  })</pre> | <pre>{<br>  "create_namespace": true,<br>  "helm_chart_name": "flux2",<br>  "helm_chart_version": "2.7.0",<br>  "helm_release_name": "observability-fluxcd-addon",<br>  "helm_repo_url": "https://fluxcd-community.github.io/helm-charts",<br>  "helm_settings": {},<br>  "helm_values": {},<br>  "k8s_namespace": "flux-system"<br>}</pre> | no |
 | <a name="input_flux_gitrepository_branch"></a> [flux\_gitrepository\_branch](#input\_flux\_gitrepository\_branch) | Flux GitRepository Branch | `string` | `"main"` | no |
 | <a name="input_flux_gitrepository_name"></a> [flux\_gitrepository\_name](#input\_flux\_gitrepository\_name) | Flux GitRepository name | `string` | `"aws-observability-accelerator"` | no |

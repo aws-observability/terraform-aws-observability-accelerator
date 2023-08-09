@@ -8,8 +8,8 @@ data "aws_eks_cluster" "eks_cluster" {
   name = var.eks_cluster_id
 }
 
-data "aws_eks_cluster_auth" "cluster" {
-  name = var.eks_cluster_id
+data "aws_iam_policy" "irsa" {
+   arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
 locals {
@@ -29,7 +29,7 @@ locals {
   # https://github.com/aws-observability/aws-otel-helm-charts/tree/main/charts/adot-exporter-for-eks-on-ec2
   default_helm_config = {
     name = local.name
-    chart = local.name
+    chart = "adot-exporter-for-eks-on-ec2"
     repository = "https://aws-observability.github.io/aws-otel-helm-charts"
     version = var.adot_otel_helm_chart_verison
     namespace = "amazon-metrics"
@@ -45,8 +45,8 @@ locals {
   default_helm_values = [templatefile("${path.module}/values.yaml", {
     aws_region = local.addon_context.aws_region_name
     cluster_name = local.addon_context.eks_cluster_id
-    service_receivers = var.service_receivers
-    service_exporters = var.service_exporters
+    service_receivers = format("[\"%s\"]", var.service_receivers)
+    service_exporters = format("[\"%s\"]", var.service_exporters)
     service_account = local.service_account
   })]
 
@@ -56,7 +56,7 @@ locals {
     create_kubernetes_namespace = try(local.helm_config["create_namespace"], true)
     create_kubernetes_service_account = true
     create_service_account_secret_token = try(local.helm_config["create_service_account_secret_token"], false)
-    irsa_iam_policies = concat([aws_iam_policy.adot-exporter-for-eks-on-ec2.arn], var.irsa_policies)
+    irsa_iam_policies = concat([data.aws_iam_policy.irsa.arn], var.irsa_policies)
   }
 
   eks_oidc_issuer_url  = replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")

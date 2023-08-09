@@ -13,14 +13,14 @@ variable "manage_via_gitops" {
 variable "service_receivers" {
   type = string
   description = "receiver for adot-ci setup"
-  default = "[\"awscontainerinsightreceiver\"]"
+  default  = "awscontainerinsightreceiver"
 }
 
 variable "service_exporters" {
     type = string
     description = "exporter for adot-ci setup"
-    default = "[\"awsemf\"]"
-}
+    default  = "awsemf"
+    }
 
 variable "irsa_policies" {
   description = "Additional IAM policies for a IAM role for service accounts"

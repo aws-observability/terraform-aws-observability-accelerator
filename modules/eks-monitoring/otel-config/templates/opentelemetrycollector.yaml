@@ -83,6 +83,8 @@ spec:
                 regex: $K8S_NODE_NAME
                 source_labels: [__meta_kubernetes_node_name]
               {{ end }}
+
+            {{ if .Values.enableAPIserver }}
             - job_name: 'apiserver'
               scheme: https
               tls_config:
@@ -108,6 +110,8 @@ spec:
                 regex: apiserver_request_duration_seconds_bucket;(0.15|0.2|0.3|0.35|0.4|0.45|0.6|0.7|0.8|0.9|1.25|1.5|1.75|2|3|3.5|4|4.5|6|7|8|9|15|25|40|50)
                 replacement: $1
                 action: drop
+            {{ end }}
+
             - job_name: serviceMonitor/default/kube-prometheus-stack-prometheus-node-exporter/0
               honor_timestamps: true
               scrape_interval: {{ .Values.globalScrapeInterval }}

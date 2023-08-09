@@ -201,6 +201,12 @@ variable "prometheus_config" {
   nullable = false
 }
 
+variable "enable_apiserver_monitoring" {
+  description = "Enable EKS kube-apiserver monitoring, alerting and dashboards"
+  type        = bool
+  default     = true
+}
+
 variable "enable_tracing" {
   description = "(Experimental) Enables tracing with AWS X-Ray. This changes the deploy mode of the collector to daemon set. Requirement: adot add-on <= 0.58-build.0"
   type        = bool

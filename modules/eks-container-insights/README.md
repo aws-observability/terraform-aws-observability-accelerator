@@ -47,10 +47,13 @@ It provides the following resources:
 | <a name="input_adot_otel_helm_chart_verison"></a> [adot\_otel\_helm\_chart\_verison](#input\_adot\_otel\_helm\_chart\_verison) | ADOT collector helm chart version | `string` | `"0.17.0"` | no |
 | <a name="input_eks_cluster_id"></a> [eks\_cluster\_id](#input\_eks\_cluster\_id) | EKS Cluster Id | `string` | n/a | yes |
 | <a name="input_helm_config"></a> [helm\_config](#input\_helm\_config) | Helm provider config for adot-exporter-for-eks-on-ec2 | `any` | `{}` | no |
+| <a name="input_irsa_iam_permissions_boundary"></a> [irsa\_iam\_permissions\_boundary](#input\_irsa\_iam\_permissions\_boundary) | IAM permissions boundary for IRSA roles | `string` | `null` | no |
+| <a name="input_irsa_iam_role_path"></a> [irsa\_iam\_role\_path](#input\_irsa\_iam\_role\_path) | IAM role path for IRSA roles | `string` | `"/"` | no |
 | <a name="input_irsa_policies"></a> [irsa\_policies](#input\_irsa\_policies) | Additional IAM policies for a IAM role for service accounts | `list(string)` | `[]` | no |
 | <a name="input_manage_via_gitops"></a> [manage\_via\_gitops](#input\_manage\_via\_gitops) | Determines if the add-on should be managed via GitOps. | `bool` | `false` | no |
 | <a name="input_service_exporters"></a> [service\_exporters](#input\_service\_exporters) | exporter for adot-ci setup | `string` | `"awsemf"` | no |
 | <a name="input_service_receivers"></a> [service\_receivers](#input\_service\_receivers) | receiver for adot-ci setup | `string` | `"awscontainerinsightreceiver"` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | `map(string)` | `{}` | no |
 
 ## Outputs
 

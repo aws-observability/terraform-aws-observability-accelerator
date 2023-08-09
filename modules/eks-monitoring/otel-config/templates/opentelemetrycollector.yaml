@@ -26,6 +26,15 @@ spec:
             endpoint: {{ .Values.otlpGrpcEndpoint }}
           http:
             endpoint: {{ .Values.otlpHttpEndpoint }}
+      {{ if .Values.enableAdotcollectorMetrics }}
+      prometheus/1:
+        config:
+          scrape_configs:
+          - job_name: otel-collector-metrics
+            scrape_interval: 10s
+            static_configs:
+              - targets: ['localhost:8888']
+      {{ end }}
       prometheus:
         config:
           global:
@@ -1607,9 +1616,21 @@ spec:
           receivers: [prometheus, otlp]
           processors: [batch/metrics, attributes/metrics]
           exporters: [logging, prometheusremotewrite]
+        {{ if .Values.enableAdotcollectorMetrics }}
+        metrics/1:
+         receivers: [prometheus/1]
+         processors: []
+         exporters: [prometheusremotewrite]
+        {{ end }}
         {{ if .Values.enableTracing }}
         traces:
           receivers: [otlp]
           processors: [batch/traces]
           exporters: [logging, awsxray]
+        {{ end }}
+        {{ if .Values.enableAdotcollectorMetrics }}  
+        telemetry:
+          metrics:
+            address: 0.0.0.0:8888
+            level: basic
         {{ end }}

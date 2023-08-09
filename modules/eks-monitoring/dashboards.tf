@@ -45,6 +45,7 @@ spec:
       GRAFANA_NODEEXP_DASH_URL: ${var.grafana_node_exporter_dashboard_url}
       GRAFANA_NODES_DASH_URL: ${var.grafana_nodes_dashboard_url}
       GRAFANA_WORKLOADS_DASH_URL: ${var.grafana_workloads_dashboard_url}
+      GRAFANA_ADOTHEALTH_DASH_URL: ${var.grafana_adothealth_dashboard_url}
 YAML
   count      = var.enable_dashboards ? 1 : 0
   depends_on = [module.external_secrets]

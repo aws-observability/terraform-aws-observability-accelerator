@@ -67,6 +67,9 @@ module "eks_monitoring" {
   # reusing existing certificate manager? defaults to true
   enable_cert_manager = true
 
+  # enable EKS API server monitoring
+  enable_apiserver_monitoring = true
+
   # deploys external-secrets in to the cluster
   enable_external_secrets = true
   grafana_api_key         = var.grafana_api_key

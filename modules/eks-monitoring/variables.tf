@@ -213,6 +213,12 @@ variable "prometheus_config" {
   nullable = false
 }
 
+variable "enable_apiserver_monitoring" {
+  description = "Enable EKS kube-apiserver monitoring, alerting and dashboards"
+  type        = bool
+  default     = true
+}
+
 variable "enable_tracing" {
   description = "Enables tracing with OTLP traces receiver to X-Ray"
   type        = bool
@@ -450,6 +456,24 @@ variable "grafana_cluster_dashboard_url" {
   description = "Dashboard URL for Cluster Grafana Dashboard JSON"
   type        = string
   default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/cluster.json"
+}
+
+variable "grafana_apiserver_basic_dashboard_url" {
+  description = "Dashboard URL for Kube-apiserver (basic) Grafana Dashboard JSON"
+  type        = string
+  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/apiserver-basic.json"
+}
+
+variable "grafana_apiserver_advanced_dashboard_url" {
+  description = "Dashboard URL for Kube-apiserver (advanced) Grafana Dashboard JSON"
+  type        = string
+  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/apiserver-advanced.json"
+}
+
+variable "grafana_apiserver_troubleshooting_dashboard_url" {
+  description = "Dashboard URL for Kube-apiserver (troubleshooting) Grafana Dashboard JSON"
+  type        = string
+  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/apiserver-troubleshooting.json"
 }
 
 variable "grafana_kubelet_dashboard_url" {

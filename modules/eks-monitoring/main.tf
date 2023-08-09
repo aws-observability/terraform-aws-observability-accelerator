@@ -158,6 +158,10 @@ module "helm_addon" {
       value = try(var.java_config.prometheus_metrics_endpoint, local.java_pattern_config.prometheus_metrics_endpoint)
     },
     {
+      name  = "enableAPIserver"
+      value = var.enable_apiserver_monitoring
+    },
+    {
       name  = "enableNginx"
       value = var.enable_nginx
     },

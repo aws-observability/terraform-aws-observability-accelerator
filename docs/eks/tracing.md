@@ -31,10 +31,6 @@ git clone https://github.com/aws-observability/aws-otel-community.git
 cd aws-otel-community/sample-apps/go-sample-app
 ```
 
-
-Highlighting code sections
-
-
 ## Deploying on Amazon EKS
 
 Using the sample application, we will build a container image, create and push

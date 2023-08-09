@@ -28,7 +28,7 @@ provider "helm" {
 # Deploy the ADOT Container Insights
 
 module "eks_container_insights" {
-  source = "../../modules/eks_container_insights"
+  source = "../../modules/eks-container-insights"
   # source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-container-insights?ref=v2.5.4"
   eks_cluster_id = var.eks_cluster_id
 }

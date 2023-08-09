@@ -27,7 +27,7 @@ under **Amazon CloudWatch Container Insights**
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_eks_container_insights"></a> [eks\_container\_insights](#module\_eks\_container\_insights) | ../../modules/eks_container_insights | n/a |
+| <a name="module_eks_container_insights"></a> [eks\_container\_insights](#module\_eks\_container\_insights) | ../../modules/eks-container-insights | n/a |
 
 ## Resources
 

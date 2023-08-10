@@ -1,37 +1,3 @@
-module "ebs_csi_driver_irsa_one" {
-  source                = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version               = "~> 5.20"
-  providers = {
-    aws     = aws.eks_cluster_one
-  }
-
-  role_name_prefix      = format("%s-%s-", var.cluster_one.name, "ebs-csi-driver")
-  attach_ebs_csi_policy = true
-  oidc_providers = {
-    main = {
-      provider_arn               = module.eks-one.oidc_provider_arn
-      namespace_service_accounts = ["kube-system:ebs-csi-controller-sa"]
-    }
-  }
-}
-
-module "ebs_csi_driver_irsa_two" {
-  source                = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version               = "~> 5.20"
-  providers = {
-    aws     = aws.eks_cluster_two
-  }
-
-  role_name_prefix      = format("%s-%s-", var.cluster_two.name, "ebs-csi-driver")
-  attach_ebs_csi_policy = true
-  oidc_providers = {
-    main = {
-      provider_arn               = module.eks-two.oidc_provider_arn
-      namespace_service_accounts = ["kube-system:ebs-csi-controller-sa"]
-    }
-  }
-}
-
 data "aws_caller_identity" "monitoring" {
   provider = aws.central_monitoring
 }
@@ -50,7 +16,7 @@ resource "aws_iam_policy" "irsa_assume_role_policy_one" {
           "sts:AssumeRole",
         ]
         Effect   = "Allow"
-        Resource = "arn:aws:iam::${data.aws_caller_identity.monitoring.account_id}:role/${var.monitoring.amp_name}-role-for-cross-account"
+        Resource = "arn:aws:iam::${data.aws_caller_identity.monitoring.account_id}:role/${local.amp_workspace_alias}-role-for-cross-account"
       },
     ]
   })
@@ -70,7 +36,7 @@ resource "aws_iam_policy" "irsa_assume_role_policy_two" {
           "sts:AssumeRole",
         ]
         Effect   = "Allow"
-        Resource = "arn:aws:iam::${data.aws_caller_identity.monitoring.account_id}:role/${var.monitoring.amp_name}-role-for-cross-account"
+        Resource = "arn:aws:iam::${data.aws_caller_identity.monitoring.account_id}:role/${local.amp_workspace_alias}-role-for-cross-account"
       },
     ]
   })
@@ -78,7 +44,7 @@ resource "aws_iam_policy" "irsa_assume_role_policy_two" {
 
 resource "aws_iam_role" "cross-account-amp-role" {
   provider = aws.central_monitoring
-  name = "${var.monitoring.amp_name}-role-for-cross-account"
+  name = "${local.amp_workspace_alias}-role-for-cross-account"
 
   assume_role_policy = <<EOF
         {

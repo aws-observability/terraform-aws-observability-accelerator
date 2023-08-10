@@ -2,15 +2,13 @@ variable "cluster_one" {
   description = "Input for your first EKS Cluster"
   type = object({
     name    = string
-    version = string
     region  = string
     tf_role = string
   })
   default = {
-    name    = "hackathon-eks-1"
-    version = "1.27"
+    name    = "eks-cluster-1"
     region  = "us-east-1"
-    tf_role = "<terraform-role-account-1>"
+    tf_role = "<iam-role-in-eks-cluster-1-account>"
   }
 }
 
@@ -18,32 +16,26 @@ variable "cluster_two" {
   description = "Input for your second EKS Cluster"
   type = object({
     name    = string
-    version = string
     region  = string
     tf_role = string
   })
   default = {
-    name    = "hackathon-eks-2"
-    version = "1.27"
+    name    = "eks-cluster-2"
     region  = "us-east-1"
-    tf_role = "<terraform-role-account-2>"
+    tf_role = "<iam-role-in-eks-cluster-2-account>"
   }
 }
 
 variable "monitoring" {
   description = "Input for your AMP and AMG workspaces"
   type = object({
-    region      = string
-    amp_name    = string
-    amg_name    = string
-    amg_version = string
-    tf_role     = string
+    managed_grafana_id  = string
+    region              = string
+    tf_role             = string
   })
   default = {
-    region              = "us-east-1"
-    amp_name            = "amp-hackathon"
-    amg_name            = "amg-hackathon"
-    amg_version         = "9.4"
-    tf_role             = "<terraform-role-account-3>"
+    managed_grafana_id = "<grafana-ws-id>"
+    region             = "<grafana-ws-region>"
+    tf_role            = "<iam-role-in-grafana-ws-account>"
   }
 }

@@ -3,7 +3,7 @@ data "aws_caller_identity" "monitoring" {
 }
 
 resource "aws_iam_policy" "irsa_assume_role_policy_one" {
-  provider = aws.eks_cluster_one
+  provider    = aws.eks_cluster_one
   name        = "${var.cluster_one.name}-irsa_assume_role_policy"
   path        = "/"
   description = "This role allows the IRSA role to assume the cross-account role for AMP access"
@@ -23,7 +23,7 @@ resource "aws_iam_policy" "irsa_assume_role_policy_one" {
 }
 
 resource "aws_iam_policy" "irsa_assume_role_policy_two" {
-  provider = aws.eks_cluster_two
+  provider    = aws.eks_cluster_two
   name        = "${var.cluster_two.name}-irsa_assume_role_policy"
   path        = "/"
   description = "This role allows the IRSA role to assume the cross-account role for AMP access"
@@ -44,7 +44,7 @@ resource "aws_iam_policy" "irsa_assume_role_policy_two" {
 
 resource "aws_iam_role" "cross-account-amp-role" {
   provider = aws.central_monitoring
-  name = "${local.amp_workspace_alias}-role-for-cross-account"
+  name     = "${local.amp_workspace_alias}-role-for-cross-account"
 
   assume_role_policy = <<EOF
         {
@@ -67,7 +67,7 @@ resource "aws_iam_role" "cross-account-amp-role" {
 }
 
 resource "aws_iam_role_policy_attachment" "role-attach" {
-  provider = aws.central_monitoring
+  provider   = aws.central_monitoring
   role       = aws_iam_role.cross-account-amp-role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonPrometheusRemoteWriteAccess"
 }

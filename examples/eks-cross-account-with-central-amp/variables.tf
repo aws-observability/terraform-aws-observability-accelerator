@@ -29,9 +29,9 @@ variable "cluster_two" {
 variable "monitoring" {
   description = "Input for your AMP and AMG workspaces"
   type = object({
-    managed_grafana_id  = string
-    region              = string
-    tf_role             = string
+    managed_grafana_id = string
+    region             = string
+    tf_role            = string
   })
   default = {
     managed_grafana_id = "<grafana-ws-id>"

@@ -90,13 +90,13 @@ variable "flux_gitrepository_name" {
 variable "flux_gitrepository_url" {
   description = "Flux GitRepository URL"
   type        = string
-  default     = "https://github.com/anaelefth/aws-observability-accelerator/"
+  default     = "https://github.com/aws-observability/aws-observability-accelerator"
 }
 
 variable "flux_gitrepository_branch" {
   description = "Flux GitRepository Branch"
   type        = string
-  default     = "dash"
+  default     = "main"
 }
 
 variable "flux_kustomization_path" {
@@ -515,6 +515,6 @@ variable "enable_adotcollector_metrics" {
 variable "grafana_adothealth_dashboard_url" {
   description = "Dashboard URL for ADOThealth Grafana Dashboard JSON"
   type = string
-  default = "https://raw.githubusercontent.com/anaelefth/aws-observability-accelerator/dash/artifacts/grafana-dashboards/eks/infrastructure/adothealth.json"
+  default = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/adothealth.json"
 }
 

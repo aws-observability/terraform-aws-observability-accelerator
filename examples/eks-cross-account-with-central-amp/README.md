@@ -109,9 +109,8 @@ One you have successfully run the above setup, you should be able to see dashboa
 
 You will notice that you are able to use the `cluster` dropdown to filter the dashboards to metrics collected from a specific EKS cluster.
 
-![eks-cross-account-1](https://github.com/veekaly/terraform-aws-observability-accelerator/assets/119073483/1373b834-1082-4a63-98b9-2b90fb32eada)
-
-![eks-cross-account-2](https://github.com/veekaly/terraform-aws-observability-accelerator/assets/119073483/96a68eb1-4fb7-4a6b-bd4a-15f4f6ac7565)
+![eks-cross-account-1](https://github.com/veekaly/terraform-aws-observability-accelerator/assets/119073483/96a68eb1-4fb7-4a6b-bd4a-15f4f6ac7565)
+![eks-cross-account-2](https://github.com/veekaly/terraform-aws-observability-accelerator/assets/119073483/1373b834-1082-4a63-98b9-2b90fb32eada)
 
 
 ## Cleanup

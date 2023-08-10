@@ -339,3 +339,14 @@ module "vpc" {
 
   tags = local.tags
 }
+
+module "managed_ecs_monitoring" {
+  source                = "../../modules/ecs-monitoring"
+  aws_ecs_cluster_name  = var.aws_ecs_cluster_name
+  taskRoleArn           = var.taskRoleArn
+  executionRoleArn      = var.executionRoleArn
+  
+  depends_on = [
+    module.ecs_service
+  ]
+}

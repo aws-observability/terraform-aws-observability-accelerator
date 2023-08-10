@@ -5,21 +5,25 @@ This module provides ECS cluster monitoring with the following resources:
 - AWS Distro For OpenTelemetry Operator and Collector for Metrics and Traces
 - Creates Grafana Dashboards on Amazon Managed Grafana.
 - Create SSM Parameter to store the ADOT config yaml file
-- Creates Prometheus Dashboards on Amazon Managed Prometheus.
 
 ## Pre-requisites
-1. ECS Cluster with EC2 under examples --> ecs-cluster-with-vpc
-2. Update your exisitng App(workload) ECS Task Definition to add below label:
-    Set ECS_PROMETHEUS_EXPORTER_PORT to point to the containerPort where the Prometheus metrics are exposed
-    Set Java_EMF_Metrics to true. The CloudWatch agent uses this flag to generated the embedded metric format in the log event.
-3. Make sure to update the placeholder values in the below files
-    configs/config.yaml
-    task_definitions/otel_collector.json
+* ECS Cluster with EC2 using examples --> ecs-cluster-with-vpc
+* Create a `Prometheus Workspace` either using the Console or using the commented code under modules/ecs-monitoring/main.tf.
+* Update your exisitng App(workload) *ECS Task Definition* to add below label/environment variable
+    - Set ***ECS_PROMETHEUS_EXPORTER_PORT*** to point to the containerPort where the Prometheus metrics are exposed
+    - Set ***Java_EMF_Metrics*** to true. The CloudWatch agent uses this flag to generated the embedded metric format in the log event.
+* Make sure to update the placeholder values in the below files
+    - configs/config.yaml
+        - region
+        - cluster_name
+        - cluster_region
+        - prometheusremotewrite --> endpoint
+    - task-definitions/otel_collector.json
+        - awslogs-region
 
-
-This module makes use of the below open source
-[aws-managed-grafana](https://github.com/terraform-aws-modules/terraform-aws-managed-service-grafana)
-[aws-managed-prometheus](https://github.com/terraform-aws-modules/terraform-aws-managed-service-prometheus)
+This module makes use of the below open source projects:
+* [aws-managed-grafana](https://github.com/terraform-aws-modules/terraform-aws-managed-service-grafana)
+* [aws-managed-prometheus](https://github.com/terraform-aws-modules/terraform-aws-managed-service-prometheus)
 
 See examples using this Terraform modules in the **Amazon ECS** section of [this documentation](https://aws-observability.github.io/terraform-aws-observability-accelerator/)
 

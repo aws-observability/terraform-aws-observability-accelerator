@@ -16,10 +16,13 @@ module "managed_grafana_default" {
   associate_license = false
 }
 
-module "managed_prometheus_default" {
-  source          = "terraform-aws-modules/managed-service-prometheus/aws"
-  workspace_alias = "${local.name}-default"
-}
+## Commented this module, as AMP workspace is a pre-requiste for this solution.
+## You can use this code to create a AMP workspace
+
+# module "managed_prometheus_default" {
+#   source          = "terraform-aws-modules/managed-service-prometheus/aws"
+#   workspace_alias = "${local.name}-default"
+# }
 
 ###########################################
 # Task Definition for ADOT ECS Prometheus

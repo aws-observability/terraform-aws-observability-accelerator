@@ -15,7 +15,7 @@ Container Insights metrics Dashboard on Amazon CloudWatch.
 
 ```
 git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
-cd terraform-aws-observability-accelerator/examples/eks-container-insights
+cd terraform-aws-observability-accelerator/examples/eks-cloudwatch-container-insights
 terraform init
 ```
 

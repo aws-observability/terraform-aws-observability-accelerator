@@ -24,7 +24,7 @@ terraform {
   # backend "s3" {
   #   bucket = "aws-observability-accelerator-terraform-states"
   #   region = "us-west-2"
-  #   key    = "e2e/eks_container_insights/terraform.tfstate"
+  #   key    = "e2e/eks_cloudwatch_container_insights/terraform.tfstate"
   # }
 
 }

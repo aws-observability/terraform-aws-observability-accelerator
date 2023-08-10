@@ -61,7 +61,7 @@ cluster.
 
 === "using docker"
 
-    ``` console
+    ```console
     export ECR_REPOSITORY_URI=$(aws ecr create-repository --repository go-sample-app --query repository.repositoryUri --output text)
     aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URI
     docker tag go-sample-app:latest "${ECR_REPOSITORY_URI}:latest"

@@ -15,26 +15,24 @@ module "eks_monitoring_one" {
     kubectl = kubectl.eks_cluster_one
   }
 
-  eks_cluster_id = var.cluster_one.name
-
-  # deploys AWS Distro for OpenTelemetry operator into the cluster
-  enable_amazon_eks_adot = true
-
-  # reusing existing certificate manager? defaults to true
-  enable_cert_manager = true
-
-  enable_alerting_rules = false
-  enable_recording_rules = false
-
-  # deploys external-secrets in to the cluster
+  eks_cluster_id          = var.cluster_one.name
+  enable_amazon_eks_adot  = true
+  enable_cert_manager     = true
+  enable_fluxcd           = true
   enable_external_secrets = true
+  enable_dashboards       = true
+  enable_java             = true
+  enable_nginx            = true
+  enable_node_exporter    = true
+
+  # Set to false for cross-cluster observability
+  enable_alerting_rules   = false
+  enable_recording_rules  = false
+  
   grafana_api_key         = aws_grafana_workspace_api_key.key.key
   target_secret_name      = "grafana-admin-credentials"
   target_secret_namespace = "grafana-operator"
   grafana_url             = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
-
-  # control the publishing of dashboards by specifying the boolean value for the variable 'enable_dashboards', default is 'true'
-  enable_dashboards = true
 
   managed_prometheus_workspace_id = module.aws_observability_accelerator.managed_prometheus_workspace_id
   managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
@@ -70,32 +68,28 @@ module "eks_monitoring_two" {
     kubectl = kubectl.eks_cluster_two
   }
 
-  eks_cluster_id = var.cluster_two.name
+  eks_cluster_id          = var.cluster_two.name
+  enable_amazon_eks_adot  = true
+  enable_cert_manager     = true
+  enable_fluxcd           = false
+  enable_external_secrets = false
+  enable_dashboards       = false
+  enable_node_exporter    = true
 
-  # deploys AWS Distro for OpenTelemetry operator into the cluster
-  enable_amazon_eks_adot = true
-
-  # reusing existing certificate manager? defaults to true
-  enable_cert_manager    = true
-
-  enable_alerting_rules  = false
-  enable_recording_rules = false
-
-  # deploys external-secrets in to the cluster
-  enable_external_secrets = true
+  # Set to false for cross-cluster observability
+  enable_alerting_rules   = false
+  enable_recording_rules  = false
+  
   grafana_api_key         = aws_grafana_workspace_api_key.key.key
   target_secret_name      = "grafana-admin-credentials"
   target_secret_namespace = "grafana-operator"
   grafana_url             = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
 
-  # control the publishing of dashboards by specifying the boolean value for the variable 'enable_dashboards', default is 'true'
-  enable_dashboards = true
-
-  managed_prometheus_workspace_id       = module.aws_observability_accelerator.managed_prometheus_workspace_id
+  managed_prometheus_workspace_id = module.aws_observability_accelerator.managed_prometheus_workspace_id
   managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
   managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
   managed_prometheus_cross_account_role = aws_iam_role.cross-account-amp-role.arn
-  irsa_iam_additional_policies          = [aws_iam_policy.irsa_assume_role_policy_two.arn]
+  irsa_iam_additional_policies = [aws_iam_policy.irsa_assume_role_policy_two.arn]
 
   # optional, defaults to 60s interval and 15s timeout
   prometheus_config = {

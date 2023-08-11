@@ -514,7 +514,6 @@ variable "enable_adotcollector_metrics" {
 
 variable "grafana_adothealth_dashboard_url" {
   description = "Dashboard URL for ADOThealth Grafana Dashboard JSON"
-  type = string
-  default = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/adothealth.json"
+  type        = string
+  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/adothealth.json"
 }
-

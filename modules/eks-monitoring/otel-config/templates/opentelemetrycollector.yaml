@@ -1628,7 +1628,7 @@ spec:
           processors: [batch/traces]
           exporters: [logging, awsxray]
         {{ end }}
-      {{ if .Values.enableAdotcollectorMetrics }}  
+      {{ if .Values.enableAdotcollectorMetrics }}
       telemetry:
         metrics:
           address: 0.0.0.0:8888

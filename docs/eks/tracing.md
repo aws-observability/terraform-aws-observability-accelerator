@@ -31,10 +31,6 @@ git clone https://github.com/aws-observability/aws-otel-community.git
 cd aws-otel-community/sample-apps/go-sample-app
 ```
 
-
-Highlighting code sections
-
-
 ## Deploying on Amazon EKS
 
 Using the sample application, we will build a container image, create and push
@@ -50,13 +46,13 @@ cluster.
 
 === "amd64 linux"
 
-    ``` console
+    ```console
     docker build -t go-sample-app .
     ```
 
 === "cross platform build"
 
-    ``` bash
+    ```bash
     docker buildx build -t go-sample-app . --platform=linux/amd64
     ```
 
@@ -65,7 +61,7 @@ cluster.
 
 === "using docker"
 
-    ``` console
+    ```console
     export ECR_REPOSITORY_URI=$(aws ecr create-repository --repository go-sample-app --query repository.repositoryUri --output text)
     aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URI
     docker tag go-sample-app:latest "${ECR_REPOSITORY_URI}:latest"
@@ -76,7 +72,7 @@ cluster.
 ## Deploying on Amazon EKS
 
 
-``` yaml title="eks.yaml" linenums="1"
+```yaml title="eks.yaml" linenums="1"
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -186,8 +182,8 @@ of traces occured in the selected timeframe.
 
 <img width="1721" alt="Screenshot 2023-07-20 at 21 42 30" src="https://github.com/aws-observability/terraform-aws-observability-accelerator/assets/10175027/bd992a77-05fb-47d2-8ed4-af05d96e951d">
 
-You can add the service map to a dashbaord, for example a service focused
-dashbaord. You can click on any of the traces to view a node map and the traces
+You can add the service map to a dashboard, for example a service focused
+dashboard. You can click on any of the traces to view a node map and the traces
 details.
 
 There is a button that can take you the CloudWatch console to view the same

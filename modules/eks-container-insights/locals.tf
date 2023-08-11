@@ -74,5 +74,4 @@ locals {
     irsa_iam_role_path             = var.irsa_iam_role_path
     irsa_iam_permissions_boundary  = var.irsa_iam_permissions_boundary
   }
-
 }

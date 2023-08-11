@@ -207,6 +207,26 @@ variable "enable_apiserver_monitoring" {
   default     = true
 }
 
+variable "apiserver_monitoring_config" {
+  description = "Config object for API server monitoring"
+  type = object({
+    flux_gitrepository_name   = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_name   = string
+    flux_kustomization_path   = string
+
+    dashboards = object({
+      basic           = string
+      advanced        = string
+      troubleshooting = string
+    })
+  })
+
+  # defaults are pre-computed in locals.tf, provide a full definition to override
+  default = null
+}
+
 variable "enable_tracing" {
   description = "Enables tracing with OTLP traces receiver to X-Ray"
   type        = bool
@@ -444,24 +464,6 @@ variable "grafana_cluster_dashboard_url" {
   description = "Dashboard URL for Cluster Grafana Dashboard JSON"
   type        = string
   default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/cluster.json"
-}
-
-variable "grafana_apiserver_basic_dashboard_url" {
-  description = "Dashboard URL for Kube-apiserver (basic) Grafana Dashboard JSON"
-  type        = string
-  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/apiserver-basic.json"
-}
-
-variable "grafana_apiserver_advanced_dashboard_url" {
-  description = "Dashboard URL for Kube-apiserver (advanced) Grafana Dashboard JSON"
-  type        = string
-  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/apiserver-advanced.json"
-}
-
-variable "grafana_apiserver_troubleshooting_dashboard_url" {
-  description = "Dashboard URL for Kube-apiserver (troubleshooting) Grafana Dashboard JSON"
-  type        = string
-  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/apiserver-troubleshooting.json"
 }
 
 variable "grafana_kubelet_dashboard_url" {

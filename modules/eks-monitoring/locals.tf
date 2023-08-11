@@ -105,4 +105,18 @@ locals {
     grafana_istio_service_dashboard_url     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/istio/istio-service-dashboard.json"
   }
 
+  apiserver_monitoring_config = {
+    # can be overriden by providing a config
+    flux_gitrepository_name   = "aws-observability-accelerator"
+    flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
+    flux_gitrepository_branch = "main"
+    flux_kustomization_name   = "grafana-dashboards-apiserver"
+    flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/apiserver"
+
+    dashboards = {
+      basic           = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/apiserver/apiserver-basic.json"
+      advanced        = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/apiserver/apiserver-advanced.json"
+      troubleshooting = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/apiserver/apiserver-troubleshooting.json"
+    }
+  }
 }

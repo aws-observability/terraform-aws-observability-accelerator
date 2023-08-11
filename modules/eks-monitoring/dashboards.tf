@@ -37,9 +37,6 @@ spec:
       AMP_ENDPOINT_URL: ${var.managed_prometheus_workspace_endpoint}
       AMG_ENDPOINT_URL: ${var.grafana_url}
       GRAFANA_CLUSTER_DASH_URL: ${var.grafana_cluster_dashboard_url}
-      GRAFANA_APISERVER_BASIC_DASH_URL: ${var.grafana_apiserver_basic_dashboard_url}
-      GRAFANA_APISERVER_ADVANCED_DASH_URL: ${var.grafana_apiserver_advanced_dashboard_url}
-      GRAFANA_APISERVER_TROUBLESHOOTING_DASH_URL: ${var.grafana_apiserver_troubleshooting_dashboard_url}
       GRAFANA_KUBELET_DASH_URL: ${var.grafana_kubelet_dashboard_url}
       GRAFANA_NSWRKLDS_DASH_URL: ${var.grafana_namespace_workloads_dashboard_url}
       GRAFANA_NODEEXP_DASH_URL: ${var.grafana_node_exporter_dashboard_url}
@@ -47,5 +44,33 @@ spec:
       GRAFANA_WORKLOADS_DASH_URL: ${var.grafana_workloads_dashboard_url}
 YAML
   count      = var.enable_dashboards ? 1 : 0
+  depends_on = [module.external_secrets]
+}
+
+# api server dashboards
+resource "kubectl_manifest" "api_server_dashboards" {
+  yaml_body  = <<YAML
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: ${local.apiserver_monitoring_config.flux_kustomization_name}
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ${local.apiserver_monitoring_config.flux_kustomization_path}
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ${local.apiserver_monitoring_config.flux_gitrepository_name}
+  postBuild:
+    substitute:
+      AMG_AWS_REGION: ${var.managed_prometheus_workspace_region}
+      AMP_ENDPOINT_URL: ${var.managed_prometheus_workspace_endpoint}
+      AMG_ENDPOINT_URL: ${var.grafana_url}
+      GRAFANA_APISERVER_BASIC_DASH_URL: ${local.apiserver_monitoring_config.dashboards.basic}
+      GRAFANA_APISERVER_ADVANCED_DASH_URL: ${local.apiserver_monitoring_config.dashboards.advanced}
+      GRAFANA_APISERVER_TROUBLESHOOTING_DASH_URL: ${local.apiserver_monitoring_config.dashboards.troubleshooting}
+YAML
+  count      = var.enable_apiserver_monitoring ? 1 : 0
   depends_on = [module.external_secrets]
 }

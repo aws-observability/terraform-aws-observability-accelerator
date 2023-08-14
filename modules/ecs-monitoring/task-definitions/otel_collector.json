@@ -1,11 +1,11 @@
 [
   {
-    "name": "adot",
-    "image": "amazon/aws-otel-collector:v0.31.0",
+    "name": "${container_name}",
+    "image": "amazon/aws-otel-collector:${otel_image_ver}",
     "secrets": [
       {
         "name": "AOT_CONFIG_CONTENT",
-        "valueFrom": "/aws-observability-accelerator/otel-collector-config"
+        "valueFrom": "/terraform-aws-observability/otel_collector_config"
       }
     ],
     "logConfiguration": {

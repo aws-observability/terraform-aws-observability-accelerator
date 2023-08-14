@@ -8,12 +8,12 @@ output "grafana_workspace_endpoint" {
   value       = module.managed_grafana_default.workspace_endpoint
 }
 
-output "prometheus_workspace_id" {
-  description = "Identifier of the workspace"
-  value       = module.managed_prometheus_default.workspace_id
-}
+# output "prometheus_workspace_id" {
+#   description = "Identifier of the workspace"
+#   value       = module.managed_prometheus_default.workspace_id
+# }
 
-output "prometheus_workspace_endpoint" {
-  description = "Prometheus endpoint available for this workspace"
-  value       = module.managed_prometheus_default.workspace_prometheus_endpoint
-}
+# output "prometheus_workspace_endpoint" {
+#   description = "Prometheus endpoint available for this workspace"
+#   value       = module.managed_prometheus_default.workspace_prometheus_endpoint
+# }

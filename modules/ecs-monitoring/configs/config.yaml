@@ -1,52 +1,52 @@
 extensions:
   sigv4auth:
-    region: "us-east-1"
+    region: "${aws_region}"
     service: "aps"
   ecs_observer: # extension type is ecs_observer
-    cluster_name: 'aot-test-cluster' # cluster name need to configured manually
-    cluster_region: 'us-east-1' # region can be configured directly or use AWS_REGION env var
-    result_file: '/etc/ecs_sd_targets.yaml' # the directory for file must already exists
-    refresh_interval: 60s
+    cluster_name: "${cluster_name}" # cluster name need to configured manually
+    cluster_region: "${cluster_region}" # region can be configured directly or use AWS_REGION env var
+    result_file: "/etc/ecs_sd_targets.yaml" # the directory for file must already exists
+    refresh_interval: ${refresh_interval}
     job_label_name: prometheus_job
     # JMX
     docker_labels:
-      - port_label: 'ECS_PROMETHEUS_EXPORTER_PORT'
+      - port_label: "ECS_PROMETHEUS_EXPORTER_PORT"
 
 receivers:
   otlp:
     protocols:
       grpc:
-        endpoint: 0.0.0.0:4317
+        endpoint: ${otlpGrpcEndpoint}
       http:
-        endpoint: 0.0.0.0:4318
+        endpoint: ${otlpHttpEndpoint}
   prometheus:
     config:
       scrape_configs:
         - job_name: "ecssd"
           file_sd_configs:
             - files:
-                - '/etc/ecs_sd_targets.yaml'
+                - "/etc/ecs_sd_targets.yaml"
           relabel_configs:
-            - source_labels: [ __meta_ecs_cluster_name ]
+            - source_labels: [__meta_ecs_cluster_name]
               action: replace
               target_label: ClusterName
-            - source_labels: [ __meta_ecs_service_name ]
+            - source_labels: [__meta_ecs_service_name]
               action: replace
               target_label: ServiceName
-            - source_labels: [ __meta_ecs_task_definition_family ]
+            - source_labels: [__meta_ecs_task_definition_family]
               action: replace
               target_label: TaskDefinitionFamily
-            - source_labels: [ __meta_ecs_task_launch_type ]
+            - source_labels: [__meta_ecs_task_launch_type]
               action: replace
               target_label: LaunchType
-            - source_labels: [ __meta_ecs_container_name ]
+            - source_labels: [__meta_ecs_container_name]
               action: replace
               target_label: container_name
             - action: labelmap
               regex: ^__meta_ecs_container_labels_(.+)$
-              replacement: '$$1'
+              replacement: "$$1"
   awsecscontainermetrics:
-    collection_interval: 15s
+    collection_interval: ${ecs_metrics_collection_interval}
 
 processors:
   resource:
@@ -111,7 +111,7 @@ processors:
 
 exporters:
   prometheusremotewrite:
-    endpoint: "https://aps-workspaces.us-east-1.amazonaws.com/workspaces/ws-f9a9b3d8-511e-4640-9b2d-15fbd53f7209/api/v1/remote_write"
+    endpoint: "${amp_remote_write_ep}"
     auth:
       authenticator: sigv4auth
   logging:

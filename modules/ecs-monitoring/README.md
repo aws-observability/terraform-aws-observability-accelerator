@@ -4,7 +4,7 @@ This module provides ECS cluster monitoring with the following resources:
 
 - AWS Distro For OpenTelemetry Operator and Collector for Metrics and Traces
 - Creates Grafana Dashboards on Amazon Managed Grafana.
-- Create SSM Parameter to store the ADOT config yaml file
+- Creates SSM Parameter to store and distribute the ADOT config file
 
 ## Pre-requisites
 * ECS Cluster with EC2 using examples --> ecs-cluster-with-vpc
@@ -12,14 +12,6 @@ This module provides ECS cluster monitoring with the following resources:
 * Update your exisitng App(workload) *ECS Task Definition* to add below label/environment variable
     - Set ***ECS_PROMETHEUS_EXPORTER_PORT*** to point to the containerPort where the Prometheus metrics are exposed
     - Set ***Java_EMF_Metrics*** to true. The CloudWatch agent uses this flag to generated the embedded metric format in the log event.
-* Make sure to update the placeholder values in the below files
-    - configs/config.yaml
-        - region
-        - cluster_name
-        - cluster_region
-        - prometheusremotewrite --> endpoint
-    - task-definitions/otel_collector.json
-        - awslogs-region
 
 This module makes use of the below open source projects:
 * [aws-managed-grafana](https://github.com/terraform-aws-modules/terraform-aws-managed-service-grafana)
@@ -32,7 +24,7 @@ See examples using this Terraform modules in the **Amazon ECS** section of [this
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0.0 |
 
 ## Providers
@@ -46,7 +38,6 @@ See examples using this Terraform modules in the **Amazon ECS** section of [this
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_managed_grafana_default"></a> [managed\_grafana\_default](#module\_managed\_grafana\_default) | terraform-aws-modules/managed-service-grafana/aws | n/a |
-| <a name="module_managed_prometheus_default"></a> [managed\_prometheus\_default](#module\_managed\_prometheus\_default) | terraform-aws-modules/managed-service-prometheus/aws | n/a |
 
 ## Resources
 
@@ -62,6 +53,8 @@ See examples using this Terraform modules in the **Amazon ECS** section of [this
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_ecs_cluster_name"></a> [aws\_ecs\_cluster\_name](#input\_aws\_ecs\_cluster\_name) | Name of your ECS cluster | `string` | n/a | yes |
+| <a name="input_ecs_adot_cpu"></a> [ecs\_adot\_cpu](#input\_ecs\_adot\_cpu) | CPU to be allocated for the ADOT ECS TASK | `string` | `"256"` | no |
+| <a name="input_ecs_adot_mem"></a> [ecs\_adot\_mem](#input\_ecs\_adot\_mem) | Memory to be allocated for the ADOT ECS TASK | `string` | `"512"` | no |
 | <a name="input_executionRoleArn"></a> [executionRoleArn](#input\_executionRoleArn) | ARN of the IAM Execution Role | `string` | n/a | yes |
 | <a name="input_taskRoleArn"></a> [taskRoleArn](#input\_taskRoleArn) | ARN of the IAM Task Role | `string` | n/a | yes |
 
@@ -71,6 +64,4 @@ See examples using this Terraform modules in the **Amazon ECS** section of [this
 |------|-------------|
 | <a name="output_grafana_workspace_endpoint"></a> [grafana\_workspace\_endpoint](#output\_grafana\_workspace\_endpoint) | The endpoint of the Grafana workspace |
 | <a name="output_grafana_workspace_id"></a> [grafana\_workspace\_id](#output\_grafana\_workspace\_id) | The ID of the Grafana workspace |
-| <a name="output_prometheus_workspace_endpoint"></a> [prometheus\_workspace\_endpoint](#output\_prometheus\_workspace\_endpoint) | Prometheus endpoint available for this workspace |
-| <a name="output_prometheus_workspace_id"></a> [prometheus\_workspace\_id](#output\_prometheus\_workspace\_id) | Identifier of the workspace |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

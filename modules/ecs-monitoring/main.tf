@@ -1,9 +1,10 @@
-# SSM Parameter
+# SSM Parameter for storing and distrivuting the ADOT config
 resource "aws_ssm_parameter" "adot-config" {
-  name        = "/observability_aws/otel_collector_conf"
+  name        = "/terraform-aws-observability/otel_collector_config"
   description = "SSM parameter for aws-observability-accelerator/otel-collector-config"
   type        = "String"
-  value       = yamlencode(file("configs/config.yaml"))
+  value       = local.ssm_param_value
+  tier        = "Intelligent-Tiering"
 }
 
 ############################################
@@ -16,8 +17,10 @@ module "managed_grafana_default" {
   associate_license = false
 }
 
+#####################
 ## Commented this module, as AMP workspace is a pre-requiste for this solution.
 ## You can use this code to create a AMP workspace
+#####################
 
 # module "managed_prometheus_default" {
 #   source          = "terraform-aws-modules/managed-service-prometheus/aws"
@@ -33,9 +36,9 @@ resource "aws_ecs_task_definition" "adot_ecs_prometheus" {
   execution_role_arn       = var.executionRoleArn
   network_mode             = "bridge"
   requires_compatibilities = ["EC2"]
-  cpu                      = "256"
-  memory                   = "512"
-  container_definitions    = file("task_definitions/otel_collector.json")
+  cpu                      = var.ecs_adot_cpu
+  memory                   = var.ecs_adot_mem
+  container_definitions    = local.container_definitions
 }
 
 ############################################

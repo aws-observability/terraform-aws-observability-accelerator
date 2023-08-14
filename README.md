@@ -132,7 +132,7 @@ ECS cluster with VPC and EC2 can be created using the example [here](./examples/
 
 ```hcl
 module "ecs_monitoring" {
-  source = "github.com/aws-observability/terraform-aws-observability-accelerator/modules/ecs-monitoring"
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/ecs-monitoring"
 
   aws_ecs_cluster_name  = module.ecs_cluster.cluster_name
   taskRoleArn           = module.ecs_cluster.task_exec_iam_role_arn

@@ -97,6 +97,6 @@ spec:
       AMG_ENDPOINT_URL: ${var.grafana_url}
       GRAFANA_ADOTHEALTH_DASH_URL: ${local.adothealth_monitoring_config.dashboards.grafana_adothealth_dashboard_url}
 YAML
-  count      = var.enableAdotcollectorMetrics ? 1 : 0
+  count      = var.enable_adotcollector_metrics ? 1 : 0
   depends_on = [module.external_secrets]
 }

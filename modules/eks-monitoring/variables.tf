@@ -514,8 +514,21 @@ variable "enable_adotcollector_metrics" {
   default     = true
 }
 
-variable "grafana_adothealth_dashboard_url" {
-  description = "Dashboard URL for ADOThealth Grafana Dashboard JSON"
-  type        = string
-  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/adothealth.json"
+variable "adothealth_monitoring_config" {
+  description = "Config object for API server monitoring"
+  type = object({
+    flux_gitrepository_name   = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_name   = string
+    flux_kustomization_path   = string
+
+    dashboards = object({
+      grafana_adothealth_dashboard_url   = string
+    })
+  })
+
+  # defaults are pre-computed in locals.tf, provide a full definition to override
+  default = null
 }
+

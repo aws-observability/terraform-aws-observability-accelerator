@@ -119,4 +119,17 @@ locals {
       troubleshooting = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/apiserver/apiserver-troubleshooting.json"
     }
   }
+
+  adothealth_monitoring_config = {
+    # can be overriden by providing a config
+    flux_gitrepository_name   = "aws-observability-accelerator"
+    flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
+    flux_gitrepository_branch = "main"
+    flux_kustomization_name   = "grafana-dashboards-adothealth"
+    flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/adothealth"
+
+    dashboards = {
+      grafana_adothealth_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/adothealth/adothealth.json"
+    }
+  }
 }

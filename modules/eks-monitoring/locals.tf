@@ -129,7 +129,7 @@ locals {
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/adothealth"
 
     dashboards = {
-      grafana_adothealth_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/adothealth/adothealth.json"
+      grafana_adothealth_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/adot/adothealth.json"
     }
   }
 }

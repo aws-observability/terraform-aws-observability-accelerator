@@ -30,3 +30,5 @@ istioScrapeSampleLimit: ${istio_scrape_sample_limit}
 istioPrometheusMetricsEndpoint: ${istio_prometheus_metrics_endpoint}
 
 adotLoglevel: ${adot_loglevel}
+
+enableAdotcollectorMetrics: ${enable_adotcollector_metrics}

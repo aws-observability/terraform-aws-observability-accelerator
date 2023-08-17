@@ -507,3 +507,27 @@ variable "target_secret_namespace" {
   type        = string
   default     = "grafana-operator"
 }
+
+variable "enable_adotcollector_metrics" {
+  description = "Enables collection of ADOT collector metrics"
+  type        = bool
+  default     = true
+}
+
+variable "adothealth_monitoring_config" {
+  description = "Config object for API server monitoring"
+  type = object({
+    flux_gitrepository_name   = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_name   = string
+    flux_kustomization_path   = string
+
+    dashboards = object({
+      grafana_adothealth_dashboard_url = string
+    })
+  })
+
+  # defaults are pre-computed in locals.tf, provide a full definition to override
+  default = null
+}

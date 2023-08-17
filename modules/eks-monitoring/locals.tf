@@ -45,12 +45,9 @@ locals {
     flux_kustomization_name   = "grafana-dashboards-java"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/java"
 
-    managed_prometheus_workspace_id       = var.managed_prometheus_workspace_id
-    managed_prometheus_workspace_region   = var.managed_prometheus_workspace_region
-    managed_prometheus_workspace_endpoint = var.managed_prometheus_workspace_endpoint
-    prometheus_metrics_endpoint           = "/metrics"
+    managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+    prometheus_metrics_endpoint     = "/metrics"
 
-    grafana_url           = var.grafana_url
     grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/java/default.json"
   }
 
@@ -69,12 +66,9 @@ locals {
     flux_kustomization_name   = "grafana-dashboards-nginx"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/nginx"
 
-    managed_prometheus_workspace_id       = var.managed_prometheus_workspace_id
-    managed_prometheus_workspace_region   = var.managed_prometheus_workspace_region
-    managed_prometheus_workspace_endpoint = var.managed_prometheus_workspace_endpoint
-    prometheus_metrics_endpoint           = "/metrics"
+    managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+    prometheus_metrics_endpoint     = "/metrics"
 
-    grafana_url           = var.grafana_url
     grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/nginx/nginx.json"
   }
 
@@ -128,7 +122,7 @@ locals {
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/adot"
 
     dashboards = {
-      grafana_adothealth_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/adot/adothealth.json"
+      health = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/adot/adothealth.json"
     }
   }
 }

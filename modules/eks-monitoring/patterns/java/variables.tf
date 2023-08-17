@@ -15,11 +15,8 @@ variable "pattern_config" {
     flux_kustomization_name   = string
     flux_kustomization_path   = string
 
-    managed_prometheus_workspace_id       = string
-    managed_prometheus_workspace_region   = string
-    managed_prometheus_workspace_endpoint = string
+    managed_prometheus_workspace_id = string
 
-    grafana_url           = string
     grafana_dashboard_url = string
   })
   nullable = false

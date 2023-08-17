@@ -5,8 +5,6 @@ variable "pattern_config" {
     enable_recording_rules = bool
     scrape_sample_limit    = number
 
-    enable_recording_rules = bool
-
     enable_dashboards = bool
 
     flux_gitrepository_name   = string
@@ -16,6 +14,7 @@ variable "pattern_config" {
     flux_kustomization_path   = string
 
     managed_prometheus_workspace_id = string
+    prometheus_metrics_endpoint     = string
 
     grafana_dashboard_url = string
   })

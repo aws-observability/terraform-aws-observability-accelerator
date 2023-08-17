@@ -524,11 +524,10 @@ variable "adothealth_monitoring_config" {
     flux_kustomization_path   = string
 
     dashboards = object({
-      grafana_adothealth_dashboard_url   = string
+      grafana_adothealth_dashboard_url = string
     })
   })
 
   # defaults are pre-computed in locals.tf, provide a full definition to override
   default = null
 }
-

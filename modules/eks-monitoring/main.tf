@@ -209,7 +209,6 @@ module "java_monitoring" {
   count  = var.enable_java ? 1 : 0
 
   pattern_config = coalesce(var.java_config, local.java_pattern_config)
-
 }
 
 module "nginx_monitoring" {

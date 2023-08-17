@@ -126,7 +126,7 @@ locals {
     flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
     flux_gitrepository_branch = "main"
     flux_kustomization_name   = "grafana-dashboards-adothealth"
-    flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/adothealth"
+    flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/adot"
 
     dashboards = {
       grafana_adothealth_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/adot/adothealth.json"

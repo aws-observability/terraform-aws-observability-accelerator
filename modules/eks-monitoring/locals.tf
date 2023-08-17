@@ -93,16 +93,15 @@ locals {
     flux_kustomization_name   = "grafana-dashboards-istio"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/istio"
 
-    managed_prometheus_workspace_id       = var.managed_prometheus_workspace_id
-    managed_prometheus_workspace_region   = var.managed_prometheus_workspace_region
-    managed_prometheus_workspace_endpoint = var.managed_prometheus_workspace_endpoint
-    prometheus_metrics_endpoint           = "/metrics"
+    managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+    prometheus_metrics_endpoint     = "/metrics"
 
-    grafana_url                             = var.grafana_url
-    grafana_istio_cp_dashboard_url          = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/istio/istio-control-plane-dashboard.json"
-    grafana_istio_mesh_dashboard_url        = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/istio/istio-mesh-dashboard.json"
-    grafana_istio_performance_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/istio/istio-performance-dashboard.json"
-    grafana_istio_service_dashboard_url     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/istio/istio-service-dashboard.json"
+    dashboards = {
+      cp          = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/istio/istio-control-plane-dashboard.json"
+      mesh        = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/istio/istio-mesh-dashboard.json"
+      performance = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/istio/istio-performance-dashboard.json"
+      service     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/istio/istio-service-dashboard.json"
+    }
   }
 
   apiserver_monitoring_config = {

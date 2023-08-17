@@ -118,7 +118,7 @@ All the modules come with end-to-end deployable examples.
 
 You can find **workload** examples like [Amazon EKS infrastructure monitoring](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/) or [monitoring your Amazon Managed Service for Prometheus workspace](https://aws-observability.github.io/terraform-aws-observability-accelerator/workloads/managed-prometheus/) and more.
 
-``` mermaid
+```mermaid
 classDiagram
     Example <|-- Base Module
     Example <|-- Workload Module

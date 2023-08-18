@@ -23,8 +23,8 @@ This deploys an EKS Cluster with the External Secrets Operator. The cluster is p
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_cluster_secretstore_role"></a> [cluster\_secretstore\_role](#module\_cluster\_secretstore\_role) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/irsa | v4.32.0 |
-| <a name="module_external_secrets"></a> [external\_secrets](#module\_external\_secrets) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/external-secrets | v4.32.0 |
+| <a name="module_cluster_secretstore_role"></a> [cluster\_secretstore\_role](#module\_cluster\_secretstore\_role) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/irsa | v4.32.1 |
+| <a name="module_external_secrets"></a> [external\_secrets](#module\_external\_secrets) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/external-secrets | v4.32.1 |
 
 ## Resources
 

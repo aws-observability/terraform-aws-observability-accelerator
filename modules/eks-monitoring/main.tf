@@ -72,7 +72,7 @@ resource "helm_release" "grafana_operator" {
 }
 
 module "helm_addon" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.32.0"
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.32.1"
 
   helm_config = merge(
     {
@@ -209,7 +209,6 @@ module "java_monitoring" {
   count  = var.enable_java ? 1 : 0
 
   pattern_config = coalesce(var.java_config, local.java_pattern_config)
-
 }
 
 module "nginx_monitoring" {

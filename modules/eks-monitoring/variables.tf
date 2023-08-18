@@ -351,13 +351,15 @@ variable "istio_config" {
     flux_kustomization_name   = string
     flux_kustomization_path   = string
 
-    grafana_url                             = string
-    grafana_istio_cp_dashboard_url          = string
-    grafana_istio_mesh_dashboard_url        = string
-    grafana_istio_performance_dashboard_url = string
-    grafana_istio_service_dashboard_url     = string
+    managed_prometheus_workspace_id = string
+    prometheus_metrics_endpoint     = string
 
-    prometheus_metrics_endpoint = string
+    dashboards = object({
+      cp          = string
+      mesh        = string
+      performance = string
+      service     = string
+    })
   })
 
   # defaults are pre-computed in locals.tf, provide a full definition to override

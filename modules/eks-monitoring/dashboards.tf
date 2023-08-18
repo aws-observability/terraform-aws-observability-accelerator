@@ -64,9 +64,6 @@ spec:
     name: ${local.apiserver_monitoring_config.flux_gitrepository_name}
   postBuild:
     substitute:
-      AMG_AWS_REGION: ${var.managed_prometheus_workspace_region}
-      AMP_ENDPOINT_URL: ${var.managed_prometheus_workspace_endpoint}
-      AMG_ENDPOINT_URL: ${var.grafana_url}
       GRAFANA_APISERVER_BASIC_DASH_URL: ${local.apiserver_monitoring_config.dashboards.basic}
       GRAFANA_APISERVER_ADVANCED_DASH_URL: ${local.apiserver_monitoring_config.dashboards.advanced}
       GRAFANA_APISERVER_TROUBLESHOOTING_DASH_URL: ${local.apiserver_monitoring_config.dashboards.troubleshooting}
@@ -92,10 +89,7 @@ spec:
     name: ${local.adothealth_monitoring_config.flux_gitrepository_name}
   postBuild:
     substitute:
-      AMG_AWS_REGION: ${var.managed_prometheus_workspace_region}
-      AMP_ENDPOINT_URL: ${var.managed_prometheus_workspace_endpoint}
-      AMG_ENDPOINT_URL: ${var.grafana_url}
-      GRAFANA_ADOTHEALTH_DASH_URL: ${local.adothealth_monitoring_config.dashboards.grafana_adothealth_dashboard_url}
+      GRAFANA_ADOTHEALTH_DASH_URL: ${local.adothealth_monitoring_config.dashboards.health}
 YAML
   count      = var.enable_adotcollector_metrics ? 1 : 0
   depends_on = [module.external_secrets]

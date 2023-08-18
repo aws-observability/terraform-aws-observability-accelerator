@@ -1,5 +1,5 @@
 module "helm_addon" {
-  source            = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.32.0"
+  source            = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.32.1"
   manage_via_gitops = var.manage_via_gitops
   set_values        = local.set_values
   helm_config       = local.helm_config

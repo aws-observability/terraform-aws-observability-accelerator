@@ -363,13 +363,15 @@ variable "istio_config" {
     flux_kustomization_name   = string
     flux_kustomization_path   = string
 
-    grafana_url                             = string
-    grafana_istio_cp_dashboard_url          = string
-    grafana_istio_mesh_dashboard_url        = string
-    grafana_istio_performance_dashboard_url = string
-    grafana_istio_service_dashboard_url     = string
+    managed_prometheus_workspace_id = string
+    prometheus_metrics_endpoint     = string
 
-    prometheus_metrics_endpoint = string
+    dashboards = object({
+      cp          = string
+      mesh        = string
+      performance = string
+      service     = string
+    })
   })
 
   # defaults are pre-computed in locals.tf, provide a full definition to override
@@ -518,4 +520,28 @@ variable "target_secret_namespace" {
   description = "Target namespace of secret in Kubernetes to store the Grafana API Key Secret"
   type        = string
   default     = "grafana-operator"
+}
+
+variable "enable_adotcollector_metrics" {
+  description = "Enables collection of ADOT collector metrics"
+  type        = bool
+  default     = true
+}
+
+variable "adothealth_monitoring_config" {
+  description = "Config object for API server monitoring"
+  type = object({
+    flux_gitrepository_name   = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_name   = string
+    flux_kustomization_path   = string
+
+    dashboards = object({
+      grafana_adothealth_dashboard_url = string
+    })
+  })
+
+  # defaults are pre-computed in locals.tf, provide a full definition to override
+  default = null
 }

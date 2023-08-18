@@ -39,7 +39,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_pattern_config"></a> [pattern\_config](#input\_pattern\_config) | Configuration object for Java/JMX monitoring | <pre>object({<br>    enable_alerting_rules  = bool<br>    enable_recording_rules = bool<br>    scrape_sample_limit    = number<br><br>    enable_recording_rules = bool<br><br>    enable_dashboards = bool<br><br>    flux_gitrepository_name   = string<br>    flux_gitrepository_url    = string<br>    flux_gitrepository_branch = string<br>    flux_kustomization_name   = string<br>    flux_kustomization_path   = string<br><br>    managed_prometheus_workspace_id       = string<br>    managed_prometheus_workspace_region   = string<br>    managed_prometheus_workspace_endpoint = string<br><br>    grafana_url           = string<br>    grafana_dashboard_url = string<br>  })</pre> | n/a | yes |
+| <a name="input_pattern_config"></a> [pattern\_config](#input\_pattern\_config) | Configuration object for Java/JMX monitoring | <pre>object({<br>    enable_alerting_rules  = bool<br>    enable_recording_rules = bool<br>    scrape_sample_limit    = number<br><br>    enable_dashboards = bool<br><br>    flux_gitrepository_name   = string<br>    flux_gitrepository_url    = string<br>    flux_gitrepository_branch = string<br>    flux_kustomization_name   = string<br>    flux_kustomization_path   = string<br><br>    managed_prometheus_workspace_id = string<br>    prometheus_metrics_endpoint     = string<br><br>    grafana_dashboard_url = string<br>  })</pre> | n/a | yes |
 
 ## Outputs
 

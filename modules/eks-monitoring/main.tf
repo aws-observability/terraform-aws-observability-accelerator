@@ -72,7 +72,7 @@ resource "helm_release" "grafana_operator" {
 }
 
 module "helm_addon" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.32.0"
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon?ref=v4.32.1"
 
   helm_config = merge(
     {
@@ -184,7 +184,12 @@ module "helm_addon" {
     {
       name  = "istioPrometheusMetricsEndpoint"
       value = try(var.istio_config.prometheus_metrics_endpoint, local.istio_pattern_config.prometheus_metrics_endpoint)
+    },
+    {
+      name  = "enableAdotcollectorMetrics"
+      value = var.enable_adotcollector_metrics
     }
+
   ]
 
   irsa_config = {
@@ -209,7 +214,6 @@ module "java_monitoring" {
   count  = var.enable_java ? 1 : 0
 
   pattern_config = coalesce(var.java_config, local.java_pattern_config)
-
 }
 
 module "nginx_monitoring" {

@@ -70,10 +70,6 @@ module "eks_monitoring" {
   # enable EKS API server monitoring
   enable_apiserver_monitoring = true
 
-  # don't needed - just include in "infrastructure" ?!
-  # enable EKS kube-proxy monitoring
-#  enable_kubeproxy_monitoring = true
-
   # deploys external-secrets in to the cluster
   enable_external_secrets = true
   grafana_api_key         = var.grafana_api_key

@@ -964,7 +964,6 @@ spec:
                     names:
                     - kube-system
 
-            {{ if .Values.enableKubeproxy }}
             - job_name: 'kube-proxy'
               honor_labels: true
               kubernetes_sd_configs:
@@ -982,7 +981,6 @@ spec:
                 target_label: __address__
                 regex: (.+?)(\\:\\d+)?
                 replacement: $$1:10249
-            {{ end }}
 
             - job_name: serviceMonitor/default/kube-prometheus-stack-kube-controller-manager/0
               honor_timestamps: true

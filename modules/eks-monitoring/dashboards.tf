@@ -65,13 +65,33 @@ spec:
     name: ${local.apiserver_monitoring_config.flux_gitrepository_name}
   postBuild:
     substitute:
-      AMG_AWS_REGION: ${var.managed_prometheus_workspace_region}
-      AMP_ENDPOINT_URL: ${var.managed_prometheus_workspace_endpoint}
-      AMG_ENDPOINT_URL: ${var.grafana_url}
       GRAFANA_APISERVER_BASIC_DASH_URL: ${local.apiserver_monitoring_config.dashboards.basic}
       GRAFANA_APISERVER_ADVANCED_DASH_URL: ${local.apiserver_monitoring_config.dashboards.advanced}
       GRAFANA_APISERVER_TROUBLESHOOTING_DASH_URL: ${local.apiserver_monitoring_config.dashboards.troubleshooting}
 YAML
   count      = var.enable_apiserver_monitoring ? 1 : 0
+  depends_on = [module.external_secrets]
+}
+
+# adot health dashboards
+resource "kubectl_manifest" "adothealth_monitoring_dashboards" {
+  yaml_body  = <<YAML
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: ${local.adothealth_monitoring_config.flux_kustomization_name}
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ${local.adothealth_monitoring_config.flux_kustomization_path}
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ${local.adothealth_monitoring_config.flux_gitrepository_name}
+  postBuild:
+    substitute:
+      GRAFANA_ADOTHEALTH_DASH_URL: ${local.adothealth_monitoring_config.dashboards.health}
+YAML
+  count      = var.enable_adotcollector_metrics ? 1 : 0
   depends_on = [module.external_secrets]
 }

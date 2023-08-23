@@ -206,12 +206,9 @@ spec:
     name: ${var.pattern_config.flux_gitrepository_name}
   postBuild:
     substitute:
-      AMG_AWS_REGION: ${var.pattern_config.managed_prometheus_workspace_region}
-      AMP_ENDPOINT_URL: ${var.pattern_config.managed_prometheus_workspace_endpoint}
-      AMG_ENDPOINT_URL: ${var.pattern_config.grafana_url}
-      GRAFANA_ISTIO_CP_DASH_URL: ${var.pattern_config.grafana_istio_cp_dashboard_url}
-      GRAFANA_ISTIO_MESH_DASH_URL: ${var.pattern_config.grafana_istio_mesh_dashboard_url}
-      GRAFANA_ISTIO_PERF_DASH_URL: ${var.pattern_config.grafana_istio_performance_dashboard_url}
-      GRAFANA_ISTIO_SERVICE_DASH_URL: ${var.pattern_config.grafana_istio_service_dashboard_url}
+      GRAFANA_ISTIO_CP_DASH_URL: ${var.pattern_config.dashboards.cp}
+      GRAFANA_ISTIO_MESH_DASH_URL: ${var.pattern_config.dashboards.mesh}
+      GRAFANA_ISTIO_PERF_DASH_URL: ${var.pattern_config.dashboards.performance}
+      GRAFANA_ISTIO_SERVICE_DASH_URL: ${var.pattern_config.dashboards.service}
 YAML
 }

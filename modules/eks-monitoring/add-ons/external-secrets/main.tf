@@ -1,5 +1,5 @@
 module "external_secrets" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/external-secrets?ref=v4.32.0"
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/external-secrets?ref=v4.32.1"
   count  = var.enable_external_secrets ? 1 : 0
 
   helm_config   = var.helm_config
@@ -17,7 +17,7 @@ resource "aws_kms_key" "secrets" {
 }
 
 module "cluster_secretstore_role" {
-  source                      = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/irsa?ref=v4.32.0"
+  source                      = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/irsa?ref=v4.32.1"
   kubernetes_namespace        = local.namespace
   create_kubernetes_namespace = false
   kubernetes_service_account  = local.cluster_secretstore_sa

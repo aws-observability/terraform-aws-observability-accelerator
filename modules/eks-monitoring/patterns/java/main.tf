@@ -50,9 +50,6 @@ spec:
     name: ${var.pattern_config.flux_gitrepository_name}
   postBuild:
     substitute:
-      AMG_AWS_REGION: ${var.pattern_config.managed_prometheus_workspace_region}
-      AMP_ENDPOINT_URL: ${var.pattern_config.managed_prometheus_workspace_endpoint}
-      AMG_ENDPOINT_URL: ${var.pattern_config.grafana_url}
       GRAFANA_JAVA_JMX_DASH_URL: ${var.pattern_config.grafana_dashboard_url}
 YAML
 }

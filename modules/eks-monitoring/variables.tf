@@ -477,8 +477,9 @@ variable "grafana_kubelet_dashboard_url" {
 variable "grafana_kubeproxy_dashboard_url" {
   description = "Dashboard URL for kube-proxy Grafana Dashboard JSON"
   type        = string
-  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/infrastructure/kube-proxy.json"
+  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/kube-proxy/kube-proxy.json"
 }
+
 variable "grafana_namespace_workloads_dashboard_url" {
   description = "Dashboard URL for Namespace Workloads Grafana Dashboard JSON"
   type        = string

@@ -38,7 +38,6 @@ spec:
       AMG_ENDPOINT_URL: ${var.grafana_url}
       GRAFANA_CLUSTER_DASH_URL: ${var.grafana_cluster_dashboard_url}
       GRAFANA_KUBELET_DASH_URL: ${var.grafana_kubelet_dashboard_url}
-      GRAFANA_KUBEKUBEPROXY_DASH_URL: ${var.grafana_kubeproxy_dashboard_url}
       GRAFANA_NSWRKLDS_DASH_URL: ${var.grafana_namespace_workloads_dashboard_url}
       GRAFANA_NODEEXP_DASH_URL: ${var.grafana_node_exporter_dashboard_url}
       GRAFANA_NODES_DASH_URL: ${var.grafana_nodes_dashboard_url}
@@ -93,5 +92,27 @@ spec:
       GRAFANA_ADOTHEALTH_DASH_URL: ${local.adothealth_monitoring_config.dashboards.health}
 YAML
   count      = var.enable_adotcollector_metrics ? 1 : 0
+  depends_on = [module.external_secrets]
+}
+
+resource "kubectl_manifest" "kubeproxy_monitoring_dashboard" {
+  yaml_body  = <<YAML
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: ${var.flux_kustomization_name}
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ${var.flux_kustomization_path}
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ${var.flux_gitrepository_name}
+  postBuild:
+    substitute:
+      GRAFANA_KUBEPROXY_DASH_URL: ${var.grafana_kubeproxy_dashboard_url}
+YAML
+  count      = var.enable_dashboards ? 1 : 0
   depends_on = [module.external_secrets]
 }

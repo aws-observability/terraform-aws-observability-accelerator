@@ -523,7 +523,7 @@ variable "enable_adotcollector_metrics" {
 }
 
 variable "adothealth_monitoring_config" {
-  description = "Config object for API server monitoring"
+  description = "Config object for ADOT health monitoring"
   type = object({
     flux_gitrepository_name   = string
     flux_gitrepository_url    = string
@@ -533,6 +533,24 @@ variable "adothealth_monitoring_config" {
 
     dashboards = object({
       grafana_adothealth_dashboard_url = string
+    })
+  })
+
+  # defaults are pre-computed in locals.tf, provide a full definition to override
+  default = null
+}
+
+variable "kubeproxy_monitoring_config" {
+  description = "Config object for kube-proxy monitoring"
+  type = object({
+    flux_gitrepository_name   = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_name   = string
+    flux_kustomization_path   = string
+
+    dashboards = object({
+      grafana_kubeproxy_dashboard_url = string
     })
   })
 

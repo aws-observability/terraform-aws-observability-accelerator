@@ -125,4 +125,17 @@ locals {
       health = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/adot/adothealth.json"
     }
   }
+
+  kubeproxy_monitoring_config = {
+    # can be overriden by providing a config
+    flux_gitrepository_name   = "aws-observability-accelerator"
+    flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
+    flux_gitrepository_branch = "v0.2.0"
+    flux_kustomization_name   = "grafana-dashboards-adothealth"
+    flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/kube-proxy"
+
+    dashboards = {
+      health = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/kube-proxy/kube-proxy.json"
+    }
+  }
 }

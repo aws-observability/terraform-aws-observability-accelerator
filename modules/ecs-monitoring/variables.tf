@@ -24,3 +24,9 @@ variable "ecs_adot_mem" {
   type        = string
   default     = "512"
 }
+
+variable "create_managed_prometheus_ws" {
+  description = "Creates a Workspace for Amazon Managed Prometheus"
+  type        = bool
+  default     = true
+}

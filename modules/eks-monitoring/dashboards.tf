@@ -100,18 +100,18 @@ resource "kubectl_manifest" "kubeproxy_monitoring_dashboard" {
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: ${var.flux_kustomization_name}
+  name: ${local.kubeproxy_monitoring_config.flux_kustomization_name}
   namespace: flux-system
 spec:
   interval: 1m0s
-  path: ${var.flux_kustomization_path}
+  path: ${local.kubeproxy_monitoring_config.flux_kustomization_path}
   prune: true
   sourceRef:
     kind: GitRepository
-    name: ${var.flux_gitrepository_name}
+    name: ${local.kubeproxy_monitoring_config.flux_gitrepository_name}
   postBuild:
     substitute:
-      GRAFANA_KUBEPROXY_DASH_URL: ${var.grafana_kubeproxy_dashboard_url}
+      GRAFANA_KUBEPROXY_DASH_URL: ${local.kubeproxy_monitoring_config.dashboards.default}
 YAML
   count      = var.enable_dashboards ? 1 : 0
   depends_on = [module.external_secrets]

@@ -41,17 +41,14 @@ locals {
 
     flux_gitrepository_name   = "aws-observability-accelerator"
     flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
-    flux_gitrepository_branch = "main"
+    flux_gitrepository_branch = "v0.2.0"
     flux_kustomization_name   = "grafana-dashboards-java"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/java"
 
-    managed_prometheus_workspace_id       = var.managed_prometheus_workspace_id
-    managed_prometheus_workspace_region   = var.managed_prometheus_workspace_region
-    managed_prometheus_workspace_endpoint = var.managed_prometheus_workspace_endpoint
-    prometheus_metrics_endpoint           = "/metrics"
+    managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+    prometheus_metrics_endpoint     = "/metrics"
 
-    grafana_url           = var.grafana_url
-    grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/java/default.json"
+    grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/java/default.json"
   }
 
   nginx_pattern_config = {
@@ -65,17 +62,14 @@ locals {
 
     flux_gitrepository_name   = "aws-observability-accelerator"
     flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
-    flux_gitrepository_branch = "main"
+    flux_gitrepository_branch = "v0.2.0"
     flux_kustomization_name   = "grafana-dashboards-nginx"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/nginx"
 
-    managed_prometheus_workspace_id       = var.managed_prometheus_workspace_id
-    managed_prometheus_workspace_region   = var.managed_prometheus_workspace_region
-    managed_prometheus_workspace_endpoint = var.managed_prometheus_workspace_endpoint
-    prometheus_metrics_endpoint           = "/metrics"
+    managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+    prometheus_metrics_endpoint     = "/metrics"
 
-    grafana_url           = var.grafana_url
-    grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/nginx/nginx.json"
+    grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/nginx/nginx.json"
   }
 
   istio_pattern_config = {
@@ -89,34 +83,59 @@ locals {
 
     flux_gitrepository_name   = "aws-observability-accelerator"
     flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
-    flux_gitrepository_branch = "main"
+    flux_gitrepository_branch = "v0.2.0"
     flux_kustomization_name   = "grafana-dashboards-istio"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/istio"
 
-    managed_prometheus_workspace_id       = var.managed_prometheus_workspace_id
-    managed_prometheus_workspace_region   = var.managed_prometheus_workspace_region
-    managed_prometheus_workspace_endpoint = var.managed_prometheus_workspace_endpoint
-    prometheus_metrics_endpoint           = "/metrics"
+    managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+    prometheus_metrics_endpoint     = "/metrics"
 
-    grafana_url                             = var.grafana_url
-    grafana_istio_cp_dashboard_url          = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/istio/istio-control-plane-dashboard.json"
-    grafana_istio_mesh_dashboard_url        = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/istio/istio-mesh-dashboard.json"
-    grafana_istio_performance_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/istio/istio-performance-dashboard.json"
-    grafana_istio_service_dashboard_url     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/istio/istio-service-dashboard.json"
+    dashboards = {
+      cp          = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/istio/istio-control-plane-dashboard.json"
+      mesh        = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/istio/istio-mesh-dashboard.json"
+      performance = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/istio/istio-performance-dashboard.json"
+      service     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/istio/istio-service-dashboard.json"
+    }
   }
 
   apiserver_monitoring_config = {
     # can be overriden by providing a config
     flux_gitrepository_name   = "aws-observability-accelerator"
     flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
-    flux_gitrepository_branch = "main"
+    flux_gitrepository_branch = "v0.2.0"
     flux_kustomization_name   = "grafana-dashboards-apiserver"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/apiserver"
 
     dashboards = {
-      basic           = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/apiserver/apiserver-basic.json"
-      advanced        = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/apiserver/apiserver-advanced.json"
-      troubleshooting = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/main/artifacts/grafana-dashboards/eks/apiserver/apiserver-troubleshooting.json"
+      basic           = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-basic.json"
+      advanced        = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-advanced.json"
+      troubleshooting = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-troubleshooting.json"
+    }
+  }
+
+  adothealth_monitoring_config = {
+    # can be overriden by providing a config
+    flux_gitrepository_name   = "aws-observability-accelerator"
+    flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
+    flux_gitrepository_branch = "v0.2.0"
+    flux_kustomization_name   = "grafana-dashboards-adothealth"
+    flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/adot"
+
+    dashboards = {
+      health = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/adot/adothealth.json"
+    }
+  }
+
+  kubeproxy_monitoring_config = {
+    # can be overriden by providing a config
+    flux_gitrepository_name   = "aws-observability-accelerator"
+    flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
+    flux_gitrepository_branch = "v0.2.0"
+    flux_kustomization_name   = "grafana-dashboards-kubeproxy"
+    flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/kube-proxy"
+
+    dashboards = {
+      default = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/kube-proxy/kube-proxy.json"
     }
   }
 }

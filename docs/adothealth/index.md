@@ -9,7 +9,7 @@ Below diagram shows an example data flow and the components in an ADOT collector
 
 ![ADOTCollectorComponents](https://github.com/RAMathews/terraform-aws-observability-accelerator/assets/114662591/1db25d84-c1ca-4468-bb0d-42c8bafd1942)
 
-In this dashboard, there are five sections. Each section has [metrics](https://aws-observability.github.io/observability-best-practices/guides/operational/adot-at-scale/operating-adot-collector/#collecting-health-metrics-from-the-collector) relevant to the various [component’s](https://opentelemetry.io/docs/demo/collector-data-flow-dashboard/#data-flow-overview) of the AWS Distro for OpenTelemetry(ADOT)collector:
+In this dashboard, there are five sections. Each section has [metrics](https://aws-observability.github.io/observability-best-practices/guides/operational/adot-at-scale/operating-adot-collector/#collecting-health-metrics-from-the-collector) relevant to the various [components](https://opentelemetry.io/docs/demo/collector-data-flow-dashboard/#data-flow-overview) of the AWS Distro for OpenTelemetry (ADOT)collector :
 
 ### Receivers
 Shows the receiver’s accepted and refused rate/count of spans and metric points that are pushed into the telemetry pipeline.
@@ -35,7 +35,7 @@ Shows the metrics and spans data flow through the collector’s components.
 ![dataflow](https://github.com/RAMathews/terraform-aws-observability-accelerator/assets/114662591/61fe684d-8ed3-4645-9210-f16158442b7d)
 
 !!!note
-    To read more about the metrics used, and the dashboard use, please visit the upstream documentation [here](https://opentelemetry.io/docs/demo/collector-data-flow-dashboard/).
+    To read more about the metrics used, and the dashboard use, visit the upstream documentation [here](https://opentelemetry.io/docs/demo/collector-data-flow-dashboard/).
 
 ## Deploy instructions
 

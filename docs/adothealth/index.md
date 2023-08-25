@@ -35,7 +35,7 @@ Shows the metrics and spans data flow through the collector’s components.
 ![dataflow](https://github.com/RAMathews/terraform-aws-observability-accelerator/assets/114662591/61fe684d-8ed3-4645-9210-f16158442b7d)
 
 !!!note
-    To read more about the metrics used, and the dashboard use, visit the upstream documentation [here](https://opentelemetry.io/docs/demo/collector-data-flow-dashboard/).
+    To read more about the metrics and the dashboard used, visit the upstream documentation [here](https://opentelemetry.io/docs/demo/collector-data-flow-dashboard/).
 
 ## Deploy instructions
 

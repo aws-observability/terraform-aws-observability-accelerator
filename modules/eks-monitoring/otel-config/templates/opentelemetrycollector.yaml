@@ -972,112 +972,25 @@ spec:
                     own_namespace: false
                     names:
                     - kube-system
-            - job_name: serviceMonitor/default/kube-prometheus-stack-kube-proxy/0
-              honor_timestamps: true
-              scrape_interval: {{ .Values.globalScrapeInterval }}
-              scrape_timeout: {{ .Values.globalScrapeTimeout }}
-              scheme: http
-              authorization:
-                type: Bearer
-                credentials_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-              follow_redirects: true
-              enable_http2: true
-              relabel_configs:
-              - source_labels: [job]
-                separator: ;
-                regex: (.*)
-                target_label: __tmp_prometheus_job_name
-                replacement: $$1
-                action: replace
-              - source_labels: [__meta_kubernetes_service_label_app, __meta_kubernetes_service_labelpresent_app]
-                separator: ;
-                regex: (kube-prometheus-stack-kube-proxy);true
-                replacement: $$1
-                action: keep
-              - source_labels: [__meta_kubernetes_service_label_release, __meta_kubernetes_service_labelpresent_release]
-                separator: ;
-                regex: (kube-prometheus-stack);true
-                replacement: $$1
-                action: keep
-              - source_labels: [__meta_kubernetes_endpoint_port_name]
-                separator: ;
-                regex: http-metrics
-                replacement: $$1
-                action: keep
-              - source_labels: [__meta_kubernetes_endpoint_address_target_kind, __meta_kubernetes_endpoint_address_target_name]
-                separator: ;
-                regex: Node;(.*)
-                target_label: node
-                replacement: $$1
-                action: replace
-              - source_labels: [__meta_kubernetes_endpoint_address_target_kind, __meta_kubernetes_endpoint_address_target_name]
-                separator: ;
-                regex: Pod;(.*)
-                target_label: pod
-                replacement: $$1
-                action: replace
-              - source_labels: [__meta_kubernetes_namespace]
-                separator: ;
-                regex: (.*)
-                target_label: namespace
-                replacement: $$1
-                action: replace
-              - source_labels: [__meta_kubernetes_service_name]
-                separator: ;
-                regex: (.*)
-                target_label: service
-                replacement: $$1
-                action: replace
-              - source_labels: [__meta_kubernetes_pod_name]
-                separator: ;
-                regex: (.*)
-                target_label: pod
-                replacement: $$1
-                action: replace
-              - source_labels: [__meta_kubernetes_pod_container_name]
-                separator: ;
-                regex: (.*)
-                target_label: container
-                replacement: $$1
-                action: replace
-              - source_labels: [__meta_kubernetes_service_name]
-                separator: ;
-                regex: (.*)
-                target_label: job
-                replacement: $$1
-                action: replace
-              - source_labels: [__meta_kubernetes_service_label_jobLabel]
-                separator: ;
-                regex: (.+)
-                target_label: job
-                replacement: $$1
-                action: replace
-              - separator: ;
-                regex: (.*)
-                target_label: endpoint
-                replacement: http-metrics
-                action: replace
-              - source_labels: [__address__]
-                separator: ;
-                regex: (.*)
-                modulus: 1
-                target_label: __tmp_hash
-                replacement: $$1
-                action: hashmod
-              - source_labels: [__tmp_hash]
-                separator: ;
-                regex: "0"
-                replacement: $$1
-                action: keep
+
+            - job_name: 'kube-proxy'
+              honor_labels: true
               kubernetes_sd_configs:
-                - role: endpoints
-                  kubeconfig_file: ""
-                  follow_redirects: true
-                  enable_http2: true
-                  namespaces:
-                    own_namespace: false
-                    names:
-                    - kube-system
+              - role: pod
+              relabel_configs:
+              - action: keep
+                source_labels:
+                - __meta_kubernetes_namespace
+                - __meta_kubernetes_pod_name
+                separator: '/'
+                regex: 'kube-system/kube-proxy.+'
+              - source_labels:
+                - __address__
+                action: replace
+                target_label: __address__
+                regex: (.+?)(\\:\\d+)?
+                replacement: $$1:10249
+
             - job_name: serviceMonitor/default/kube-prometheus-stack-kube-controller-manager/0
               honor_timestamps: true
               scrape_interval: {{ .Values.globalScrapeInterval }}

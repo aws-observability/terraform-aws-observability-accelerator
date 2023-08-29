@@ -142,7 +142,7 @@ module "helm_addon" {
       value = var.enable_custom_metrics
     },
     {
-      name  = "custom_metrics"
+      name  = "customMetrics"
       value = yamlencode(var.custom_metrics_config)
     },
     {

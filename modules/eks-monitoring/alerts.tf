@@ -262,6 +262,14 @@ groups:
         annotations:
           description: Kubelet has disappeared from Prometheus target discovery.
           summary: Target disappeared from Prometheus target discovery.
+      - alert: KubeProxyDown
+        expr: absent(up{job="kube-proxy"} == 1)
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          description: KubeProxy has disappeared from Prometheus target discovery.
+          summary: Target disappeared from Prometheus target discovery.
       - alert: KubeVersionMismatch
         expr: count by(cluster) (count by(git_version, cluster) (label_replace(kubernetes_build_info{job!~"kube-dns|coredns"}, "git_version", "$1", "git_version", "(v[0-9]*.[0-9]*).*"))) > 1
         for: 15m

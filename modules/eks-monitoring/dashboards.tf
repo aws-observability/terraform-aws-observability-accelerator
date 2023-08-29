@@ -11,7 +11,7 @@ spec:
   interval: 5m0s
   url: ${var.flux_gitrepository_url}
   ref:
-    branch: ${var.flux_gitrepository_branch}
+    tag: ${var.flux_gitrepository_branch}
 YAML
 
   depends_on = [module.external_secrets]
@@ -92,5 +92,27 @@ spec:
       GRAFANA_ADOTHEALTH_DASH_URL: ${local.adothealth_monitoring_config.dashboards.health}
 YAML
   count      = var.enable_adotcollector_metrics ? 1 : 0
+  depends_on = [module.external_secrets]
+}
+
+resource "kubectl_manifest" "kubeproxy_monitoring_dashboard" {
+  yaml_body  = <<YAML
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: ${local.kubeproxy_monitoring_config.flux_kustomization_name}
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ${local.kubeproxy_monitoring_config.flux_kustomization_path}
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ${local.kubeproxy_monitoring_config.flux_gitrepository_name}
+  postBuild:
+    substitute:
+      GRAFANA_KUBEPROXY_DASH_URL: ${local.kubeproxy_monitoring_config.dashboards.default}
+YAML
+  count      = var.enable_dashboards ? 1 : 0
   depends_on = [module.external_secrets]
 }

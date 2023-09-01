@@ -66,7 +66,7 @@ resource "aws_iam_role" "cross_account_amp_role" {
     EOF
 }
 
-resource "aws_iam_role_policy_attachment" "role-attach" {
+resource "aws_iam_role_policy_attachment" "role_attach" {
   provider   = aws.central_monitoring
   role       = aws_iam_role.cross_account_amp_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonPrometheusRemoteWriteAccess"

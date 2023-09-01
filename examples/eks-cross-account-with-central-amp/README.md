@@ -10,7 +10,7 @@ This example shows how to use the [AWS Observability Accelerator](https://github
 
 #### 1. Cross Account IAM access
 
-In order to create/modify resources across multiple AWS accounts, this terraform example implements the cross-account IAM role assumption. You will need separate IAM roles in all 3 AWS accounts, and each of these IAM roles should have the below specified trust-relationship so that your local AWS user/role will be able to assume them during the terraform execution.
+In order to create/modify resources across multiple AWS accounts, this Terraform example implements the cross-account IAM role assumption. You will need separate IAM roles in all 3 AWS accounts, and each of these IAM roles should have the below specified trust-relationship so that your local AWS user/role will be able to assume them during the terraform execution.
 
 ```
 {

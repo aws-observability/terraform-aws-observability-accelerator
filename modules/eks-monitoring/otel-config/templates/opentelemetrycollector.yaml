@@ -1497,6 +1497,11 @@ spec:
       sigv4auth:
         region: {{ .Values.region }}
         service: aps
+        {{ if ne .Values.assumeRoleArn "" }}
+        assume_role:
+          arn: {{ .Values.assumeRoleArn }}
+          sts_region: {{ .Values.region }}
+        {{ end }}
       health_check:
       pprof:
         endpoint: :1888

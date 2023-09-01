@@ -42,7 +42,7 @@ resource "aws_iam_policy" "irsa_assume_role_policy_two" {
   })
 }
 
-resource "aws_iam_role" "cross-account-amp-role" {
+resource "aws_iam_role" "cross_account_amp_role" {
   provider = aws.central_monitoring
   name     = "${local.amp_workspace_alias}-role-for-cross-account"
 
@@ -68,6 +68,6 @@ resource "aws_iam_role" "cross-account-amp-role" {
 
 resource "aws_iam_role_policy_attachment" "role-attach" {
   provider   = aws.central_monitoring
-  role       = aws_iam_role.cross-account-amp-role.name
+  role       = aws_iam_role.cross_account_amp_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonPrometheusRemoteWriteAccess"
 }

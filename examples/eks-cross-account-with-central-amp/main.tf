@@ -37,7 +37,7 @@ module "eks_monitoring_one" {
   managed_prometheus_workspace_id       = module.aws_observability_accelerator.managed_prometheus_workspace_id
   managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
   managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
-  managed_prometheus_cross_account_role = aws_iam_role.cross-account-amp-role.arn
+  managed_prometheus_cross_account_role = aws_iam_role.cross_account_amp_role.arn
   irsa_iam_additional_policies          = [aws_iam_policy.irsa_assume_role_policy_one.arn]
 
   # optional, defaults to 60s interval and 15s timeout
@@ -88,7 +88,7 @@ module "eks_monitoring_two" {
   managed_prometheus_workspace_id       = module.aws_observability_accelerator.managed_prometheus_workspace_id
   managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
   managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
-  managed_prometheus_cross_account_role = aws_iam_role.cross-account-amp-role.arn
+  managed_prometheus_cross_account_role = aws_iam_role.cross_account_amp_role.arn
   irsa_iam_additional_policies          = [aws_iam_policy.irsa_assume_role_policy_two.arn]
 
   # optional, defaults to 60s interval and 15s timeout

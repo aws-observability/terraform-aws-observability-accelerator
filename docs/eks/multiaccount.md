@@ -54,11 +54,11 @@ Add the Grafana Workspace ID and its corresponding region name in the `variables
 
 ```sh
 
-git  clone  https://github.com/aws-observability/terraform-aws-observability-accelerator.git
+git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
 
-cd  terraform-aws-observability-accelerator/examples/eks-cross-account-with-central-amp
+cd terraform-aws-observability-accelerator/examples/eks-cross-account-with-central-amp
 
-terraform  init
+terraform init
 
 ```
 
@@ -80,7 +80,7 @@ While installing the observability settings for the EKS cluster specified in var
 !!! warning
     To override the defaults, create a `terraform.tfvars` and change the default values of the variables.
 
-  
+
 
 Run the following command to deploy
 
@@ -90,15 +90,15 @@ terraform  apply  --auto-approve
 
 ```
 
-  
+
 
 ## Verifying Multi Account Observability
 
-  
+
 
 One you have successfully run the above setup, you should be able to see dashboards similar to the images shown below in `Amazon Managed Grafana` workspace.
 
-  
+
 
 You will notice that you are able to use the `cluster` dropdown to filter the dashboards to metrics collected from a specific EKS cluster.
 
@@ -110,7 +110,7 @@ You will notice that you are able to use the `cluster` dropdown to filter the da
 
 To clean up entirely, run the following command:
 
-  
+
 
 ```sh
 

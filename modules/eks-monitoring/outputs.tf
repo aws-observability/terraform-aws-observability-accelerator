@@ -10,5 +10,5 @@ output "eks_cluster_id" {
 
 output "adot_irsa_arn" {
   description = "IRSA Arn for ADOT"
-  value = module.helm_addon.irsa_arn
+  value       = module.helm_addon.irsa_arn
 }

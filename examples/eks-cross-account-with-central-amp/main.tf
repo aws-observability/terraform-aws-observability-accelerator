@@ -116,7 +116,7 @@ resource "aws_grafana_workspace_api_key" "key" {
   workspace_id    = var.monitoring.managed_grafana_id
 }
 
-module "managed-service-prometheus" {
+module "managed_service_prometheus" {
   source  = "terraform-aws-modules/managed-service-prometheus/aws"
   version = "2.2.2"
   providers = {
@@ -132,7 +132,7 @@ module "aws_observability_accelerator" {
   enable_managed_prometheus           = false
   enable_alertmanager                 = false
   managed_prometheus_workspace_region = var.monitoring.region
-  managed_prometheus_workspace_id     = module.managed-service-prometheus.workspace_id
+  managed_prometheus_workspace_id     = module.managed_service_prometheus.workspace_id
   managed_grafana_workspace_id        = var.monitoring.managed_grafana_id
 
   providers = {

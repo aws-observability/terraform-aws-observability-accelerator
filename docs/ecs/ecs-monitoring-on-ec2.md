@@ -51,6 +51,7 @@ terraform apply
 ```
 
 ## Visualization
+![image](https://github.com/ruchimo/terraform-aws-observability-accelerator/assets/106240341/006c387e-92e8-45c8-ae2e-825900990741)
 
 
 ## Cleanup

@@ -12,11 +12,11 @@ locals {
     aws_region                      = data.aws_region.current.name
     cluster_name                    = var.aws_ecs_cluster_name
     cluster_region                  = data.aws_region.current.name
-    refresh_interval                = "60s"
-    ecs_metrics_collection_interval = "15s"
+    refresh_interval                = var.refresh_interval
+    ecs_metrics_collection_interval = var.ecs_metrics_collection_interval
     amp_remote_write_ep             = "${local.prometheus_ws_endpoint}api/v1/remote_write"
-    otlpGrpcEndpoint                = "0.0.0.0:4317"
-    otlpHttpEndpoint                = "0.0.0.0:4318"
+    otlpGrpcEndpoint                = var.otlpGrpcEndpoint
+    otlpHttpEndpoint                = var.otlpHttpEndpoint
   }
 
   ssm_param_value = yamlencode(
@@ -24,8 +24,8 @@ locals {
   )
 
   container_def_default_values = {
-    container_name = "adot_new"
-    otel_image_ver = "v0.31.0"
+    container_name = var.container_name
+    otel_image_ver = var.otel_image_ver
     aws_region     = data.aws_region.current.name
   }
 

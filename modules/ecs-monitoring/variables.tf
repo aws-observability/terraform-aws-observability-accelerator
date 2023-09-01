@@ -30,3 +30,40 @@ variable "create_managed_prometheus_ws" {
   type        = bool
   default     = true
 }
+
+variable "refresh_interval" {
+  description = "Refresh interval for ecs_observer"
+  type = string
+  default = "60s"
+}
+
+variable "ecs_metrics_collection_interval" {
+  description = "Collection interval for ecs metrics"
+  type = string
+  default = "15s"
+}
+
+variable "otlpGrpcEndpoint" {
+  description = "otlpGrpcEndpoint"
+  type = string
+  default = "0.0.0.0:4317"
+}
+
+
+variable "otlpHttpEndpoint" {
+  description = "otlpHttpEndpoint"
+  type = string
+  default = "0.0.0.0:4318"
+}
+
+variable "container_name" {
+  description = "Container Name for Adot"
+  type = string
+  default = "adot_new"
+}
+
+variable "otel_image_ver" {
+  description = "Otel Docker Image version"
+  type = string
+  default = "v0.31.0"
+}

@@ -29,13 +29,15 @@ variable "cluster_two" {
 variable "monitoring" {
   description = "Input for your AMP and AMG workspaces"
   type = object({
-    managed_grafana_id = string
-    region             = string
-    tf_role            = string
+    managed_grafana_id  = string
+    amp_workspace_alias = string
+    region              = string
+    tf_role             = string
   })
   default = {
-    managed_grafana_id = "<grafana-ws-id>"
-    region             = "<grafana-ws-region>"
-    tf_role            = "<iam-role-in-grafana-ws-account>"
+    managed_grafana_id  = "<grafana-ws-id>"
+    amp_workspace_alias = "aws-observability-accelerator"
+    region              = "<grafana-ws-region>"
+    tf_role             = "<iam-role-in-grafana-ws-account>"
   }
 }

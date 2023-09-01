@@ -1,5 +1,5 @@
 locals {
-  amp_workspace_alias = "aws-observability-accelerator"
+  amp_workspace_alias = var.monitoring.amp_workspace_alias
 }
 
 ###########################################################################

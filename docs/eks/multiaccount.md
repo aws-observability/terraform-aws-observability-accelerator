@@ -1,10 +1,6 @@
 # AWS EKS Cross Account Observability
 
-
-
-This example shows how to use the [AWS Observability Accelerator](https://github.com/aws-observability/terraform-aws-observability-accelerator), with two or more EKS cluster in multiple AWS accounts and verify the collected metrics from all the clusters in the dashboards of a common `Amazon Managed Grafana` workspace in a central monitoring account.
-
-
+This example shows how to use the [AWS Observability Accelerator](https://github.com/aws-observability/terraform-aws-observability-accelerator), with two or more EKS clusters in multiple AWS accounts and verify the collected metrics from all the clusters in the dashboards of a common `Amazon Managed Grafana` workspace in a central monitoring account.
 
 ## Prerequisites
 
@@ -28,13 +24,12 @@ In order to create/modify resources across multiple AWS accounts, this terraform
 }
 ```
 
-> [!NOTE]  
-> The IAM roles in Account 1 and Account 2 (EKS cluster accounts) should have permissions to perform kubernetes API operations against your EKS clusters. For more info, please review documentation for [enabling IAM principal access to your clusters](https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html)
-
+!!! note
+    The IAM roles in Account 1 and Account 2 (EKS cluster accounts) should have permissions to perform kubernetes API operations against your EKS clusters. For more info, please review documentation for [enabling IAM principal access to your clusters](https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html)
 
 #### 2. EKS clusters in multiple AWS Accounts
 
-Using the example [eks-cluster-with-vpc](../../examples/eks-cluster-with-vpc/), create two EKS clusters with the below names in two different AWS accounts:
+Using the example [eks-cluster-with-vpc](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/new-eks-cluster/), create two EKS clusters with the below names in two different AWS accounts:
 
 1.  `eks-cluster-1` (Account 1)
 
@@ -49,11 +44,10 @@ To run this example you need an existing Amazon Managed Grafana (AMG) workspace.
 Add the Grafana Workspace ID and its corresponding region name in the `variables.tf` file along with the corresponding IAM role ARN that can be assumed by terraform to perform cross-account API operations.
 
 !!! note
+    You can obtain the AMG Workspace ID based on its URL. For the URL `https://g-xyz.grafana-workspace.eu-central-1.amazonaws.com`, the workspace ID would be `g-xyz`
 
-You can obtain the AMG Workspace ID based on its URL. For the URL `https://g-xyz.grafana-workspace.eu-central-1.amazonaws.com`, the workspace ID would be `g-xyz`
 
-
- ## Setup
+## Setup
 
 #### 1. Download sources and initialize Terraform
 
@@ -84,10 +78,9 @@ While installing the observability settings for the EKS cluster specified in var
 
 
 !!! warning
+    To override the defaults, create a `terraform.tfvars` and change the default values of the variables.
 
-To override the defaults, create a `terraform.tfvars` and change the default values of the variables.
-
-
+  
 
 Run the following command to deploy
 
@@ -97,15 +90,15 @@ terraform  apply  --auto-approve
 
 ```
 
-
+  
 
 ## Verifying Multi Account Observability
 
-
+  
 
 One you have successfully run the above setup, you should be able to see dashboards similar to the images shown below in `Amazon Managed Grafana` workspace.
 
-
+  
 
 You will notice that you are able to use the `cluster` dropdown to filter the dashboards to metrics collected from a specific EKS cluster.
 
@@ -117,7 +110,7 @@ You will notice that you are able to use the `cluster` dropdown to filter the da
 
 To clean up entirely, run the following command:
 
-
+  
 
 ```sh
 

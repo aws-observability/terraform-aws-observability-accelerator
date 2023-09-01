@@ -29,6 +29,7 @@ nav:
       - Infrastructure monitoring: eks/index.md
       - EKS API server monitoring: eks/eks-apiserver.md
       - Multicluster monitoring: eks/multicluster.md
+      - Cross Account monitoring: eks/multiaccount.md
       - Java/JMX: eks/java.md
       - Nginx: eks/nginx.md
       - Istio: eks/istio.md

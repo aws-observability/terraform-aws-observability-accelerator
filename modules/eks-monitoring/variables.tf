@@ -33,6 +33,12 @@ variable "irsa_iam_permissions_boundary" {
   default     = null
 }
 
+variable "irsa_iam_additional_policies" {
+  description = "IAM additional policies for IRSA roles"
+  type        = list(string)
+  default     = []
+}
+
 variable "adot_loglevel" {
   description = "Verbosity level for ADOT collector logs. This accepts (detailed|normal|basic), see https://aws-otel.github.io/docs/components/misc-exporters for mor infos."
   type        = string
@@ -55,6 +61,12 @@ variable "managed_prometheus_workspace_region" {
   description = "Amazon Managed Prometheus Workspace's Region"
   type        = string
   default     = null
+}
+
+variable "managed_prometheus_cross_account_role" {
+  description = "Amazon Managed Prometheus Workspace's Account Role Arn"
+  type        = string
+  default     = ""
 }
 
 variable "enable_alerting_rules" {

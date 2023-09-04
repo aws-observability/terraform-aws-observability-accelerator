@@ -94,6 +94,10 @@ module "helm_addon" {
       value = var.managed_prometheus_workspace_region
     },
     {
+      name  = "assumeRoleArn"
+      value = var.managed_prometheus_cross_account_role
+    },
+    {
       name  = "ekscluster"
       value = local.context.eks_cluster_id
     },
@@ -193,10 +197,11 @@ module "helm_addon" {
     kubernetes_namespace              = local.namespace
     create_kubernetes_service_account = true
     kubernetes_service_account        = try(var.helm_config.service_account, local.name)
-    irsa_iam_policies = [
+    irsa_iam_policies = flatten([
       "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonPrometheusRemoteWriteAccess",
-      "arn:${data.aws_partition.current.partition}:iam::aws:policy/AWSXrayWriteOnlyAccess"
-    ]
+      "arn:${data.aws_partition.current.partition}:iam::aws:policy/AWSXrayWriteOnlyAccess",
+      var.irsa_iam_additional_policies,
+    ])
   }
 
   addon_context = local.context

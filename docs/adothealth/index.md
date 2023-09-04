@@ -7,7 +7,8 @@ The OpenTelemetry collector produces metrics to monitor the entire pipeline. In 
 
 Below diagram shows an example data flow and the components in an ADOT collector:
 
-![ADOTCollectorComponents](https://github.com/RAMathews/terraform-aws-observability-accelerator/assets/114662591/1db25d84-c1ca-4468-bb0d-42c8bafd1942)
+![ADOTCollectorComponents](https://github.com/aws-observability/terraform-aws-observability-accelerator/assets/10175027/71a4a53d-f9fd-45b0-81cb-e060d2b3915b)
+
 
 In this dashboard, there are five sections. Each section has [metrics](https://aws-observability.github.io/observability-best-practices/guides/operational/adot-at-scale/operating-adot-collector/#collecting-health-metrics-from-the-collector) relevant to the various [components](https://opentelemetry.io/docs/demo/collector-data-flow-dashboard/#data-flow-overview) of the AWS Distro for OpenTelemetry (ADOT) collector :
 
@@ -17,22 +18,24 @@ Shows the receiver’s accepted and refused rate/count of spans and metric point
 ### Processors
 Shows the accepted and refused rate/count of spans and metric points pushed into next component in the pipeline. The batch metrics can help to understand how often metrics are sent to exporter and the batch size.
 
-![receivers_processors](https://github.com/RAMathews/terraform-aws-observability-accelerator/assets/114662591/9a2edc27-9472-4a58-a244-d69f2bc7f41f)
+![receivers_processors](https://github.com/aws-observability/terraform-aws-observability-accelerator/assets/10175027/34bfb881-1004-480f-8e0e-4ded10463d31)
+
 
 ### Exporters
 Shows the exporter’s accepted and refused rate/count of spans and metric points that are pushed to any of the destinations. It also shows the size and capacity of the retry queue. These metrics can be used to understand if the collector is having issues in sending trace or metric data to the destination configured.
 
-![exporters](https://github.com/RAMathews/terraform-aws-observability-accelerator/assets/114662591/77e20ac5-64bb-42ca-9db6-4d13ca7b27de)
+![exporters](https://github.com/aws-observability/terraform-aws-observability-accelerator/assets/10175027/0bceaa32-a52c-4e23-9b6f-8b208e337f4f)
+
 
 ### Collectors
 Shows the collector’s operational metrics (Memory, CPU, uptime). This can be used to understand how much resources the collector is consuming.
 
-![collectors](https://github.com/RAMathews/terraform-aws-observability-accelerator/assets/114662591/25151edd-6132-479a-9331-71aa69a91d5e)
+![collectors](https://github.com/aws-observability/terraform-aws-observability-accelerator/assets/10175027/fc68d2f4-d6a1-4d34-ac05-78e57310c28e)
 
 ### Data Flow
 Shows the metrics and spans data flow through the collector’s components.
 
-![dataflow](https://github.com/RAMathews/terraform-aws-observability-accelerator/assets/114662591/61fe684d-8ed3-4645-9210-f16158442b7d)
+![dataflow](https://github.com/aws-observability/terraform-aws-observability-accelerator/assets/10175027/ffcdafca-5718-4d19-889d-b9503a295679)
 
 !!!note
     To read more about the metrics and the dashboard used, visit the upstream documentation [here](https://opentelemetry.io/docs/demo/collector-data-flow-dashboard/).

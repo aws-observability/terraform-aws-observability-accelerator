@@ -35,6 +35,8 @@ nav:
       - Viewing logs: eks/logs.md
       - Tracing: eks/tracing.md
       - Teardown: eks/destroy.md
+  - AWS Distro for OpenTelemetry (ADOT):
+      - Monitoring ADOT collector health: adothealth/index.md
   - Amazon CloudWatch Container Insights:
       - Amazon EKS: container-insights/eks.md
   - Monitoring Managed Service for Prometheus Workspaces: workloads/managed-prometheus.md

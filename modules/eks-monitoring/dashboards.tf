@@ -11,7 +11,7 @@ spec:
   interval: 5m0s
   url: ${var.flux_gitrepository_url}
   ref:
-    branch: ${var.flux_gitrepository_branch}
+    tag: ${var.flux_gitrepository_branch}
 YAML
 
   depends_on = [module.external_secrets]

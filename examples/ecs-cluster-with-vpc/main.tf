@@ -27,14 +27,15 @@ locals {
 
 module "ecs_cluster" {
   source = "terraform-aws-modules/ecs/aws"
+  version = "5.2.2"
 
   cluster_name = local.name
 
   # Capacity provider - autoscaling groups
   default_capacity_provider_use_fargate = false
-  create_task_exec_iam_role = true
-  task_exec_iam_role_name = "ecs_monitor_task_exec_role"
-  task_exec_iam_role_policies = {"module.ecs_cluster.module.cluster.aws_iam_policy.task_exec[0]" : "arn:aws:iam::aws:policy/AmazonPrometheusRemoteWriteAccess" }
+  create_task_exec_iam_role             = true
+  task_exec_iam_role_name               = "ecs_monitor_task_exec_role"
+  task_exec_iam_role_policies           = { "module.ecs_cluster.module.cluster.aws_iam_policy.task_exec[0]" : "arn:aws:iam::aws:policy/AmazonPrometheusRemoteWriteAccess" }
   autoscaling_capacity_providers = {
     # On-demand instances
     ex-1 = {
@@ -179,12 +180,12 @@ module "alb_sg" {
 }
 
 module "ecs_monitoring" {
-  source                = "../../modules/ecs-monitoring"
-  aws_ecs_cluster_name  = module.ecs_cluster.cluster_name
-  taskRoleArn           = module.ecs_cluster.task_exec_iam_role_arn
-  executionRoleArn      = module.ecs_cluster.task_exec_iam_role_arn
-  
+  source               = "../../modules/ecs-monitoring"
+  aws_ecs_cluster_name = module.ecs_cluster.cluster_name
+  taskRoleArn          = module.ecs_cluster.task_exec_iam_role_arn
+  executionRoleArn     = module.ecs_cluster.task_exec_iam_role_arn
+
   depends_on = [
-    module.ecs_service
+    module.ecs_cluster
   ]
 }

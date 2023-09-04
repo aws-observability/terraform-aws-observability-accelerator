@@ -4,10 +4,10 @@ This example demonstrates how to monitor your Amazon Elastic Container Service o
 (Amazon ECS) cluster with the Observability Accelerator's
 [ECS monitoring module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/ecs-monitoring).
 
-The module collects Prometheus metrics from tasks running on ECS and sends it to Prometheus using AWS Distro for OpenTelemetry Collector (ADOT). 
-You can either run the collector as a sidecar or deploy the collector as its own ECS service for entire cluster. 
-ECS tasks with Prometheus endpoints are discovered using extension 
-[ecsobserver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/extension/observer/ecsobserver/README.md). 
+The module collects Prometheus metrics from tasks running on ECS and sends it to Prometheus using AWS Distro for OpenTelemetry Collector (ADOT).
+You can either run the collector as a sidecar or deploy the collector as its own ECS service for entire cluster.
+ECS tasks with Prometheus endpoints are discovered using extension
+[ecsobserver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/extension/observer/ecsobserver/README.md).
 (Unlike EKS, there is no builtin discovery for ECS inside prometheus)
 
 Additionally, you can optionally collect custom Prometheus metrics from your applications running
@@ -35,9 +35,9 @@ module "ecs_monitoring" {
   aws_ecs_cluster_name  = module.ecs_cluster.cluster_name
   taskRoleArn           = module.ecs_cluster.task_exec_iam_role_arn
   executionRoleArn      = module.ecs_cluster.task_exec_iam_role_arn
-  
+
   depends_on = [
-    module.ecs_service
+    module.ecs_cluster
   ]
 }
 ```

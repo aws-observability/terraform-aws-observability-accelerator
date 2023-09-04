@@ -38,6 +38,7 @@ See examples using this Terraform modules in the **Amazon ECS** section of [this
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_managed_grafana_default"></a> [managed\_grafana\_default](#module\_managed\_grafana\_default) | terraform-aws-modules/managed-service-grafana/aws | n/a |
+| <a name="module_managed_prometheus_default"></a> [managed\_prometheus\_default](#module\_managed\_prometheus\_default) | terraform-aws-modules/managed-service-prometheus/aws | n/a |
 
 ## Resources
 
@@ -45,7 +46,7 @@ See examples using this Terraform modules in the **Amazon ECS** section of [this
 |------|------|
 | [aws_ecs_service.adot_ecs_prometheus](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service) | resource |
 | [aws_ecs_task_definition.adot_ecs_prometheus](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition) | resource |
-| [aws_ssm_parameter.adot-config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.adot_config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
 ## Inputs
@@ -53,9 +54,16 @@ See examples using this Terraform modules in the **Amazon ECS** section of [this
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_ecs_cluster_name"></a> [aws\_ecs\_cluster\_name](#input\_aws\_ecs\_cluster\_name) | Name of your ECS cluster | `string` | n/a | yes |
+| <a name="input_container_name"></a> [container\_name](#input\_container\_name) | Container Name for Adot | `string` | `"adot_new"` | no |
+| <a name="input_create_managed_prometheus_ws"></a> [create\_managed\_prometheus\_ws](#input\_create\_managed\_prometheus\_ws) | Creates a Workspace for Amazon Managed Prometheus | `bool` | `true` | no |
 | <a name="input_ecs_adot_cpu"></a> [ecs\_adot\_cpu](#input\_ecs\_adot\_cpu) | CPU to be allocated for the ADOT ECS TASK | `string` | `"256"` | no |
 | <a name="input_ecs_adot_mem"></a> [ecs\_adot\_mem](#input\_ecs\_adot\_mem) | Memory to be allocated for the ADOT ECS TASK | `string` | `"512"` | no |
+| <a name="input_ecs_metrics_collection_interval"></a> [ecs\_metrics\_collection\_interval](#input\_ecs\_metrics\_collection\_interval) | Collection interval for ecs metrics | `string` | `"15s"` | no |
 | <a name="input_executionRoleArn"></a> [executionRoleArn](#input\_executionRoleArn) | ARN of the IAM Execution Role | `string` | n/a | yes |
+| <a name="input_otel_image_ver"></a> [otel\_image\_ver](#input\_otel\_image\_ver) | Otel Docker Image version | `string` | `"v0.31.0"` | no |
+| <a name="input_otlpGrpcEndpoint"></a> [otlpGrpcEndpoint](#input\_otlpGrpcEndpoint) | otlpGrpcEndpoint | `string` | `"0.0.0.0:4317"` | no |
+| <a name="input_otlpHttpEndpoint"></a> [otlpHttpEndpoint](#input\_otlpHttpEndpoint) | otlpHttpEndpoint | `string` | `"0.0.0.0:4318"` | no |
+| <a name="input_refresh_interval"></a> [refresh\_interval](#input\_refresh\_interval) | Refresh interval for ecs\_observer | `string` | `"60s"` | no |
 | <a name="input_taskRoleArn"></a> [taskRoleArn](#input\_taskRoleArn) | ARN of the IAM Task Role | `string` | n/a | yes |
 
 ## Outputs

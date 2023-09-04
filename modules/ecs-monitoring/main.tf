@@ -1,5 +1,5 @@
 # SSM Parameter for storing and distrivuting the ADOT config
-resource "aws_ssm_parameter" "adot-config" {
+resource "aws_ssm_parameter" "adot_config" {
   name        = "/terraform-aws-observability/otel_collector_config"
   description = "SSM parameter for aws-observability-accelerator/otel-collector-config"
   type        = "String"
@@ -23,8 +23,8 @@ module "managed_grafana_default" {
 #####################
 
 module "managed_prometheus_default" {
-  count  = var.create_managed_prometheus_ws ? 1 : 0
-  
+  count = var.create_managed_prometheus_ws ? 1 : 0
+
   source          = "terraform-aws-modules/managed-service-prometheus/aws"
   workspace_alias = "${local.name}-default"
 }

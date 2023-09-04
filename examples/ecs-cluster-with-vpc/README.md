@@ -39,12 +39,11 @@ Note that this example may create resources which will incur monetary charges on
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_alb"></a> [alb](#module\_alb) | terraform-aws-modules/alb/aws | ~> 8.0 |
 | <a name="module_alb_sg"></a> [alb\_sg](#module\_alb\_sg) | terraform-aws-modules/security-group/aws | ~> 5.0 |
 | <a name="module_autoscaling"></a> [autoscaling](#module\_autoscaling) | terraform-aws-modules/autoscaling/aws | ~> 6.5 |
 | <a name="module_autoscaling_sg"></a> [autoscaling\_sg](#module\_autoscaling\_sg) | terraform-aws-modules/security-group/aws | ~> 5.0 |
-| <a name="module_ecs_cluster"></a> [ecs\_cluster](#module\_ecs\_cluster) | ./modules/cluster | n/a |
-| <a name="module_ecs_service"></a> [ecs\_service](#module\_ecs\_service) | ./modules/service | n/a |
+| <a name="module_ecs_cluster"></a> [ecs\_cluster](#module\_ecs\_cluster) | terraform-aws-modules/ecs/aws | n/a |
+| <a name="module_ecs_monitoring"></a> [ecs\_monitoring](#module\_ecs\_monitoring) | ../../modules/ecs-monitoring | n/a |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 5.0 |
 
 ## Resources

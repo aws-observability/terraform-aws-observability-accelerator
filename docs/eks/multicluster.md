@@ -1,6 +1,9 @@
-# AWS EKS Multicluster Observability
+# AWS EKS Multicluster Observability (single AWS Account)
 
-This example shows how to use the [AWS Observability Accelerator](https://github.com/aws-observability/terraform-aws-observability-accelerator), with more than one EKS cluster and verify the collected metrics from all the clusters in the dashboards of a common `Amazon Managed Grafana` workspace.
+This example shows how to use the [AWS Observability Accelerator](https://github.com/aws-observability/terraform-aws-observability-accelerator),
+with more than one EKS cluster in a single account and visualize the collected
+metrics from all the clusters in the dashboards of a common
+`Amazon Managed Grafana` workspace.
 
 ## Prerequisites
 

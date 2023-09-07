@@ -103,7 +103,7 @@ EXTERNAL_IP=your-nginx-controller-external-ip
 
 ```sh
 SAMPLE_TRAFFIC_NAMESPACE=nginx-sample-traffic
-curl https://raw.githubusercontent.com/aws-samples/amazon-cloudwatch-container-insights/master/k8s-deployment-manifest-templates/deployment-mode/service/cwagent-prometheus/sample_traffic/nginx-traffic/nginx-traffic-sample.yaml |
+curl https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/main/examples/existing-cluster-nginx/sample_traffic/nginx-traffic-sample.yaml |
 sed "s/{{external_ip}}/$EXTERNAL_IP/g" |
 sed "s/{{namespace}}/$SAMPLE_TRAFFIC_NAMESPACE/g" |
 kubectl apply -f -

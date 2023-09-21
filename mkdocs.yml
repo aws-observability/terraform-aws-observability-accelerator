@@ -26,15 +26,18 @@ nav:
   - Home: index.md
   - Concepts: concepts.md
   - Amazon EKS:
-      - Infrastructure monitoring: eks/index.md
-      - EKS API server monitoring: eks/eks-apiserver.md
-      - Multicluster monitoring: eks/multicluster.md
-      - Cross Account monitoring: eks/multiaccount.md
-      - Java/JMX: eks/java.md
-      - Nginx: eks/nginx.md
-      - Istio: eks/istio.md
+      - Infrastructure: eks/index.md
+      - EKS API server: eks/eks-apiserver.md
+      - Multicluster:
+          - Single AWS account: eks/multicluster.md
+          - Cross AWS account: eks/multiaccount.md
       - Viewing logs: eks/logs.md
       - Tracing: eks/tracing.md
+      - Patterns:
+        - Java/JMX: eks/java.md
+        - Nginx: eks/nginx.md
+        - Istio: eks/istio.md
+      - Troubleshooting: eks/troubleshooting.md
       - Teardown: eks/destroy.md
   - AWS Distro for OpenTelemetry (ADOT):
       - Monitoring ADOT collector health: adothealth/index.md

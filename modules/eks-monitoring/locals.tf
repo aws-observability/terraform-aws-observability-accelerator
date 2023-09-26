@@ -39,9 +39,9 @@ locals {
 
     scrape_sample_limit = 1000
 
-    flux_gitrepository_name   = "aws-observability-accelerator"
-    flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
-    flux_gitrepository_branch = "v0.2.0"
+    flux_gitrepository_name   = var.flux_gitrepository_name
+    flux_gitrepository_url    = var.flux_gitrepository_url
+    flux_gitrepository_branch = var.flux_gitrepository_branch
     flux_kustomization_name   = "grafana-dashboards-java"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/java"
 
@@ -60,9 +60,9 @@ locals {
 
     scrape_sample_limit = 1000
 
-    flux_gitrepository_name   = "aws-observability-accelerator"
-    flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
-    flux_gitrepository_branch = "v0.2.0"
+    flux_gitrepository_name   = var.flux_gitrepository_name
+    flux_gitrepository_url    = var.flux_gitrepository_url
+    flux_gitrepository_branch = var.flux_gitrepository_branch
     flux_kustomization_name   = "grafana-dashboards-nginx"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/nginx"
 
@@ -81,9 +81,9 @@ locals {
 
     scrape_sample_limit = 1000
 
-    flux_gitrepository_name   = "aws-observability-accelerator"
-    flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
-    flux_gitrepository_branch = "v0.2.0"
+    flux_gitrepository_name   = var.flux_gitrepository_name
+    flux_gitrepository_url    = var.flux_gitrepository_url
+    flux_gitrepository_branch = var.flux_gitrepository_branch
     flux_kustomization_name   = "grafana-dashboards-istio"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/istio"
 
@@ -100,42 +100,42 @@ locals {
 
   apiserver_monitoring_config = {
     # can be overriden by providing a config
-    flux_gitrepository_name   = "aws-observability-accelerator"
-    flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
-    flux_gitrepository_branch = "v0.2.0"
-    flux_kustomization_name   = "grafana-dashboards-apiserver"
-    flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/apiserver"
+    flux_gitrepository_name   = try(var.apiserver_monitoring_config.flux_gitrepository_name, var.flux_gitrepository_name)
+    flux_gitrepository_url    = try(var.apiserver_monitoring_config.flux_gitrepository_url, var.flux_gitrepository_url)
+    flux_gitrepository_branch = try(var.apiserver_monitoring_config.flux_gitrepository_branch, var.flux_gitrepository_branch)
+    flux_kustomization_name   = try(var.apiserver_monitoring_config.flux_kustomization_name, "grafana-dashboards-apiserver")
+    flux_kustomization_path   = try(var.apiserver_monitoring_config.flux_kustomization_path, "./artifacts/grafana-operator-manifests/eks/apiserver")
 
     dashboards = {
-      basic           = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-basic.json"
-      advanced        = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-advanced.json"
-      troubleshooting = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-troubleshooting.json"
+      basic           = try(var.apiserver_monitoring_config.dashboards.basic, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-basic.json")
+      advanced        = try(var.apiserver_monitoring_config.dashboards.advanced, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-advanced.json")
+      troubleshooting = try(var.apiserver_monitoring_config.dashboards.troubleshooting, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-troubleshooting.json")
     }
   }
 
   adothealth_monitoring_config = {
     # can be overriden by providing a config
-    flux_gitrepository_name   = "aws-observability-accelerator"
-    flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
-    flux_gitrepository_branch = "v0.2.0"
-    flux_kustomization_name   = "grafana-dashboards-adothealth"
-    flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/adot"
+    flux_gitrepository_name   = try(var.adothealth_monitoring_config.flux_gitrepository_name, var.flux_gitrepository_name)
+    flux_gitrepository_url    = try(var.adothealth_monitoring_config.flux_gitrepository_url, var.flux_gitrepository_url)
+    flux_gitrepository_branch = try(var.adothealth_monitoring_config.flux_gitrepository_branch, var.flux_gitrepository_branch)
+    flux_kustomization_name   = try(var.adothealth_monitoring_config.flux_kustomization_name, "grafana-dashboards-adothealth")
+    flux_kustomization_path   = try(var.adothealth_monitoring_config.flux_kustomization_path, "./artifacts/grafana-operator-manifests/eks/adot")
 
     dashboards = {
-      health = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/adot/adothealth.json"
+      health = try(var.adothealth_monitoring_config.dashboards.health, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/adot/adothealth.json")
     }
   }
 
   kubeproxy_monitoring_config = {
     # can be overriden by providing a config
-    flux_gitrepository_name   = "aws-observability-accelerator"
-    flux_gitrepository_url    = "https://github.com/aws-observability/aws-observability-accelerator"
-    flux_gitrepository_branch = "v0.2.0"
-    flux_kustomization_name   = "grafana-dashboards-kubeproxy"
-    flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/kube-proxy"
+    flux_gitrepository_name   = try(var.kubeproxy_monitoring_config.flux_gitrepository_name, var.flux_gitrepository_name)
+    flux_gitrepository_url    = try(var.kubeproxy_monitoring_config.flux_gitrepository_url, var.flux_gitrepository_url)
+    flux_gitrepository_branch = try(var.kubeproxy_monitoring_config.flux_gitrepository_branch, var.flux_gitrepository_branch)
+    flux_kustomization_name   = try(var.kubeproxy_monitoring_config.flux_kustomization_name, "grafana-dashboards-kubeproxy")
+    flux_kustomization_path   = try(var.kubeproxy_monitoring_config.flux_kustomization_path, "./artifacts/grafana-operator-manifests/eks/kube-proxy")
 
     dashboards = {
-      default = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/kube-proxy/kube-proxy.json"
+      default = try(var.kubeproxy_monitoring_config.dashboards.default, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/kube-proxy/kube-proxy.json")
     }
   }
 }

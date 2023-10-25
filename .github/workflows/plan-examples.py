@@ -9,7 +9,7 @@ def get_examples():
     returning a string formatted json array of the example directories minus those that are excluded
     """
     exclude = {
-        '',  # Add examples here to exclude from terraform plan
+        'examples/eks-cross-account-with-central-amp',  # Add examples here to exclude from terraform plan
     }
 
     projects = {

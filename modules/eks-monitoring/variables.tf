@@ -544,7 +544,7 @@ variable "adothealth_monitoring_config" {
     flux_kustomization_path   = string
 
     dashboards = object({
-      grafana_adothealth_dashboard_url = string
+      health = string
     })
   })
 
@@ -562,7 +562,7 @@ variable "kubeproxy_monitoring_config" {
     flux_kustomization_path   = string
 
     dashboards = object({
-      grafana_kubeproxy_dashboard_url = string
+      default = string
     })
   })
 

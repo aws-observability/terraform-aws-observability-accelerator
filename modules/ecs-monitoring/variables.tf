@@ -3,12 +3,12 @@ variable "aws_ecs_cluster_name" {
   type        = string
 }
 
-variable "taskRoleArn" {
+variable "task_role_arn" {
   description = "ARN of the IAM Task Role"
   type        = string
 }
 
-variable "executionRoleArn" {
+variable "execution_role_arn" {
   description = "ARN of the IAM Execution Role"
   type        = string
 }
@@ -43,14 +43,14 @@ variable "ecs_metrics_collection_interval" {
   default     = "15s"
 }
 
-variable "otlpGrpcEndpoint" {
+variable "otlp_grpc_endpoint" {
   description = "otlpGrpcEndpoint"
   type        = string
   default     = "0.0.0.0:4317"
 }
 
 
-variable "otlpHttpEndpoint" {
+variable "otlp_http_endpoint" {
   description = "otlpHttpEndpoint"
   type        = string
   default     = "0.0.0.0:4318"

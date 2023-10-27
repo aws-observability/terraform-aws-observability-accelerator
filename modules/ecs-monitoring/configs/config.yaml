@@ -16,9 +16,9 @@ receivers:
   otlp:
     protocols:
       grpc:
-        endpoint: ${otlpGrpcEndpoint}
+        endpoint: ${otlp_grpc_endpoint}
       http:
-        endpoint: ${otlpHttpEndpoint}
+        endpoint: ${otlp_http_endpoint}
   prometheus:
     config:
       scrape_configs:

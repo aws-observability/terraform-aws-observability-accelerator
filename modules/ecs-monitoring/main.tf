@@ -17,11 +17,6 @@ module "managed_grafana_default" {
   associate_license = false
 }
 
-#####################
-## Commented this module, as AMP workspace is a pre-requiste for this solution.
-## You can use this code to create a AMP workspace
-#####################
-
 module "managed_prometheus_default" {
   count = var.create_managed_prometheus_ws ? 1 : 0
 
@@ -34,8 +29,8 @@ module "managed_prometheus_default" {
 ###########################################
 resource "aws_ecs_task_definition" "adot_ecs_prometheus" {
   family                   = "adot_prometheus_td"
-  task_role_arn            = var.taskRoleArn
-  execution_role_arn       = var.executionRoleArn
+  task_role_arn            = var.task_role_arn
+  execution_role_arn       = var.execution_role_arn
   network_mode             = "bridge"
   requires_compatibilities = ["EC2"]
   cpu                      = var.ecs_adot_cpu

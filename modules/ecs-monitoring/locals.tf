@@ -13,8 +13,8 @@ locals {
     refresh_interval                = var.refresh_interval
     ecs_metrics_collection_interval = var.ecs_metrics_collection_interval
     amp_remote_write_ep             = "${local.prometheus_ws_endpoint}api/v1/remote_write"
-    otlpGrpcEndpoint                = var.otlpGrpcEndpoint
-    otlpHttpEndpoint                = var.otlpHttpEndpoint
+    otlp_grpc_endpoint                = var.otlp_grpc_endpoint
+    otlp_http_endpoint                = var.otlp_http_endpoint
   }
 
   ssm_param_value = yamlencode(

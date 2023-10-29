@@ -59,12 +59,12 @@ See examples using this Terraform modules in the **Amazon ECS** section of [this
 | <a name="input_ecs_adot_cpu"></a> [ecs\_adot\_cpu](#input\_ecs\_adot\_cpu) | CPU to be allocated for the ADOT ECS TASK | `string` | `"256"` | no |
 | <a name="input_ecs_adot_mem"></a> [ecs\_adot\_mem](#input\_ecs\_adot\_mem) | Memory to be allocated for the ADOT ECS TASK | `string` | `"512"` | no |
 | <a name="input_ecs_metrics_collection_interval"></a> [ecs\_metrics\_collection\_interval](#input\_ecs\_metrics\_collection\_interval) | Collection interval for ecs metrics | `string` | `"15s"` | no |
-| <a name="input_executionRoleArn"></a> [executionRoleArn](#input\_executionRoleArn) | ARN of the IAM Execution Role | `string` | n/a | yes |
+| <a name="input_execution_role_arn"></a> [execution\_role\_arn](#input\_execution\_role\_arn) | ARN of the IAM Execution Role | `string` | n/a | yes |
 | <a name="input_otel_image_ver"></a> [otel\_image\_ver](#input\_otel\_image\_ver) | Otel Docker Image version | `string` | `"v0.31.0"` | no |
-| <a name="input_otlpGrpcEndpoint"></a> [otlpGrpcEndpoint](#input\_otlpGrpcEndpoint) | otlpGrpcEndpoint | `string` | `"0.0.0.0:4317"` | no |
-| <a name="input_otlpHttpEndpoint"></a> [otlpHttpEndpoint](#input\_otlpHttpEndpoint) | otlpHttpEndpoint | `string` | `"0.0.0.0:4318"` | no |
+| <a name="input_otlp_grpc_endpoint"></a> [otlp\_grpc\_endpoint](#input\_otlp\_grpc\_endpoint) | otlpGrpcEndpoint | `string` | `"0.0.0.0:4317"` | no |
+| <a name="input_otlp_http_endpoint"></a> [otlp\_http\_endpoint](#input\_otlp\_http\_endpoint) | otlpHttpEndpoint | `string` | `"0.0.0.0:4318"` | no |
 | <a name="input_refresh_interval"></a> [refresh\_interval](#input\_refresh\_interval) | Refresh interval for ecs\_observer | `string` | `"60s"` | no |
-| <a name="input_taskRoleArn"></a> [taskRoleArn](#input\_taskRoleArn) | ARN of the IAM Task Role | `string` | n/a | yes |
+| <a name="input_task_role_arn"></a> [task\_role\_arn](#input\_task\_role\_arn) | ARN of the IAM Task Role | `string` | n/a | yes |
 
 ## Outputs
 
@@ -72,4 +72,6 @@ See examples using this Terraform modules in the **Amazon ECS** section of [this
 |------|-------------|
 | <a name="output_grafana_workspace_endpoint"></a> [grafana\_workspace\_endpoint](#output\_grafana\_workspace\_endpoint) | The endpoint of the Grafana workspace |
 | <a name="output_grafana_workspace_id"></a> [grafana\_workspace\_id](#output\_grafana\_workspace\_id) | The ID of the Grafana workspace |
+| <a name="output_prometheus_workspace_endpoint"></a> [prometheus\_workspace\_endpoint](#output\_prometheus\_workspace\_endpoint) | Prometheus endpoint available for this workspace |
+| <a name="output_prometheus_workspace_id"></a> [prometheus\_workspace\_id](#output\_prometheus\_workspace\_id) | Identifier of the workspace |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

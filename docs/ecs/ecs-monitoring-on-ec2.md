@@ -33,8 +33,8 @@ Make sure to update your exisitng Application Task Definitions based on the work
 module "ecs_monitoring" {
   source                = "../../modules/ecs-monitoring"
   aws_ecs_cluster_name  = module.ecs_cluster.cluster_name
-  taskRoleArn           = module.ecs_cluster.task_exec_iam_role_arn
-  executionRoleArn      = module.ecs_cluster.task_exec_iam_role_arn
+  task_role_arn           = module.ecs_cluster.task_exec_iam_role_arn
+  execution_role_arn      = module.ecs_cluster.task_exec_iam_role_arn
 
   depends_on = [
     module.ecs_cluster

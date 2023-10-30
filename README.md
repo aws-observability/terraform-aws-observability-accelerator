@@ -135,8 +135,8 @@ module "ecs_monitoring" {
   source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/ecs-monitoring"
 
   aws_ecs_cluster_name  = module.ecs_cluster.cluster_name
-  taskRoleArn           = module.ecs_cluster.task_exec_iam_role_arn
-  executionRoleArn      = module.ecs_cluster.task_exec_iam_role_arn
+  task_role_arn           = module.ecs_cluster.task_exec_iam_role_arn
+  execution_role_arn      = module.ecs_cluster.task_exec_iam_role_arn
 }
 ```
 Grafana Dashboards

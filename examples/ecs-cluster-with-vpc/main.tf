@@ -55,6 +55,10 @@ module "ecs_cluster" {
       }
     }
   }
+  
+  metadata_options = {
+    http_tokens                 = "required"
+  }
 
   tags = local.tags
 }
@@ -171,7 +175,7 @@ module "alb_sg" {
   vpc_id      = module.vpc.vpc_id
 
   ingress_rules       = ["http-80-tcp"]
-  ingress_cidr_blocks = ["0.0.0.0/0"]
+  ingress_cidr_blocks = ["10.0.0.0/16"]
 
   egress_rules       = ["all-all"]
   egress_cidr_blocks = module.vpc.private_subnets_cidr_blocks

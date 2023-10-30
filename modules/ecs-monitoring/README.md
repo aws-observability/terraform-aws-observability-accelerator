@@ -72,6 +72,4 @@ See examples using this Terraform modules in the **Amazon ECS** section of [this
 |------|-------------|
 | <a name="output_grafana_workspace_endpoint"></a> [grafana\_workspace\_endpoint](#output\_grafana\_workspace\_endpoint) | The endpoint of the Grafana workspace |
 | <a name="output_grafana_workspace_id"></a> [grafana\_workspace\_id](#output\_grafana\_workspace\_id) | The ID of the Grafana workspace |
-| <a name="output_prometheus_workspace_endpoint"></a> [prometheus\_workspace\_endpoint](#output\_prometheus\_workspace\_endpoint) | Prometheus endpoint available for this workspace |
-| <a name="output_prometheus_workspace_id"></a> [prometheus\_workspace\_id](#output\_prometheus\_workspace\_id) | Identifier of the workspace |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

@@ -184,10 +184,10 @@ module "alb_sg" {
 }
 
 module "ecs_monitoring" {
-  source                 = "../../modules/ecs-monitoring"
-  aws_ecs_cluster_name   = module.ecs_cluster.cluster_name
-  task_role_arn          = module.ecs_cluster.task_exec_iam_role_arn
-  execution_role_arn     = module.ecs_cluster.task_exec_iam_role_arn
+  source               = "../../modules/ecs-monitoring"
+  aws_ecs_cluster_name = module.ecs_cluster.cluster_name
+  task_role_arn        = module.ecs_cluster.task_exec_iam_role_arn
+  execution_role_arn   = module.ecs_cluster.task_exec_iam_role_arn
 
   depends_on = [
     module.ecs_cluster

@@ -19,6 +19,53 @@ locals {
     Example    = local.name
     Repository = "https://github.com/terraform-aws-modules/terraform-aws-ecs"
   }
+
+  network_acls = {
+    public_inbound = [
+      {
+        rule_number = 100
+        rule_action = "allow"
+        from_port   = 80
+        to_port     = 80
+        protocol    = "tcp"
+        cidr_block  = "10.0.0.0/16"
+      },
+      {
+        rule_number = 110
+        rule_action = "allow"
+        from_port   = 443
+        to_port     = 443
+        protocol    = "tcp"
+        cidr_block  = "10.0.0.0/16"
+      },
+      {
+        rule_number = 120
+        rule_action = "allow"
+        from_port   = 22
+        to_port     = 22
+        protocol    = "tcp"
+        cidr_block  = "10.0.0.0/16"
+      }
+    ]
+    public_outbound = [
+      {
+        rule_number = 100
+        rule_action = "allow"
+        from_port   = 80
+        to_port     = 80
+        protocol    = "tcp"
+        cidr_block  = "10.0.0.0/16"
+      },
+      {
+        rule_number = 110
+        rule_action = "allow"
+        from_port   = 443
+        to_port     = 443
+        protocol    = "tcp"
+        cidr_block  = "10.0.0.0/16"
+      }
+    ]
+  }
 }
 
 ################################################################################
@@ -54,10 +101,6 @@ module "ecs_cluster" {
         base   = 20
       }
     }
-  }
-  
-  metadata_options = {
-    http_tokens                 = "required"
   }
 
   tags = local.tags
@@ -121,6 +164,10 @@ module "autoscaling" {
   use_mixed_instances_policy = each.value.use_mixed_instances_policy
   mixed_instances_policy     = each.value.mixed_instances_policy
 
+  metadata_options = {
+    http_tokens = "required"
+  }
+
   tags = local.tags
 }
 
@@ -140,7 +187,7 @@ module "autoscaling_sg" {
   ]
   number_of_computed_ingress_with_source_security_group_id = 1
 
-  egress_rules = ["all-all"]
+  # egress_rules = ["http-80-tcp"]
 
   tags = local.tags
 }
@@ -156,8 +203,16 @@ module "vpc" {
   private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 4, k)]
   public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 48)]
 
-  enable_nat_gateway = true
-  single_nat_gateway = true
+  public_dedicated_network_acl  = true
+  public_inbound_acl_rules      = local.network_acls["public_inbound"]
+  public_outbound_acl_rules     = local.network_acls["public_outbound"]
+  private_dedicated_network_acl = true
+  private_inbound_acl_rules     = local.network_acls["public_inbound"]
+  private_outbound_acl_rules    = local.network_acls["public_outbound"]
+
+  manage_default_network_acl = true
+  enable_nat_gateway         = true
+  single_nat_gateway         = true
 
   tags = local.tags
 }
@@ -177,7 +232,7 @@ module "alb_sg" {
   ingress_rules       = ["http-80-tcp"]
   ingress_cidr_blocks = ["10.0.0.0/16"]
 
-  egress_rules       = ["all-all"]
+  # egress_rules       = ["http-80-tcp"]
   egress_cidr_blocks = module.vpc.private_subnets_cidr_blocks
 
   tags = local.tags

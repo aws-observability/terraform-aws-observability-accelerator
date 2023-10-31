@@ -187,8 +187,6 @@ module "autoscaling_sg" {
   ]
   number_of_computed_ingress_with_source_security_group_id = 1
 
-  # egress_rules = ["http-80-tcp"]
-
   tags = local.tags
 }
 
@@ -231,9 +229,7 @@ module "alb_sg" {
 
   ingress_rules       = ["http-80-tcp"]
   ingress_cidr_blocks = ["10.0.0.0/16"]
-
-  # egress_rules       = ["http-80-tcp"]
-  egress_cidr_blocks = module.vpc.private_subnets_cidr_blocks
+  egress_cidr_blocks  = module.vpc.private_subnets_cidr_blocks
 
   tags = local.tags
 }

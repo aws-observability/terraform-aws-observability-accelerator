@@ -1,0 +1,130 @@
+extensions:
+  sigv4auth:
+    region: "${aws_region}"
+    service: "aps"
+  ecs_observer: # extension type is ecs_observer
+    cluster_name: "${cluster_name}" # cluster name need to configured manually
+    cluster_region: "${cluster_region}" # region can be configured directly or use AWS_REGION env var
+    result_file: "/etc/ecs_sd_targets.yaml" # the directory for file must already exists
+    refresh_interval: ${refresh_interval}
+    job_label_name: prometheus_job
+    # JMX
+    docker_labels:
+      - port_label: "ECS_PROMETHEUS_EXPORTER_PORT"
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: ${otlp_grpc_endpoint}
+      http:
+        endpoint: ${otlp_http_endpoint}
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: "ecssd"
+          file_sd_configs:
+            - files:
+                - "/etc/ecs_sd_targets.yaml"
+          relabel_configs:
+            - source_labels: [__meta_ecs_cluster_name]
+              action: replace
+              target_label: ClusterName
+            - source_labels: [__meta_ecs_service_name]
+              action: replace
+              target_label: ServiceName
+            - source_labels: [__meta_ecs_task_definition_family]
+              action: replace
+              target_label: TaskDefinitionFamily
+            - source_labels: [__meta_ecs_task_launch_type]
+              action: replace
+              target_label: LaunchType
+            - source_labels: [__meta_ecs_container_name]
+              action: replace
+              target_label: container_name
+            - action: labelmap
+              regex: ^__meta_ecs_container_labels_(.+)$
+              replacement: "$$1"
+  awsecscontainermetrics:
+    collection_interval: ${ecs_metrics_collection_interval}
+
+processors:
+  resource:
+    attributes:
+      - key: receiver
+        value: "prometheus"
+        action: insert
+  filter:
+    metrics:
+      include:
+        match_type: strict
+        metric_names:
+          - ecs.task.memory.utilized
+          - ecs.task.memory.reserved
+          - ecs.task.memory.usage
+          - ecs.task.cpu.utilized
+          - ecs.task.cpu.reserved
+          - ecs.task.cpu.usage.vcpu
+          - ecs.task.network.rate.rx
+          - ecs.task.network.rate.tx
+          - ecs.task.storage.read_bytes
+          - ecs.task.storage.write_bytes
+  metricstransform:
+    transforms:
+      - include: ".*"
+        match_type: regexp
+        action: update
+        operations:
+          - label: prometheus_job
+            new_label: job
+            action: update_label
+      - include: ecs.task.memory.utilized
+        action: update
+        new_name: MemoryUtilized
+      - include: ecs.task.memory.reserved
+        action: update
+        new_name: MemoryReserved
+      - include: ecs.task.memory.usage
+        action: update
+        new_name: MemoryUsage
+      - include: ecs.task.cpu.utilized
+        action: update
+        new_name: CpuUtilized
+      - include: ecs.task.cpu.reserved
+        action: update
+        new_name: CpuReserved
+      - include: ecs.task.cpu.usage.vcpu
+        action: update
+        new_name: CpuUsage
+      - include: ecs.task.network.rate.rx
+        action: update
+        new_name: NetworkRxBytes
+      - include: ecs.task.network.rate.tx
+        action: update
+        new_name: NetworkTxBytes
+      - include: ecs.task.storage.read_bytes
+        action: update
+        new_name: StorageReadBytes
+      - include: ecs.task.storage.write_bytes
+        action: update
+        new_name: StorageWriteBytes
+
+exporters:
+  prometheusremotewrite:
+    endpoint: "${amp_remote_write_ep}"
+    auth:
+      authenticator: sigv4auth
+  logging:
+    loglevel: debug
+
+service:
+  extensions: [ecs_observer, sigv4auth]
+  pipelines:
+    metrics:
+      receivers: [prometheus]
+      processors: [resource, metricstransform]
+      exporters: [prometheusremotewrite]
+    metrics/ecs:
+      receivers: [awsecscontainermetrics]
+      processors: [filter]
+      exporters: [logging, prometheusremotewrite]

@@ -1,0 +1,21 @@
+[
+  {
+    "name": "${container_name}",
+    "image": "amazon/aws-otel-collector:${otel_image_ver}",
+    "secrets": [
+      {
+        "name": "AOT_CONFIG_CONTENT",
+        "valueFrom": "/terraform-aws-observability/otel_collector_config"
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-create-group": "True",
+        "awslogs-group": "/adot/collector",
+        "awslogs-region": "${aws_region}",
+        "awslogs-stream-prefix": "ecs-prometheus"
+      }
+    }
+  }
+]

@@ -127,6 +127,18 @@ module "eks_monitoring" {
 }
 ```
 
+#### Amazon ECS monitoring
+ECS cluster with VPC and EC2 can be created using the example [here](./examples/ecs_cluster_with_vpc)
+
+```hcl
+module "ecs_monitoring" {
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/ecs-monitoring"
+
+  aws_ecs_cluster_name  = module.ecs_cluster.cluster_name
+  task_role_arn           = module.ecs_cluster.task_exec_iam_role_arn
+  execution_role_arn      = module.ecs_cluster.task_exec_iam_role_arn
+}
+```
 Grafana Dashboards
 
 <img width="2056" alt="image" src="https://user-images.githubusercontent.com/10175027/199110753-9bc7a9b7-1b45-4598-89d3-32980154080e.png">

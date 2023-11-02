@@ -25,6 +25,12 @@ variable "ecs_adot_mem" {
   default     = "512"
 }
 
+variable "create_managed_grafana_ws" {
+  description = "Creates a Workspace for Amazon Managed Grafana"
+  type        = bool
+  default     = true
+}
+
 variable "create_managed_prometheus_ws" {
   description = "Creates a Workspace for Amazon Managed Prometheus"
   type        = bool

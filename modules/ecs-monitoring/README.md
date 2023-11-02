@@ -37,8 +37,8 @@ See examples using this Terraform modules in the **Amazon ECS** section of [this
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_managed_grafana_default"></a> [managed\_grafana\_default](#module\_managed\_grafana\_default) | terraform-aws-modules/managed-service-grafana/aws | n/a |
-| <a name="module_managed_prometheus_default"></a> [managed\_prometheus\_default](#module\_managed\_prometheus\_default) | terraform-aws-modules/managed-service-prometheus/aws | n/a |
+| <a name="module_managed_grafana_default"></a> [managed\_grafana\_default](#module\_managed\_grafana\_default) | terraform-aws-modules/managed-service-grafana/aws | 2.1.0 |
+| <a name="module_managed_prometheus_default"></a> [managed\_prometheus\_default](#module\_managed\_prometheus\_default) | terraform-aws-modules/managed-service-prometheus/aws | 2.2.2 |
 
 ## Resources
 
@@ -55,6 +55,7 @@ See examples using this Terraform modules in the **Amazon ECS** section of [this
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_ecs_cluster_name"></a> [aws\_ecs\_cluster\_name](#input\_aws\_ecs\_cluster\_name) | Name of your ECS cluster | `string` | n/a | yes |
 | <a name="input_container_name"></a> [container\_name](#input\_container\_name) | Container Name for Adot | `string` | `"adot_new"` | no |
+| <a name="input_create_managed_grafana_ws"></a> [create\_managed\_grafana\_ws](#input\_create\_managed\_grafana\_ws) | Creates a Workspace for Amazon Managed Grafana | `bool` | `true` | no |
 | <a name="input_create_managed_prometheus_ws"></a> [create\_managed\_prometheus\_ws](#input\_create\_managed\_prometheus\_ws) | Creates a Workspace for Amazon Managed Prometheus | `bool` | `true` | no |
 | <a name="input_ecs_adot_cpu"></a> [ecs\_adot\_cpu](#input\_ecs\_adot\_cpu) | CPU to be allocated for the ADOT ECS TASK | `string` | `"256"` | no |
 | <a name="input_ecs_adot_mem"></a> [ecs\_adot\_mem](#input\_ecs\_adot\_mem) | Memory to be allocated for the ADOT ECS TASK | `string` | `"512"` | no |
@@ -72,4 +73,6 @@ See examples using this Terraform modules in the **Amazon ECS** section of [this
 |------|-------------|
 | <a name="output_grafana_workspace_endpoint"></a> [grafana\_workspace\_endpoint](#output\_grafana\_workspace\_endpoint) | The endpoint of the Grafana workspace |
 | <a name="output_grafana_workspace_id"></a> [grafana\_workspace\_id](#output\_grafana\_workspace\_id) | The ID of the Grafana workspace |
+| <a name="output_prometheus_workspace_id"></a> [prometheus\_workspace\_id](#output\_prometheus\_workspace\_id) | Identifier of the workspace |
+| <a name="output_prometheus_workspace_prometheus_endpoint"></a> [prometheus\_workspace\_prometheus\_endpoint](#output\_prometheus\_workspace\_prometheus\_endpoint) | Prometheus endpoint available for this workspace |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

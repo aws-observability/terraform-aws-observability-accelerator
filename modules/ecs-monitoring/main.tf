@@ -12,7 +12,10 @@ resource "aws_ssm_parameter" "adot_config" {
 ############################################
 
 module "managed_grafana_default" {
+  count = var.create_managed_grafana_ws ? 1 : 0
+
   source            = "terraform-aws-modules/managed-service-grafana/aws"
+  version           = "2.1.0"
   name              = "${local.name}-default"
   associate_license = false
 }
@@ -21,6 +24,7 @@ module "managed_prometheus_default" {
   count = var.create_managed_prometheus_ws ? 1 : 0
 
   source          = "terraform-aws-modules/managed-service-prometheus/aws"
+  version         = "2.2.2"
   workspace_alias = "${local.name}-default"
 }
 

@@ -1,6 +1,5 @@
 # Example Amazon ECS Cluster with VPC
 This example deploys an AWS ECS Cluster with VPC and also add the ECS Monitoring module
-[ECS Cluster example](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples/ecs-cluster-with-vpc).vpc
 
 ## Prerequisites
 

@@ -1,8 +1,7 @@
 # Amazon ECS on EC2 cluster monitoring
 
 This example demonstrates how to monitor your Amazon Elastic Container Service on EC2
-(Amazon ECS) cluster with the Observability Accelerator's
-[ECS monitoring module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/ecs-monitoring).
+(Amazon ECS) cluster with the Observability Accelerator's ECS monitoring module
 
 The module collects Prometheus metrics from tasks running on ECS and sends it to Prometheus using AWS Distro for OpenTelemetry Collector (ADOT).
 You can either run the collector as a sidecar or deploy the collector as its own ECS service for entire cluster.

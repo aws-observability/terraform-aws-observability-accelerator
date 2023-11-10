@@ -9,8 +9,9 @@ data "aws_eks_cluster" "eks_cluster" {
 }
 
 locals {
-  name      = "adot-collector-kubeprometheus"
-  namespace = try(var.helm_config.namespace, local.name)
+  name                      = "adot-collector-kubeprometheus"
+  kube_service_account_name = try(var.helm_config.service_account, local.name)
+  namespace                 = try(var.helm_config.namespace, local.name)
 
   eks_oidc_issuer_url  = replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")
   eks_cluster_endpoint = data.aws_eks_cluster.eks_cluster.endpoint

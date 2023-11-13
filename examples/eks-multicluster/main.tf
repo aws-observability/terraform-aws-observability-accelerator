@@ -27,6 +27,10 @@ module "eks_cluster_1_monitoring" {
   enable_alerting_rules   = true
   enable_recording_rules  = true
 
+  # Additional dashboards
+  enable_apiserver_monitoring  = true
+  enable_adotcollector_metrics = true
+
   grafana_api_key                       = var.grafana_api_key
   managed_prometheus_workspace_id       = module.aws_observability_accelerator.managed_prometheus_workspace_id
   managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
@@ -64,6 +68,10 @@ module "eks_cluster_2_monitoring" {
   enable_fluxcd           = false
   enable_alerting_rules   = false
   enable_recording_rules  = false
+
+  # Disable additional dashboards
+  enable_apiserver_monitoring  = false
+  enable_adotcollector_metrics = false
 
   managed_prometheus_workspace_id       = module.aws_observability_accelerator.managed_prometheus_workspace_id
   managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint

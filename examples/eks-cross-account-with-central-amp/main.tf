@@ -25,6 +25,10 @@ module "eks_monitoring_one" {
   enable_nginx            = true
   enable_node_exporter    = true
 
+  # Additional dashboards
+  enable_apiserver_monitoring  = true
+  enable_adotcollector_metrics = true
+
   # Set to false for cross-cluster observability
   enable_alerting_rules  = false
   enable_recording_rules = false
@@ -75,6 +79,10 @@ module "eks_monitoring_two" {
   enable_external_secrets = false
   enable_dashboards       = false
   enable_node_exporter    = true
+
+  # Additional dashboards
+  enable_apiserver_monitoring  = false
+  enable_adotcollector_metrics = false
 
   # Set to false for cross-cluster observability
   enable_alerting_rules  = false

@@ -21,6 +21,12 @@ variable "helm_config" {
   default     = {}
 }
 
+variable "irsa_iam_role_name" {
+  description = "IAM role name for IRSA roles"
+  type        = string
+  default     = ""
+}
+
 variable "irsa_iam_role_path" {
   description = "IAM role path for IRSA roles"
   type        = string

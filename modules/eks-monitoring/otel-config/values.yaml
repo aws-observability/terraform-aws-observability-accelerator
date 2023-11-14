@@ -34,3 +34,6 @@ istioPrometheusMetricsEndpoint: ${istio_prometheus_metrics_endpoint}
 adotLoglevel: ${adot_loglevel}
 
 enableAdotcollectorMetrics: ${enable_adotcollector_metrics}
+
+serviceAccount: ${service_account}
+namespace: ${namespace}

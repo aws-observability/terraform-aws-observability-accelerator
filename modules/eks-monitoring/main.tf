@@ -188,15 +188,23 @@ module "helm_addon" {
     {
       name  = "enableAdotcollectorMetrics"
       value = var.enable_adotcollector_metrics
+    },
+    {
+      name  = "serviceAccount"
+      value = local.kube_service_account_name
+    },
+    {
+      name  = "namespace"
+      value = local.namespace
     }
-
   ]
 
+  irsa_iam_role_name = var.irsa_iam_role_name
   irsa_config = {
     create_kubernetes_namespace       = true
     kubernetes_namespace              = local.namespace
     create_kubernetes_service_account = true
-    kubernetes_service_account        = try(var.helm_config.service_account, local.name)
+    kubernetes_service_account        = local.kube_service_account_name
     irsa_iam_policies = flatten([
       "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonPrometheusRemoteWriteAccess",
       "arn:${data.aws_partition.current.partition}:iam::aws:policy/AWSXrayWriteOnlyAccess",

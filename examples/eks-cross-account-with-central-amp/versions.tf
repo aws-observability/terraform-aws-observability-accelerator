@@ -18,8 +18,8 @@ terraform {
       configuration_aliases = [helm.eks_cluster_one, helm.eks_cluster_two]
     }
     kubectl = {
-      source  = "gavinbunney/kubectl"
-      version = ">= 1.14"
+      source  = "alekc/kubectl"
+      version = ">= 2.0.3"
     }
   }
 }

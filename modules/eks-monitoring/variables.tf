@@ -114,7 +114,7 @@ variable "flux_gitrepository_url" {
 variable "flux_gitrepository_branch" {
   description = "Flux GitRepository Branch"
   type        = string
-  default     = "v0.2.0"
+  default     = "v0.3.1"
 }
 
 variable "flux_kustomization_path" {
@@ -457,7 +457,7 @@ variable "go_config" {
     helm_name          = "grafana-operator"
     k8s_namespace      = "grafana-operator"
     helm_release_name  = "grafana-operator"
-    helm_chart_version = "v5.0.0-rc3"
+    helm_chart_version = "v5.5.2"
   }
   nullable = false
 }

@@ -26,5 +26,5 @@ variable "managed_node_min_size" {
 variable "eks_version" {
   type        = string
   description = "EKS Cluster version"
-  default     = "1.25"
+  default     = "1.28"
 }

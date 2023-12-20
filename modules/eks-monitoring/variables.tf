@@ -148,7 +148,7 @@ variable "ksm_config" {
   default = {
     create_namespace   = true
     helm_chart_name    = "kube-state-metrics"
-    helm_chart_version = "4.24.0"
+    helm_chart_version = "5.15.2"
     helm_release_name  = "kube-state-metrics"
     helm_repo_url      = "https://prometheus-community.github.io/helm-charts"
     helm_settings      = {}
@@ -186,7 +186,7 @@ variable "ne_config" {
   default = {
     create_namespace   = true
     helm_chart_name    = "prometheus-node-exporter"
-    helm_chart_version = "4.14.0"
+    helm_chart_version = "4.24.0"
     helm_release_name  = "prometheus-node-exporter"
     helm_repo_url      = "https://prometheus-community.github.io/helm-charts"
     helm_settings      = {}
@@ -424,7 +424,7 @@ variable "flux_config" {
   default = {
     create_namespace   = true
     helm_chart_name    = "flux2"
-    helm_chart_version = "2.7.0"
+    helm_chart_version = "2.12.2"
     helm_release_name  = "observability-fluxcd-addon"
     helm_repo_url      = "https://fluxcd-community.github.io/helm-charts"
     helm_settings      = {}

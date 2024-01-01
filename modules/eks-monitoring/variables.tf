@@ -21,6 +21,12 @@ variable "helm_config" {
   default     = {}
 }
 
+variable "irsa_iam_role_name" {
+  description = "IAM role name for IRSA roles"
+  type        = string
+  default     = ""
+}
+
 variable "irsa_iam_role_path" {
   description = "IAM role path for IRSA roles"
   type        = string
@@ -108,7 +114,7 @@ variable "flux_gitrepository_url" {
 variable "flux_gitrepository_branch" {
   description = "Flux GitRepository Branch"
   type        = string
-  default     = "v0.2.0"
+  default     = "v0.3.2"
 }
 
 variable "flux_kustomization_path" {
@@ -142,7 +148,7 @@ variable "ksm_config" {
   default = {
     create_namespace   = true
     helm_chart_name    = "kube-state-metrics"
-    helm_chart_version = "4.24.0"
+    helm_chart_version = "5.15.2"
     helm_release_name  = "kube-state-metrics"
     helm_repo_url      = "https://prometheus-community.github.io/helm-charts"
     helm_settings      = {}
@@ -180,7 +186,7 @@ variable "ne_config" {
   default = {
     create_namespace   = true
     helm_chart_name    = "prometheus-node-exporter"
-    helm_chart_version = "4.14.0"
+    helm_chart_version = "4.24.0"
     helm_release_name  = "prometheus-node-exporter"
     helm_repo_url      = "https://prometheus-community.github.io/helm-charts"
     helm_settings      = {}
@@ -418,7 +424,7 @@ variable "flux_config" {
   default = {
     create_namespace   = true
     helm_chart_name    = "flux2"
-    helm_chart_version = "2.7.0"
+    helm_chart_version = "2.12.2"
     helm_release_name  = "observability-fluxcd-addon"
     helm_repo_url      = "https://fluxcd-community.github.io/helm-charts"
     helm_settings      = {}
@@ -451,7 +457,7 @@ variable "go_config" {
     helm_name          = "grafana-operator"
     k8s_namespace      = "grafana-operator"
     helm_release_name  = "grafana-operator"
-    helm_chart_version = "v5.0.0-rc3"
+    helm_chart_version = "v5.5.2"
   }
   nullable = false
 }

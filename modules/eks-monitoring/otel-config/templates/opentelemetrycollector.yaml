@@ -4,7 +4,7 @@ metadata:
   name: adot
 spec:
   mode: deployment
-  serviceAccount: adot-collector-kubeprometheus
+  serviceAccount: {{ default "adot-collector-kubeprometheus" .Values.serviceAccount }}
   env:
     - name: "K8S_NODE_NAME"
       valueFrom:

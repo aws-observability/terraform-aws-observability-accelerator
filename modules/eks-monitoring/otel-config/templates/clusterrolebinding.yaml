@@ -8,5 +8,5 @@ roleRef:
   name: otel-prometheus-role
 subjects:
   - kind: ServiceAccount
-    name: adot-collector-kubeprometheus
-    namespace: adot-collector-kubeprometheus
+    name: {{ default "adot-collector-kubeprometheus" .Values.serviceAccount }}
+    namespace: {{ default "adot-collector-kubeprometheus" .Values.namespace }}

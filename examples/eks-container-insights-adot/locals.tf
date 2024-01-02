@@ -7,3 +7,7 @@ data "aws_region" "current" {}
 data "aws_eks_cluster" "eks_cluster" {
   name = var.eks_cluster_id
 }
+
+locals {
+  eks_cluster_endpoint = data.aws_eks_cluster.eks_cluster.endpoint
+}

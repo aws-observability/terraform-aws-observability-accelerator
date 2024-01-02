@@ -25,10 +25,9 @@ provider "helm" {
 }
 
 
-# Deploy the ADOT Container Insights
+# Deploy the CW Application Signals and Container Insights
 
-module "eks_container_insights" {
-  source = "../../modules/eks-container-insights"
-  # source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-container-insights?ref=v2.5.4"
+module "eks_container_insights_cw" {
+  source         = "../../modules/eks-container-insights-cw"
   eks_cluster_id = var.eks_cluster_id
 }

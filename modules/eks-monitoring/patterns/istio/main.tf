@@ -187,28 +187,3 @@ resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
           for: 30m
     EOF
 }
-
-resource "kubectl_manifest" "flux_kustomization" {
-  count = var.pattern_config.enable_dashboards ? 1 : 0
-
-  yaml_body = <<YAML
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
-kind: Kustomization
-metadata:
-  name: ${var.pattern_config.flux_kustomization_name}
-  namespace: flux-system
-spec:
-  interval: 1m0s
-  path: ${var.pattern_config.flux_kustomization_path}
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: ${var.pattern_config.flux_gitrepository_name}
-  postBuild:
-    substitute:
-      GRAFANA_ISTIO_CP_DASH_URL: ${var.pattern_config.dashboards.cp}
-      GRAFANA_ISTIO_MESH_DASH_URL: ${var.pattern_config.dashboards.mesh}
-      GRAFANA_ISTIO_PERF_DASH_URL: ${var.pattern_config.dashboards.performance}
-      GRAFANA_ISTIO_SERVICE_DASH_URL: ${var.pattern_config.dashboards.service}
-YAML
-}

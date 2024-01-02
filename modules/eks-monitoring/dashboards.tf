@@ -116,3 +116,28 @@ YAML
   count      = var.enable_dashboards ? 1 : 0
   depends_on = [module.external_secrets]
 }
+
+resource "kubectl_manifest" "istio_monitoring_dashboards" {
+  yaml_body = <<YAML
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: ${local.istio_pattern_config.flux_kustomization_name}
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ${local.istio_pattern_config.flux_kustomization_path}
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ${local.istio_pattern_config.flux_gitrepository_name}
+  postBuild:
+    substitute:
+      GRAFANA_ISTIO_CP_DASH_URL: ${local.istio_pattern_config.dashboards.cp}
+      GRAFANA_ISTIO_MESH_DASH_URL: ${local.istio_pattern_config.dashboards.mesh}
+      GRAFANA_ISTIO_PERF_DASH_URL: ${local.istio_pattern_config.dashboards.performance}
+      GRAFANA_ISTIO_SERVICE_DASH_URL: ${local.istio_pattern_config.dashboards.service}
+YAML
+  count = local.istio_pattern_config.enable_dashboards ? 1 : 0
+  depends_on = [module.external_secrets]
+}

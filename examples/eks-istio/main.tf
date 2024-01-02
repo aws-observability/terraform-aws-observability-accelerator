@@ -2,6 +2,8 @@ provider "aws" {
   region = local.region
 }
 
+data "aws_caller_identity" "current" {}
+
 data "aws_eks_cluster_auth" "this" {
   name = var.eks_cluster_id
 }
@@ -28,6 +30,10 @@ locals {
   region               = var.aws_region
   eks_cluster_endpoint = data.aws_eks_cluster.this.endpoint
   create_new_workspace = var.managed_prometheus_workspace_id == "" ? true : false
+  istio_chart_url      = "https://tis.tetrate.io/charts"
+  istio_chart_version  = "1.20.1"
+  istio_global_tag     = "1.20.1-tetrate0"
+  istio_global_hub     = "containers.istio.tetratelabs.com"
   tags = {
     Source = "github.com/aws-observability/terraform-aws-observability-accelerator"
   }
@@ -55,27 +61,105 @@ module "aws_observability_accelerator" {
   tags = local.tags
 }
 
-module "eks_blueprints_kubernetes_addons" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.32.1"
+module "eks_blueprints_addons" {
+  source = "aws-ia/eks-blueprints-addons/aws"
+  version = "~> 1.0" #ensure to update this to the latest/desired version
 
-  eks_cluster_id = var.eks_cluster_id
-  #eks_cluster_endpoint = module.eks_blueprints.eks_cluster_endpoint
-  #eks_oidc_provider    = module.eks_blueprints.oidc_provider
-  #eks_cluster_version  = module.eks_blueprints.eks_cluster_version
-
-  # EKS Managed Add-ons
-  #enable_amazon_eks_vpc_cni    = true
-  #enable_amazon_eks_coredns    = true
-  #enable_amazon_eks_kube_proxy = true
+  cluster_name      = var.eks_cluster_id
+  cluster_endpoint  = data.aws_eks_cluster.this.endpoint
+  oidc_provider_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${replace(data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")}"
+  cluster_version   = data.aws_eks_cluster.this.version
 
   # Add-ons
-  enable_metrics_server     = true
-  enable_cluster_autoscaler = true
-
-  # Tetrate Istio Add-on
-  enable_tetrate_istio = true
+  enable_metrics_server               = true
+  enable_cluster_autoscaler          = true
+  enable_aws_load_balancer_controller = true
 
   tags = local.tags
+}
+
+################################################################################
+# Istio
+################################################################################
+
+resource "helm_release" "istio_base" {
+  repository       = local.istio_chart_url
+  chart            = "base"
+  name             = "istio-base"
+  namespace        = "istio-system"
+  create_namespace = true
+  version          = local.istio_chart_version
+  wait             = false
+  
+  set {
+    name  = "global.tag"
+    value = local.istio_global_tag
+  }
+  
+  set {
+    name  = "global.hub"
+    value = local.istio_global_hub
+  }
+
+  depends_on = [
+    module.eks_blueprints_addons
+  ]
+}
+
+resource "helm_release" "istiod" {
+  repository = local.istio_chart_url
+  chart      = "istiod"
+  name       = "istiod"
+  namespace  = "istio-system"
+  version    = local.istio_chart_version
+  wait       = false
+  
+  set {
+    name  = "global.tag"
+    value = local.istio_global_tag
+  }
+  
+  set {
+    name  = "global.hub"
+    value = local.istio_global_hub
+  }
+
+  depends_on = [
+    helm_release.istio_base
+  ]
+}
+
+resource "helm_release" "istio_ingress" {
+  repository = local.istio_chart_url
+  chart      = "istio-ingress"
+  name       = "istio-ingress"
+  namespace  = "istio-system"
+  version    = local.istio_chart_version
+  wait       = false
+  
+  set {
+    name  = "global.tag"
+    value = local.istio_global_tag
+  }
+  
+  set {
+    name  = "global.hub"
+    value = local.istio_global_hub
+  }
+  
+  set {
+    name  = "gateways.istio-ingressgateway.serviceAnnotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-type"
+    value = "nlb"
+  }
+  
+  set {
+    name  = "gateways.istio-ingressgateway.serviceAnnotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-scheme"
+    value = "internet-facing"
+  }
+
+  depends_on = [
+    helm_release.istiod
+  ]
 }
 
 module "eks_monitoring" {

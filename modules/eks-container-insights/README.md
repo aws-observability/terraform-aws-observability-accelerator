@@ -44,18 +44,21 @@ Use CloudWatch Container Insights to collect, aggregate, and summarize metrics a
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_adot_otel_helm_chart_verison"></a> [adot\_otel\_helm\_chart\_verison](#input\_adot\_otel\_helm\_chart\_verison) | ADOT collector helm chart version | `string` | `"0.17.0"` | no |
+| <a name="input_aws_cloudwatch_metrics_chart_verison"></a> [aws\_cloudwatch\_metrics\_chart\_verison](#input\_aws\_cloudwatch\_metrics\_chart\_verison) | AWS CloudWatch Observability Metrics helm chart version | `string` | `"0.0.7"` | no |
 | <a name="input_eks_cluster_id"></a> [eks\_cluster\_id](#input\_eks\_cluster\_id) | EKS Cluster Id | `string` | n/a | yes |
 | <a name="input_helm_config"></a> [helm\_config](#input\_helm\_config) | Helm provider config for adot-exporter-for-eks-on-ec2 | `any` | `{}` | no |
 | <a name="input_irsa_iam_permissions_boundary"></a> [irsa\_iam\_permissions\_boundary](#input\_irsa\_iam\_permissions\_boundary) | IAM permissions boundary for IRSA roles | `string` | `null` | no |
 | <a name="input_irsa_iam_role_path"></a> [irsa\_iam\_role\_path](#input\_irsa\_iam\_role\_path) | IAM role path for IRSA roles | `string` | `"/"` | no |
 | <a name="input_irsa_policies"></a> [irsa\_policies](#input\_irsa\_policies) | Additional IAM policies for a IAM role for service accounts | `list(string)` | `[]` | no |
 | <a name="input_manage_via_gitops"></a> [manage\_via\_gitops](#input\_manage\_via\_gitops) | Determines if the add-on should be managed via GitOps. | `bool` | `false` | no |
-| <a name="input_service_exporters"></a> [service\_exporters](#input\_service\_exporters) | exporter for adot-ci setup | `string` | `"awsemf"` | no |
-| <a name="input_service_receivers"></a> [service\_receivers](#input\_service\_receivers) | receiver for adot-ci setup | `string` | `"awscontainerinsightreceiver"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | `map(string)` | `{}` | no |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_irsa_arn"></a> [irsa\_arn](#output\_irsa\_arn) | IAM role ARN for the service account |
+| <a name="output_irsa_name"></a> [irsa\_name](#output\_irsa\_name) | IAM role name for the service account |
+| <a name="output_release_metadata"></a> [release\_metadata](#output\_release\_metadata) | Map of attributes of the Helm release metadata |
+| <a name="output_service_account"></a> [service\_account](#output\_service\_account) | Name of Kubernetes service account |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

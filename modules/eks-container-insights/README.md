@@ -1,10 +1,10 @@
-# Container Insights ADOT implementation for EKS Cluster Observability
+# Container Insights CloudWatch implementation for EKS Cluster Observability
 
-This module provides an automated experience around enabling Container Insights for your EKS cluster using ADOT (AWS Distro for OpenTelemetry).
-It provides the following resources:
+This module configures AWS CloudWatch Agent used for CloudWatch Application signals and Container Insights.
 
-- ADOT Collector Deployment to your EKS cluster
-- Enabling Container Insights on CloudWatch
+Use CloudWatch Application Signals to automatically instrument your applications on AWS so that you can monitor current application health and track long-term application performance against your business objectives. Application Signals provides you with a unified, application-centric view of your applications, services, and dependencies, and helps you monitor and triage application health.
+
+Use CloudWatch Container Insights to collect, aggregate, and summarize metrics and logs from your containerized applications and microservices. CloudWatch automatically collects metrics for many resources, such as CPU, memory, disk, and network. Container Insights also provides diagnostic information, such as container restart failures, to help you isolate issues and resolve them quickly. You can also set CloudWatch alarms on metrics that Container Insights collects.
 
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

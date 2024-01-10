@@ -27,7 +27,7 @@ provider "helm" {
 
 # Deploy the CW Application Signals and Container Insights
 
-module "eks_container_insights_cw" {
-  source         = "../../modules/eks-container-insights-cw"
+module "eks_container_insights" {
+  source         = "../../modules/eks-container-insights"
   eks_cluster_id = var.eks_cluster_id
 }

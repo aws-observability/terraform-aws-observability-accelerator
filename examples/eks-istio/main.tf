@@ -58,7 +58,7 @@ module "aws_observability_accelerator" {
 }
 
 module "eks_blueprints_addons" {
-  source = "aws-ia/eks-blueprints-addons/aws"
+  source  = "aws-ia/eks-blueprints-addons/aws"
   version = "~> 1.0" #ensure to update this to the latest/desired version
 
   cluster_name      = var.eks_cluster_id
@@ -68,7 +68,7 @@ module "eks_blueprints_addons" {
 
   # Add-ons
   enable_metrics_server               = true
-  enable_cluster_autoscaler          = true
+  enable_cluster_autoscaler           = true
   enable_aws_load_balancer_controller = true
 
   tags = local.tags
@@ -86,12 +86,12 @@ resource "helm_release" "istio_base" {
   create_namespace = true
   version          = var.istio_chart_version
   wait             = false
-  
+
   set {
     name  = "global.tag"
     value = var.istio_global_tag
   }
-  
+
   set {
     name  = "global.hub"
     value = var.istio_global_hub
@@ -109,12 +109,12 @@ resource "helm_release" "istiod" {
   namespace  = "istio-system"
   version    = var.istio_chart_version
   wait       = false
-  
+
   set {
     name  = "global.tag"
     value = var.istio_global_tag
   }
-  
+
   set {
     name  = "global.hub"
     value = var.istio_global_hub
@@ -132,22 +132,22 @@ resource "helm_release" "istio_ingress" {
   namespace  = "istio-system"
   version    = var.istio_chart_version
   wait       = false
-  
+
   set {
     name  = "global.tag"
     value = var.istio_global_tag
   }
-  
+
   set {
     name  = "global.hub"
     value = var.istio_global_hub
   }
-  
+
   set {
     name  = "gateways.istio-ingressgateway.serviceAnnotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-type"
     value = "nlb"
   }
-  
+
   set {
     name  = "gateways.istio-ingressgateway.serviceAnnotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-scheme"
     value = "internet-facing"

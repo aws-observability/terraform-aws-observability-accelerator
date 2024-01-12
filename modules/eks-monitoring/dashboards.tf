@@ -118,7 +118,7 @@ YAML
 }
 
 resource "kubectl_manifest" "istio_monitoring_dashboards" {
-  yaml_body = <<YAML
+  yaml_body  = <<YAML
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
@@ -138,6 +138,6 @@ spec:
       GRAFANA_ISTIO_PERF_DASH_URL: ${local.istio_pattern_config.dashboards.performance}
       GRAFANA_ISTIO_SERVICE_DASH_URL: ${local.istio_pattern_config.dashboards.service}
 YAML
-  count = local.istio_pattern_config.enable_dashboards ? 1 : 0
+  count      = local.istio_pattern_config.enable_dashboards ? 1 : 0
   depends_on = [module.external_secrets]
 }

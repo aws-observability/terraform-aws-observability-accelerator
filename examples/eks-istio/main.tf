@@ -30,10 +30,6 @@ locals {
   region               = var.aws_region
   eks_cluster_endpoint = data.aws_eks_cluster.this.endpoint
   create_new_workspace = var.managed_prometheus_workspace_id == "" ? true : false
-  istio_chart_url      = "https://tis.tetrate.io/charts"
-  istio_chart_version  = "1.20.1"
-  istio_global_tag     = "1.20.1-tetrate0"
-  istio_global_hub     = "containers.istio.tetratelabs.com"
   tags = {
     Source = "github.com/aws-observability/terraform-aws-observability-accelerator"
   }
@@ -83,22 +79,22 @@ module "eks_blueprints_addons" {
 ################################################################################
 
 resource "helm_release" "istio_base" {
-  repository       = local.istio_chart_url
+  repository       = var.istio_chart_url
   chart            = "base"
   name             = "istio-base"
   namespace        = "istio-system"
   create_namespace = true
-  version          = local.istio_chart_version
+  version          = var.istio_chart_version
   wait             = false
   
   set {
     name  = "global.tag"
-    value = local.istio_global_tag
+    value = var.istio_global_tag
   }
   
   set {
     name  = "global.hub"
-    value = local.istio_global_hub
+    value = var.istio_global_hub
   }
 
   depends_on = [
@@ -107,21 +103,21 @@ resource "helm_release" "istio_base" {
 }
 
 resource "helm_release" "istiod" {
-  repository = local.istio_chart_url
+  repository = var.istio_chart_url
   chart      = "istiod"
   name       = "istiod"
   namespace  = "istio-system"
-  version    = local.istio_chart_version
+  version    = var.istio_chart_version
   wait       = false
   
   set {
     name  = "global.tag"
-    value = local.istio_global_tag
+    value = var.istio_global_tag
   }
   
   set {
     name  = "global.hub"
-    value = local.istio_global_hub
+    value = var.istio_global_hub
   }
 
   depends_on = [
@@ -130,21 +126,21 @@ resource "helm_release" "istiod" {
 }
 
 resource "helm_release" "istio_ingress" {
-  repository = local.istio_chart_url
+  repository = var.istio_chart_url
   chart      = "istio-ingress"
   name       = "istio-ingress"
   namespace  = "istio-system"
-  version    = local.istio_chart_version
+  version    = var.istio_chart_version
   wait       = false
   
   set {
     name  = "global.tag"
-    value = local.istio_global_tag
+    value = var.istio_global_tag
   }
   
   set {
     name  = "global.hub"
-    value = local.istio_global_hub
+    value = var.istio_global_hub
   }
   
   set {

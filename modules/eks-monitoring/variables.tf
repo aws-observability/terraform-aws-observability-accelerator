@@ -9,6 +9,18 @@ variable "enable_amazon_eks_adot" {
   default     = true
 }
 
+variable "enable_managed_prometheus" {
+  description = "Creates a new Amazon Managed Service for Prometheus Workspace"
+  type        = bool
+  default     = true
+}
+
+variable "enable_alertmanager" {
+  description = "Creates Amazon Managed Service for Prometheus AlertManager for all workloads"
+  type        = bool
+  default     = false
+}
+
 variable "enable_cert_manager" {
   description = "Allow reusing an existing installation of cert-manager"
   type        = bool

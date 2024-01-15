@@ -8,7 +8,6 @@ data "aws_eks_cluster" "eks_cluster" {
   name = var.eks_cluster_id
 }
 
-
 locals {
   # if region is not passed, we assume the current one
   managed_prometheus_workspace_id       = var.enable_managed_prometheus ? aws_prometheus_workspace.this[0].id : var.managed_prometheus_workspace_id

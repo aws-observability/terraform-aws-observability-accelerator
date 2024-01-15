@@ -10,6 +10,10 @@ data "aws_eks_cluster" "this" {
   name = var.eks_cluster_id
 }
 
+data "aws_grafana_workspace" "this" {
+  workspace_id = var.managed_grafana_workspace_id
+}
+
 provider "kubernetes" {
   host                   = local.eks_cluster_endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
@@ -31,28 +35,6 @@ locals {
   tags = {
     Source = "github.com/aws-observability/terraform-aws-observability-accelerator"
   }
-}
-
-# deploys the base module
-module "aws_observability_accelerator" {
-  source = "../../"
-  # source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v2.0.0"
-
-  aws_region = var.aws_region
-
-  # creates a new Amazon Managed Prometheus workspace, defaults to true
-  enable_managed_prometheus = local.create_new_workspace
-
-  # reusing existing Amazon Managed Prometheus if specified
-  managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
-
-  # sets up the Amazon Managed Prometheus alert manager at the workspace level
-  enable_alertmanager = true
-
-  # reusing existing Amazon Managed Grafana workspace
-  managed_grafana_workspace_id = var.managed_grafana_workspace_id
-
-  tags = local.tags
 }
 
 module "eks_blueprints_kubernetes_addons" {
@@ -95,15 +77,13 @@ module "eks_monitoring" {
   grafana_api_key         = var.grafana_api_key
   target_secret_name      = "grafana-admin-credentials"
   target_secret_namespace = "grafana-operator"
-  grafana_url             = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
+  grafana_url             = "https://${data.aws_grafana_workspace.this.endpoint}"
 
   # control the publishing of dashboards by specifying the boolean value for the variable 'enable_dashboards', default is 'true'
   enable_dashboards = var.enable_dashboards
 
-  managed_prometheus_workspace_id = module.aws_observability_accelerator.managed_prometheus_workspace_id
-
-  managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
-  managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
+  enable_managed_prometheus       = local.create_new_workspace
+  managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
 
   # optional, defaults to 60s interval and 15s timeout
   prometheus_config = {
@@ -114,8 +94,4 @@ module "eks_monitoring" {
   enable_logs = true
 
   tags = local.tags
-
-  depends_on = [
-    module.aws_observability_accelerator
-  ]
 }

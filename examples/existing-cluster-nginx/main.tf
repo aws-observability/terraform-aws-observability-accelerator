@@ -38,24 +38,6 @@ locals {
   }
 }
 
-module "aws_observability_accelerator" {
-  source = "../../"
-  # source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v2.0.0"
-
-  aws_region = var.aws_region
-
-  # creates a new AMP workspace, defaults to true
-  enable_managed_prometheus = local.create_new_workspace
-
-  # reusing existing AMP if specified
-  managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
-
-  # reusing existing Amazon Managed Grafana workspace
-  managed_grafana_workspace_id = var.managed_grafana_workspace_id
-
-  tags = local.tags
-}
-
 module "eks_monitoring" {
   source = "../../modules/eks-monitoring"
   # source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v2.0.0"

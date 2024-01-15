@@ -1,5 +1,5 @@
 module "eks_cluster_1_monitoring" {
-  source                 = "../../../terraform-aws-observability-accelerator//modules/eks-monitoring"
+  source                 = "../..//modules/eks-monitoring"
   eks_cluster_id         = var.eks_cluster_1_id
   enable_amazon_eks_adot = true
   enable_cert_manager    = true
@@ -41,7 +41,7 @@ module "eks_cluster_1_monitoring" {
 }
 
 module "eks_cluster_2_monitoring" {
-  source                 = "../../../terraform-aws-observability-accelerator//modules/eks-monitoring"
+  source                 = "../..//modules/eks-monitoring"
   eks_cluster_id         = var.eks_cluster_2_id
   enable_amazon_eks_adot = true
   enable_cert_manager    = true

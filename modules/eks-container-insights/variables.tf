@@ -1,46 +1,50 @@
-variable "helm_config" {
-  description = "Helm provider config for adot-exporter-for-eks-on-ec2"
+variable "cluster_name" {
+  default = "eks-cw"
+  type    = string
+}
+
+variable "enable_amazon_eks_cw_observability" {
+  description = "Enable Amazon EKS CloudWatch Observability add-on"
+  type        = bool
+  default     = false
+}
+
+variable "addon_config" {
+  description = "Amazon EKS Managed CloudWatch Observability Add-on config"
   type        = any
   default     = {}
 }
 
-variable "manage_via_gitops" {
-  type        = bool
-  description = "Determines if the add-on should be managed via GitOps."
-  default     = false
-}
-
-variable "irsa_policies" {
-  description = "Additional IAM policies for a IAM role for service accounts"
-  type        = list(string)
-  default     = []
-}
-
-variable "eks_cluster_id" {
-  description = "EKS Cluster Id"
+variable "cluster_version" {
+  description = "The Version of Kubernetes to deploy"
   type        = string
+  default     = "1.25"
 }
 
-variable "aws_cloudwatch_metrics_chart_verison" {
-  description = "AWS CloudWatch Observability Metrics helm chart version"
+variable "kubernetes_version" {
+  description = "Kubernetes version"
   type        = string
-  default     = "0.0.7"
+  default     = "1.28"
 }
 
-variable "tags" {
-  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
-  type        = map(string)
-  default     = {}
+variable "most_recent" {
+  type    = string
+  default = "false"
 }
 
-variable "irsa_iam_role_path" {
-  description = "IAM role path for IRSA roles"
+variable "eks_oidc_provider_arn" {
+  type    = string
+  default = ""
+}
+
+variable "create_cloudwatch_observability_irsa_role" {
   type        = string
-  default     = "/"
+  default     = true
+  description = "Create a Cloudwatch Observability IRSA"
 }
 
-variable "irsa_iam_permissions_boundary" {
-  description = "IAM permissions boundary for IRSA roles"
+variable "create_cloudwatch_application_signals_role" {
   type        = string
-  default     = null
+  default     = true
+  description = "Create a Cloudwatch Application Signals service-linked role"
 }

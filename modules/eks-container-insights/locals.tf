@@ -1,8 +1,6 @@
 locals {
-  name = "amazon-cloudwatch-observability"
-  # eks_cluster_endpoint = var.eks_cluster_endpoint != null ? var.eks_cluster_endpoint : data.aws_eks_cluster.eks_cluster.endpoint
-  # eks_cluster_version  = var.eks_cluster_version != null ? var.eks_cluster_version : data.aws_eks_cluster.eks_cluster.version
-  kubernetes_version  = var.eks_cluster_version
+  name                = "amazon-cloudwatch-observability"
+  kubernetes_version  = var.kubernetes_version
   eks_oidc_issuer_url = replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")
 
   addon_context = {

@@ -15,12 +15,6 @@ variable "addon_config" {
   default     = {}
 }
 
-variable "cluster_version" {
-  description = "The Version of Kubernetes to deploy"
-  type        = string
-  default     = "1.25"
-}
-
 variable "kubernetes_version" {
   description = "Kubernetes version"
   type        = string
@@ -47,4 +41,10 @@ variable "create_cloudwatch_application_signals_role" {
   type        = string
   default     = true
   description = "Create a Cloudwatch Application Signals service-linked role"
+}
+
+variable "tags" {
+  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
+  type        = map(string)
+  default     = {}
 }

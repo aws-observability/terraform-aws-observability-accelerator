@@ -24,6 +24,6 @@ data "aws_grafana_workspace" "this" {
 }
 
 data "aws_prometheus_workspace" "this" {
-  workspace_id = var.managed_prometheus_workspace_id
+  workspace_id = local.managed_prometheus_workspace_id
   provider     = aws.eks_cluster_1
 }

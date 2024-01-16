@@ -19,6 +19,6 @@ data "aws_eks_cluster" "eks_two" {
 }
 
 data "aws_grafana_workspace" "this" {
-  workspace_id = var.managed_grafana_workspace_id
+  workspace_id = var.monitoring.managed_grafana_id
   provider     = aws.eks_cluster_one
 }

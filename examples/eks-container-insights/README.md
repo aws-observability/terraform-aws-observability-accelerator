@@ -1,6 +1,6 @@
 # Enable Container Insights for EKS cluster
 
-This example deploys CW Application Signal and Container Insights as a daemonset on your EKS cluster which enables Container Insights metrics and Application Signals on CloudWatch.
+This example deploys Amazon CloudWatch Application Signal and Container Insights as an EKS add-on on your EKS cluster which enables Container Insights metrics and Application Signals on CloudWatch.
 
 Step-by-step instructions available on our [docs site](https://aws-observability.github.io/terraform-aws-observability-accelerator/)
 under **Amazon CloudWatch Container Insights**

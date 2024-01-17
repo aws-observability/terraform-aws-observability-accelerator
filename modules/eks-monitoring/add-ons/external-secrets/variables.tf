@@ -41,3 +41,13 @@ variable "target_secret_name" {
   description = "Name to store the secret for Grafana API Key"
   type        = string
 }
+
+variable "grafana_api_key_refresh_interval" {
+  description = "Refresh Internal to be used by External Secrets for Grafana API Key rotation"
+  type        = string
+}
+
+variable "managed_grafana_workspace_id" {
+  description = "Amazon Managed Grafana Workspace ID"
+  type        = string
+}

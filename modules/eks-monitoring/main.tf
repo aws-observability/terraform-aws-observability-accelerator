@@ -250,11 +250,13 @@ module "external_secrets" {
   source = "./add-ons/external-secrets"
   count  = var.enable_external_secrets ? 1 : 0
 
-  enable_external_secrets = var.enable_external_secrets
-  grafana_api_key         = var.grafana_api_key
-  addon_context           = local.context
-  target_secret_namespace = var.target_secret_namespace
-  target_secret_name      = var.target_secret_name
+  enable_external_secrets          = var.enable_external_secrets
+  grafana_api_key                  = var.grafana_api_key
+  addon_context                    = local.context
+  target_secret_namespace          = var.target_secret_namespace
+  target_secret_name               = var.target_secret_name
+  grafana_api_key_refresh_interval = var.grafana_api_key_refresh_interval
+  managed_grafana_workspace_id     = var.managed_grafana_workspace_id
 
   depends_on = [resource.helm_release.grafana_operator]
 }

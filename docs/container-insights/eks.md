@@ -64,13 +64,16 @@ Next, you have to update your Application to `Configure application metrics and 
 
 After the terraform apply is successful, open your Amazon CloudWatch console in the same region as your EKS cluster, then from the left hand side choose `Insights -> Container Insights`, there choose the `EKS` from the drop down and you will see the metrics shown on the dashboard:
 
-![image](https://github.com/aws-observability/terraform-aws-observability-accelerator/assets/10175027/c5b9b685-5894-4350-b68a-ca86d1128f6f)
+<img width="1345" alt="image" src="https://github.com/ruchimo/terraform-aws-observability-accelerator/assets/106240341/31686b29-8ec2-46ff-a266-ebfa1de9768a">
+
 
 ## Visualization of Application Signal data
 
-After enabling your Application to pass metrics and traces by following [these steps](#enabling-application-signals-for-your-services), open your Amazon CloudWatch console in the same region as your EKS cluster, then from the left hand side choose `Application Signals -> Services` and you will see the metrics shown on the dashboard:
+After enabling your Application to pass metrics and traces by following [the steps provided above](#enabling-application-signals-for-your-services), open your Amazon CloudWatch console in the same region as your EKS cluster, then from the left hand side choose `Application Signals -> Services` and you will see the metrics shown on the sample dashboard below:
 
-<image>
+<img width="1321" alt="image" src="https://github.com/ruchimo/terraform-aws-observability-accelerator/assets/106240341/2fccf784-6560-45a9-8be0-4e843c9653f1">
+
+<img width="1300" alt="image" src="https://github.com/ruchimo/terraform-aws-observability-accelerator/assets/106240341/69749d78-7c9a-4019-a023-f5412ab3b2de">
 
 ## Cleanup
 

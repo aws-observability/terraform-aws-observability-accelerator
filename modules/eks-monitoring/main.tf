@@ -190,6 +190,10 @@ module "helm_addon" {
       value = var.enable_adotcollector_metrics
     },
     {
+      name  = "enableGpuMonitoring"
+      value = var.enable_gpu_monitoring
+    },
+    {
       name  = "serviceAccount"
       value = local.kube_service_account_name
     },

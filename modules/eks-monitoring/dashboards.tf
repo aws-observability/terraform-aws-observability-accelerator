@@ -95,6 +95,26 @@ YAML
   depends_on = [module.external_secrets]
 }
 
+# gpu dashboards
+resource "kubectl_manifest" "gpu_monitoring_dashboards" {
+  yaml_body  = <<YAML
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: ${local.gpu_monitoring_config.flux_kustomization_name}
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ${local.gpu_monitoring_config.flux_kustomization_path}
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ${local.gpu_monitoring_config.flux_gitrepository_name}
+YAML
+  count      = var.enable_gpu_monitoring ? 1 : 0
+  depends_on = [module.external_secrets]
+}
+
 resource "kubectl_manifest" "kubeproxy_monitoring_dashboard" {
   yaml_body  = <<YAML
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2

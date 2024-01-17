@@ -3,9 +3,10 @@ locals {
 }
 
 module "cloudwatch_observability_irsa_role" {
-  source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  count  = var.create_cloudwatch_observability_irsa_role ? 1 : 0
+  count = var.create_cloudwatch_observability_irsa_role ? 1 : 0
 
+  source                                 = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version                                = "v5.33.0"
   role_name                              = "cloudwatch-observability"
   attach_cloudwatch_observability_policy = true
 
@@ -23,7 +24,7 @@ data "aws_eks_addon_version" "eks_addon_version" {
   most_recent        = var.most_recent
 }
 
-resource "aws_eks_addon" "amazon-cloudwatch-observability" {
+resource "aws_eks_addon" "amazon_cloudwatch_observability" {
   count = var.enable_amazon_eks_cw_observability ? 1 : 0
 
   cluster_name                = var.cluster_name
@@ -40,7 +41,7 @@ resource "aws_eks_addon" "amazon-cloudwatch-observability" {
   )
 }
 
-resource "aws_iam_service_linked_role" "application-signals-cw" {
+resource "aws_iam_service_linked_role" "application_signals_cw" {
   count            = var.create_cloudwatch_application_signals_role ? 1 : 0
   aws_service_name = "application-signals.cloudwatch.amazonaws.com"
 }

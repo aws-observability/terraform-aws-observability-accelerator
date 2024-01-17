@@ -48,7 +48,7 @@ Next, you have to update your Application to `Configure application metrics and 
 1. **Annotate Workload** auto-instruments a single workload in the cluster.
     - Paste the below line into the PodTemplate section of the workload manifest.
     ```
-    annotations: instrumentation.opentelemetry.io/inject-java: "true" 
+    annotations: instrumentation.opentelemetry.io/inject-java: "true"
     ```
     - In your terminal, enter `kubectl apply -f your_deployment_yaml` to apply the change.
 

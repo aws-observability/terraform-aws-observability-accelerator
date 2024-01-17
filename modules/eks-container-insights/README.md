@@ -14,9 +14,6 @@ Use CloudWatch Container Insights to collect, aggregate, and summarize metrics a
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0.0 |
-| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.4.1 |
-| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >= 2.0.3 |
-| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.10 |
 
 ## Providers
 
@@ -28,15 +25,17 @@ Use CloudWatch Container Insights to collect, aggregate, and summarize metrics a
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_helm_addon"></a> [helm\_addon](#module\_helm\_addon) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon | v4.32.1 |
+| <a name="module_cloudwatch_observability_irsa_role"></a> [cloudwatch\_observability\_irsa\_role](#module\_cloudwatch\_observability\_irsa\_role) | terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks | v5.33.0 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
+| [aws_eks_addon.amazon_cloudwatch_observability](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_addon) | resource |
+| [aws_iam_service_linked_role.application_signals_cw](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_service_linked_role) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_eks_addon_version.eks_addon_version](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_addon_version) | data source |
 | [aws_eks_cluster.eks_cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
-| [aws_iam_policy.irsa](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
@@ -44,21 +43,17 @@ Use CloudWatch Container Insights to collect, aggregate, and summarize metrics a
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_aws_cloudwatch_metrics_chart_verison"></a> [aws\_cloudwatch\_metrics\_chart\_verison](#input\_aws\_cloudwatch\_metrics\_chart\_verison) | AWS CloudWatch Observability Metrics helm chart version | `string` | `"0.0.7"` | no |
-| <a name="input_eks_cluster_id"></a> [eks\_cluster\_id](#input\_eks\_cluster\_id) | EKS Cluster Id | `string` | n/a | yes |
-| <a name="input_helm_config"></a> [helm\_config](#input\_helm\_config) | Helm provider config for adot-exporter-for-eks-on-ec2 | `any` | `{}` | no |
-| <a name="input_irsa_iam_permissions_boundary"></a> [irsa\_iam\_permissions\_boundary](#input\_irsa\_iam\_permissions\_boundary) | IAM permissions boundary for IRSA roles | `string` | `null` | no |
-| <a name="input_irsa_iam_role_path"></a> [irsa\_iam\_role\_path](#input\_irsa\_iam\_role\_path) | IAM role path for IRSA roles | `string` | `"/"` | no |
-| <a name="input_irsa_policies"></a> [irsa\_policies](#input\_irsa\_policies) | Additional IAM policies for a IAM role for service accounts | `list(string)` | `[]` | no |
-| <a name="input_manage_via_gitops"></a> [manage\_via\_gitops](#input\_manage\_via\_gitops) | Determines if the add-on should be managed via GitOps. | `bool` | `false` | no |
+| <a name="input_addon_config"></a> [addon\_config](#input\_addon\_config) | Amazon EKS Managed CloudWatch Observability Add-on config | `any` | `{}` | no |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the EKS cluster | `string` | `"eks-cw"` | no |
+| <a name="input_create_cloudwatch_application_signals_role"></a> [create\_cloudwatch\_application\_signals\_role](#input\_create\_cloudwatch\_application\_signals\_role) | Create a Cloudwatch Application Signals service-linked role | `string` | `true` | no |
+| <a name="input_create_cloudwatch_observability_irsa_role"></a> [create\_cloudwatch\_observability\_irsa\_role](#input\_create\_cloudwatch\_observability\_irsa\_role) | Create a Cloudwatch Observability IRSA | `string` | `true` | no |
+| <a name="input_eks_oidc_provider_arn"></a> [eks\_oidc\_provider\_arn](#input\_eks\_oidc\_provider\_arn) | The OIDC Provider ARN of AWS EKS cluster | `string` | `""` | no |
+| <a name="input_enable_amazon_eks_cw_observability"></a> [enable\_amazon\_eks\_cw\_observability](#input\_enable\_amazon\_eks\_cw\_observability) | Enable Amazon EKS CloudWatch Observability add-on | `bool` | `false` | no |
+| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | Kubernetes version | `string` | `"1.28"` | no |
+| <a name="input_most_recent"></a> [most\_recent](#input\_most\_recent) | Most Recent | `string` | `"false"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | `map(string)` | `{}` | no |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_irsa_arn"></a> [irsa\_arn](#output\_irsa\_arn) | IAM role ARN for the service account |
-| <a name="output_irsa_name"></a> [irsa\_name](#output\_irsa\_name) | IAM role name for the service account |
-| <a name="output_release_metadata"></a> [release\_metadata](#output\_release\_metadata) | Map of attributes of the Helm release metadata |
-| <a name="output_service_account"></a> [service\_account](#output\_service\_account) | Name of Kubernetes service account |
+No outputs.
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

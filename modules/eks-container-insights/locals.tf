@@ -1,5 +1,4 @@
 locals {
-  name                = "amazon-cloudwatch-observability"
   kubernetes_version  = var.kubernetes_version
   eks_oidc_issuer_url = replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")
 

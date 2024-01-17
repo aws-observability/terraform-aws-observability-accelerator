@@ -1,6 +1,7 @@
 variable "cluster_name" {
-  default = "eks-cw"
-  type    = string
+  description = "Name of the EKS cluster"
+  default     = "eks-cw"
+  type        = string
 }
 
 variable "enable_amazon_eks_cw_observability" {
@@ -22,13 +23,15 @@ variable "kubernetes_version" {
 }
 
 variable "most_recent" {
-  type    = string
-  default = "false"
+  description = "Most Recent"
+  type        = string
+  default     = "false"
 }
 
 variable "eks_oidc_provider_arn" {
-  type    = string
-  default = ""
+  description = "The OIDC Provider ARN of AWS EKS cluster"
+  type        = string
+  default     = ""
 }
 
 variable "create_cloudwatch_observability_irsa_role" {

@@ -44,7 +44,6 @@ We have setup a [GitRepository](https://fluxcd.io/flux/components/source/gitrepo
 We have placed our declarative code snippet to create an Amazon Managed Service For Promethes datasource and Grafana Dashboard in Amazon Managed Grafana in our [AWS Observabiity Accelerator GitHub Repository](https://github.com/aws-observability/aws-observability-accelerator). We have setup a GitRepository to point to the AWS Observabiity Accelerator GitHub Repository and `Kustomization` for flux to sync Git Repository with artifacts in `./artifacts/grafana-operator-manifests/*` path in the AWS Observabiity Accelerator GitHub Repository. You can use this extension of our solution to point your own Kubernetes manifests to create Grafana Datasources and personified Grafana Dashboards of your choice using GitOps with Grafana Operator and Flux in Kubernetes native way with altering and redeploying this solution for changes to Grafana resources.
 
 
-
 ## Release notes
 
 We encourage you to use our [release versions](https://github.com/aws-observability/terraform-aws-observability-accelerator/releases)
@@ -57,81 +56,18 @@ module "eks_monitoring" {
 }
 ```
 
+## Modules
 
-## Base module
-
-The base module allows you to configure the AWS Observability services for your cluster and
-the AWS Distro for OpenTelemetry (ADOT) Operator as the signals collection mechanism.
-
-This is the minimum configuration to have a new Amazon Managed Service for Prometheus Workspace
-and ADOT Operator deployed for you and ready to receive your data.
-The base module serve as an anchor to the workload modules and cannot run on its own.
-
-```hcl
-module "aws_observability_accelerator" {
-  # use release tags and check for the latest versions
-  # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
-  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1"
-
-  aws_region     = "eu-west-1"
-  eks_cluster_id = "my-eks-cluster"
-
-  # As Grafana shares a different lifecycle, we recommend using an existing workspace.
-  managed_grafana_workspace_id = var.managed_grafana_workspace_id
-}
-```
-
-You can optionally reuse an existing Amazon Managed Service for Prometheus Workspace:
-
-```hcl
-module "aws_observability_accelerator" {
-  # use release tags and check for the latest versions
-  # https://github.com/aws-observability/terraform-aws-observability-accelerator/releases
-  source = "github.com/aws-observability/terraform-aws-observability-accelerator?ref=v1.6.1"
-
-  aws_region     = "eu-west-1"
-  eks_cluster_id = "my-eks-cluster"
-
-  # prevents creation of a new Amazon Managed Prometheus workspace
-  enable_managed_prometheus = false
-
-  # reusing existing Amazon Managed Prometheus Workspace
-  managed_prometheus_workspace_id  = "ws-abcd123..."
-
-  managed_grafana_workspace_id = "g-abcdef123"
-}
-```
-
-View all the configuration options in the [module's documentation](https://github.com/aws-observability/terraform-aws-observability-accelerator#requirements)
-
-## Workload modules
-
-Workloads modules are focused Terraform modules provided in this repository. They essentially provide curated metrics collection, alerts and Grafana dashboards according to the use case. Most of those modules require the base module.
-
-You can check the full workload modules list and their documentation [here](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/).
-
+[Modules](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/)
+are set of functionalities (ex: Managed Open-Source EKS monitoring, CloudWatch Container Insights, ...)
+packaged together that can be used to add Observability to your environments.
 All the modules come with end-to-end deployable examples.
 
 ## Examples
 
-[Examples](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples) put modules together in a ready to deploy terraform configuration as a starting point. With little to no configuration, you can run `terraform apply` and use the deployed resources on your AWS Account.
+[Examples](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples) put [modules](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/) together in a ready to deploy terraform configuration as a starting point. With little to no configuration, you can run `terraform apply` and use the deployed resources on your AWS Account.
 
 You can find **workload** examples like [Amazon EKS infrastructure monitoring](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/) or [monitoring your Amazon Managed Service for Prometheus workspace](https://aws-observability.github.io/terraform-aws-observability-accelerator/workloads/managed-prometheus/) and more.
-
-```mermaid
-classDiagram
-    Example <|-- Base Module
-    Example <|-- Workload Module
-    class Base Module{
-        Amazon Managed Prometheus
-        Amazon Managed Grafana Data Sources
-    }
-    class Workload Module{
-        Amazon Distro for Open Telemetry Config
-        Amazon Managed Prometheus Alerts
-        Amazon Managed Grafana Dashboards
-    }
-```
 
 
 ## Getting started with AWS Observability services

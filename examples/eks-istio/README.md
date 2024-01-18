@@ -1,4 +1,4 @@
-# Existing Cluster with the AWS Observability accelerator base module, Tetrate Istio Add-on and Istio monitoring
+# Existing Cluster with Tetrate Istio Add-on and Istio monitoring
 
 View the full documentation for this example [here](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/istio)
 

@@ -1,9 +1,8 @@
 # Enable Container Insights for EKS cluster
 
-This example deploys Amazon CloudWatch Application Signal and Container Insights as an EKS add-on on your EKS cluster which enables Container Insights metrics and Application Signals on CloudWatch.
+This example enables enhanced CloudWatch Container Insights for EKS and CloudWatch Application Signals (preview) through our CloudWatch EKS add-ons, providing comprehensive metrics, logs, and insights for cluster and application monitoring.
 
-Step-by-step instructions available on our [docs site](https://aws-observability.github.io/terraform-aws-observability-accelerator/)
-under **Amazon CloudWatch Container Insights**
+Step-by-step instructions available on our [docs site](https://aws-observability.github.io/terraform-aws-observability-accelerator/container-insights/eks/)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements

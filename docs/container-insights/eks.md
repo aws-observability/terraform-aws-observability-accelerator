@@ -40,8 +40,8 @@ Simply run this command to deploy the example
 terraform apply
 ```
 
-## Enabling Application Signals for your services
-CloudWatch Application Signals is currenlty supported for **Java** applications running on your Amazon EKS cluster.
+## Enabling Application Signals (preview) for your services
+CloudWatch Application Signals (preview) is currenlty supported for **Java** applications running on your Amazon EKS cluster.
 
 Next, you have to update your Application to `Configure application metrics and trace sampling`. For this, you must add an annotation to a manifest YAML in your cluster. Adding this annotation auto-instruments the application to send metrics, traces, and logs to Application Signals. You have two options for the annotation:
 
@@ -62,12 +62,12 @@ Next, you have to update your Application to `Configure application metrics and 
 
 ## Visualization of Container Insights data
 
-After the terraform apply is successful, open your Amazon CloudWatch console in the same region as your EKS cluster, then from the left hand side choose `Insights -> Container Insights`, there choose the `EKS` from the drop down and you will see the metrics shown on the dashboard:
+After `terraform apply` is successful, open your Amazon CloudWatch console in the same region as your EKS cluster, then from the left hand side choose `Insights -> Container Insights`, there choose the `EKS` from the drop down and you will see the metrics shown on the dashboard:
 
 <img width="1345" alt="image" src="https://github.com/ruchimo/terraform-aws-observability-accelerator/assets/106240341/31686b29-8ec2-46ff-a266-ebfa1de9768a">
 
 
-## Visualization of Application Signal data
+## Visualization of CloudWatch Application Signals (preview) data
 
 After enabling your Application to pass metrics and traces by following [the steps provided above](#enabling-application-signals-for-your-services), open your Amazon CloudWatch console in the same region as your EKS cluster, then from the left hand side choose `Application Signals -> Services` and you will see the metrics shown on the sample dashboard below:
 

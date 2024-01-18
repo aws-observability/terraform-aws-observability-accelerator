@@ -1,6 +1,6 @@
 # Setting Up Container Insights for your EKS Cluster
 
-This example deploys CloudWatch Observability EKS add-on on an exisiting Amazon EKS cluster, wihich has Container Insights enhanced observability for Amazon EKS and CloudWatch Application Signals enabled by default.
+This example deploys CloudWatch Observability EKS add-on on an exisiting Amazon EKS cluster, which has Container Insights enhanced observability for Amazon EKS and CloudWatch Application Signals enabled by default.
 
 ## Prerequisites
 
@@ -69,7 +69,7 @@ After `terraform apply` is successful, open your Amazon CloudWatch console in th
 
 ## Visualization of CloudWatch Application Signals (preview) data
 
-After enabling your Application to pass metrics and traces by following [the steps provided above](#enabling-application-signals-for-your-services), open your Amazon CloudWatch console in the same region as your EKS cluster, then from the left hand side choose `Application Signals -> Services` and you will see the metrics shown on the sample dashboard below:
+After enabling your Application to pass metrics and traces by following [the steps provided above](#enabling-application-signals-preview-for-your-services), open your Amazon CloudWatch console in the same region as your EKS cluster, then from the left hand side choose `Application Signals -> Services` and you will see the metrics shown on the sample dashboard below:
 
 <img width="1321" alt="image" src="https://github.com/ruchimo/terraform-aws-observability-accelerator/assets/106240341/2fccf784-6560-45a9-8be0-4e843c9653f1">
 

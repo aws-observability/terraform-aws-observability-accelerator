@@ -258,3 +258,48 @@ module "external_secrets" {
 
   depends_on = [resource.helm_release.grafana_operator]
 }
+
+resource "aws_prometheus_workspace" "this" {
+
+  tags = {
+                AMPAgentlessScraper = ""
+        }
+}
+
+
+resource "aws_prometheus_scraper" "basic" {
+  alias = "managed-prometheus-scraper"
+
+  source {
+    eks{
+      cluster_arn = data.aws_eks_cluster.eks_cluster.arn
+      subnet_ids = data.aws_eks_cluster.eks_cluster.vpc_config[0].subnet_ids
+
+    }
+
+  }
+
+
+   scrape_configuration= templatefile("${path.module}/prom_config.yaml",
+                         { global_scrape_interval = var.prometheus_config.global_scrape_interval,
+                           global_scrape_timeout = var.prometheus_config.global_scrape_timeout,
+                           enableAPIserver = var.enable_apiserver_monitoring,
+                           eks_cluster_id = var.eks_cluster_id,
+                           region = var.managed_prometheus_workspace_region,
+                           accountID = local.context.aws_caller_identity_account_id
+                          })
+
+  destination {
+    amp {
+      workspace_arn = "arn:aws:aps:${var.managed_prometheus_workspace_region}:${local.context.aws_caller_identity_account_id}:workspace/${var.managed_prometheus_workspace_id}"
+    }
+  }
+
+  tags = {
+    CreatedBy = "Terraform"
+    Owner = "AWS Observability Accelerator"
+  }
+
+}
+
+

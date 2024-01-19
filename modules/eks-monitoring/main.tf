@@ -198,7 +198,7 @@ module "helm_addon" {
     },
     {
       name  = "enableGpuMonitoring"
-      value = var.enable_gpu_monitoring
+      value = var.enable_nvidia_monitoring
     },
     {
       name  = "serviceAccount"

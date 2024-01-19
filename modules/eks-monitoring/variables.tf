@@ -552,14 +552,14 @@ variable "enable_adotcollector_metrics" {
   default     = true
 }
 
-variable "enable_gpu_monitoring" {
-  description = "Enables monitoring of GPU metrics"
+variable "enable_nvidia_monitoring" {
+  description = "Enables monitoring of nvidia metrics"
   type        = bool
   default     = true
 }
 
-variable "gpu_monitoring_config" {
-  description = "Config object for GPU monitoring"
+variable "nvidia_monitoring_config" {
+  description = "Config object for nvidia monitoring"
   type = object({
     flux_gitrepository_name   = string
     flux_gitrepository_url    = string

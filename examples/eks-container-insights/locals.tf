@@ -1,6 +1,5 @@
 locals {
   name                = "amazon-cloudwatch-observability"
-  kubernetes_version  = var.eks_cluster_version
   eks_oidc_issuer_url = replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")
 
   addon_context = {
@@ -11,5 +10,10 @@ locals {
     eks_oidc_provider_arn          = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${local.eks_oidc_issuer_url}"
     eks_cluster_id                 = data.aws_eks_cluster.eks_cluster.id
     tags                           = var.tags
+  }
+
+  addon_config = {
+    kubernetes_version = var.eks_cluster_version
+    most_recent        = true
   }
 }

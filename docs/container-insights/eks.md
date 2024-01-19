@@ -1,6 +1,9 @@
 # Setting Up Container Insights for your EKS Cluster
 
-This example deploys CloudWatch Observability EKS add-on on an exisiting Amazon EKS cluster, which has Container Insights enhanced observability for Amazon EKS and CloudWatch Application Signals enabled by default.
+This example deploys CloudWatch Observability EKS add-on on an exisiting Amazon EKS cluster, which enables Container Insights enhanced observability for Amazon EKS and CloudWatch Application Signals by default.
+
+1. Enables the CloudWatch Observability Add-on on EKS using the IAM service account role
+2. Creates an IAM Service Linked role for enabling Application Signals
 
 ## Prerequisites
 
@@ -30,6 +33,16 @@ Specify the EKS Cluster Name where the resources will be deployed:
 
 ```bash
 export TF_VAR_eks_cluster_id=xxx
+```
+
+### 3. Disable creation of `Cloudwatch Application Signals Service-linked Role`
+If you already have Application Signals deployed in your AWS account, please set the value of this variable to `false`
+```
+variable "create_cloudwatch_application_signals_role" {
+  type        = bool
+  default     = true
+  description = "Create a Cloudwatch Application Signals service-linked role"
+}
 ```
 
 ## Deploy

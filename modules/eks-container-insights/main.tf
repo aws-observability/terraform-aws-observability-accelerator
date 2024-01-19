@@ -20,14 +20,14 @@ module "cloudwatch_observability_irsa_role" {
 
 data "aws_eks_addon_version" "eks_addon_version" {
   addon_name         = local.name
-  kubernetes_version = var.kubernetes_version
-  most_recent        = var.most_recent
+  kubernetes_version = try(var.addon_config.kubernetes_version, var.kubernetes_version)
+  most_recent        = try(var.addon_config.most_recent, true)
 }
 
 resource "aws_eks_addon" "amazon_cloudwatch_observability" {
   count = var.enable_amazon_eks_cw_observability ? 1 : 0
 
-  cluster_name                = var.cluster_name
+  cluster_name                = var.eks_cluster_id
   addon_name                  = local.name
   addon_version               = try(var.addon_config.addon_version, data.aws_eks_addon_version.eks_addon_version.version)
   resolve_conflicts_on_create = try(var.addon_config.resolve_conflicts_on_create, "OVERWRITE")

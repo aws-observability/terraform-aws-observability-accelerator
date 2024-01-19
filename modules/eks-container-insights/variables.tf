@@ -1,4 +1,4 @@
-variable "cluster_name" {
+variable "eks_cluster_id" {
   description = "Name of the EKS cluster"
   default     = "eks-cw"
   type        = string
@@ -7,7 +7,7 @@ variable "cluster_name" {
 variable "enable_amazon_eks_cw_observability" {
   description = "Enable Amazon EKS CloudWatch Observability add-on"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "addon_config" {
@@ -23,9 +23,9 @@ variable "kubernetes_version" {
 }
 
 variable "most_recent" {
-  description = "Most Recent"
-  type        = string
-  default     = "false"
+  description = "Determines if the most recent or default version of the addon should be returned."
+  type        = bool
+  default     = false
 }
 
 variable "eks_oidc_provider_arn" {
@@ -35,13 +35,13 @@ variable "eks_oidc_provider_arn" {
 }
 
 variable "create_cloudwatch_observability_irsa_role" {
-  type        = string
+  type        = bool
   default     = true
   description = "Create a Cloudwatch Observability IRSA"
 }
 
 variable "create_cloudwatch_application_signals_role" {
-  type        = string
+  type        = bool
   default     = true
   description = "Create a Cloudwatch Application Signals service-linked role"
 }

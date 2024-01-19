@@ -44,13 +44,13 @@ Use CloudWatch Container Insights to collect, aggregate, and summarize metrics a
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_addon_config"></a> [addon\_config](#input\_addon\_config) | Amazon EKS Managed CloudWatch Observability Add-on config | `any` | `{}` | no |
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the EKS cluster | `string` | `"eks-cw"` | no |
-| <a name="input_create_cloudwatch_application_signals_role"></a> [create\_cloudwatch\_application\_signals\_role](#input\_create\_cloudwatch\_application\_signals\_role) | Create a Cloudwatch Application Signals service-linked role | `string` | `true` | no |
-| <a name="input_create_cloudwatch_observability_irsa_role"></a> [create\_cloudwatch\_observability\_irsa\_role](#input\_create\_cloudwatch\_observability\_irsa\_role) | Create a Cloudwatch Observability IRSA | `string` | `true` | no |
+| <a name="input_create_cloudwatch_application_signals_role"></a> [create\_cloudwatch\_application\_signals\_role](#input\_create\_cloudwatch\_application\_signals\_role) | Create a Cloudwatch Application Signals service-linked role | `bool` | `true` | no |
+| <a name="input_create_cloudwatch_observability_irsa_role"></a> [create\_cloudwatch\_observability\_irsa\_role](#input\_create\_cloudwatch\_observability\_irsa\_role) | Create a Cloudwatch Observability IRSA | `bool` | `true` | no |
+| <a name="input_eks_cluster_id"></a> [eks\_cluster\_id](#input\_eks\_cluster\_id) | Name of the EKS cluster | `string` | `"eks-cw"` | no |
 | <a name="input_eks_oidc_provider_arn"></a> [eks\_oidc\_provider\_arn](#input\_eks\_oidc\_provider\_arn) | The OIDC Provider ARN of AWS EKS cluster | `string` | `""` | no |
-| <a name="input_enable_amazon_eks_cw_observability"></a> [enable\_amazon\_eks\_cw\_observability](#input\_enable\_amazon\_eks\_cw\_observability) | Enable Amazon EKS CloudWatch Observability add-on | `bool` | `false` | no |
+| <a name="input_enable_amazon_eks_cw_observability"></a> [enable\_amazon\_eks\_cw\_observability](#input\_enable\_amazon\_eks\_cw\_observability) | Enable Amazon EKS CloudWatch Observability add-on | `bool` | `true` | no |
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | Kubernetes version | `string` | `"1.28"` | no |
-| <a name="input_most_recent"></a> [most\_recent](#input\_most\_recent) | Most Recent | `string` | `"false"` | no |
+| <a name="input_most_recent"></a> [most\_recent](#input\_most\_recent) | Determines if the most recent or default version of the addon should be returned. | `bool` | `false` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | `map(string)` | `{}` | no |
 
 ## Outputs

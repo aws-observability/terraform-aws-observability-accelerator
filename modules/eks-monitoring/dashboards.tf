@@ -33,8 +33,8 @@ spec:
     name: ${var.flux_gitrepository_name}
   postBuild:
     substitute:
-      AMG_AWS_REGION: ${var.managed_prometheus_workspace_region}
-      AMP_ENDPOINT_URL: ${var.managed_prometheus_workspace_endpoint}
+      AMG_AWS_REGION: ${local.managed_prometheus_workspace_region}
+      AMP_ENDPOINT_URL: ${local.managed_prometheus_workspace_endpoint}
       AMG_ENDPOINT_URL: ${var.grafana_url}
       GRAFANA_CLUSTER_DASH_URL: ${var.grafana_cluster_dashboard_url}
       GRAFANA_KUBELET_DASH_URL: ${var.grafana_kubelet_dashboard_url}

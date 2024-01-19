@@ -6,7 +6,7 @@ locals {
 #               EKS Monitoring Addon for cluster one                      #
 ###########################################################################
 module "eks_monitoring_one" {
-  source = "../../modules/eks-monitoring"
+  source = "../..//modules/eks-monitoring"
   # source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v2.0.0"
   providers = {
     aws        = aws.eks_cluster_one
@@ -36,11 +36,15 @@ module "eks_monitoring_one" {
   grafana_api_key         = aws_grafana_workspace_api_key.key.key
   target_secret_name      = "grafana-admin-credentials"
   target_secret_namespace = "grafana-operator"
-  grafana_url             = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
+  grafana_url             = "https://${data.aws_grafana_workspace.this.endpoint}"
 
-  managed_prometheus_workspace_id       = module.aws_observability_accelerator.managed_prometheus_workspace_id
-  managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
-  managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
+
+  # prevents the module to create a workspace
+  enable_managed_prometheus = false
+
+  managed_prometheus_workspace_id       = module.managed_service_prometheus.workspace_id
+  managed_prometheus_workspace_endpoint = module.managed_service_prometheus.workspace_prometheus_endpoint
+  managed_prometheus_workspace_region   = var.cluster_one.region
   managed_prometheus_cross_account_role = aws_iam_role.cross_account_amp_role.arn
   irsa_iam_additional_policies          = [aws_iam_policy.irsa_assume_role_policy_one.arn]
 
@@ -51,10 +55,6 @@ module "eks_monitoring_one" {
   }
 
   enable_logs = true
-
-  depends_on = [
-    module.aws_observability_accelerator
-  ]
 }
 
 
@@ -63,7 +63,7 @@ module "eks_monitoring_one" {
 ###########################################################################
 
 module "eks_monitoring_two" {
-  source = "../../modules/eks-monitoring"
+  source = "../..//modules/eks-monitoring"
   # source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v2.0.0"
   providers = {
     aws        = aws.eks_cluster_two
@@ -91,11 +91,15 @@ module "eks_monitoring_two" {
   grafana_api_key         = aws_grafana_workspace_api_key.key.key
   target_secret_name      = "grafana-admin-credentials"
   target_secret_namespace = "grafana-operator"
-  grafana_url             = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
+  grafana_url             = "https://${data.aws_grafana_workspace.this.endpoint}"
 
-  managed_prometheus_workspace_id       = module.aws_observability_accelerator.managed_prometheus_workspace_id
-  managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
-  managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
+  # prevents the module to create a workspace
+  enable_managed_prometheus = false
+
+  managed_prometheus_workspace_id       = module.managed_service_prometheus.workspace_id
+  managed_prometheus_workspace_endpoint = module.managed_service_prometheus.workspace_prometheus_endpoint
+  managed_prometheus_workspace_region   = var.cluster_two.region
+
   managed_prometheus_cross_account_role = aws_iam_role.cross_account_amp_role.arn
   irsa_iam_additional_policies          = [aws_iam_policy.irsa_assume_role_policy_two.arn]
 
@@ -106,10 +110,6 @@ module "eks_monitoring_two" {
   }
 
   enable_logs = true
-
-  depends_on = [
-    module.aws_observability_accelerator
-  ]
 }
 
 ###########################################################################
@@ -132,18 +132,4 @@ module "managed_service_prometheus" {
   }
 
   workspace_alias = local.amp_workspace_alias
-}
-
-module "aws_observability_accelerator" {
-  source                              = "../../../terraform-aws-observability-accelerator"
-  aws_region                          = var.monitoring.region
-  enable_managed_prometheus           = false
-  enable_alertmanager                 = false
-  managed_prometheus_workspace_region = var.monitoring.region
-  managed_prometheus_workspace_id     = module.managed_service_prometheus.workspace_id
-  managed_grafana_workspace_id        = var.monitoring.managed_grafana_id
-
-  providers = {
-    aws = aws.central_monitoring
-  }
 }

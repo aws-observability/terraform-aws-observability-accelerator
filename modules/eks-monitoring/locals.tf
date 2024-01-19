@@ -9,6 +9,11 @@ data "aws_eks_cluster" "eks_cluster" {
 }
 
 locals {
+  # if region is not passed, we assume the current one
+  managed_prometheus_workspace_id       = var.enable_managed_prometheus ? aws_prometheus_workspace.this[0].id : var.managed_prometheus_workspace_id
+  managed_prometheus_workspace_region   = coalesce(var.managed_prometheus_workspace_region, data.aws_region.current.name)
+  managed_prometheus_workspace_endpoint = "https://aps-workspaces.${local.managed_prometheus_workspace_region}.amazonaws.com/workspaces/${local.managed_prometheus_workspace_id}/"
+
   name                      = "adot-collector-kubeprometheus"
   kube_service_account_name = try(var.helm_config.service_account, local.name)
   namespace                 = try(var.helm_config.namespace, local.name)
@@ -46,7 +51,7 @@ locals {
     flux_kustomization_name   = "grafana-dashboards-java"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/java"
 
-    managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+    managed_prometheus_workspace_id = local.managed_prometheus_workspace_id
     prometheus_metrics_endpoint     = "/metrics"
 
     grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/java/default.json"
@@ -67,7 +72,7 @@ locals {
     flux_kustomization_name   = "grafana-dashboards-nginx"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/nginx"
 
-    managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+    managed_prometheus_workspace_id = local.managed_prometheus_workspace_id
     prometheus_metrics_endpoint     = "/metrics"
 
     grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/nginx/nginx.json"
@@ -88,7 +93,7 @@ locals {
     flux_kustomization_name   = "grafana-dashboards-istio"
     flux_kustomization_path   = "./artifacts/grafana-operator-manifests/eks/istio"
 
-    managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+    managed_prometheus_workspace_id = local.managed_prometheus_workspace_id
     prometheus_metrics_endpoint     = "/metrics"
 
     dashboards = {

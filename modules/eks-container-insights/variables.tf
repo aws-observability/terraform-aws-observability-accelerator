@@ -1,58 +1,53 @@
-variable "helm_config" {
-  description = "Helm provider config for adot-exporter-for-eks-on-ec2"
+variable "eks_cluster_id" {
+  description = "Name of the EKS cluster"
+  default     = "eks-cw"
+  type        = string
+}
+
+variable "enable_amazon_eks_cw_observability" {
+  description = "Enable Amazon EKS CloudWatch Observability add-on"
+  type        = bool
+  default     = true
+}
+
+variable "addon_config" {
+  description = "Amazon EKS Managed CloudWatch Observability Add-on config"
   type        = any
   default     = {}
 }
 
-variable "manage_via_gitops" {
+variable "kubernetes_version" {
+  description = "Kubernetes version"
+  type        = string
+  default     = "1.28"
+}
+
+variable "most_recent" {
+  description = "Determines if the most recent or default version of the addon should be returned."
   type        = bool
-  description = "Determines if the add-on should be managed via GitOps."
   default     = false
 }
 
-variable "service_receivers" {
+variable "eks_oidc_provider_arn" {
+  description = "The OIDC Provider ARN of AWS EKS cluster"
   type        = string
-  description = "receiver for adot-ci setup"
-  default     = "awscontainerinsightreceiver"
+  default     = ""
 }
 
-variable "service_exporters" {
-  type        = string
-  description = "exporter for adot-ci setup"
-  default     = "awsemf"
+variable "create_cloudwatch_observability_irsa_role" {
+  type        = bool
+  default     = true
+  description = "Create a Cloudwatch Observability IRSA"
 }
 
-variable "irsa_policies" {
-  description = "Additional IAM policies for a IAM role for service accounts"
-  type        = list(string)
-  default     = []
-}
-
-variable "eks_cluster_id" {
-  description = "EKS Cluster Id"
-  type        = string
-}
-
-variable "adot_otel_helm_chart_verison" {
-  description = "ADOT collector helm chart version"
-  type        = string
-  default     = "0.17.0"
+variable "create_cloudwatch_application_signals_role" {
+  type        = bool
+  default     = true
+  description = "Create a Cloudwatch Application Signals service-linked role"
 }
 
 variable "tags" {
   description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
   type        = map(string)
   default     = {}
-}
-
-variable "irsa_iam_role_path" {
-  description = "IAM role path for IRSA roles"
-  type        = string
-  default     = "/"
-}
-
-variable "irsa_iam_permissions_boundary" {
-  description = "IAM permissions boundary for IRSA roles"
-  type        = string
-  default     = null
 }

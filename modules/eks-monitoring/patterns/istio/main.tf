@@ -188,10 +188,8 @@ resource "aws_prometheus_rule_group_namespace" "alerting_rules" {
     EOF
 }
 
-resource "kubectl_manifest" "flux_kustomization" {
-  count = var.pattern_config.enable_dashboards ? 1 : 0
-
-  yaml_body = <<YAML
+resource "kubectl_manifest" "istio_monitoring_dashboards" {
+  yaml_body  = <<YAML
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
@@ -211,4 +209,6 @@ spec:
       GRAFANA_ISTIO_PERF_DASH_URL: ${var.pattern_config.dashboards.performance}
       GRAFANA_ISTIO_SERVICE_DASH_URL: ${var.pattern_config.dashboards.service}
 YAML
+  count      = var.pattern_config.enable_dashboards ? 1 : 0
+  #depends_on = [module.external_secrets]
 }

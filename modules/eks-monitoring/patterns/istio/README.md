@@ -21,7 +21,6 @@ Provides monitoring for Istio based workloads with the following resources:
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0.0 |
-| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >= 2.0.3 |
 
 ## Modules
 
@@ -33,7 +32,6 @@ No modules.
 |------|------|
 | [aws_prometheus_rule_group_namespace.alerting_rules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
 | [aws_prometheus_rule_group_namespace.recording_rules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [kubectl_manifest.flux_kustomization](https://registry.terraform.io/providers/alekc/kubectl/latest/docs/resources/manifest) | resource |
 
 ## Inputs
 

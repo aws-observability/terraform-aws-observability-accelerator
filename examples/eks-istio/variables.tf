@@ -31,3 +31,27 @@ variable "enable_dashboards" {
   type        = bool
   default     = true
 }
+
+variable "istio_chart_url" {
+  description = "Helm repository for Tetrate Istio charts"
+  type        = string
+  default     = "https://tis.tetrate.io/charts"
+}
+
+variable "istio_chart_version" {
+  description = "Helm chart version for Tetrate Istio charts"
+  type        = string
+  default     = "1.20.1"
+}
+
+variable "istio_global_tag" {
+  description = "Tetrate Istio container tag"
+  type        = string
+  default     = "1.20.1-tetrate0"
+}
+
+variable "istio_global_hub" {
+  description = "Tetrate Istio container repository"
+  type        = string
+  default     = "containers.istio.tetratelabs.com"
+}

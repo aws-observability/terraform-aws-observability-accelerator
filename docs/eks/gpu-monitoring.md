@@ -1,6 +1,6 @@
 # Monitoring NVIDIA GPU Workloads
 
-GPUs play an integral part in data intensive workloads. The base infrastructure module of the Observability Accelerator proivdes the ability to deploy the NVIDIA DCGM Exporter Dashboard.
+GPUs play an integral part in data intensive workloads. The base infrastructure module of the Observability Accelerator provides the ability to deploy the NVIDIA DCGM Exporter Dashboard.
 The dashboard utilizes metrics scraped from the `/metrics` endpoint that are exposed when running the nvidia gpu operator and NVSMI binary.
 
 !!!note
@@ -9,7 +9,7 @@ The dashboard utilizes metrics scraped from the `/metrics` endpoint that are exp
 
 ## Deployment
 
-This is enabled by default in the [base infrasturcture module](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/).
+This is enabled by default in the [eks-monitoring module](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/).
 
 ## Dashboards
 

@@ -1,7 +1,7 @@
 # Monitoring NVIDIA GPU Workloads
 
-GPUs play an integral part in data intensive workloads. The base infrastructure module of the Observability Accelerator provides the ability to deploy the NVIDIA DCGM Exporter Dashboard.
-The dashboard utilizes metrics scraped from the `/metrics` endpoint that are exposed when running the nvidia gpu operator and NVSMI binary.
+GPUs play an integral part in data intensive workloads. The eks-monitoring module of the Observability Accelerator provides the ability to deploy the NVIDIA DCGM Exporter Dashboard.
+The dashboard utilizes metrics scraped from the `/metrics` endpoint that are exposed when running the nvidia gpu operator with the [DCGM exporter](https://developer.nvidia.com/blog/monitoring-gpus-in-kubernetes-with-dcgm/) and NVSMI binary.
 
 !!!note
     In order to make use of this dashboard, you will need to have a GPU backed EKS cluster and deploy the [GPU operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/amazon-eks.html)

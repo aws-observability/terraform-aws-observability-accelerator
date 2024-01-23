@@ -36,6 +36,3 @@ EOF
 After producing the metrics they should populate the DCGM exporter dashboard:
 
 ![image](https://github.com/aws-observability/terraform-aws-observability-accelerator/assets/97046295/66e8ae83-3a78-48b8-a9fc-4460a5a4d173)
-
-
-

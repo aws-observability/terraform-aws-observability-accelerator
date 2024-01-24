@@ -5,6 +5,16 @@ resource "aws_prometheus_workspace" "this" {
   tags  = var.tags
 }
 
+module "adot_logs" {
+  source = "./add-ons/adot-logs"
+
+  addon_context = local.context
+  addon_config = {
+    enable_logs = var.enable_logs
+    logs_config = var.logs_config
+  }
+}
+
 module "operator" {
   source = "./add-ons/adot-operator"
   count  = var.enable_amazon_eks_adot ? 1 : 0
@@ -12,6 +22,13 @@ module "operator" {
   enable_cert_manager = var.enable_cert_manager
   kubernetes_version  = local.eks_cluster_version
   addon_context       = local.context
+  addon_config = {
+    configuration_values = jsonencode({
+      collector = {
+        containerLogs = module.adot_logs.adot_logs_collector_config
+      }
+    })
+  }
 }
 
 resource "helm_release" "kube_state_metrics" {
@@ -243,14 +260,6 @@ module "istio_monitoring" {
   count  = var.enable_istio ? 1 : 0
 
   pattern_config = coalesce(var.istio_config, local.istio_pattern_config)
-}
-
-module "fluentbit_logs" {
-  source = "./add-ons/aws-for-fluentbit"
-  count  = var.enable_logs ? 1 : 0
-
-  cw_log_retention_days = var.logs_config.cw_log_retention_days
-  addon_context         = local.context
 }
 
 module "external_secrets" {

@@ -20,18 +20,19 @@ to enable Amazon CloudWatch as a data source. Make sure to provide permissions.
     Amazon CloudWatch data source has already been setup for you.
 
 All logs are delivered in the following CloudWatch Log groups naming pattern:
-`/aws/eks/observability-accelerator/{cluster-name}/{namespace}`. Log streams
-follow `{container-name}.{pod-name}`. In Grafana, querying and analyzing logs
+`/aws/eks/observability-accelerator/{cluster-name}/workloads`. Log streams
+follow the naming pattern `{node-name}`. In Grafana, querying and analyzing logs
 is done with [CloudWatch Logs Insights](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html)
 
 ### Example - ADOT collector logs
 
-Select one or many log groups and run the following query. The example below,
-queries AWS Distro for OpenTelemetry (ADOT) logs
+Select workloads log group for the cluster and run the following query. The example below,
+queries container logs from `kube-system` namespace.
 
 ```console
-fields @timestamp, log
-| order @timestamp desc
+fields @timestamp, @message, @logStream, @log, resource.k8s.namespace.name
+| filter resource.k8s.namespace.name = "kube-system"
+| sort @timestamp desc
 | limit 100
 ```
 
@@ -49,8 +50,9 @@ In the example below, we use the following query to graph the number of metrics
 collected by the ADOT collector
 
 ```console
-fields @timestamp, log
-| parse log /"#metrics": (?<metrics_count>\d+)}/
+fields @timestamp, attributes.log
+| filter resource.k8s.namespace.name = "adot-collector-kubeprometheus"
+| parse attributes.log  /\"metrics\": (?<metrics_count>\d+?)(,|\})/
 | stats avg(metrics_count) by bin(5m)
 | limit 100
 ```

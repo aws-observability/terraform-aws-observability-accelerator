@@ -3,7 +3,7 @@
 This module provides EKS cluster monitoring with the following resources:
 
 - AWS Distro For OpenTelemetry Operator and Collector for Metrics and Traces
-- Logs with [AWS for FluentBit](https://github.com/aws/aws-for-fluent-bit)
+- Logs with [ADOT Container Logs Collector](https://aws-otel.github.io/docs/getting-started/adot-eks-add-on/config-container-logs)
 - Installs Grafana Operator to add AWS data sources and create Grafana Dashboards to Amazon Managed Grafana.
 - Installs FluxCD to perform GitOps sync of a Git Repo to EKS Cluster. We will use this later for creating Grafana Dashboards and AWS datasources to Amazon Managed Grafana.
 - Installs External Secrets Operator to retrieve and Sync the Grafana API keys from AWS SSM Parameter Store.
@@ -37,8 +37,8 @@ See examples using this Terraform modules in the **Amazon EKS** section of [this
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_adot_logs"></a> [adot\_logs](#module\_adot\_logs) | ./add-ons/adot-logs | n/a |
 | <a name="module_external_secrets"></a> [external\_secrets](#module\_external\_secrets) | ./add-ons/external-secrets | n/a |
-| <a name="module_fluentbit_logs"></a> [fluentbit\_logs](#module\_fluentbit\_logs) | ./add-ons/aws-for-fluentbit | n/a |
 | <a name="module_helm_addon"></a> [helm\_addon](#module\_helm\_addon) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon | v4.32.1 |
 | <a name="module_istio_monitoring"></a> [istio\_monitoring](#module\_istio\_monitoring) | ./patterns/istio | n/a |
 | <a name="module_java_monitoring"></a> [java\_monitoring](#module\_java\_monitoring) | ./patterns/java | n/a |
@@ -89,7 +89,7 @@ See examples using this Terraform modules in the **Amazon EKS** section of [this
 | <a name="input_enable_istio"></a> [enable\_istio](#input\_enable\_istio) | Enable ISTIO workloads monitoring, alerting and default dashboards | `bool` | `false` | no |
 | <a name="input_enable_java"></a> [enable\_java](#input\_enable\_java) | Enable Java workloads monitoring, alerting and default dashboards | `bool` | `false` | no |
 | <a name="input_enable_kube_state_metrics"></a> [enable\_kube\_state\_metrics](#input\_enable\_kube\_state\_metrics) | Enables or disables Kube State metrics exporter. Disabling this might affect some data in the dashboards | `bool` | `true` | no |
-| <a name="input_enable_logs"></a> [enable\_logs](#input\_enable\_logs) | Using AWS For FluentBit to collect cluster and application logs to Amazon CloudWatch | `bool` | `true` | no |
+| <a name="input_enable_logs"></a> [enable\_logs](#input\_enable\_logs) | Using ADOT container logs collector to collect cluster and application logs to Amazon CloudWatch | `bool` | `true` | no |
 | <a name="input_enable_managed_prometheus"></a> [enable\_managed\_prometheus](#input\_enable\_managed\_prometheus) | Creates a new Amazon Managed Service for Prometheus Workspace | `bool` | `true` | no |
 | <a name="input_enable_nginx"></a> [enable\_nginx](#input\_enable\_nginx) | Enable NGINX workloads monitoring, alerting and default dashboards | `bool` | `false` | no |
 | <a name="input_enable_node_exporter"></a> [enable\_node\_exporter](#input\_enable\_node\_exporter) | Enables or disables Node exporter. Disabling this might affect some data in the dashboards | `bool` | `true` | no |

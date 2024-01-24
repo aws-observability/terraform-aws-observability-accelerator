@@ -34,6 +34,8 @@ resource "aws_eks_addon" "adot" {
   service_account_role_arn    = try(var.addon_config.service_account_role_arn, null)
   preserve                    = try(var.addon_config.preserve, true)
 
+  configuration_values = try(var.addon_config.configuration_values, null)
+
   tags = merge(
     var.addon_context.tags,
     try(var.addon_config.tags, {}),

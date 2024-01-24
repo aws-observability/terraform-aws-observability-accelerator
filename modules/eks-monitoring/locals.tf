@@ -132,6 +132,15 @@ locals {
     }
   }
 
+  nvidia_monitoring_config = {
+    # can be overriden by providing a config
+    flux_gitrepository_name   = try(var.nvidia_monitoring_config.flux_gitrepository_name, var.flux_gitrepository_name)
+    flux_gitrepository_url    = try(var.nvidia_monitoring_config.flux_gitrepository_url, var.flux_gitrepository_url)
+    flux_gitrepository_branch = try(var.nvidia_monitoring_config.flux_gitrepository_branch, var.flux_gitrepository_branch)
+    flux_kustomization_name   = try(var.nvidia_monitoring_config.flux_kustomization_name, "grafana-dashboards-adothealth")
+    flux_kustomization_path   = try(var.nvidia_monitoring_config.flux_kustomization_path, "./artifacts/grafana-operator-manifests/eks/gpu")
+  }
+
   kubeproxy_monitoring_config = {
     # can be overriden by providing a config
     flux_gitrepository_name   = try(var.kubeproxy_monitoring_config.flux_gitrepository_name, var.flux_gitrepository_name)

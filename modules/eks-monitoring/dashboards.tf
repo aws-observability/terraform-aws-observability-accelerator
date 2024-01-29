@@ -33,8 +33,8 @@ spec:
     name: ${var.flux_gitrepository_name}
   postBuild:
     substitute:
-      AMG_AWS_REGION: ${var.managed_prometheus_workspace_region}
-      AMP_ENDPOINT_URL: ${var.managed_prometheus_workspace_endpoint}
+      AMG_AWS_REGION: ${local.managed_prometheus_workspace_region}
+      AMP_ENDPOINT_URL: ${local.managed_prometheus_workspace_endpoint}
       AMG_ENDPOINT_URL: ${var.grafana_url}
       GRAFANA_CLUSTER_DASH_URL: ${var.grafana_cluster_dashboard_url}
       GRAFANA_KUBELET_DASH_URL: ${var.grafana_kubelet_dashboard_url}
@@ -92,6 +92,26 @@ spec:
       GRAFANA_ADOTHEALTH_DASH_URL: ${local.adothealth_monitoring_config.dashboards.health}
 YAML
   count      = var.enable_adotcollector_metrics ? 1 : 0
+  depends_on = [module.external_secrets]
+}
+
+# nvidia dashboards
+resource "kubectl_manifest" "nvidia_monitoring_dashboards" {
+  yaml_body  = <<YAML
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: ${local.nvidia_monitoring_config.flux_kustomization_name}
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ${local.nvidia_monitoring_config.flux_kustomization_path}
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ${local.nvidia_monitoring_config.flux_gitrepository_name}
+YAML
+  count      = var.enable_nvidia_monitoring ? 1 : 0
   depends_on = [module.external_secrets]
 }
 

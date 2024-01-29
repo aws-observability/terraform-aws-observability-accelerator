@@ -1,3 +1,10 @@
+resource "aws_prometheus_workspace" "this" {
+  count = var.enable_managed_prometheus ? 1 : 0
+
+  alias = local.name
+  tags  = var.tags
+}
+
 module "operator" {
   source = "./add-ons/adot-operator"
   count  = var.enable_amazon_eks_adot ? 1 : 0
@@ -87,11 +94,11 @@ module "helm_addon" {
   set_values = [
     {
       name  = "ampurl"
-      value = "${var.managed_prometheus_workspace_endpoint}api/v1/remote_write"
+      value = "${local.managed_prometheus_workspace_endpoint}api/v1/remote_write"
     },
     {
       name  = "region"
-      value = var.managed_prometheus_workspace_region
+      value = local.managed_prometheus_workspace_region
     },
     {
       name  = "assumeRoleArn"
@@ -188,6 +195,10 @@ module "helm_addon" {
     {
       name  = "enableAdotcollectorMetrics"
       value = var.enable_adotcollector_metrics
+    },
+    {
+      name  = "enableGpuMonitoring"
+      value = var.enable_nvidia_monitoring
     },
     {
       name  = "serviceAccount"

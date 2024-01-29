@@ -262,32 +262,35 @@ module "external_secrets" {
 resource "aws_prometheus_workspace" "this" {
 
   tags = {
-                AMPAgentlessScraper = ""
-        }
+    AMPAgentlessScraper = ""
+  }
 }
 
-
+resource "helm_release" "managed_prometheus__role" {
+  name  = "managed-prometheus-role"
+  chart = "${path.module}/managed-prometheus-scraper-config"
+}
 resource "aws_prometheus_scraper" "basic" {
   alias = "managed-prometheus-scraper"
 
   source {
-    eks{
+    eks {
       cluster_arn = data.aws_eks_cluster.eks_cluster.arn
-      subnet_ids = data.aws_eks_cluster.eks_cluster.vpc_config[0].subnet_ids
+      subnet_ids  = data.aws_eks_cluster.eks_cluster.vpc_config[0].subnet_ids
 
     }
 
   }
 
 
-   scrape_configuration= templatefile("${path.module}/prom_config.yaml",
-                         { global_scrape_interval = var.prometheus_config.global_scrape_interval,
-                           global_scrape_timeout = var.prometheus_config.global_scrape_timeout,
-                           enableAPIserver = var.enable_apiserver_monitoring,
-                           eks_cluster_id = var.eks_cluster_id,
-                           region = var.managed_prometheus_workspace_region,
-                           accountID = local.context.aws_caller_identity_account_id
-                          })
+  scrape_configuration = templatefile("${path.module}/prom_config.yaml",
+    { global_scrape_interval = var.prometheus_config.global_scrape_interval,
+      global_scrape_timeout  = var.prometheus_config.global_scrape_timeout,
+      enableAPIserver        = var.enable_apiserver_monitoring,
+      eks_cluster_id         = var.eks_cluster_id,
+      region                 = var.managed_prometheus_workspace_region,
+      accountID              = local.context.aws_caller_identity_account_id
+  })
 
   destination {
     amp {
@@ -297,9 +300,23 @@ resource "aws_prometheus_scraper" "basic" {
 
   tags = {
     CreatedBy = "Terraform"
-    Owner = "AWS Observability Accelerator"
+    Owner     = "AWS Observability Accelerator"
   }
 
 }
 
 
+
+resource "terraform_data" "managed-amp-scrapper-role" {
+  provisioner "local-exec" {
+    command = <<EOT
+        ROLE=$(echo ${aws_prometheus_scraper.basic.role_arn} | sed -e "s+/aws-service-role/scraper.aps.amazonaws.com/+/+g") &&
+        eksctl create iamidentitymapping  \
+             --cluster ${var.eks_cluster_id} \
+             --region ${var.managed_prometheus_workspace_region} \
+             --arn $ROLE \
+             --username aps-collector-user
+      EOT
+  }
+  depends_on = [resource.aws_prometheus_scraper.basic]
+}

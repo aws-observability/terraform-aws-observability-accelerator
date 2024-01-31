@@ -1,4 +1,4 @@
-# Existing Cluster with the AWS Observability accelerator base module and Infrastructure monitoring
+# Existing Cluster with the AWS Observability accelerator EKS Infrastructure monitoring
 
 This example demonstrates how to use the AWS Observability Accelerator Terraform
 modules with Infrastructure monitoring enabled.
@@ -35,7 +35,6 @@ View the full documentation for this example [here](https://aws-observability.gi
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_aws_observability_accelerator"></a> [aws\_observability\_accelerator](#module\_aws\_observability\_accelerator) | ../../ | n/a |
 | <a name="module_eks_monitoring"></a> [eks\_monitoring](#module\_eks\_monitoring) | ../../modules/eks-monitoring | n/a |
 | <a name="module_grafana_key_rotation"></a> [grafana\_key\_rotation](#module\_grafana\_key\_rotation) | ../../modules/grafana-key-rotation | n/a |
 
@@ -45,6 +44,7 @@ View the full documentation for this example [here](https://aws-observability.gi
 |------|------|
 | [aws_eks_cluster.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
 | [aws_eks_cluster_auth.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster_auth) | data source |
+| [aws_grafana_workspace.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/grafana_workspace) | data source |
 
 ## Inputs
 
@@ -66,11 +66,13 @@ View the full documentation for this example [here](https://aws-observability.gi
 
 | Name | Description |
 |------|-------------|
-| <a name="output_aws_region"></a> [aws\_region](#output\_aws\_region) | AWS Region |
 | <a name="output_eks_cluster_id"></a> [eks\_cluster\_id](#output\_eks\_cluster\_id) | EKS Cluster Id |
 | <a name="output_eks_cluster_version"></a> [eks\_cluster\_version](#output\_eks\_cluster\_version) | EKS Cluster version |
 | <a name="output_eks_key_rotation_eventbridge_scheduler_arn"></a> [eks\_key\_rotation\_eventbridge\_scheduler\_arn](#output\_eks\_key\_rotation\_eventbridge\_scheduler\_arn) | ARN of the EventBridge Scheduler invoking Lambda Function for Key rotation |
 | <a name="output_eks_key_rotation_eventbridge_scheduler_role_arn"></a> [eks\_key\_rotation\_eventbridge\_scheduler\_role\_arn](#output\_eks\_key\_rotation\_eventbridge\_scheduler\_role\_arn) | ARN of the IAM Role of EventBridge Scheduler invoking Lambda Function for Key rotation |
 | <a name="output_eks_key_rotation_lambda_function_arn"></a> [eks\_key\_rotation\_lambda\_function\_arn](#output\_eks\_key\_rotation\_lambda\_function\_arn) | ARN of the Lambda function performing Key rotation |
 | <a name="output_eks_key_rotation_lambda_function_role_arn"></a> [eks\_key\_rotation\_lambda\_function\_role\_arn](#output\_eks\_key\_rotation\_lambda\_function\_role\_arn) | ARN of the Lambda function execution role |
+| <a name="output_managed_prometheus_workspace_endpoint"></a> [managed\_prometheus\_workspace\_endpoint](#output\_managed\_prometheus\_workspace\_endpoint) | Amazon Managed Prometheus workspace endpoint |
+| <a name="output_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#output\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus workspace ID |
+| <a name="output_managed_prometheus_workspace_region"></a> [managed\_prometheus\_workspace\_region](#output\_managed\_prometheus\_workspace\_region) | AWS Region |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

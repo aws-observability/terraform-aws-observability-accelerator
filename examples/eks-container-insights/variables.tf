@@ -3,21 +3,28 @@ variable "eks_cluster_id" {
   type        = string
 }
 
-variable "aws_region" {
-  description = "EKS cluster region"
+variable "eks_cluster_domain" {
+  description = "The domain for the EKS cluster"
   type        = string
+  default     = ""
 }
 
-variable "irsa_iam_role_path" {
-  description = "IAM role path for IRSA roles"
-  type        = string
-  default     = "/"
-}
-
-variable "irsa_iam_permissions_boundary" {
-  description = "IAM permissions boundary for IRSA roles"
+variable "eks_oidc_provider" {
+  description = "The OpenID Connect identity provider (issuer URL without leading `https://`)"
   type        = string
   default     = null
+}
+
+variable "eks_oidc_provider_arn" {
+  description = "The OpenID Connect identity provider ARN"
+  type        = string
+  default     = null
+}
+
+variable "eks_cluster_version" {
+  description = "The Kubernetes version for the cluster"
+  type        = string
+  default     = "1.28"
 }
 
 variable "tags" {

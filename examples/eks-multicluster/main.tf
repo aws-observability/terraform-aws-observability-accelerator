@@ -1,19 +1,9 @@
-module "aws_observability_accelerator" {
-  source                              = "../../../terraform-aws-observability-accelerator"
-  aws_region                          = var.eks_cluster_1_region
-  enable_managed_prometheus           = false
-  enable_alertmanager                 = true
-  managed_prometheus_workspace_region = null
-  managed_prometheus_workspace_id     = var.managed_prometheus_workspace_id
-  managed_grafana_workspace_id        = var.managed_grafana_workspace_id
-
-  providers = {
-    aws = aws.eks_cluster_1
-  }
+locals {
+  create_new_workspace            = var.managed_prometheus_workspace_id == "" ? true : false
+  managed_prometheus_workspace_id = local.create_new_workspace ? module.managed_service_prometheus[0].workspace_id : var.managed_prometheus_workspace_id
 }
-
 module "eks_cluster_1_monitoring" {
-  source                 = "../../../terraform-aws-observability-accelerator//modules/eks-monitoring"
+  source                 = "../..//modules/eks-monitoring"
   eks_cluster_id         = var.eks_cluster_1_id
   enable_amazon_eks_adot = true
   enable_cert_manager    = true
@@ -31,11 +21,15 @@ module "eks_cluster_1_monitoring" {
   enable_apiserver_monitoring  = true
   enable_adotcollector_metrics = true
 
-  grafana_api_key                       = var.grafana_api_key
-  managed_prometheus_workspace_id       = module.aws_observability_accelerator.managed_prometheus_workspace_id
-  managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
-  managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
-  grafana_url                           = module.aws_observability_accelerator.managed_grafana_workspace_endpoint
+  grafana_api_key = var.grafana_api_key
+  grafana_url     = "https://${data.aws_grafana_workspace.this.endpoint}"
+
+  # prevents the module to create a workspace
+  enable_managed_prometheus = false
+
+  managed_prometheus_workspace_id       = local.managed_prometheus_workspace_id
+  managed_prometheus_workspace_endpoint = data.aws_prometheus_workspace.this.prometheus_endpoint
+  managed_prometheus_workspace_region   = var.eks_cluster_1_region
 
   prometheus_config = {
     global_scrape_interval = "60s"
@@ -48,14 +42,10 @@ module "eks_cluster_1_monitoring" {
     kubernetes = kubernetes.eks_cluster_1
     helm       = helm.eks_cluster_1
   }
-
-  depends_on = [
-    module.aws_observability_accelerator
-  ]
 }
 
 module "eks_cluster_2_monitoring" {
-  source                 = "../../../terraform-aws-observability-accelerator//modules/eks-monitoring"
+  source                 = "../..//modules/eks-monitoring"
   eks_cluster_id         = var.eks_cluster_2_id
   enable_amazon_eks_adot = true
   enable_cert_manager    = true
@@ -73,9 +63,12 @@ module "eks_cluster_2_monitoring" {
   enable_apiserver_monitoring  = false
   enable_adotcollector_metrics = false
 
-  managed_prometheus_workspace_id       = module.aws_observability_accelerator.managed_prometheus_workspace_id
-  managed_prometheus_workspace_endpoint = module.aws_observability_accelerator.managed_prometheus_workspace_endpoint
-  managed_prometheus_workspace_region   = module.aws_observability_accelerator.managed_prometheus_workspace_region
+  # prevents the module to create a workspace
+  enable_managed_prometheus = false
+
+  managed_prometheus_workspace_id       = var.managed_prometheus_workspace_id
+  managed_prometheus_workspace_endpoint = data.aws_prometheus_workspace.this.prometheus_endpoint
+  managed_prometheus_workspace_region   = var.eks_cluster_1_region
 
   prometheus_config = {
     global_scrape_interval = "60s"
@@ -88,8 +81,15 @@ module "eks_cluster_2_monitoring" {
     kubernetes = kubernetes.eks_cluster_2
     helm       = helm.eks_cluster_2
   }
+}
 
-  depends_on = [
-    module.aws_observability_accelerator
-  ]
+module "managed_service_prometheus" {
+  count   = local.create_new_workspace ? 1 : 0
+  source  = "terraform-aws-modules/managed-service-prometheus/aws"
+  version = "~> 2.2.2"
+  providers = {
+    aws = aws.eks_cluster_1
+  }
+
+  workspace_alias = "aws-observability-accelerator-multicluster"
 }

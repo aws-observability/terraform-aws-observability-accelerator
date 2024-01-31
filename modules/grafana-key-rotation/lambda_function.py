@@ -22,9 +22,9 @@ def lambda_handler(event, context):
         parameter_version = response['Parameter']['Version']
         logger.info(f'SSM Parameter exists. Current Parameter Version is : {parameter_version}')
 
-        # Timestamp to be used for unique KeyName while creating Grafana Workspace API Key 
+        # Timestamp to be used for unique KeyName while creating Grafana Workspace API Key
         now = datetime.now()
-        
+
         # Create a new API key in Amazon Managed Grafana
         response = grafana_client.create_workspace_api_key(
             workspaceId=workspace_id,
@@ -34,8 +34,8 @@ def lambda_handler(event, context):
         )
         new_api_key = '{\"GF_SECURITY_ADMIN_APIKEY\":\"'+response['key']+'\"}'
         new_api_key_name = response['keyName']
-        logger.info(f'New API Key Name : {new_api_key_name}') 
-        
+        logger.info(f'New API Key Name : {new_api_key_name}')
+
         # Updating SSM Parameter value with new Key
         response = ssm_client.put_parameter(
             Name=ssm_parameter_name,
@@ -44,14 +44,14 @@ def lambda_handler(event, context):
             Overwrite=True
         )
         new_parameter_version = response['Version']
-        logger.info(f'API Key updated in SSM parameter successfully. New Parameter Version is : {new_parameter_version}') 
+        logger.info(f'API Key updated in SSM parameter successfully. New Parameter Version is : {new_parameter_version}')
 
-    
+
         # Deleting hour-2 API key to deal with the limit of 100 keys per WorkSpace
         logger.info(f'Proceeding to delete older API Key')
-        last_hour_date_time = now - timedelta(hours = 2) 
+        last_hour_date_time = now - timedelta(hours = 2)
         old_key_name = 'observability-accelerator-'+last_hour_date_time.strftime('%Y%m%d-%H')
-        logger.info(f'Deleting key : {old_key_name}') 
+        logger.info(f'Deleting key : {old_key_name}')
         grafana_client.delete_workspace_api_key(
             keyName=old_key_name,
             workspaceId=workspace_id

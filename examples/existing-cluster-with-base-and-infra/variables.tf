@@ -55,3 +55,9 @@ variable "grafana_api_key_refresh_interval" {
   type        = string
   default     = "5m"
 }
+
+variable "lambda_runtime_grafana_key_rotation" {
+  description = "Python Runtime Identifier for the Lambda Function"
+  type        = string
+  default     = "python3.12"
+}

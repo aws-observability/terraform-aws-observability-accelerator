@@ -17,7 +17,7 @@ variable "lambda_execution_role_policy_name" {
 }
 
 variable "eventbridge_scheduler_name" {
-  description = "Name of the EventBridge Scheduler, Not the EventBridge Rule"
+  description = "Name of the EventBridge Scheduler"
   type        = string
   default     = "observability-accelerator-EBridge"
 }
@@ -52,6 +52,7 @@ variable "kms_key_arn_ssm" {
 variable "grafana_api_key_interval" {
   description = "Number of seconds for secondsToLive value while creating API Key"
   type        = number
+  default     = 5400
 }
 
 variable "managed_grafana_workspace_id" {
@@ -62,4 +63,11 @@ variable "managed_grafana_workspace_id" {
 variable "eventbridge_scheduler_schedule_expression" {
   description = "Schedule Expression for EventBridge Scheduler in Grafana API Key Rotation"
   type        = string
+  default     = "rate(60 minutes)"
+}
+
+variable "lambda_runtime_grafana_key_rotation" {
+  description = "Python Runtime Identifier for the Lambda Function"
+  type        = string
+  default     = "python3.12"
 }

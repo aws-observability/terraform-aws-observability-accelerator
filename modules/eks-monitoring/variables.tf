@@ -579,6 +579,7 @@ variable "kubeproxy_monitoring_config" {
 variable "grafana_api_key_refresh_interval" {
   description = "Refresh Internal to be used by External Secrets for Grafana API Key rotation"
   type        = string
+  default     = "5m"
 }
 
 variable "managed_grafana_workspace_id" {

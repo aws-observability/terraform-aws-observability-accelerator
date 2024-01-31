@@ -2,7 +2,11 @@ resource "aws_prometheus_workspace" "this" {
   count = var.enable_managed_prometheus ? 1 : 0
 
   alias = local.name
-  tags  = var.tags
+
+  # Agentless scraping require this tag on the workspace
+  tags = merge(local.tags, {
+    AMPAgentlessScraper = ""
+  })
 }
 
 module "operator" {
@@ -270,54 +274,38 @@ module "external_secrets" {
   depends_on = [resource.helm_release.grafana_operator]
 }
 
-resource "aws_prometheus_workspace" "this" {
-
-  tags = {
-    AMPAgentlessScraper = ""
-  }
-}
-
-resource "helm_release" "managed_prometheus__role" {
+resource "helm_release" "managed_prometheus_role" {
   name  = "managed-prometheus-role"
   chart = "${path.module}/managed-prometheus-scraper-config"
 }
 resource "aws_prometheus_scraper" "basic" {
   alias = "managed-prometheus-scraper"
-
   source {
     eks {
       cluster_arn = data.aws_eks_cluster.eks_cluster.arn
       subnet_ids  = data.aws_eks_cluster.eks_cluster.vpc_config[0].subnet_ids
-
     }
-
   }
 
-
-  scrape_configuration = templatefile("${path.module}/prom_config.yaml",
-    { global_scrape_interval = var.prometheus_config.global_scrape_interval,
-      global_scrape_timeout  = var.prometheus_config.global_scrape_timeout,
-      enableAPIserver        = var.enable_apiserver_monitoring,
-      eks_cluster_id         = var.eks_cluster_id,
-      region                 = var.managed_prometheus_workspace_region,
-      accountID              = local.context.aws_caller_identity_account_id
+  scrape_configuration = templatefile("${path.module}/prom_config.yaml", {
+    global_scrape_interval = var.prometheus_config.global_scrape_interval,
+    global_scrape_timeout  = var.prometheus_config.global_scrape_timeout,
+    enableAPIserver        = var.enable_apiserver_monitoring,
+    eks_cluster_id         = local.context.eks_cluster_id,
+    region                 = local.managed_prometheus_workspace_region,
+    accountID              = local.context.aws_caller_identity_account_id
   })
 
   destination {
     amp {
-      workspace_arn = "arn:aws:aps:${var.managed_prometheus_workspace_region}:${local.context.aws_caller_identity_account_id}:workspace/${var.managed_prometheus_workspace_id}"
+      workspace_arn = local.managed_prometheus_workspace_arn
     }
   }
 
-  tags = {
-    CreatedBy = "Terraform"
-    Owner     = "AWS Observability Accelerator"
-  }
-
+  tags = local.tags
 }
 
-
-
+/*TODO - use native resource providers for iamidentity mapping or provide an output command
 resource "terraform_data" "managed-amp-scrapper-role" {
   provisioner "local-exec" {
     command = <<EOT
@@ -331,3 +319,4 @@ resource "terraform_data" "managed-amp-scrapper-role" {
   }
   depends_on = [resource.aws_prometheus_scraper.basic]
 }
+*/

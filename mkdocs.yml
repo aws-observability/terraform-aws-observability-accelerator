@@ -28,6 +28,7 @@ nav:
   - Amazon EKS:
       - Infrastructure: eks/index.md
       - EKS API server: eks/eks-apiserver.md
+      - EKS GPU montitoring: eks/gpu-monitoring.md
       - Multicluster:
           - Single AWS account: eks/multicluster.md
           - Cross AWS account: eks/multiaccount.md

@@ -552,6 +552,26 @@ variable "enable_adotcollector_metrics" {
   default     = true
 }
 
+variable "enable_nvidia_monitoring" {
+  description = "Enables monitoring of nvidia metrics"
+  type        = bool
+  default     = true
+}
+
+variable "nvidia_monitoring_config" {
+  description = "Config object for nvidia monitoring"
+  type = object({
+    flux_gitrepository_name   = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_name   = string
+    flux_kustomization_path   = string
+  })
+
+  # defaults are pre-computed in locals.tf, provide a full definition to override
+  default = null
+}
+
 variable "adothealth_monitoring_config" {
   description = "Config object for ADOT health monitoring"
   type = object({

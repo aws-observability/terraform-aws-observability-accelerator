@@ -95,6 +95,26 @@ YAML
   depends_on = [module.external_secrets]
 }
 
+# nvidia dashboards
+resource "kubectl_manifest" "nvidia_monitoring_dashboards" {
+  yaml_body  = <<YAML
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: ${local.nvidia_monitoring_config.flux_kustomization_name}
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ${local.nvidia_monitoring_config.flux_kustomization_path}
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ${local.nvidia_monitoring_config.flux_gitrepository_name}
+YAML
+  count      = var.enable_nvidia_monitoring ? 1 : 0
+  depends_on = [module.external_secrets]
+}
+
 resource "kubectl_manifest" "kubeproxy_monitoring_dashboard" {
   yaml_body  = <<YAML
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2

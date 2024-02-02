@@ -146,9 +146,9 @@ See examples using this Terraform modules in the **Amazon EKS** section of [this
 | <a name="output_eks_cluster_id"></a> [eks\_cluster\_id](#output\_eks\_cluster\_id) | EKS Cluster Id |
 | <a name="output_eks_cluster_version"></a> [eks\_cluster\_version](#output\_eks\_cluster\_version) | EKS Cluster version |
 | <a name="output_kms_key_arn_eks_monitoring"></a> [kms\_key\_arn\_eks\_monitoring](#output\_kms\_key\_arn\_eks\_monitoring) | Name of the SSM Parameter |
-| <a name="output_ssmparameter_arn_eks_monitoring"></a> [ssmparameter\_arn\_eks\_monitoring](#output\_ssmparameter\_arn\_eks\_monitoring) | Name of the SSM Parameter |
-| <a name="output_ssmparameter_name_eks_monitoring"></a> [ssmparameter\_name\_eks\_monitoring](#output\_ssmparameter\_name\_eks\_monitoring) | Name of the SSM Parameter |
 | <a name="output_managed_prometheus_workspace_endpoint"></a> [managed\_prometheus\_workspace\_endpoint](#output\_managed\_prometheus\_workspace\_endpoint) | Amazon Managed Prometheus workspace endpoint |
 | <a name="output_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#output\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus workspace ID |
 | <a name="output_managed_prometheus_workspace_region"></a> [managed\_prometheus\_workspace\_region](#output\_managed\_prometheus\_workspace\_region) | Amazon Managed Prometheus workspace region |
+| <a name="output_ssmparameter_arn_eks_monitoring"></a> [ssmparameter\_arn\_eks\_monitoring](#output\_ssmparameter\_arn\_eks\_monitoring) | Name of the SSM Parameter |
+| <a name="output_ssmparameter_name_eks_monitoring"></a> [ssmparameter\_name\_eks\_monitoring](#output\_ssmparameter\_name\_eks\_monitoring) | Name of the SSM Parameter |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

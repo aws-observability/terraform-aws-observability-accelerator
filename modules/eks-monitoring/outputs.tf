@@ -27,7 +27,7 @@ output "kms_key_arn_eks_monitoring" {
   description = "Name of the SSM Parameter"
   value       = module.external_secrets[0].kms_key_arn_ssm
 }
-  
+
 output "managed_prometheus_workspace_endpoint" {
   description = "Amazon Managed Prometheus workspace endpoint"
   value       = local.managed_prometheus_workspace_endpoint

@@ -292,12 +292,27 @@ resource "helm_release" "managed_prometheus_role" {
   name  = "managed-prometheus-role"
   chart = "${path.module}/managed-prometheus-scraper-config"
 }
-resource "aws_prometheus_scraper" "basic" {
+
+data "aws_subnet" "helper" {
+  for_each = toset(data.aws_eks_cluster.eks_cluster.vpc_config[0].subnet_ids)
+  id       = each.key
+}
+
+locals {
+  eks_availability_zone_subnets = {
+    for subnet in data.aws_subnet.helper : subnet.availability_zone => subnet.id...
+  }
+}
+
+resource "aws_prometheus_scraper" "this" {
   alias = "managed-prometheus-scraper"
   source {
     eks {
       cluster_arn = data.aws_eks_cluster.eks_cluster.arn
-      subnet_ids  = data.aws_eks_cluster.eks_cluster.vpc_config[0].subnet_ids
+
+      //ValidationException: Subnets provided must be in unique availability zones
+      // might not always work
+      subnet_ids = [for subnet_ids in local.eks_availability_zone_subnets : subnet_ids[0]]
     }
   }
 
@@ -318,6 +333,53 @@ resource "aws_prometheus_scraper" "basic" {
 
   tags = local.tags
 }
+
+# locals {
+#   aws_auth_yaml = <<-EOF
+#       rolearn: ${aws_prometheus_scraper.this.role_arn}
+#       username: aps-collector-user
+#     EOF
+# }
+
+# data "kubernetes_config_map" "aws_auth" {
+#   metadata {
+#     name      = "aws-auth"
+#     namespace = "kube-system"
+#   }
+# }
+
+# resource "kubernetes_config_map_v1_data" "aws_auth" {
+#   force = true
+
+#   metadata {
+#     name      = "aws-auth"
+#     namespace = "kube-system"
+#   }
+
+#   data = {
+#     # Convert to list, make distinict to remove duplicates, and convert to yaml as mapRoles is a yaml string.
+#     # replace() remove double quotes on "strings" in yaml output.
+#     # distinct() only apply the change once, not append every run.
+#     mapRoles = replace(yamlencode(distinct(concat(yamldecode(data.kubernetes_config_map.aws_auth.data.mapRoles), yamldecode(local.aws_auth_yaml)))), "\"", "")
+#   }
+
+#   lifecycle {
+#     ignore_changes = []
+#   }
+# }
+
+# // requires authentication mode API_AND_CONFIG_MAP at least on the cluster
+# // TODO: update doc
+# resource "aws_eks_access_entry" "scraper" {
+#   cluster_name  = local.context.eks_cluster_id
+#   principal_arn = aws_prometheus_scraper.this.role_arn
+#   user_name     = "aps-collector-user"
+#   type          = "STANDARD"
+# }
+
+# // │ Error: creating EKS Access Entry (attractive-wardrobe-1706565893:arn:aws:iam::339743103717:role/aws-service-role/scraper.aps.amazonaws.com/AWSServiceRoleForAmazonPrometheusScraper_085aa6c7-fc8c-4): operation error EKS: CreateAccessEntry, https response error StatusCode: 400, RequestID: cdca4512-8fcc-40af-87f2-3f168ce58bd7, InvalidParameterException: The caller is not allowed to modify access entries with a principalArn value of a Service Linked Role
+
+
 
 /*TODO - use native resource providers for iamidentity mapping or provide an output command
 resource "terraform_data" "managed-amp-scrapper-role" {

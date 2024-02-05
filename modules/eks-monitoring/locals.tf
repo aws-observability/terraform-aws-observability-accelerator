@@ -15,7 +15,7 @@ locals {
   managed_prometheus_workspace_endpoint = "https://aps-workspaces.${local.managed_prometheus_workspace_region}.amazonaws.com/workspaces/${local.managed_prometheus_workspace_id}/"
   managed_prometheus_workspace_arn      = "arn:aws:aps:${local.managed_prometheus_workspace_region}:${data.aws_caller_identity.current.account_id}:workspace/${local.managed_prometheus_workspace_id}"
 
-  name                      = "adot-collector-kubeprometheus"
+  name                      = "adot-collector"
   kube_service_account_name = try(var.helm_config.service_account, local.name)
   namespace                 = try(var.helm_config.namespace, local.name)
 

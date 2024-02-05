@@ -244,6 +244,9 @@ spec:
           - key: account_id
             action: upsert
             value: {{ .Values.accountId }}
+           - key: collected_by
+            action: upsert
+            value: adot
     {{ if .Values.enableTracing }}
       batch/traces:
         timeout: {{ .Values.tracingTimeout }}

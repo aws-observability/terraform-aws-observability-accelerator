@@ -5,6 +5,7 @@ global:
     cluster: ${eks_cluster_id}
     region : ${region}
     account_id : ${accountID}
+    collected_by: aws-scraper
 scrape_configs:
   - job_name: 'kubernetes-kubelet'
     scrape_interval: ${global_scrape_interval}

@@ -22,3 +22,8 @@ output "eks_cluster_id" {
   description = "EKS Cluster Id"
   value       = module.eks_monitoring.eks_cluster_id
 }
+
+output "scraper_aws_auth" {
+  description = "Execute this command to grand access to the managed scrapers to gain permissions on your cluster. Mandatory for the first use"
+  value       = module.eks_monitoring.scraper_aws_auth
+}

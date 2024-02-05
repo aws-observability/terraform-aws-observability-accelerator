@@ -30,5 +30,5 @@ output "managed_prometheus_workspace_region" {
 
 output "scraper_aws_auth" {
   description = "Execute this command to grand access to the managed scrapers to gain permissions on your cluster. Mandatory for the first use"
-  value       = "eksctl create iamidentitymapping --cluster ${var.eks_cluster_id} --region ${local.managed_prometheus_workspace_region} --arn ${aws_prometheus_scraper.this.role_arn} --username aps-collector-user"
+  value       = "eksctl create iamidentitymapping --cluster ${var.eks_cluster_id} --region ${local.managed_prometheus_workspace_region} --arn ${replace(aws_prometheus_scraper.this.role_arn, "aws-service-role/scraper.aps.amazonaws.com/", "")} --username aps-collector-user"
 }

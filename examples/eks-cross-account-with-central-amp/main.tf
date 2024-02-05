@@ -43,7 +43,6 @@ module "eks_monitoring_one" {
   enable_managed_prometheus = false
 
   managed_prometheus_workspace_id       = module.managed_service_prometheus.workspace_id
-  managed_prometheus_workspace_endpoint = module.managed_service_prometheus.workspace_prometheus_endpoint
   managed_prometheus_workspace_region   = var.cluster_one.region
   managed_prometheus_cross_account_role = aws_iam_role.cross_account_amp_role.arn
   irsa_iam_additional_policies          = [aws_iam_policy.irsa_assume_role_policy_one.arn]
@@ -96,9 +95,8 @@ module "eks_monitoring_two" {
   # prevents the module to create a workspace
   enable_managed_prometheus = false
 
-  managed_prometheus_workspace_id       = module.managed_service_prometheus.workspace_id
-  managed_prometheus_workspace_endpoint = module.managed_service_prometheus.workspace_prometheus_endpoint
-  managed_prometheus_workspace_region   = var.cluster_two.region
+  managed_prometheus_workspace_id     = module.managed_service_prometheus.workspace_id
+  managed_prometheus_workspace_region = var.cluster_two.region
 
   managed_prometheus_cross_account_role = aws_iam_role.cross_account_amp_role.arn
   irsa_iam_additional_policies          = [aws_iam_policy.irsa_assume_role_policy_two.arn]

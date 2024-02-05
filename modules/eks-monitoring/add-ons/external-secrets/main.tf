@@ -77,7 +77,7 @@ YAML
 }
 
 resource "aws_ssm_parameter" "secret" {
-  name        = join("", ["/terraform-accelerator/grafana-api-key-", var.managed_grafana_workspace_id])
+  name        = "/terraform-accelerator/grafana-api-key"
   description = "SSM Secret to store grafana API Key"
   type        = "SecureString"
   value = jsonencode({

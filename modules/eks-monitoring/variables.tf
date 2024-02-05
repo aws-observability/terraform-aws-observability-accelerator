@@ -613,8 +613,3 @@ variable "grafana_api_key_refresh_interval" {
   type        = string
   default     = "5m"
 }
-
-variable "managed_grafana_workspace_id" {
-  description = "Amazon Managed Grafana Workspace ID"
-  type        = string
-}

@@ -46,7 +46,6 @@ This deploys an EKS Cluster with the External Secrets Operator. The cluster is p
 | <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | Grafana API key for the Amazon Managed Grafana workspace | `string` | n/a | yes |
 | <a name="input_grafana_api_key_refresh_interval"></a> [grafana\_api\_key\_refresh\_interval](#input\_grafana\_api\_key\_refresh\_interval) | Refresh Internal to be used by External Secrets for Grafana API Key rotation | `string` | n/a | yes |
 | <a name="input_helm_config"></a> [helm\_config](#input\_helm\_config) | Helm provider config for external secrets | `any` | `{}` | no |
-| <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana Workspace ID | `string` | n/a | yes |
 | <a name="input_target_secret_name"></a> [target\_secret\_name](#input\_target\_secret\_name) | Name to store the secret for Grafana API Key | `string` | n/a | yes |
 | <a name="input_target_secret_namespace"></a> [target\_secret\_namespace](#input\_target\_secret\_namespace) | Namespace to store the secret for Grafana API Key | `string` | n/a | yes |
 

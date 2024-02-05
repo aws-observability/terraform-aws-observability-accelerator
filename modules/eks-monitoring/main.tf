@@ -267,7 +267,6 @@ module "external_secrets" {
   target_secret_namespace          = var.target_secret_namespace
   target_secret_name               = var.target_secret_name
   grafana_api_key_refresh_interval = var.grafana_api_key_refresh_interval
-  managed_grafana_workspace_id     = var.managed_grafana_workspace_id
 
   depends_on = [resource.helm_release.grafana_operator]
 }

@@ -46,8 +46,3 @@ variable "grafana_api_key_refresh_interval" {
   description = "Refresh Internal to be used by External Secrets for Grafana API Key rotation"
   type        = string
 }
-
-variable "managed_grafana_workspace_id" {
-  description = "Amazon Managed Grafana Workspace ID"
-  type        = string
-}

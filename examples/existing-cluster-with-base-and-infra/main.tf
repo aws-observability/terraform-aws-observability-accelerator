@@ -53,13 +53,12 @@ module "eks_monitoring" {
   enable_apiserver_monitoring = true
 
   # deploys external-secrets in to the cluster
-  enable_external_secrets = true
-  grafana_api_key         = var.grafana_api_key
-  target_secret_name      = "grafana-admin-credentials"
-  target_secret_namespace = "grafana-operator"
-  grafana_url             = "https://${data.aws_grafana_workspace.this.endpoint}"
+  enable_external_secrets          = true
+  grafana_api_key                  = var.grafana_api_key
+  target_secret_name               = "grafana-admin-credentials"
+  target_secret_namespace          = "grafana-operator"
+  grafana_url                      = "https://${data.aws_grafana_workspace.this.endpoint}"
   grafana_api_key_refresh_interval = var.grafana_api_key_refresh_interval
-  managed_grafana_workspace_id     = var.managed_grafana_workspace_id
 
   # control the publishing of dashboards by specifying the boolean value for the variable 'enable_dashboards', default is 'true'
   enable_dashboards = var.enable_dashboards
@@ -92,7 +91,7 @@ module "grafana_key_rotation" {
   eventbridge_scheduler_schedule_expression = var.eventbridge_scheduler_schedule_expression
   lambda_runtime_grafana_key_rotation       = var.lambda_runtime_grafana_key_rotation
 
-  ssmparameter_name = module.eks_monitoring.ssmparameter_name_eks_monitoring
-  ssmparameter_arn  = module.eks_monitoring.ssmparameter_arn_eks_monitoring
-  kms_key_arn_ssm   = module.eks_monitoring.kms_key_arn_eks_monitoring
+  ssmparameter_name = module.eks_monitoring.ssmparameter_name
+  ssmparameter_arn  = module.eks_monitoring.ssmparameter_arn
+  kms_key_arn_ssm   = module.eks_monitoring.kms_key_arn
 }

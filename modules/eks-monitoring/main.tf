@@ -9,6 +9,20 @@ resource "aws_prometheus_workspace" "this" {
   })
 }
 
+resource "aws_prometheus_alert_manager_definition" "this" {
+  count = var.enable_alertmanager ? 1 : 0
+
+  workspace_id = local.managed_prometheus_workspace_id
+
+  definition = <<EOF
+alertmanager_config: |
+    route:
+      receiver: 'default'
+    receivers:
+      - name: 'default'
+EOF
+}
+
 module "operator" {
   source = "./add-ons/adot-operator"
   count  = var.enable_amazon_eks_adot ? 1 : 0

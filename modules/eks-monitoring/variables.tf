@@ -63,12 +63,6 @@ variable "adot_loglevel" {
   default     = "normal"
 }
 
-variable "managed_prometheus_workspace_endpoint" {
-  description = "Amazon Managed Prometheus Workspace Endpoint"
-  type        = string
-  default     = ""
-}
-
 variable "managed_prometheus_workspace_id" {
   description = "Amazon Managed Prometheus Workspace ID"
   type        = string
@@ -502,12 +496,6 @@ variable "grafana_kubelet_dashboard_url" {
   description = "Dashboard URL for Kubelet Grafana Dashboard JSON"
   type        = string
   default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/infrastructure/kubelet.json"
-}
-
-variable "grafana_kubeproxy_dashboard_url" {
-  description = "Dashboard URL for kube-proxy Grafana Dashboard JSON"
-  type        = string
-  default     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/kube-proxy/kube-proxy.json"
 }
 
 variable "grafana_namespace_workloads_dashboard_url" {

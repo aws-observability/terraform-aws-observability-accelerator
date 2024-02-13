@@ -4,6 +4,7 @@ This example demonstrates how to monitor your Amazon Elastic Container Service o
 (Amazon ECS) cluster with the Observability Accelerator's ECS monitoring module
 
 The module collects Prometheus metrics from tasks running on ECS and sends it to Prometheus using AWS Distro for OpenTelemetry Collector (ADOT).
+
 You can either run the collector as a sidecar or deploy the collector as its own ECS service for entire cluster.
 ECS tasks with Prometheus endpoints are discovered using extension
 [ecsobserver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/extension/observer/ecsobserver/README.md).
@@ -26,7 +27,7 @@ Make sure to update your exisitng Application Task Definitions based on the work
 
 ## Setup
 
-#### 1. Add the ECS Monitoring Module to your exisitng ECS CLuster
+#### 1. Add the ECS Monitoring Module to your exisitng ECS Cluster
 
 ```
 module "ecs_monitoring" {

@@ -80,7 +80,7 @@ locals {
 
   nginx_pattern_config = {
     # Merge input variable with defaults and rebuild with non-null values
-    for k, v in merge(local.nginx_pattern_config_defaults, var.nginx_config) : k => v != null ? v :local.nginx_pattern_config_defaults[k]
+    for k, v in merge(local.nginx_pattern_config_defaults, var.nginx_config) : k => v != null ? v : local.nginx_pattern_config_defaults[k]
   }
 
   istio_pattern_config = {

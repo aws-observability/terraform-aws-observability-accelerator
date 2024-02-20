@@ -16,6 +16,7 @@ The core team include the following people:
 * Michael Hausenblas
 * Rodrigue Koffi
 * Toshal Dudhwala
+* Vikram Venkataraman
 
 We welcome the wider open source community and thank [those who contribute](https://github.com/aws-observability/terraform-aws-observability-accelerator/graphs/contributors)
 to this project.

@@ -121,10 +121,6 @@ module "helm_addon" {
       value = var.adot_loglevel
     },
     {
-      name  = "adotServiceTelemetryLoglevel"
-      value = var.adot_service_telemetry_loglevel
-    },
-    {
       name  = "accountId"
       value = local.context.aws_caller_identity_account_id
     },
@@ -178,11 +174,11 @@ module "helm_addon" {
     },
     {
       name  = "nginxScrapeSampleLimit"
-      value = local.nginx_pattern_config.scrape_sample_limit
+      value = try(var.nginx_config.scrape_sample_limit, local.nginx_pattern_config.scrape_sample_limit)
     },
     {
       name  = "nginxPrometheusMetricsEndpoint"
-      value = local.nginx_pattern_config.prometheus_metrics_endpoint
+      value = try(var.nginx_config.prometheus_metrics_endpoint, local.nginx_pattern_config.prometheus_metrics_endpoint)
     },
     {
       name  = "enableIstio"
@@ -243,7 +239,7 @@ module "nginx_monitoring" {
   source = "./patterns/nginx"
   count  = var.enable_nginx ? 1 : 0
 
-  pattern_config = local.nginx_pattern_config
+  pattern_config = coalesce(var.nginx_config, local.nginx_pattern_config)
 }
 
 module "istio_monitoring" {

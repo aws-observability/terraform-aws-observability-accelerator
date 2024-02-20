@@ -57,7 +57,7 @@ locals {
     grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/java/default.json"
   }
 
-  nginx_pattern_config_defaults = {
+  nginx_pattern_config = {
     # disabled if options from module are disabled, by default
     # can be overriden by providing a config
     enable_alerting_rules  = var.enable_alerting_rules
@@ -76,11 +76,6 @@ locals {
     prometheus_metrics_endpoint     = "/metrics"
 
     grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/nginx/nginx.json"
-  }
-
-  nginx_pattern_config = {
-    # Merge input variable with defaults and rebuild with non-null values
-    for k, v in merge(local.nginx_pattern_config_defaults, var.nginx_config) : k => v != null ? v : local.nginx_pattern_config_defaults[k]
   }
 
   istio_pattern_config = {

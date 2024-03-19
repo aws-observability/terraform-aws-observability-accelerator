@@ -2,7 +2,25 @@ resource "aws_prometheus_workspace" "this" {
   count = var.enable_managed_prometheus ? 1 : 0
 
   alias = local.name
-  tags  = var.tags
+
+  # Agentless scraping require this tag on the workspace
+  tags = merge(local.tags, {
+    AMPAgentlessScraper = ""
+  })
+}
+
+resource "aws_prometheus_alert_manager_definition" "this" {
+  count = var.enable_alertmanager ? 1 : 0
+
+  workspace_id = local.managed_prometheus_workspace_id
+
+  definition = <<EOF
+alertmanager_config: |
+    route:
+      receiver: 'default'
+    receivers:
+      - name: 'default'
+EOF
 }
 
 module "operator" {
@@ -272,4 +290,49 @@ module "external_secrets" {
   target_secret_name      = var.target_secret_name
 
   depends_on = [resource.helm_release.grafana_operator]
+}
+
+resource "helm_release" "managed_prometheus_role" {
+  name  = "managed-prometheus-role"
+  chart = "${path.module}/managed-prometheus-scraper-config"
+}
+
+// These helpers solve the ValidationException error thrown by the scraper if
+// eks subnets are not in unique availability zones.
+data "aws_subnet" "helper" {
+  for_each = toset(data.aws_eks_cluster.eks_cluster.vpc_config[0].subnet_ids)
+  id       = each.key
+}
+
+locals {
+  eks_availability_zone_subnets = {
+    for subnet in data.aws_subnet.helper : subnet.availability_zone => subnet.id...
+  }
+}
+
+resource "aws_prometheus_scraper" "this" {
+  alias = "managed-prometheus-scraper"
+  source {
+    eks {
+      cluster_arn = data.aws_eks_cluster.eks_cluster.arn
+      subnet_ids  = [for subnet_ids in local.eks_availability_zone_subnets : subnet_ids[0]]
+    }
+  }
+
+  scrape_configuration = templatefile("${path.module}/prom_config.yaml", {
+    global_scrape_interval = var.prometheus_config.global_scrape_interval,
+    global_scrape_timeout  = var.prometheus_config.global_scrape_timeout,
+    enableAPIserver        = var.enable_apiserver_monitoring,
+    eks_cluster_id         = local.context.eks_cluster_id,
+    region                 = local.managed_prometheus_workspace_region,
+    accountID              = local.context.aws_caller_identity_account_id
+  })
+
+  destination {
+    amp {
+      workspace_arn = local.managed_prometheus_workspace_arn
+    }
+  }
+
+  tags = local.tags
 }

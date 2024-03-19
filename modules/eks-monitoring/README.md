@@ -49,12 +49,15 @@ See examples using this Terraform modules in the **Amazon EKS** section of [this
 
 | Name | Type |
 |------|------|
+| [aws_prometheus_alert_manager_definition.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_alert_manager_definition) | resource |
 | [aws_prometheus_rule_group_namespace.alerting_rules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
 | [aws_prometheus_rule_group_namespace.recording_rules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
+| [aws_prometheus_scraper.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_scraper) | resource |
 | [aws_prometheus_workspace.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_workspace) | resource |
 | [helm_release.fluxcd](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.grafana_operator](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.kube_state_metrics](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [helm_release.managed_prometheus_role](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.prometheus_node_exporter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [kubectl_manifest.adothealth_monitoring_dashboards](https://registry.terraform.io/providers/alekc/kubectl/latest/docs/resources/manifest) | resource |
 | [kubectl_manifest.api_server_dashboards](https://registry.terraform.io/providers/alekc/kubectl/latest/docs/resources/manifest) | resource |
@@ -66,6 +69,7 @@ See examples using this Terraform modules in the **Amazon EKS** section of [this
 | [aws_eks_cluster.eks_cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+| [aws_subnet.helper](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet) | data source |
 
 ## Inputs
 
@@ -108,7 +112,6 @@ See examples using this Terraform modules in the **Amazon EKS** section of [this
 | <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | Grafana API key for the Amazon Managed Grafana workspace. Required if `enable_external_secrets = true` | `string` | `""` | no |
 | <a name="input_grafana_cluster_dashboard_url"></a> [grafana\_cluster\_dashboard\_url](#input\_grafana\_cluster\_dashboard\_url) | Dashboard URL for Cluster Grafana Dashboard JSON | `string` | `"https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/infrastructure/cluster.json"` | no |
 | <a name="input_grafana_kubelet_dashboard_url"></a> [grafana\_kubelet\_dashboard\_url](#input\_grafana\_kubelet\_dashboard\_url) | Dashboard URL for Kubelet Grafana Dashboard JSON | `string` | `"https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/infrastructure/kubelet.json"` | no |
-| <a name="input_grafana_kubeproxy_dashboard_url"></a> [grafana\_kubeproxy\_dashboard\_url](#input\_grafana\_kubeproxy\_dashboard\_url) | Dashboard URL for kube-proxy Grafana Dashboard JSON | `string` | `"https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/kube-proxy/kube-proxy.json"` | no |
 | <a name="input_grafana_namespace_workloads_dashboard_url"></a> [grafana\_namespace\_workloads\_dashboard\_url](#input\_grafana\_namespace\_workloads\_dashboard\_url) | Dashboard URL for Namespace Workloads Grafana Dashboard JSON | `string` | `"https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/infrastructure/namespace-workloads.json"` | no |
 | <a name="input_grafana_node_exporter_dashboard_url"></a> [grafana\_node\_exporter\_dashboard\_url](#input\_grafana\_node\_exporter\_dashboard\_url) | Dashboard URL for Node Exporter Grafana Dashboard JSON | `string` | `"https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/infrastructure/nodeexporter-nodes.json"` | no |
 | <a name="input_grafana_nodes_dashboard_url"></a> [grafana\_nodes\_dashboard\_url](#input\_grafana\_nodes\_dashboard\_url) | Dashboard URL for Nodes Grafana Dashboard JSON | `string` | `"https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/infrastructure/nodes.json"` | no |
@@ -125,7 +128,6 @@ See examples using this Terraform modules in the **Amazon EKS** section of [this
 | <a name="input_kubeproxy_monitoring_config"></a> [kubeproxy\_monitoring\_config](#input\_kubeproxy\_monitoring\_config) | Config object for kube-proxy monitoring | <pre>object({<br>    flux_gitrepository_name   = string<br>    flux_gitrepository_url    = string<br>    flux_gitrepository_branch = string<br>    flux_kustomization_name   = string<br>    flux_kustomization_path   = string<br><br>    dashboards = object({<br>      default = string<br>    })<br>  })</pre> | `null` | no |
 | <a name="input_logs_config"></a> [logs\_config](#input\_logs\_config) | Configuration object for logs collection | <pre>object({<br>    cw_log_retention_days = number<br>  })</pre> | <pre>{<br>  "cw_log_retention_days": 90<br>}</pre> | no |
 | <a name="input_managed_prometheus_cross_account_role"></a> [managed\_prometheus\_cross\_account\_role](#input\_managed\_prometheus\_cross\_account\_role) | Amazon Managed Prometheus Workspace's Account Role Arn | `string` | `""` | no |
-| <a name="input_managed_prometheus_workspace_endpoint"></a> [managed\_prometheus\_workspace\_endpoint](#input\_managed\_prometheus\_workspace\_endpoint) | Amazon Managed Prometheus Workspace Endpoint | `string` | `""` | no |
 | <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus Workspace ID | `string` | `null` | no |
 | <a name="input_managed_prometheus_workspace_region"></a> [managed\_prometheus\_workspace\_region](#input\_managed\_prometheus\_workspace\_region) | Amazon Managed Prometheus Workspace's Region | `string` | `null` | no |
 | <a name="input_ne_config"></a> [ne\_config](#input\_ne\_config) | Node exporter configuration | <pre>object({<br>    create_namespace   = optional(bool, true)<br>    k8s_namespace      = optional(string, "prometheus-node-exporter")<br>    helm_chart_name    = optional(string, "prometheus-node-exporter")<br>    helm_chart_version = optional(string, "4.24.0")<br>    helm_release_name  = optional(string, "prometheus-node-exporter")<br>    helm_repo_url      = optional(string, "https://prometheus-community.github.io/helm-charts")<br>    helm_settings      = optional(map(string), {})<br>    helm_values        = optional(map(any), {})<br><br>    scrape_interval = optional(string, "60s")<br>    scrape_timeout  = optional(string, "60s")<br>  })</pre> | `{}` | no |
@@ -147,4 +149,5 @@ See examples using this Terraform modules in the **Amazon EKS** section of [this
 | <a name="output_managed_prometheus_workspace_endpoint"></a> [managed\_prometheus\_workspace\_endpoint](#output\_managed\_prometheus\_workspace\_endpoint) | Amazon Managed Prometheus workspace endpoint |
 | <a name="output_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#output\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus workspace ID |
 | <a name="output_managed_prometheus_workspace_region"></a> [managed\_prometheus\_workspace\_region](#output\_managed\_prometheus\_workspace\_region) | Amazon Managed Prometheus workspace region |
+| <a name="output_scraper_aws_auth"></a> [scraper\_aws\_auth](#output\_scraper\_aws\_auth) | Execute this command to grand access to the managed scrapers to gain permissions on your cluster. Mandatory for the first use |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

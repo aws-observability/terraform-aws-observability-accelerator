@@ -237,4 +237,5 @@ terraform destroy -var-file=terraform.tfvars
 | <a name="output_managed_prometheus_workspace_endpoint"></a> [managed\_prometheus\_workspace\_endpoint](#output\_managed\_prometheus\_workspace\_endpoint) | Amazon Managed Prometheus workspace endpoint |
 | <a name="output_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#output\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus workspace ID |
 | <a name="output_managed_prometheus_workspace_region"></a> [managed\_prometheus\_workspace\_region](#output\_managed\_prometheus\_workspace\_region) | AWS Region |
+| <a name="output_scraper_aws_auth"></a> [scraper\_aws\_auth](#output\_scraper\_aws\_auth) | Execute this command to grand access to the managed scrapers to gain permissions on your cluster. Mandatory for the first use |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

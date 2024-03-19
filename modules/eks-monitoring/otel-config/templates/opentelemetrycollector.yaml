@@ -261,9 +261,9 @@ spec:
           exporters: [logging, prometheusremotewrite]
         {{ if .Values.enableAdotcollectorMetrics }}
         metrics/1:
-         receivers: [prometheus/1]
-         processors: []
-         exporters: [prometheusremotewrite]
+          receivers: [prometheus/1]
+          processors: []
+          exporters: [prometheusremotewrite]
         {{ end }}
         {{ if .Values.enableTracing }}
         traces:
@@ -276,4 +276,6 @@ spec:
         metrics:
           address: 0.0.0.0:8888
           level: basic
+        logs:
+          level: {{ .Values.adotServiceTelemetryLoglevel }}
       {{ end }}

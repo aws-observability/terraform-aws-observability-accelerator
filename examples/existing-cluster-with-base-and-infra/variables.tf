@@ -31,3 +31,33 @@ variable "enable_dashboards" {
   type        = bool
   default     = true
 }
+
+variable "enable_grafana_key_rotation" {
+  description = "Enables or disables Grafana API key rotation"
+  type        = bool
+  default     = true
+}
+
+variable "grafana_api_key_interval" {
+  description = "Number of seconds for secondsToLive value while creating API Key"
+  type        = number
+  default     = 5400
+}
+
+variable "eventbridge_scheduler_schedule_expression" {
+  description = "Schedule Expression for EventBridge Scheduler in Grafana API Key Rotation"
+  type        = string
+  default     = "rate(60 minutes)"
+}
+
+variable "grafana_api_key_refresh_interval" {
+  description = "Refresh Internal to be used by External Secrets for Grafana API Key rotation"
+  type        = string
+  default     = "5m"
+}
+
+variable "lambda_runtime_grafana_key_rotation" {
+  description = "Python Runtime Identifier for the Lambda Function"
+  type        = string
+  default     = "python3.12"
+}

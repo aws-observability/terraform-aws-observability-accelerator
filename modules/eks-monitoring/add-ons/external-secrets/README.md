@@ -18,6 +18,7 @@ This deploys an EKS Cluster with the External Secrets Operator. The cluster is p
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.72 |
 | <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >= 2.0.3 |
+| <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Modules
 
@@ -35,6 +36,7 @@ This deploys an EKS Cluster with the External Secrets Operator. The cluster is p
 | [aws_ssm_parameter.secret](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [kubectl_manifest.cluster_secretstore](https://registry.terraform.io/providers/alekc/kubectl/latest/docs/resources/manifest) | resource |
 | [kubectl_manifest.secret](https://registry.terraform.io/providers/alekc/kubectl/latest/docs/resources/manifest) | resource |
+| [random_uuid.grafana_key_suffix](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/uuid) | resource |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
 ## Inputs

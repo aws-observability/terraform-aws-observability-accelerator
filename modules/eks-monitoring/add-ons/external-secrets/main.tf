@@ -76,8 +76,11 @@ YAML
   depends_on = [module.external_secrets]
 }
 
+resource "random_uuid" "grafana_key_suffix" {
+}
+
 resource "aws_ssm_parameter" "secret" {
-  name        = "/terraform-accelerator/grafana-api-key"
+  name        = "/terraform-accelerator/grafana-api-key/${random_uuid.grafana_key_suffix.result}"
   description = "SSM Secret to store grafana API Key"
   type        = "SecureString"
   value = jsonencode({

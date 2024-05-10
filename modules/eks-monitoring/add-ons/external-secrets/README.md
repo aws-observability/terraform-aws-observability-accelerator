@@ -11,6 +11,7 @@ This deploys an EKS Cluster with the External Secrets Operator. The cluster is p
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.72 |
 | <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >= 2.0.3 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.10 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.6.1 |
 
 ## Providers
 
@@ -18,7 +19,7 @@ This deploys an EKS Cluster with the External Secrets Operator. The cluster is p
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.72 |
 | <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >= 2.0.3 |
-| <a name="provider_random"></a> [random](#provider\_random) | n/a |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 3.6.1 |
 
 ## Modules
 

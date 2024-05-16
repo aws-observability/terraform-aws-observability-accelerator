@@ -101,10 +101,21 @@ for Service Accounts and (`CreateWorkspaceApiKey, DeleteWorkspaceApiKey`) for Gr
 
     ```console
     # skip this command if you already have a service token
-    GRAFANA_SA_ID=$(aws grafana create-workspace-service-account --workspace-id $TF_VAR_managed_grafana_workspace_id --grafana-role ADMIN --name terraform-accelerator-eks --query 'id' --output text)
+    GRAFANA_SA_ID=$(aws grafana create-workspace-service-account \
+      --workspace-id $TF_VAR_managed_grafana_workspace_id \
+      --grafana-role ADMIN \
+      --name terraform-accelerator-eks \
+      --query 'id' \
+      --output text)
 
     # creates a new token for running Terraform
-    export TF_VAR_grafana_api_key=`aws grafana create-workspace-service-account-token --workspace-id $TF_VAR_managed_grafana_workspace_id --name --key-name "observability-accelerator-$(date +%s)" --seconds-to-live 7200 --service-account-id $GRAFANA_SA_ID --query 'serviceAccountToken.key' --output text`
+    export TF_VAR_grafana_api_key=$(aws grafana create-workspace-service-account-token \
+      --workspace-id $TF_VAR_managed_grafana_workspace_id \
+      --name "observability-accelerator-$(date +%s)" \
+      --seconds-to-live 7200 \
+      --service-account-id $GRAFANA_SA_ID \
+      --query 'serviceAccountToken.key' \
+      --output text)
     ```
 
 === "v8.4 workspaces"

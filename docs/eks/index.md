@@ -86,11 +86,11 @@ export TF_VAR_managed_grafana_workspace_id=g-xxx
 #### 6. Grafana authentication
 
 Grafana Service Accounts and Service Account Tokens have been introduced in
-Amazon Managed Grafana v9.4, which definitely replaces Grafana API Keys in v10.4.
-Amazon Managed Grafana provides two control plane APIs to automate their creation.
+Amazon Managed Grafana v9.4, which replaces Grafana API Keys in v10.4.
+Amazon Managed Grafana provides new control plane APIs to automate their creation.
 If you are still using a workspace in Grafana v8.4, you can use a Grafana API Key.
 
-As a security best practice, we will provide to Terraform a short lived token to
+As a security best practice, we will provide Terraform a short lived token to
 run the `apply` or `destroy` command.
 
 Ensure you have necessary IAM permissions

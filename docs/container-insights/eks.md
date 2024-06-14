@@ -110,10 +110,10 @@ you will see the metrics shown on the dashboard:
 <img width="1345" alt="image" src="https://github.com/ruchimo/terraform-aws-observability-accelerator/assets/106240341/31686b29-8ec2-46ff-a266-ebfa1de9768a">
 
 
-## Visualization of CloudWatch Application Signals (preview) data
+## Visualization of CloudWatch Application Signals data
 
 After enabling your Application to pass metrics and traces by following
-[the steps provided above](#enabling-application-signals-preview-for-your-services),
+[the steps provided above](#enabling-application-signals-for-your-services),
 open your Amazon CloudWatch console in the same region as your EKS cluster,
 then from the left hand side choose `Application Signals -> Services` and you
 will see the metrics shown on the sample dashboard below:

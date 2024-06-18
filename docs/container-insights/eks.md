@@ -1,6 +1,8 @@
-# Setting Up Container Insights for your EKS Cluster
+# CloudWatch Application Signals & Container Insights for your EKS Cluster
 
-This example deploys CloudWatch Observability EKS add-on on an exisiting Amazon EKS cluster, which enables Container Insights enhanced observability for Amazon EKS and CloudWatch Application Signals by default.
+This example deploys CloudWatch Observability EKS add-on on an exisiting Amazon
+EKS cluster, which enables Container Insights enhanced observability for Amazon
+EKS and CloudWatch Application Signals by default.
 
 1. Enables the CloudWatch Observability Add-on on EKS using the IAM service account role
 2. Creates an IAM Service Linked role for enabling Application Signals
@@ -53,15 +55,31 @@ Simply run this command to deploy the example
 terraform apply
 ```
 
-## Enabling Application Signals (preview) for your services
-CloudWatch Application Signals (preview) is currenlty supported for **Java** applications running on your Amazon EKS cluster.
+## Enabling Application Signals for your services
 
-Next, you have to update your Application to `Configure application metrics and trace sampling`. For this, you must add an annotation to a manifest YAML in your cluster. Adding this annotation auto-instruments the application to send metrics, traces, and logs to Application Signals. You have two options for the annotation:
+Amazon CloudWatch Application Signals is a new integrated native APM experience
+in AWS. CloudWatch Application Signals supports **Java** and **Python** applications
+running on your Amazon EKS cluster.
+
+Next, you have to update your Application to
+`Configure application metrics and trace sampling`. For this, you must add an
+annotation to a manifest YAML in your cluster. Adding this annotation
+auto-instruments the application to send metrics, traces, and logs to
+Application Signals. You have two options for the annotation:
 
 1. **Annotate Workload** auto-instruments a single workload in the cluster.
     - Paste the below line into the PodTemplate section of the workload manifest.
     ```
-    annotations: instrumentation.opentelemetry.io/inject-java: "true"
+    apiVersion: apps/v1
+    kind: Deployment
+    spec:
+      template:
+        metadata:
+          # add this annotation under the pod template metadata of the services deployment YAML you want to monitor
+          annotations:
+            instrumentation.opentelemetry.io/inject-java: "true"
+            instrumentation.opentelemetry.io/inject-python: "true"
+    ...
     ```
     - In your terminal, enter `kubectl apply -f your_deployment_yaml` to apply the change.
 
@@ -69,20 +87,36 @@ Next, you have to update your Application to `Configure application metrics and 
     - Paste the below line into the metadata section of the namespace manifest.
     ```
     annotations: instrumentation.opentelemetry.io/inject-java: "true"
+    apiVersion: apps/v1
+    kind: Namespace
+    metadata:
+        name: <your_namespace>
+        # add this annotation under metadata of the namespace manifest you want to monitor
+        annotations:
+          instrumentation.opentelemetry.io/inject-java: "true"
+          instrumentation.opentelemetry.io/inject-python: "true"
+    ...
     ```
     - In your terminal, enter `kubectl apply -f your_namespace_yaml` to apply the change.
     - In your terminal, enter a command to restart all pods in the namespace. An example command to restart deployment workloads is `kubectl rollout restart deployment -n namespace_name`
 
 ## Visualization of Container Insights data
 
-After `terraform apply` is successful, open your Amazon CloudWatch console in the same region as your EKS cluster, then from the left hand side choose `Insights -> Container Insights`, there choose the `EKS` from the drop down and you will see the metrics shown on the dashboard:
+After `terraform apply` is successful, open your Amazon CloudWatch console in
+the same region as your EKS cluster, then from the left hand side choose
+`Insights -> Container Insights`, there choose the `EKS` from the drop down and
+you will see the metrics shown on the dashboard:
 
 <img width="1345" alt="image" src="https://github.com/ruchimo/terraform-aws-observability-accelerator/assets/106240341/31686b29-8ec2-46ff-a266-ebfa1de9768a">
 
 
-## Visualization of CloudWatch Application Signals (preview) data
+## Visualization of CloudWatch Application Signals data
 
-After enabling your Application to pass metrics and traces by following [the steps provided above](#enabling-application-signals-preview-for-your-services), open your Amazon CloudWatch console in the same region as your EKS cluster, then from the left hand side choose `Application Signals -> Services` and you will see the metrics shown on the sample dashboard below:
+After enabling your Application to pass metrics and traces by following
+[the steps provided above](#enabling-application-signals-for-your-services),
+open your Amazon CloudWatch console in the same region as your EKS cluster,
+then from the left hand side choose `Application Signals -> Services` and you
+will see the metrics shown on the sample dashboard below:
 
 <img width="1321" alt="image" src="https://github.com/ruchimo/terraform-aws-observability-accelerator/assets/106240341/2fccf784-6560-45a9-8be0-4e843c9653f1">
 

@@ -83,23 +83,50 @@ To create a new workspace, visit [our supporting example for Grafana](https://aw
 export TF_VAR_managed_grafana_workspace_id=g-xxx
 ```
 
-#### 6. Grafana API Key
+#### 6. Grafana authentication
 
-Amazon Managed Grafana provides a control plane API for generating Grafana API keys.
-As a security best practice, we will provide to Terraform a short lived API key to
+Grafana Service Accounts and Service Account Tokens have been introduced in
+Amazon Managed Grafana v9.4, which replaces Grafana API Keys in v10.4.
+Amazon Managed Grafana provides new control plane APIs to automate their creation.
+If you are still using a workspace in Grafana v8.4, you can use a Grafana API Key.
+
+As a security best practice, we will provide Terraform a short lived token to
 run the `apply` or `destroy` command.
 
-Ensure you have necessary IAM permissions (`CreateWorkspaceApiKey, DeleteWorkspaceApiKey`)
+Ensure you have necessary IAM permissions
+(`CreateWorkspaceServiceAccount, CreateWorkspaceServiceAccountToken, DeleteWorkspaceServiceAccounts, DeleteWorkspaceServiceAccountToken`)
+for Service Accounts and (`CreateWorkspaceApiKey, DeleteWorkspaceApiKey`) for Grafana API key.
+
+=== "v10.4 & v9.4 workspaces"
+
+    ```console
+    # skip this command if you already have a service token
+    GRAFANA_SA_ID=$(aws grafana create-workspace-service-account \
+      --workspace-id $TF_VAR_managed_grafana_workspace_id \
+      --grafana-role ADMIN \
+      --name terraform-accelerator-eks \
+      --query 'id' \
+      --output text)
+
+    # creates a new token for running Terraform
+    export TF_VAR_grafana_api_key=$(aws grafana create-workspace-service-account-token \
+      --workspace-id $TF_VAR_managed_grafana_workspace_id \
+      --name "observability-accelerator-$(date +%s)" \
+      --seconds-to-live 7200 \
+      --service-account-id $GRAFANA_SA_ID \
+      --query 'serviceAccountToken.key' \
+      --output text)
+    ```
+
+=== "v8.4 workspaces"
+
+    ```bash
+    export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 7200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
+    ```
 
 !!! note
-    Starting version v2.5.x and above, we use Grafana Operator and External Secrets to
-    manage Grafana contents. Your API Key will be stored securely on AWS SSM Parameter Store
-    and the Grafana Operator will use it to sync dashboards, folders and data sources.
-    Read more [here](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/).
-
-```bash
-export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 7200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
-```
+    The `grafana_api_key` variable accepts both Grafana API key or a service
+    account token
 
 ## Deploy
 

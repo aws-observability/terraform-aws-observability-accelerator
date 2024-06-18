@@ -27,3 +27,18 @@ output "managed_prometheus_workspace_region" {
   description = "Amazon Managed Prometheus workspace region"
   value       = local.managed_prometheus_workspace_region
 }
+
+output "ssmparameter_name_eks_monitoring" {
+  description = "Name of the SSM Parameter"
+  value       = module.external_secrets[0].ssmparameter_name
+}
+
+output "ssmparameter_arn_eks_monitoring" {
+  description = "Name of the SSM Parameter"
+  value       = module.external_secrets[0].ssmparameter_arn
+}
+
+output "kms_key_arn_eks_monitoring" {
+  description = "Name of the SSM Parameter"
+  value       = module.external_secrets[0].kms_key_arn_ssm
+}

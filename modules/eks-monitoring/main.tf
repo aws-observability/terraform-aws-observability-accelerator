@@ -270,6 +270,7 @@ module "external_secrets" {
   addon_context           = local.context
   target_secret_namespace = var.target_secret_namespace
   target_secret_name      = var.target_secret_name
+  grafana_api_key_refresh_interval  = var.grafana_api_key_refresh_interval
 
   depends_on = [resource.helm_release.grafana_operator]
 }

@@ -97,7 +97,7 @@ metadata:
   name: ${local.name}-sm
   namespace: ${var.target_secret_namespace}
 spec:
-  refreshInterval: 1h
+  refreshInterval: ${var.grafana_api_key_refresh_interval} 
   secretStoreRef:
     name: ${local.cluster_secretstore_name}
     kind: ClusterSecretStore

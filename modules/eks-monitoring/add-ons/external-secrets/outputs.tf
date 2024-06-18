@@ -12,5 +12,3 @@ output "kms_key_arn_ssm" {
   description = "Name of the SSM Parameter"
   value       = aws_kms_key.secrets.arn
 }
-
-

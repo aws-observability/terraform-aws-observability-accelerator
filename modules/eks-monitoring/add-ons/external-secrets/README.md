@@ -47,11 +47,16 @@ This deploys an EKS Cluster with the External Secrets Operator. The cluster is p
 | <a name="input_addon_context"></a> [addon\_context](#input\_addon\_context) | Input configuration for the addon | <pre>object({<br>    aws_caller_identity_account_id = string<br>    aws_caller_identity_arn        = string<br>    aws_eks_cluster_endpoint       = string<br>    aws_partition_id               = string<br>    aws_region_name                = string<br>    eks_cluster_id                 = string<br>    eks_oidc_issuer_url            = string<br>    eks_oidc_provider_arn          = string<br>    irsa_iam_role_path             = string<br>    irsa_iam_permissions_boundary  = string<br>    tags                           = map(string)<br>  })</pre> | n/a | yes |
 | <a name="input_enable_external_secrets"></a> [enable\_external\_secrets](#input\_enable\_external\_secrets) | Enable external-secrets | `bool` | `true` | no |
 | <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | Grafana API key for the Amazon Managed Grafana workspace | `string` | n/a | yes |
+| <a name="input_grafana_api_key_refresh_interval"></a> [grafana\_api\_key\_refresh\_interval](#input\_grafana\_api\_key\_refresh\_interval) | Refresh Internal to be used by External Secrets for Grafana API Key rotation | `string` | n/a | yes |
 | <a name="input_helm_config"></a> [helm\_config](#input\_helm\_config) | Helm provider config for external secrets | `any` | `{}` | no |
 | <a name="input_target_secret_name"></a> [target\_secret\_name](#input\_target\_secret\_name) | Name to store the secret for Grafana API Key | `string` | n/a | yes |
 | <a name="input_target_secret_namespace"></a> [target\_secret\_namespace](#input\_target\_secret\_namespace) | Namespace to store the secret for Grafana API Key | `string` | n/a | yes |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_kms_key_arn_ssm"></a> [kms\_key\_arn\_ssm](#output\_kms\_key\_arn\_ssm) | Name of the SSM Parameter |
+| <a name="output_ssmparameter_arn"></a> [ssmparameter\_arn](#output\_ssmparameter\_arn) | Name of the SSM Parameter |
+| <a name="output_ssmparameter_name"></a> [ssmparameter\_name](#output\_ssmparameter\_name) | Name of the SSM Parameter |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

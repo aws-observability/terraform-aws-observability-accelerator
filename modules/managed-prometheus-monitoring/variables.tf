@@ -11,13 +11,13 @@ variable "managed_prometheus_workspace_ids" {
 variable "active_series_threshold" {
   description = "Threshold for active series metric alarm"
   type        = number
-  default     = 1000000
+  default     = 8000000
 }
 
 variable "ingestion_rate_threshold" {
   description = "Threshold for active series metric alarm"
   type        = number
-  default     = 70000
+  default     = 136000
 }
 
 variable "dashboards_folder_id" {

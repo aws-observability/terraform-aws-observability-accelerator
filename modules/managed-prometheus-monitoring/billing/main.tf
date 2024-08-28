@@ -3,7 +3,7 @@ resource "aws_cloudwatch_metric_alarm" "amp_billing_anomaly_detection" {
   comparison_operator       = "GreaterThanUpperThreshold"
   evaluation_periods        = "2"
   threshold_metric_id       = "e1"
-  alarm_description         = "This metric monitors ec2 cpu utilization"
+  alarm_description         = "This monitors AMP charges and alarms on anomaly detection"
   insufficient_data_actions = []
 
   metric_query {

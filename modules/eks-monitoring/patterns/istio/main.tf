@@ -192,7 +192,7 @@ resource "kubectl_manifest" "flux_kustomization" {
   count = var.pattern_config.enable_dashboards ? 1 : 0
 
   yaml_body = <<YAML
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: ${var.pattern_config.flux_kustomization_name}

@@ -19,7 +19,7 @@ YAML
 
 resource "kubectl_manifest" "flux_kustomization" {
   yaml_body  = <<YAML
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: ${var.flux_kustomization_name}
@@ -50,7 +50,7 @@ YAML
 # api server dashboards
 resource "kubectl_manifest" "api_server_dashboards" {
   yaml_body  = <<YAML
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: ${local.apiserver_monitoring_config.flux_kustomization_name}
@@ -75,7 +75,7 @@ YAML
 # adot health dashboards
 resource "kubectl_manifest" "adothealth_monitoring_dashboards" {
   yaml_body  = <<YAML
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: ${local.adothealth_monitoring_config.flux_kustomization_name}
@@ -98,7 +98,7 @@ YAML
 # nvidia dashboards
 resource "kubectl_manifest" "nvidia_monitoring_dashboards" {
   yaml_body  = <<YAML
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: ${local.nvidia_monitoring_config.flux_kustomization_name}
@@ -117,7 +117,7 @@ YAML
 
 resource "kubectl_manifest" "kubeproxy_monitoring_dashboard" {
   yaml_body  = <<YAML
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: ${local.kubeproxy_monitoring_config.flux_kustomization_name}

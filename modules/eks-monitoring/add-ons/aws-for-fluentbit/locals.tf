@@ -35,6 +35,7 @@ locals {
     log_retention_days = var.cw_log_retention_days
     refresh_interval   = var.refresh_interval
     service_account    = local.service_account
+    cw_logs_enabled    = var.cw_logs_enabled
   })]
 
   irsa_config = {

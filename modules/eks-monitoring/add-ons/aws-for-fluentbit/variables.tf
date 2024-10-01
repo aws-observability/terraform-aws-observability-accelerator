@@ -10,6 +10,12 @@ variable "cw_log_retention_days" {
   default     = 90
 }
 
+variable "cw_logs_enabled" {
+  description = "FluentBit CloudWatch Log enable"
+  type        = bool
+  default     = true
+}
+
 variable "refresh_interval" {
   description = "FluentBit input refresh interval"
   type        = number

@@ -6,7 +6,7 @@ cloudWatch:
   enabled: false
 
 cloudWatchLogs:
-  enabled: true
+  enabled: ${cw_logs_enabled}
   region: ${aws_region}
   # logGroupName is a fallback to failed parsing
   logGroupName: /aws/eks/observability-accelerator/workloads

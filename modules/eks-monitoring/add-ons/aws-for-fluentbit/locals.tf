@@ -36,6 +36,9 @@ locals {
     refresh_interval   = var.refresh_interval
     service_account    = local.service_account
     cw_logs_enabled    = var.cw_logs_enabled
+    os_logs_enabled    = var.os_logs_enabled
+    os_logs_host       = var.os_logs_host
+    os_logs_index      = var.os_logs_index
   })]
 
   irsa_config = {

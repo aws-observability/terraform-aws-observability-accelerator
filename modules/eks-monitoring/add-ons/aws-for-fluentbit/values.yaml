@@ -15,6 +15,13 @@ cloudWatchLogs:
   logKey: log
   logRetentionDays: ${log_retention_days}
 
+opensearch:
+  enabled: ${os_logs_enabled}
+  match: "*"
+  awsRegion: ${aws_region}
+  host: ${os_logs_host}
+  index: ${os_logs_index}
+
 input:
   enabled: false
 

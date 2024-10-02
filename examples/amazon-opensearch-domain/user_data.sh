@@ -38,7 +38,7 @@ server {
         proxy_buffers 4 256k;
         proxy_busy_buffers_size 256k;
     }
-}          
+}
 EOF
 sed -i -e "s/DOMAIN_ENDPOINT/${os_domain}/g" /etc/nginx/conf.d/nginx_opensearch.conf
 systemctl restart nginx.service

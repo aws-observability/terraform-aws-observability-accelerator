@@ -75,9 +75,9 @@ module "eks_monitoring" {
     global_scrape_timeout  = "15s"
   }
 
-  enable_logs = true
+  enable_logs     = true
   os_logs_enabled = true
-  os_logs_host = var.os_logs_host
+  os_logs_host    = var.os_logs_host
 
   tags = local.tags
 }

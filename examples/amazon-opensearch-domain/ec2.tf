@@ -1,6 +1,6 @@
 data "aws_ami" "reverse_proxy" {
-  most_recent      = true
-  owners = ["amazon"]
+  most_recent = true
+  owners      = ["amazon"]
 
   filter {
     name   = "name"
@@ -43,19 +43,19 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
 }
 
 resource "aws_launch_configuration" "reverse_proxy" {
-  name          = "reverse_proxy"
-  image_id      = data.aws_ami.reverse_proxy.id
-  instance_type = "t2.medium"
+  name                        = "reverse_proxy"
+  image_id                    = data.aws_ami.reverse_proxy.id
+  instance_type               = "t2.medium"
   associate_public_ip_address = true
-  user_data = templatefile("${path.module}/user_data.sh", {os_domain = module.opensearch.domain_endpoint})
-  security_groups = [aws_security_group.reverse_proxy.id]
+  user_data                   = templatefile("${path.module}/user_data.sh", { os_domain = module.opensearch.domain_endpoint })
+  security_groups             = [aws_security_group.reverse_proxy.id]
 }
 
 resource "aws_autoscaling_group" "reverse_proxy" {
-  name                      = "reverse_proxy"
-  max_size                  = 1
-  min_size                  = 1
-  desired_capacity          = 1
-  launch_configuration      = aws_launch_configuration.reverse_proxy.name
-  vpc_zone_identifier       = [local.public_subnet_id]
+  name                 = "reverse_proxy"
+  max_size             = 1
+  min_size             = 1
+  desired_capacity     = 1
+  launch_configuration = aws_launch_configuration.reverse_proxy.name
+  vpc_zone_identifier  = [local.public_subnet_id]
 }

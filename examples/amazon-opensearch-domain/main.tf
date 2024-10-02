@@ -10,12 +10,12 @@ data "aws_vpc" "main" {
 
 locals {
   region = var.aws_region
-  name        = "aws-o11y-accelerator"
+  name   = "aws-o11y-accelerator"
 
-  vpc_cidr = data.aws_vpc.main.cidr_block
-  public_subnet_id = var.public_subnet_id
-  private_subnet_id = var.private_subnet_id
-  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
+  vpc_cidr                = data.aws_vpc.main.cidr_block
+  public_subnet_id        = var.public_subnet_id
+  private_subnet_id       = var.private_subnet_id
+  azs                     = slice(data.aws_availability_zones.available.names, 0, 3)
   reverse_proxy_client_ip = var.reverse_proxy_client_ip
 
   tags = {

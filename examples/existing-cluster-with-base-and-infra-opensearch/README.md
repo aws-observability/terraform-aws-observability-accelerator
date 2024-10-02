@@ -23,7 +23,7 @@ terraform output -json | jq -r '.fluentbit_irsa_arn.value'
 
 Access the OpenSearch dashboards directly or using a proxy and add the IAM Role as a
 backend role to the desired role. Althought the `all_access` role will work, it is
-safer to restrict access in production environments. Check the 
+safer to restrict access in production environments. Check the
 [service documentation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html)
 for more information.
 
@@ -71,9 +71,9 @@ View the full documentation for this example [here](https://aws-observability.gi
 | <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | API key for authorizing the Grafana provider to make changes to Amazon Managed Grafana | `string` | n/a | yes |
 | <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana Workspace ID | `string` | n/a | yes |
 | <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Service for Prometheus Workspace ID | `string` | `""` | no |
-| <a name="input_os_logs_host"></a> [os\_logs\_host](#input\_os\_logs\_host) | Amazon Opensearch host | `string` | `""` | yes |
-| <a name="input_os_logs_username"></a> [os\_logs\_username](#input\_os\_logs\_username) | Amazon Opensearch master username | `string` | `""` | yes |
-| <a name="input_os_logs_password"></a> [os\_logs\_password](#input\_os\_logs\_password) | Amazon Opensearch password | `string` | `""` | yes |
+| <a name="input_os_logs_host"></a> [os\_logs\_host](#input\_os\_logs\_host) | OpenSearch domain URL for logs | `string` | `""` | no |
+| <a name="input_os_logs_password"></a> [os\_logs\_password](#input\_os\_logs\_password) | OpenSearch domain password | `string` | n/a | yes |
+| <a name="input_os_logs_username"></a> [os\_logs\_username](#input\_os\_logs\_username) | OpenSearch domain username | `string` | n/a | yes |
 
 ## Outputs
 
@@ -81,9 +81,8 @@ View the full documentation for this example [here](https://aws-observability.gi
 |------|-------------|
 | <a name="output_eks_cluster_id"></a> [eks\_cluster\_id](#output\_eks\_cluster\_id) | EKS Cluster Id |
 | <a name="output_eks_cluster_version"></a> [eks\_cluster\_version](#output\_eks\_cluster\_version) | EKS Cluster version |
+| <a name="output_fluentbit_irsa_arn"></a> [fluentbit\_irsa\_arn](#output\_fluentbit\_irsa\_arn) | IRSA Arn for FluentBit |
 | <a name="output_managed_prometheus_workspace_endpoint"></a> [managed\_prometheus\_workspace\_endpoint](#output\_managed\_prometheus\_workspace\_endpoint) | Amazon Managed Prometheus workspace endpoint |
 | <a name="output_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#output\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus workspace ID |
 | <a name="output_managed_prometheus_workspace_region"></a> [managed\_prometheus\_workspace\_region](#output\_managed\_prometheus\_workspace\_region) | AWS Region |
-| <a name="output_fluentbit_irsa_arn"></a> [managed\_fluentbit\_irsa\_arn](#output\_managed\_fluentbit\_irsa\_arn) | FluentBit IAM Role ARN |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

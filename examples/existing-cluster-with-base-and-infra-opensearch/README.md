@@ -13,6 +13,20 @@ configuration options on the cluster infrastructure.
 
 In addition, logs are shipped to an OpenSearch domain.
 
+## Allow FluentBit to send logs to OpenSearch
+
+After provisioning the example, get the FluentBit IAM role:
+
+```
+terraform output -json | jq -r '.fluentbit_irsa_arn.value'
+```
+
+Access the OpenSearch dashboards directly or using a proxy and add the IAM Role as a
+backend role to the desired role. Althought the `all_access` role will work, it is
+safer to restrict access in production environments. Check the 
+[service documentation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html)
+for more information.
+
 View the full documentation for this example [here](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/)
 
 

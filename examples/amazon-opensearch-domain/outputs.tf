@@ -23,30 +23,12 @@ output "domain_dashboard_endpoint" {
 }
 
 ################################################################################
-# Package Association(s)
-################################################################################
-
-output "package_associations" {
-  description = "Map of package associations created and their attributes"
-  value       = module.opensearch.package_associations
-}
-
-################################################################################
 # VPC Endpoint(s)
 ################################################################################
 
 output "vpc_endpoints" {
   description = "Map of VPC endpoints created and their attributes"
   value       = module.opensearch.vpc_endpoints
-}
-
-################################################################################
-# Outbound Connections
-################################################################################
-
-output "outbound_connections" {
-  description = "Map of outbound connections created and their attributes"
-  value       = module.opensearch.outbound_connections
 }
 
 ################################################################################

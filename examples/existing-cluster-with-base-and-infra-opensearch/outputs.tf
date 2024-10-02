@@ -22,3 +22,8 @@ output "eks_cluster_id" {
   description = "EKS Cluster Id"
   value       = module.eks_monitoring.eks_cluster_id
 }
+
+output "fluentbit_irsa_arn" {
+  description = "IRSA Arn for FluentBit"
+  value       = module.eks_monitoring.fluentbit_irsa_arn
+}

@@ -13,6 +13,11 @@ output "adot_irsa_arn" {
   value       = module.helm_addon.irsa_arn
 }
 
+output "fluentbit_irsa_arn" {
+  description = "IRSA Arn for FluentBit"
+  value       = var.enable_logs ? module.fluentbit_logs[0].irsa_arn : ""
+}
+
 output "managed_prometheus_workspace_endpoint" {
   description = "Amazon Managed Prometheus workspace endpoint"
   value       = local.managed_prometheus_workspace_endpoint

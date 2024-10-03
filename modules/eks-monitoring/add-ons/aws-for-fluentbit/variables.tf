@@ -10,6 +10,30 @@ variable "cw_log_retention_days" {
   default     = 90
 }
 
+variable "cw_logs_enabled" {
+  description = "FluentBit CloudWatch Log enable"
+  type        = bool
+  default     = true
+}
+
+variable "os_logs_enabled" {
+  description = "FluentBit OpenSearch enable"
+  type        = bool
+  default     = false
+}
+
+variable "os_logs_host" {
+  description = "FluentBit OpenSearch"
+  type        = string
+  default     = ""
+}
+
+variable "os_logs_index" {
+  description = "FluentBit OpenSearch"
+  type        = string
+  default     = "observability-accelerator"
+}
+
 variable "refresh_interval" {
   description = "FluentBit input refresh interval"
   type        = number

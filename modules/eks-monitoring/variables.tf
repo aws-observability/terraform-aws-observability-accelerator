@@ -376,6 +376,24 @@ variable "enable_logs" {
   default     = true
 }
 
+variable "os_logs_enabled" {
+  description = "FluentBit OpenSearch enable"
+  type        = bool
+  default     = false
+}
+
+variable "os_logs_host" {
+  description = "FluentBit OpenSearch"
+  type        = string
+  default     = ""
+}
+
+variable "os_logs_index" {
+  description = "FluentBit OpenSearch"
+  type        = string
+  default     = "observability-accelerator"
+}
+
 variable "logs_config" {
   description = "Configuration object for logs collection"
   type = object({

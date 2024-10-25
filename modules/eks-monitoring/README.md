@@ -90,7 +90,7 @@ See examples using this Terraform modules in the **Amazon EKS** section of [this
 | <a name="input_enable_grafana_operator"></a> [enable\_grafana\_operator](#input\_enable\_grafana\_operator) | Deploys Grafana Operator to EKS Cluster | `bool` | `true` | no |
 | <a name="input_enable_istio"></a> [enable\_istio](#input\_enable\_istio) | Enable ISTIO workloads monitoring, alerting and default dashboards | `bool` | `false` | no |
 | <a name="input_enable_java"></a> [enable\_java](#input\_enable\_java) | Enable Java workloads monitoring, alerting and default dashboards | `bool` | `false` | no |
-| <a name="input_enable_polyglot"></a> [enable\_polyglot](#input\_enable\_polyglot) | Enable monitoring, alerting and default dashboards for .net,Rust and other languages | `bool` | `false` | no |
+| <a name="input_enable_polyglot"></a> [enable\_polyglot](#input\_enable\_polyglot) | Enable monitoring for .Net,Rust and other languages | `bool` | `false` | no |
 | <a name="input_enable_kube_state_metrics"></a> [enable\_kube\_state\_metrics](#input\_enable\_kube\_state\_metrics) | Enables or disables Kube State metrics exporter. Disabling this might affect some data in the dashboards | `bool` | `true` | no |
 | <a name="input_enable_logs"></a> [enable\_logs](#input\_enable\_logs) | Using AWS For FluentBit to collect cluster and application logs to Amazon CloudWatch | `bool` | `true` | no |
 | <a name="input_enable_managed_prometheus"></a> [enable\_managed\_prometheus](#input\_enable\_managed\_prometheus) | Creates a new Amazon Managed Service for Prometheus Workspace | `bool` | `true` | no |

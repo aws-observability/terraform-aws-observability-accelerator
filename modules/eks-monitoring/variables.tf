@@ -567,7 +567,7 @@ variable "kubeproxy_monitoring_config" {
 }
 
 variable "enable_polyglot" {
-  description = "Enable monitoring for .net,Rust and other languages"
+  description = "Enable monitoring for .Net,Rust and other languages"
   type        = bool
   default     = false
 }

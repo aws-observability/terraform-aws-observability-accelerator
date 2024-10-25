@@ -565,3 +565,9 @@ variable "kubeproxy_monitoring_config" {
   # defaults are pre-computed in locals.tf, provide a full definition to override
   default = null
 }
+
+variable "enable_polyglot" {
+  description = "Enable monitoring for .net,Rust and other languages"
+  type        = bool
+  default     = false
+}

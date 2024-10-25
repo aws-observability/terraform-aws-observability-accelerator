@@ -1386,6 +1386,12 @@ spec:
                   action: drop
             {{ end }}
 
+            {{ if .Values.enablePolyglot }}
+            - job_name: 'kubernetes-polyglot'
+              kubernetes_sd_configs:
+                - role: pod
+            {{ end }}
+
             {{ if .Values.enableNginx }}
             - job_name: 'kubernetes-nginx'
               sample_limit: {{ .Values.nginxScrapeSampleLimit }}

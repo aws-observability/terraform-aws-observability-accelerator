@@ -189,6 +189,10 @@ module "helm_addon" {
       value = var.enable_istio
     },
     {
+      name  = "enablePolyglot"
+      value = var.enable_polyglot
+    },
+    {
       name  = "istioScrapeSampleLimit"
       value = try(var.istio_config.scrape_sample_limit, local.istio_pattern_config.scrape_sample_limit)
     },
@@ -237,6 +241,8 @@ module "java_monitoring" {
   count  = var.enable_java ? 1 : 0
 
   pattern_config = coalesce(var.java_config, local.java_pattern_config)
+
+  depends_on = [resource.helm_release.fluxcd]
 }
 
 module "nginx_monitoring" {
@@ -244,6 +250,8 @@ module "nginx_monitoring" {
   count  = var.enable_nginx ? 1 : 0
 
   pattern_config = local.nginx_pattern_config
+
+  depends_on = [resource.helm_release.fluxcd]
 }
 
 module "istio_monitoring" {
@@ -251,6 +259,8 @@ module "istio_monitoring" {
   count  = var.enable_istio ? 1 : 0
 
   pattern_config = coalesce(var.istio_config, local.istio_pattern_config)
+
+  depends_on = [resource.helm_release.fluxcd]
 }
 
 module "fluentbit_logs" {

@@ -36,5 +36,7 @@ adotServiceTelemetryLoglevel: ${adot_service_telemetry_loglevel}
 
 enableAdotcollectorMetrics: ${enable_adotcollector_metrics}
 
+enablePolyglot: ${enable_polyglot}
+
 serviceAccount: ${service_account}
 namespace: ${namespace}

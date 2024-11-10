@@ -177,9 +177,9 @@ resource "kubernetes_cluster_role_v1" "adot" {
     verbs             = ["get"]
   }
   rule {
-    api_groups  = ["metrics.eks.amazonaws.com"]
-    verbs       = ["get"]
-    resources   = ["kcm/metrics", "ksh/metrics"]
+    api_groups = ["metrics.eks.amazonaws.com"]
+    verbs      = ["get"]
+    resources  = ["kcm/metrics", "ksh/metrics"]
   }
   rule {
     api_groups = [""]

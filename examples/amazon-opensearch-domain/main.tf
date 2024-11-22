@@ -8,19 +8,63 @@ data "aws_vpc" "main" {
   id = var.vpc_id
 }
 
+data "aws_subnet" "private_subnet" {
+  vpc_id = var.vpc_id
+  availability_zone = local.availability_zone
+  filter {
+    name = "tag:Name"
+    values = [
+      "*private*",
+      "*Private*"
+    ]
+  }
+}
+
+data "aws_subnet" "public_subnet" {
+  vpc_id = var.vpc_id
+  availability_zone = local.availability_zone
+  filter {
+    name = "tag:Name"
+    values = [
+      "*public*",
+      "*Public*"
+    ]
+  }
+}
+
 locals {
   region = var.aws_region
   name   = "aws-o11y-accelerator"
 
   vpc_cidr                = data.aws_vpc.main.cidr_block
-  public_subnet_id        = var.public_subnet_id
-  private_subnet_id       = var.private_subnet_id
+  public_subnet_id        = data.aws_subnet.public_subnet.id
+  private_subnet_id       = data.aws_subnet.private_subnet.id
   azs                     = slice(data.aws_availability_zones.available.names, 0, 3)
   reverse_proxy_client_ip = var.reverse_proxy_client_ip
 
   tags = {
     GithubRepo = "terraform-aws-observability-accelerator"
     GithubOrg  = "aws-observability"
+  }
+}
+
+resource "aws_ssm_parameter" "opensearch_master_user_name" {
+  name        = "/terraform-accelerator/opensearch-master-user-name"
+  type        = "SecureString"
+  value       = local.opensearch_master_user_name
+
+  tags = {
+    environment = "production"
+  }
+}
+
+resource "aws_ssm_parameter" "opensearch_master_user_password" {
+  name        = "/terraform-accelerator/opensearch/master-user-password"
+  type        = "SecureString"
+  value       = local.opensearch_master_user_password
+
+  tags = {
+    environment = "production"
   }
 }
 
@@ -38,8 +82,8 @@ module "opensearch" {
     internal_user_database_enabled = true
 
     master_user_options = {
-      master_user_name     = var.master_user_name
-      master_user_password = var.master_user_password
+      master_user_name     = local.opensearch_master_user_name
+      master_user_password = local.opensearch_master_user_password
     }
   }
 

@@ -6,7 +6,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/cert.key 
 
 cat << EOF > /etc/nginx/conf.d/nginx_opensearch.conf
 server {
-    listen 443;
+    listen 443 ssl;
     server_name \$host;
     rewrite ^/$ https://\$host/_dashboards redirect;
 
@@ -14,7 +14,6 @@ server {
     ssl_certificate           /etc/nginx/cert.crt;
     ssl_certificate_key       /etc/nginx/cert.key;
 
-    ssl on;
     ssl_session_cache  builtin:1000  shared:SSL:10m;
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!eNULL:!EXPORT:!CAMELLIA:!DES:!MD5:!PSK:!RC4;

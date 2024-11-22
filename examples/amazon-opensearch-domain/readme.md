@@ -3,6 +3,8 @@
 This example creates an Amazon OpenSearch domain in the same VPC of the EKS cluster,
 and a proxy instance to Amazon OpenSearch Dashboards, to allow access from outside of the VPC.
 
+Step-by-step instructions available on our [docs site](https://aws-observability.github.io/terraform-aws-observability-accelerator/)
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
@@ -52,7 +54,7 @@ and a proxy instance to Amazon OpenSearch Dashboards, to allow access from outsi
 | <a name="input_master_user_password"></a> [master\_user\_password](#input\_master\_user\_password) | OpenSearch domain password | `string` | `""` | no |
 | <a name="input_reverse_proxy_client_ip"></a> [reverse\_proxy\_client\_ip](#input\_reverse\_proxy\_client\_ip) | CIDR block to grant access for OpenSearch reverse proxy | `string` | `"0.0.0.0/0"` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | EKS cluster VPC Id | `string` | n/a | yes |
-| <a name="expose_proxy"></a> [vpc\_id](#expose\_proxy) | Whether or not to expose EC2 proxy instance for Amazon Opensearch dashboards to the Internet | `string` | false | no |
+| <a name="input_expose_proxy"></a> [expose\_proxy](#expose\_proxy) | Whether or not to expose EC2 proxy instance for Amazon Opensearch dashboards to the Internet | `string` | false | no |
 
 ## Outputs
 

@@ -9,7 +9,7 @@ data "aws_vpc" "main" {
 }
 
 data "aws_subnet" "private_subnet" {
-  vpc_id = var.vpc_id
+  vpc_id            = var.vpc_id
   availability_zone = local.availability_zone
   filter {
     name = "tag:Name"
@@ -21,7 +21,7 @@ data "aws_subnet" "private_subnet" {
 }
 
 data "aws_subnet" "public_subnet" {
-  vpc_id = var.vpc_id
+  vpc_id            = var.vpc_id
   availability_zone = local.availability_zone
   filter {
     name = "tag:Name"
@@ -49,9 +49,9 @@ locals {
 }
 
 resource "aws_ssm_parameter" "opensearch_master_user_name" {
-  name        = "/terraform-accelerator/opensearch-master-user-name"
-  type        = "SecureString"
-  value       = local.opensearch_master_user_name
+  name  = "/terraform-accelerator/opensearch-master-user-name"
+  type  = "SecureString"
+  value = local.opensearch_master_user_name
 
   tags = {
     environment = "production"
@@ -59,9 +59,9 @@ resource "aws_ssm_parameter" "opensearch_master_user_name" {
 }
 
 resource "aws_ssm_parameter" "opensearch_master_user_password" {
-  name        = "/terraform-accelerator/opensearch/master-user-password"
-  type        = "SecureString"
-  value       = local.opensearch_master_user_password
+  name  = "/terraform-accelerator/opensearch/master-user-password"
+  type  = "SecureString"
+  value = local.opensearch_master_user_password
 
   tags = {
     environment = "production"

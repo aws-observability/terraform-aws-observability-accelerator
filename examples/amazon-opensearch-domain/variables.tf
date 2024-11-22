@@ -8,16 +8,6 @@ variable "vpc_id" {
   type        = string
 }
 
-# variable "private_subnet_id" {
-#   description = "One of the EKS cluster private subnets"
-#   type        = string
-# }
-
-# variable "public_subnet_id" {
-#   description = "One of the EKS cluster public subnets"
-#   type        = string
-# }
-
 variable "master_user_name" {
   description = "OpenSearch domain user name"
   type        = string
@@ -40,4 +30,10 @@ variable "availability_zone" {
   description = "AZ where the example domain and its proxy instance will be created"
   type        = string
   default     = ""
+}
+
+variable "expose_proxy" {
+  description = "Whether or not to expose EC2 proxy instance for Amazon Opensearch dashboards to the Internet"
+  type        = bool
+  default     = false
 }

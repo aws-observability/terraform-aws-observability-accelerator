@@ -45,7 +45,7 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
 resource "aws_launch_configuration" "reverse_proxy" {
   image_id                    = data.aws_ami.reverse_proxy.id
   instance_type               = "t2.medium"
-  associate_public_ip_address = false
+  associate_public_ip_address = var.expose_proxy
   user_data                   = templatefile("${path.module}/user_data.sh", { os_domain = module.opensearch.domain_endpoint })
   security_groups             = [aws_security_group.reverse_proxy.id]
   root_block_device {

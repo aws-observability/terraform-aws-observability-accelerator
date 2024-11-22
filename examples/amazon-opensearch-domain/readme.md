@@ -48,7 +48,7 @@ and a proxy instance to Amazon OpenSearch Dashboards, to allow access from outsi
 |------|-------------|------|---------|:--------:|
 | <a name="input_availability_zone"></a> [availability\_zone](#input\_availability\_zone) | AZ where the example domain and its proxy instance will be created | `string` | `""` | no |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS Region | `string` | n/a | yes |
-| <a name="input_master_user_name"></a> [master\_user\_name](#input\_master\_user\_name) | OpenSearch domain user name | `string` | `""` | no |
+| <a name="input_master_user_name"></a> [master\_user\_name](#input\_master\_user\_name) | OpenSearch domain user name | `string` | `"observability-accelerator"` | no |
 | <a name="input_master_user_password"></a> [master\_user\_password](#input\_master\_user\_password) | OpenSearch domain password | `string` | `""` | no |
 | <a name="input_reverse_proxy_client_ip"></a> [reverse\_proxy\_client\_ip](#input\_reverse\_proxy\_client\_ip) | CIDR block to grant access for OpenSearch reverse proxy | `string` | `"0.0.0.0/0"` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | EKS cluster VPC Id | `string` | n/a | yes |

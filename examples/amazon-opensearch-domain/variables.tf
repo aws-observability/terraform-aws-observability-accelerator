@@ -21,7 +21,7 @@ variable "vpc_id" {
 variable "master_user_name" {
   description = "OpenSearch domain user name"
   type        = string
-  default     = ""
+  default     = "observability-accelerator"
 }
 variable "master_user_password" {
   description = "OpenSearch domain password"

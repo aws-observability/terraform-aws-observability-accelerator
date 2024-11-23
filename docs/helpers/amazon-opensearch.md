@@ -106,18 +106,18 @@ To allow Amazon Managed Grafana to access Amazon OpenSearch domain datasource, f
       --output json --no-cli-pager | jq -r .workspace.workspaceRoleArn)
   GRAFANA_ROLE=$(echo $GRAFANA_ROLE_ARN | cut -d/ -f3)
   cat <<EOF > policy.json
-    {
-      "Version": "2012-10-17",
-      "Statement": [
-        {
-          "Effect": "Allow",
-          "Action": [
-            "aoss:ListCollections"
-          ],
-          "Resource": "*"
-        }
-      ]
-    }
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "aoss:ListCollections"
+        ],
+        "Resource": "*"
+      }
+    ]
+  }
   EOF
   
   aws iam put-role-policy --role-name $GRAFANA_ROLE \

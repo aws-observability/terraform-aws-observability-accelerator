@@ -57,7 +57,7 @@ locals {
     managed_prometheus_workspace_id = local.managed_prometheus_workspace_id
     prometheus_metrics_endpoint     = "/metrics"
 
-    grafana_dashboard_url = "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/java/default.json"
+    grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/java/default.json"
   }
 
   nginx_pattern_config_defaults = {
@@ -78,7 +78,7 @@ locals {
     managed_prometheus_workspace_id = local.managed_prometheus_workspace_id
     prometheus_metrics_endpoint     = "/metrics"
 
-    grafana_dashboard_url = "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/nginx/nginx.json"
+    grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/nginx/nginx.json"
   }
 
   nginx_pattern_config = {
@@ -105,10 +105,10 @@ locals {
     prometheus_metrics_endpoint     = "/metrics"
 
     dashboards = {
-      cp          = "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/istio/istio-control-plane-dashboard.json"
-      mesh        = "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/istio/istio-mesh-dashboard.json"
-      performance = "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/istio/istio-performance-dashboard.json"
-      service     = "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/istio/istio-service-dashboard.json"
+      cp          = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/istio/istio-control-plane-dashboard.json"
+      mesh        = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/istio/istio-mesh-dashboard.json"
+      performance = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/istio/istio-performance-dashboard.json"
+      service     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/istio/istio-service-dashboard.json"
     }
   }
 
@@ -121,9 +121,9 @@ locals {
     flux_kustomization_path   = try(var.apiserver_monitoring_config.flux_kustomization_path, "./artifacts/grafana-operator-manifests/eks/apiserver")
 
     dashboards = {
-      basic           = try(var.apiserver_monitoring_config.dashboards.basic, "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/apiserver/apiserver-basic.json")
-      advanced        = try(var.apiserver_monitoring_config.dashboards.advanced, "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/apiserver/apiserver-advanced.json")
-      troubleshooting = try(var.apiserver_monitoring_config.dashboards.troubleshooting, "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/apiserver/apiserver-troubleshooting.json")
+      basic           = try(var.apiserver_monitoring_config.dashboards.basic, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-basic.json")
+      advanced        = try(var.apiserver_monitoring_config.dashboards.advanced, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-advanced.json")
+      troubleshooting = try(var.apiserver_monitoring_config.dashboards.troubleshooting, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-troubleshooting.json")
     }
   }
 
@@ -136,7 +136,7 @@ locals {
     flux_kustomization_path   = try(var.opensearch_config.flux_kustomization_path, "./artifacts/grafana-operator-manifests/eks/opensearch")
 
     dashboards = {
-      logs = try(var.opensearch_config.dashboards.logs, "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/opensearch/opensearch-logs.json")
+      logs = try(var.opensearch_config.dashboards.logs, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/opensearch/opensearch-logs.json")
     }
   }
 
@@ -149,7 +149,7 @@ locals {
     flux_kustomization_path   = try(var.adothealth_monitoring_config.flux_kustomization_path, "./artifacts/grafana-operator-manifests/eks/adot")
 
     dashboards = {
-      health = try(var.adothealth_monitoring_config.dashboards.health, "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/adot/adothealth.json")
+      health = try(var.adothealth_monitoring_config.dashboards.health, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/adot/adothealth.json")
     }
   }
 
@@ -171,7 +171,7 @@ locals {
     flux_kustomization_path   = try(var.kubeproxy_monitoring_config.flux_kustomization_path, "./artifacts/grafana-operator-manifests/eks/kube-proxy")
 
     dashboards = {
-      default = try(var.kubeproxy_monitoring_config.dashboards.default, "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/kube-proxy/kube-proxy.json")
+      default = try(var.kubeproxy_monitoring_config.dashboards.default, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/kube-proxy/kube-proxy.json")
     }
   }
 }

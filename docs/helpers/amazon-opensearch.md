@@ -99,12 +99,12 @@ To allow Amazon Managed Grafana to access Amazon OpenSearch domain datasource, f
 1. Connect the workspace to the VPC following [these instructions](https://docs.aws.amazon.com/grafana/latest/userguide/AMG-configure-vpc.html).
 2. Add access to OpenSearch datasources by following [these instructions](https://docs.aws.amazon.com/grafana/latest/userguide/ES-adding-AWS-config.html).
 3. Include the policy for listing OpenSearch collections:
-
   ```bash
   GRAFANA_WORKSPACE_ID=<grafana workspace id>
-  GRAFANA_ROLE=$(
+  GRAFANA_ROLE_ARN=$(
     aws grafana describe-workspace --workspace-id $GRAFANA_WORKSPACE_ID \
-      --output json --no-cli-pager | jq -r .workspace.workspaceRoleArn | cut -d / -f 3)
+      --output json --no-cli-pager | jq -r .workspace.workspaceRoleArn)
+  GRAFANA_ROLE=$(echo $GRAFANA_ROLE_ARN | cut -d/ -f3)
   cat <<EOF > policy.json
     {
       "Version": "2012-10-17",
@@ -123,7 +123,13 @@ To allow Amazon Managed Grafana to access Amazon OpenSearch domain datasource, f
   aws iam put-role-policy --role-name $GRAFANA_ROLE \
     --policy-name OpenSearchCollections --policy-document file://policy.json
   ```
+
 4. Enable the OpenSearch plugin by following [these instructions](https://docs.aws.amazon.com/grafana/latest/userguide/aws-datasources-plugin.html).
+5. Access OpenSearch Dashboards. In the left menu, select **Security**.
+6. In Security, select **Roles**.
+7. In Roles, select **all access**.
+8. In All access, select the tab **Mapped Users**, and them **Manage mapping**.
+9. In Backend roles, click in **Add another backend role**. In the empty field, enter the Grafana Role ARN retrieved before.
 
 ## Cleanup
 

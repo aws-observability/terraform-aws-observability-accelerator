@@ -22,6 +22,9 @@ locals {
   eks_cluster_endpoint = data.aws_eks_cluster.eks_cluster.endpoint
   eks_cluster_version  = data.aws_eks_cluster.eks_cluster.version
 
+  opensearch_domain_url    = "https://${var.os_logs_host}/"
+  opensearch_domain_region = coalesce(var.os_logs_region, data.aws_region.current.name)
+
   context = {
     aws_caller_identity_account_id = data.aws_caller_identity.current.account_id
     aws_caller_identity_arn        = data.aws_caller_identity.current.arn
@@ -54,7 +57,7 @@ locals {
     managed_prometheus_workspace_id = local.managed_prometheus_workspace_id
     prometheus_metrics_endpoint     = "/metrics"
 
-    grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/java/default.json"
+    grafana_dashboard_url = "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/java/default.json"
   }
 
   nginx_pattern_config_defaults = {
@@ -75,7 +78,7 @@ locals {
     managed_prometheus_workspace_id = local.managed_prometheus_workspace_id
     prometheus_metrics_endpoint     = "/metrics"
 
-    grafana_dashboard_url = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/nginx/nginx.json"
+    grafana_dashboard_url = "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/nginx/nginx.json"
   }
 
   nginx_pattern_config = {
@@ -102,10 +105,10 @@ locals {
     prometheus_metrics_endpoint     = "/metrics"
 
     dashboards = {
-      cp          = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/istio/istio-control-plane-dashboard.json"
-      mesh        = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/istio/istio-mesh-dashboard.json"
-      performance = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/istio/istio-performance-dashboard.json"
-      service     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/istio/istio-service-dashboard.json"
+      cp          = "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/istio/istio-control-plane-dashboard.json"
+      mesh        = "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/istio/istio-mesh-dashboard.json"
+      performance = "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/istio/istio-performance-dashboard.json"
+      service     = "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/istio/istio-service-dashboard.json"
     }
   }
 
@@ -118,9 +121,22 @@ locals {
     flux_kustomization_path   = try(var.apiserver_monitoring_config.flux_kustomization_path, "./artifacts/grafana-operator-manifests/eks/apiserver")
 
     dashboards = {
-      basic           = try(var.apiserver_monitoring_config.dashboards.basic, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-basic.json")
-      advanced        = try(var.apiserver_monitoring_config.dashboards.advanced, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-advanced.json")
-      troubleshooting = try(var.apiserver_monitoring_config.dashboards.troubleshooting, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-troubleshooting.json")
+      basic           = try(var.apiserver_monitoring_config.dashboards.basic, "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/apiserver/apiserver-basic.json")
+      advanced        = try(var.apiserver_monitoring_config.dashboards.advanced, "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/apiserver/apiserver-advanced.json")
+      troubleshooting = try(var.apiserver_monitoring_config.dashboards.troubleshooting, "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/apiserver/apiserver-troubleshooting.json")
+    }
+  }
+
+  opensearch_config = {
+    # can be overriden by providing a config
+    flux_gitrepository_name   = try(var.opensearch_config.flux_gitrepository_name, var.flux_gitrepository_name)
+    flux_gitrepository_url    = try(var.opensearch_config.flux_gitrepository_url, var.flux_gitrepository_url)
+    flux_gitrepository_branch = try(var.opensearch_config.flux_gitrepository_branch, var.flux_gitrepository_branch)
+    flux_kustomization_name   = try(var.opensearch_config.flux_kustomization_name, "grafana-dashboards-opensearch")
+    flux_kustomization_path   = try(var.opensearch_config.flux_kustomization_path, "./artifacts/grafana-operator-manifests/eks/opensearch")
+
+    dashboards = {
+      logs = try(var.opensearch_config.dashboards.logs, "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/opensearch/opensearch-logs.json")
     }
   }
 
@@ -133,7 +149,7 @@ locals {
     flux_kustomization_path   = try(var.adothealth_monitoring_config.flux_kustomization_path, "./artifacts/grafana-operator-manifests/eks/adot")
 
     dashboards = {
-      health = try(var.adothealth_monitoring_config.dashboards.health, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/adot/adothealth.json")
+      health = try(var.adothealth_monitoring_config.dashboards.health, "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/adot/adothealth.json")
     }
   }
 
@@ -155,7 +171,7 @@ locals {
     flux_kustomization_path   = try(var.kubeproxy_monitoring_config.flux_kustomization_path, "./artifacts/grafana-operator-manifests/eks/kube-proxy")
 
     dashboards = {
-      default = try(var.kubeproxy_monitoring_config.dashboards.default, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/kube-proxy/kube-proxy.json")
+      default = try(var.kubeproxy_monitoring_config.dashboards.default, "https://raw.githubusercontent.com/pelgrim/aws-observability-accelerator/v0.0.2-i/artifacts/grafana-dashboards/eks/kube-proxy/kube-proxy.json")
     }
   }
 }

@@ -72,6 +72,31 @@ YAML
   depends_on = [module.external_secrets]
 }
 
+# opensearch dashboards
+resource "kubectl_manifest" "opensearch_dashboards" {
+  yaml_body  = <<YAML
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: ${local.opensearch_config.flux_kustomization_name}
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ${local.opensearch_config.flux_kustomization_path}
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ${local.opensearch_config.flux_gitrepository_name}
+  postBuild:
+    substitute:
+      AMG_AWS_REGION: ${local.opensearch_domain_region}
+      GRAFANA_OPENSEARCH_LOGS_DASH_URL: ${local.opensearch_config.dashboards.logs}
+      OPENSEARCH_DOMAIN_URL: ${local.opensearch_domain_url}
+YAML
+  count      = var.os_logs_enabled ? 1 : 0
+  depends_on = [module.external_secrets]
+}
+
 # adot health dashboards
 resource "kubectl_manifest" "adothealth_monitoring_dashboards" {
   yaml_body  = <<YAML

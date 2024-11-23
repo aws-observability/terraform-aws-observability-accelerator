@@ -15,6 +15,8 @@ In addition, logs are shipped to an OpenSearch domain.
 
 View the full documentation for this example [here](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/)
 
+For an implemantion of Amazon OpenSearch that will work with this example, follow [these instructions](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/amazon-opensearch/).
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 

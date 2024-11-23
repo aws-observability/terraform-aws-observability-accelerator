@@ -37,14 +37,3 @@ variable "os_logs_host" {
   type        = string
   default     = ""
 }
-
-variable "os_logs_username" {
-  description = "OpenSearch domain username"
-  type        = string
-}
-
-variable "os_logs_password" {
-  description = "OpenSearch domain password"
-  type        = string
-  sensitive   = true
-}

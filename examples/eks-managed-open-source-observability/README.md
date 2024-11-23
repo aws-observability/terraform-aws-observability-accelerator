@@ -72,8 +72,6 @@ View the full documentation for this example [here](https://aws-observability.gi
 | <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana Workspace ID | `string` | n/a | yes |
 | <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Service for Prometheus Workspace ID | `string` | `""` | no |
 | <a name="input_os_logs_host"></a> [os\_logs\_host](#input\_os\_logs\_host) | OpenSearch domain URL for logs | `string` | `""` | no |
-| <a name="input_os_logs_password"></a> [os\_logs\_password](#input\_os\_logs\_password) | OpenSearch domain password | `string` | n/a | yes |
-| <a name="input_os_logs_username"></a> [os\_logs\_username](#input\_os\_logs\_username) | OpenSearch domain username | `string` | n/a | yes |
 
 ## Outputs
 

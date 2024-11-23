@@ -43,6 +43,7 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
 }
 
 resource "aws_launch_template" "reverse_proxy" {
+  name          = "reverse_proxy"
   image_id      = data.aws_ami.reverse_proxy.id
   instance_type = "t2.medium"
   network_interfaces {

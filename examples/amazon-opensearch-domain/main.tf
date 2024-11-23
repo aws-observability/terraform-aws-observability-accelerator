@@ -49,7 +49,7 @@ locals {
 }
 
 resource "aws_ssm_parameter" "opensearch_master_user_name" {
-  name  = "/terraform-accelerator/opensearch-master-user-name"
+  name  = "/terraform-accelerator/opensearch/master-user-name"
   type  = "SecureString"
   value = local.opensearch_master_user_name
 

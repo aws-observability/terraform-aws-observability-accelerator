@@ -132,7 +132,7 @@ variable "flux_gitrepository_url" {
 variable "flux_gitrepository_branch" {
   description = "Flux GitRepository Branch"
   type        = string
-  default     = "v0.2.0"
+  default     = "v0.3.2"
 }
 
 variable "flux_kustomization_path" {

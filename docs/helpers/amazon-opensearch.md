@@ -119,7 +119,7 @@ To allow Amazon Managed Grafana to access Amazon OpenSearch domain datasource, f
     ]
   }
   EOF
-  
+
   aws iam put-role-policy --role-name $GRAFANA_ROLE \
     --policy-name OpenSearchCollections --policy-document file://policy.json
   ```

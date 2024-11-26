@@ -22,6 +22,9 @@ locals {
   eks_cluster_endpoint = data.aws_eks_cluster.eks_cluster.endpoint
   eks_cluster_version  = data.aws_eks_cluster.eks_cluster.version
 
+  opensearch_domain_url    = "https://${var.os_logs_host}/"
+  opensearch_domain_region = coalesce(var.os_logs_region, data.aws_region.current.name)
+
   context = {
     aws_caller_identity_account_id = data.aws_caller_identity.current.account_id
     aws_caller_identity_arn        = data.aws_caller_identity.current.arn
@@ -121,6 +124,19 @@ locals {
       basic           = try(var.apiserver_monitoring_config.dashboards.basic, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-basic.json")
       advanced        = try(var.apiserver_monitoring_config.dashboards.advanced, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-advanced.json")
       troubleshooting = try(var.apiserver_monitoring_config.dashboards.troubleshooting, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/apiserver/apiserver-troubleshooting.json")
+    }
+  }
+
+  opensearch_config = {
+    # can be overriden by providing a config
+    flux_gitrepository_name   = try(var.opensearch_config.flux_gitrepository_name, var.flux_gitrepository_name)
+    flux_gitrepository_url    = try(var.opensearch_config.flux_gitrepository_url, var.flux_gitrepository_url)
+    flux_gitrepository_branch = try(var.opensearch_config.flux_gitrepository_branch, var.flux_gitrepository_branch)
+    flux_kustomization_name   = try(var.opensearch_config.flux_kustomization_name, "grafana-dashboards-opensearch")
+    flux_kustomization_path   = try(var.opensearch_config.flux_kustomization_path, "./artifacts/grafana-operator-manifests/eks/opensearch")
+
+    dashboards = {
+      logs = try(var.opensearch_config.dashboards.logs, "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/opensearch/opensearch-logs.json")
     }
   }
 

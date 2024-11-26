@@ -39,9 +39,13 @@ See this [Helm Chart](https://github.com/aws/eks-charts/tree/master/stable/aws-f
 |------|-------------|------|---------|:--------:|
 | <a name="input_addon_context"></a> [addon\_context](#input\_addon\_context) | Input configuration for the addon | <pre>object({<br>    aws_caller_identity_account_id = string<br>    aws_caller_identity_arn        = string<br>    aws_eks_cluster_endpoint       = string<br>    aws_partition_id               = string<br>    aws_region_name                = string<br>    eks_cluster_id                 = string<br>    eks_oidc_issuer_url            = string<br>    eks_oidc_provider_arn          = string<br>    tags                           = map(string)<br>    irsa_iam_role_path             = string<br>    irsa_iam_permissions_boundary  = string<br>  })</pre> | n/a | yes |
 | <a name="input_cw_log_retention_days"></a> [cw\_log\_retention\_days](#input\_cw\_log\_retention\_days) | FluentBit CloudWatch Log group retention period | `number` | `90` | no |
+| <a name="input_cw_logs_enabled"></a> [cw\_logs\_enabled](#input\_cw\_logs\_enabled) | FluentBit CloudWatch Log enable | `bool` | `true` | no |
 | <a name="input_helm_config"></a> [helm\_config](#input\_helm\_config) | Helm provider config aws\_for\_fluent\_bit. | `any` | `{}` | no |
 | <a name="input_irsa_policies"></a> [irsa\_policies](#input\_irsa\_policies) | Additional IAM policies for a IAM role for service accounts | `list(string)` | `[]` | no |
 | <a name="input_manage_via_gitops"></a> [manage\_via\_gitops](#input\_manage\_via\_gitops) | Determines if the add-on should be managed via GitOps. | `bool` | `false` | no |
+| <a name="input_os_logs_enabled"></a> [os\_logs\_enabled](#input\_os\_logs\_enabled) | FluentBit OpenSearch enable | `bool` | `false` | no |
+| <a name="input_os_logs_host"></a> [os\_logs\_host](#input\_os\_logs\_host) | FluentBit OpenSearch | `string` | `""` | no |
+| <a name="input_os_logs_index"></a> [os\_logs\_index](#input\_os\_logs\_index) | FluentBit OpenSearch | `string` | `"observability-accelerator"` | no |
 | <a name="input_refresh_interval"></a> [refresh\_interval](#input\_refresh\_interval) | FluentBit input refresh interval | `number` | `60` | no |
 
 ## Outputs

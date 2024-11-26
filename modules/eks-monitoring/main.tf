@@ -262,6 +262,11 @@ module "fluentbit_logs" {
 
   cw_log_retention_days = var.logs_config.cw_log_retention_days
   addon_context         = local.context
+
+  os_logs_enabled = var.os_logs_enabled
+  os_logs_host    = var.os_logs_host
+  os_logs_index   = var.os_logs_index
+
 }
 
 module "external_secrets" {

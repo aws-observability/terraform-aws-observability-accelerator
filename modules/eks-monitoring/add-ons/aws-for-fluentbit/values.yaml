@@ -6,7 +6,7 @@ cloudWatch:
   enabled: false
 
 cloudWatchLogs:
-  enabled: true
+  enabled: ${cw_logs_enabled}
   region: ${aws_region}
   # logGroupName is a fallback to failed parsing
   logGroupName: /aws/eks/observability-accelerator/workloads
@@ -14,6 +14,13 @@ cloudWatchLogs:
   logStreamTemplate: $kubernetes['container_name'].$kubernetes['pod_name']
   logKey: log
   logRetentionDays: ${log_retention_days}
+
+opensearch:
+  enabled: ${os_logs_enabled}
+  match: "*"
+  awsRegion: ${aws_region}
+  host: ${os_logs_host}
+  index: ${os_logs_index}
 
 input:
   enabled: false

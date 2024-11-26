@@ -236,6 +236,24 @@ variable "apiserver_monitoring_config" {
   default = null
 }
 
+variable "opensearch_config" {
+  description = "Config object for API server monitoring"
+  type = object({
+    flux_gitrepository_name   = string
+    flux_gitrepository_url    = string
+    flux_gitrepository_branch = string
+    flux_kustomization_name   = string
+    flux_kustomization_path   = string
+
+    dashboards = object({
+      logs = string
+    })
+  })
+
+  # defaults are pre-computed in locals.tf, provide a full definition to override
+  default = null
+}
+
 variable "enable_tracing" {
   description = "Enables tracing with OTLP traces receiver to X-Ray"
   type        = bool
@@ -374,6 +392,30 @@ variable "enable_logs" {
   description = "Using AWS For FluentBit to collect cluster and application logs to Amazon CloudWatch"
   type        = bool
   default     = true
+}
+
+variable "os_logs_enabled" {
+  description = "FluentBit OpenSearch enable"
+  type        = bool
+  default     = false
+}
+
+variable "os_logs_host" {
+  description = "FluentBit OpenSearch"
+  type        = string
+  default     = ""
+}
+
+variable "os_logs_index" {
+  description = "FluentBit OpenSearch"
+  type        = string
+  default     = "observability-accelerator"
+}
+
+variable "os_logs_region" {
+  description = "OpenSearch Domain Region"
+  type        = string
+  default     = null
 }
 
 variable "logs_config" {

@@ -23,6 +23,13 @@ rules:
       - get
       - list
       - watch
+  - apiGroups:
+      - metrics.eks.amazonaws.com
+    resources:
+      - kcm/metrics
+      - ksh/metrics
+    verbs:
+      - get
   - nonResourceURLs:
       - /metrics
     verbs:

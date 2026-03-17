@@ -229,3 +229,60 @@ locals {
   # self-managed-amp branch will be added in task 5.3.
   otel_collector_values = local.is_cloudwatch_otlp ? local.cloudwatch_otel_collector_values : ""
 }
+
+#--------------------------------------------------------------
+# Scrape Configuration Renderer (managed-metrics profile)
+#--------------------------------------------------------------
+
+locals {
+  default_scrape_jobs = [
+    {
+      job_name        = "kube-state-metrics"
+      scrape_interval = var.prometheus_config.global_scrape_interval
+      scrape_timeout  = var.prometheus_config.global_scrape_timeout
+      static_configs = [
+        { targets = ["kube-state-metrics.kube-system.svc.cluster.local:8080"] }
+      ]
+    },
+    {
+      job_name        = "node-exporter"
+      scrape_interval = var.prometheus_config.global_scrape_interval
+      scrape_timeout  = var.prometheus_config.global_scrape_timeout
+      static_configs = [
+        { targets = ["prometheus-node-exporter.prometheus-node-exporter.svc.cluster.local:9100"] }
+      ]
+    },
+    {
+      job_name = "kubelet"
+      scheme   = "https"
+      tls_config = {
+        ca_file              = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+        insecure_skip_verify = true
+      }
+      bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+      kubernetes_sd_configs = [
+        { role = "node" }
+      ]
+      scrape_interval = var.prometheus_config.global_scrape_interval
+      scrape_timeout  = var.prometheus_config.global_scrape_timeout
+      relabel_configs = [
+        {
+          action = "labelmap"
+          regex  = "__meta_kubernetes_node_label_(.+)"
+        }
+      ]
+    },
+  ]
+
+  all_scrape_jobs = concat(local.default_scrape_jobs, var.additional_scrape_jobs)
+
+  scrape_configuration_yaml = var.scrape_configuration != "" ? var.scrape_configuration : yamlencode({
+    global = {
+      scrape_interval = var.prometheus_config.global_scrape_interval
+      scrape_timeout  = var.prometheus_config.global_scrape_timeout
+    }
+    scrape_configs = local.all_scrape_jobs
+  })
+
+  scrape_configuration_base64 = base64encode(local.scrape_configuration_yaml)
+}

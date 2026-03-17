@@ -11,7 +11,7 @@ resource "helm_release" "kube_state_metrics" {
   name             = "kube-state-metrics"
   repository       = "https://prometheus-community.github.io/helm-charts"
   chart            = "kube-state-metrics"
-  version          = "5.15.2"
+  version          = var.kube_state_metrics_chart_version
   namespace        = "kube-system"
   create_namespace = false
   max_history      = 3
@@ -28,7 +28,7 @@ resource "helm_release" "prometheus_node_exporter" {
   name             = "prometheus-node-exporter"
   repository       = "https://prometheus-community.github.io/helm-charts"
   chart            = "prometheus-node-exporter"
-  version          = "4.24.0"
+  version          = var.node_exporter_chart_version
   namespace        = "prometheus-node-exporter"
   create_namespace = true
   max_history      = 3

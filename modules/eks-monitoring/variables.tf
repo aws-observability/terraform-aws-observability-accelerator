@@ -152,6 +152,18 @@ variable "otel_collector_chart_version" {
   default     = "0.78.0"
 }
 
+variable "kube_state_metrics_chart_version" {
+  type        = string
+  description = "Version of the kube-state-metrics Helm chart to deploy"
+  default     = "5.15.2"
+}
+
+variable "node_exporter_chart_version" {
+  type        = string
+  description = "Version of the prometheus-node-exporter Helm chart to deploy"
+  default     = "4.24.0"
+}
+
 variable "collector_namespace" {
   type        = string
   description = "Kubernetes namespace for the OTel Collector deployment"

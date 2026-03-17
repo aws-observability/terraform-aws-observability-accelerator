@@ -21,7 +21,6 @@ default.
 
 ```bash
 export TF_VAR_eks_cluster_id=my-cluster
-export TF_VAR_eks_oidc_provider_arn=arn:aws:iam::123456789012:oidc-provider/oidc.eks.us-west-2.amazonaws.com/id/EXAMPLE
 export TF_VAR_aws_region=us-west-2
 export TF_VAR_managed_grafana_workspace_id=g-xxx
 export TF_VAR_grafana_api_key=$(aws grafana create-workspace-api-key \

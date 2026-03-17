@@ -9,11 +9,6 @@ variable "eks_cluster_id" {
   type        = string
 }
 
-variable "eks_oidc_provider_arn" {
-  description = "ARN of the EKS OIDC identity provider"
-  type        = string
-}
-
 variable "scraper_subnet_ids" {
   description = "Subnet IDs for the AMP scraper (minimum 2 in 2 AZs)"
   type        = list(string)

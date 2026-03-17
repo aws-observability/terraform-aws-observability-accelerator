@@ -7,7 +7,6 @@ module "eks_monitoring" {
 
   collector_profile     = "managed-metrics"
   eks_cluster_id        = var.eks_cluster_id
-  eks_oidc_provider_arn = var.eks_oidc_provider_arn
 
   # AMP Managed Collector settings
   scraper_subnet_ids         = var.scraper_subnet_ids

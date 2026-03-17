@@ -37,7 +37,10 @@ locals {
   region               = data.aws_region.current.id
   partition            = data.aws_partition.current.partition
   account_id           = data.aws_caller_identity.current.account_id
-  eks_oidc_provider_arn = var.eks_oidc_provider_arn
+
+  # Derive OIDC provider ARN from EKS cluster when not explicitly provided
+  eks_oidc_issuer_url   = replace(data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")
+  eks_oidc_provider_arn = var.eks_oidc_provider_arn != "" ? var.eks_oidc_provider_arn : "arn:${local.partition}:iam::${local.account_id}:oidc-provider/${local.eks_oidc_issuer_url}"
 }
 
 #--------------------------------------------------------------

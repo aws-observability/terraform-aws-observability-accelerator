@@ -9,11 +9,6 @@ variable "eks_cluster_id" {
   type        = string
 }
 
-variable "eks_oidc_provider_arn" {
-  description = "ARN of the EKS OIDC identity provider"
-  type        = string
-}
-
 variable "grafana_endpoint" {
   description = "Amazon Managed Grafana workspace endpoint URL"
   type        = string

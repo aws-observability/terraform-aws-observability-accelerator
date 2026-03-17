@@ -21,7 +21,6 @@ This example deploys the `eks-monitoring` module with the `cloudwatch-otlp` coll
 ```hcl
 terraform init
 terraform plan -var="eks_cluster_id=my-cluster" \
-  -var="eks_oidc_provider_arn=arn:aws:iam::123456789012:oidc-provider/oidc.eks.us-west-2.amazonaws.com/id/EXAMPLE" \
   -var="cloudwatch_metrics_endpoint=https://monitoring.us-west-2.amazonaws.com/v1/metrics" \
   -var="grafana_endpoint=https://g-abc123.grafana-workspace.us-west-2.amazonaws.com" \
   -var="grafana_api_key=your-api-key"

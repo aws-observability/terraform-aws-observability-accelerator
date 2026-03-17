@@ -57,9 +57,6 @@ aws_region = "eu-west-1"
 
 # (mandatory) EKS Cluster name
 eks_cluster_id = "my-eks-cluster"
-
-# (mandatory) ARN of the EKS OIDC provider for IRSA role creation
-eks_oidc_provider_arn = "arn:aws:iam::123456789012:oidc-provider/oidc.eks.eu-west-1.amazonaws.com/id/EXAMPLE"
 ```
 
 #### 4. Amazon Managed Grafana workspace

@@ -22,7 +22,8 @@ variable "eks_cluster_id" {
 
 variable "eks_oidc_provider_arn" {
   type        = string
-  description = "ARN of the EKS OIDC provider for IRSA role creation"
+  description = "ARN of the EKS OIDC provider for IRSA role creation. If empty, derived automatically from the EKS cluster."
+  default     = ""
 }
 
 variable "tags" {

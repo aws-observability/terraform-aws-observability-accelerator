@@ -7,7 +7,6 @@ module "eks_monitoring" {
 
   collector_profile     = "self-managed-amp"
   eks_cluster_id        = var.eks_cluster_id
-  eks_oidc_provider_arn = var.eks_oidc_provider_arn
 
   # Create a new AMP workspace
   create_amp_workspace = true

@@ -72,7 +72,6 @@ module "eks_monitoring" {
 
   collector_profile            = "cloudwatch-otlp"
   eks_cluster_id               = var.eks_cluster_id
-  eks_oidc_provider_arn        = var.eks_oidc_provider_arn
   cloudwatch_metrics_endpoint  = var.cloudwatch_metrics_endpoint
   cloudwatch_log_group         = var.cloudwatch_log_group
   cloudwatch_log_stream        = var.cloudwatch_log_stream

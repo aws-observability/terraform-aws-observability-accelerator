@@ -42,7 +42,6 @@ module "eks_monitoring" {
 
   collector_profile     = "self-managed-amp"
   eks_cluster_id        = var.eks_cluster_id
-  eks_oidc_provider_arn = var.eks_oidc_provider_arn
 
   # Creates a new AMP workspace; set to false and provide
   # managed_prometheus_workspace_id to reuse an existing one

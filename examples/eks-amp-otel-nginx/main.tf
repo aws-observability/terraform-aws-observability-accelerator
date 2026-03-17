@@ -42,7 +42,6 @@ module "eks_monitoring" {
 
   collector_profile     = "self-managed-amp"
   eks_cluster_id        = var.eks_cluster_id
-  eks_oidc_provider_arn = var.eks_oidc_provider_arn
 
   create_amp_workspace            = var.managed_prometheus_workspace_id == "" ? true : false
   managed_prometheus_workspace_id = var.managed_prometheus_workspace_id != "" ? var.managed_prometheus_workspace_id : null

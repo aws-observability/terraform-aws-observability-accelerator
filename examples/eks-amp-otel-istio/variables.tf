@@ -3,11 +3,6 @@ variable "eks_cluster_id" {
   type        = string
 }
 
-variable "eks_oidc_provider_arn" {
-  description = "ARN of the EKS OIDC provider for IRSA role creation"
-  type        = string
-}
-
 variable "aws_region" {
   description = "AWS Region"
   type        = string

@@ -115,7 +115,6 @@ module "eks_monitoring" {
 
   collector_profile          = "managed-metrics"
   eks_cluster_id             = var.eks_cluster_id
-  eks_oidc_provider_arn      = var.eks_oidc_provider_arn
   scraper_subnet_ids         = var.scraper_subnet_ids         # >= 2 subnets in 2 AZs
   scraper_security_group_ids = var.scraper_security_group_ids
 }

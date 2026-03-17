@@ -3,7 +3,6 @@
 
 aws_region            = "us-west-2"
 eks_cluster_id        = "my-cluster"
-eks_oidc_provider_arn = "arn:aws:iam::123456789012:oidc-provider/oidc.eks.us-west-2.amazonaws.com/id/EXAMPLE"
 
 # CloudWatch OTLP endpoint — get from the CloudWatch console or API
 cloudwatch_metrics_endpoint = "https://monitoring.us-west-2.amazonaws.com"

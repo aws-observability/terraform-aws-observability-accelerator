@@ -21,7 +21,21 @@ provider "aws" {
   region = var.aws_region
 }
 
-provider "helm" {}
+data "aws_eks_cluster" "this" {
+  name = var.eks_cluster_id
+}
+
+data "aws_eks_cluster_auth" "this" {
+  name = var.eks_cluster_id
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = data.aws_eks_cluster.this.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
+    token                  = data.aws_eks_cluster_auth.this.token
+  }
+}
 
 provider "grafana" {
   url  = var.grafana_endpoint

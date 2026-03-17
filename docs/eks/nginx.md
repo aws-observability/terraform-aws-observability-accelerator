@@ -64,7 +64,7 @@ helm install my-nginx ingress-nginx/ingress-nginx \
 ```bash
 EXTERNAL_IP=$(kubectl get svc my-nginx-ingress-nginx-controller -n nginx-ingress-sample -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 SAMPLE_TRAFFIC_NAMESPACE=nginx-sample-traffic
-curl https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/main/examples/existing-cluster-nginx/sample_traffic/nginx-traffic-sample.yaml |
+curl https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/main/examples/eks-amp-otel-nginx/sample_traffic/nginx-traffic-sample.yaml |
 sed "s/{{external_ip}}/$EXTERNAL_IP/g" |
 sed "s/{{namespace}}/$SAMPLE_TRAFFIC_NAMESPACE/g" |
 kubectl apply -f -

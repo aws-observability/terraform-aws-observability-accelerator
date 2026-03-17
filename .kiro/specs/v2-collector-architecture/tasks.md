@@ -225,7 +225,7 @@ Replace the current `modules/eks-monitoring/` module with a profile-driven v2 ar
     - Update Helm-related troubleshooting for Helm provider v3
 
 - [x] 11. Legacy examples refresh
-  - [x] 11.1 Rewrite `examples/existing-cluster-with-base-and-infra/` for v3
+  - [x] 11.1 Rewrite `examples/eks-amp-otel-getting-started/` for v3
     - This is the primary getting-started example referenced in Hugo docs and the AMP docs page
     - Update to use `collector_profile = "self-managed-amp"` (closest to the old default behavior)
     - Replace old variable names with v3 variables
@@ -233,12 +233,12 @@ Replace the current `modules/eks-monitoring/` module with a profile-driven v2 ar
     - Ensure backward compatibility with the AMP docs page walkthrough flow (same env var names where possible)
 
   - [x] 11.2 Update or remove workload-specific examples
-    - `examples/existing-cluster-java/` — rewrite to use `additional_scrape_jobs` or remove
-    - `examples/existing-cluster-nginx/` — rewrite to use `additional_scrape_jobs` or remove
-    - `examples/eks-istio/` — rewrite to use `additional_scrape_jobs` or remove
+    - `examples/eks-amp-otel-java/` — rewrite to use `additional_scrape_jobs` or remove
+    - `examples/eks-amp-otel-nginx/` — rewrite to use `additional_scrape_jobs` or remove
+    - `examples/eks-amp-otel-istio/` — rewrite to use `additional_scrape_jobs` or remove
 
   - [x] 11.3 Update multi-cluster and cross-account examples
-    - `examples/eks-cross-account-with-central-amp/` — update module interface to v3 variables
+    - `examples/eks-amp-cross-account/` — update module interface to v3 variables
     - `examples/eks-multicluster/` — update module interface to v3 variables
 
   - [x] 11.4 Update `modules/eks-monitoring/README.md`
@@ -249,7 +249,7 @@ Replace the current `modules/eks-monitoring/` module with a profile-driven v2 ar
 
 - [x] 12. External documentation coordination (prepare in advance, merge with doc team publish)
   - [x] 12.1 Prepare replacement AMP docs page example using managed scraper
-    - Create a polished `examples/existing-cluster-with-base-and-infra/` rewrite that uses `collector_profile = "managed-metrics"` (agentless managed scraper)
+    - Create a polished `examples/eks-amp-otel-getting-started/` rewrite that uses `collector_profile = "managed-metrics"` (agentless managed scraper)
     - Write a step-by-step walkthrough matching the structure of the current AMP docs page (https://docs.aws.amazon.com/prometheus/latest/userguide/obs_accelerator.html)
     - Preserve same env var names where possible (`TF_VAR_eks_cluster_id`, `TF_VAR_managed_prometheus_workspace_id`, `TF_VAR_managed_grafana_workspace_id`, `TF_VAR_grafana_api_key`)
     - Document the new resources created (AMP workspace, managed scraper, Grafana dashboards via Terraform)

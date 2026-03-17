@@ -1,7 +1,7 @@
-# Monitor Java applications running on Amazon EKS
+# Monitor NGINX applications running on Amazon EKS
 
 This example demonstrates how to use the AWS Observability Accelerator Terraform
-modules to monitor EKS infrastructure and Java based workloads.
+modules to monitor EKS infrastructure and NGINX workloads.
 The current example deploys the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html)
 for Amazon EKS with its requirements and make use of an existing Amazon Managed Grafana workspace.
 It creates a new Amazon Managed Service for Prometheus workspace unless provided with an existing one to reuse.
@@ -10,14 +10,13 @@ Since v2.x releases, it uses the `EKS monitoring` [module](../../modules/eks-mon
 to provide an existing EKS cluster with an OpenTelemetry collector,
 curated Grafana dashboards, Prometheus alerting and recording rules with multiple
 configuration options on the cluster infrastructure.
-You will gain both visibility on the cluster and Java based applications.
-
+You will gain both visibility on the cluster and NGINX based applications.
 
 ## Prerequisites
 
 Ensure that you have the following tools installed locally:
 
-1. [aws cli v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+1. [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 2. [kubectl](https://kubernetes.io/docs/tasks/tools/)
 3. [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 
@@ -36,14 +35,14 @@ git clone https://github.com/aws-observability/terraform-aws-observability-accel
 2. Initialize terraform
 
 ```console
-cd examples/existing-cluster-java
+cd examples/eks-amp-otel-nginx
 terraform init
 ```
 
 3. Amazon EKS Cluster
 
 To run this example, you need to provide your EKS cluster name.
-If you don't have a cluster ready, visit [this example](../eks-cluster-with-vpc)
+If you don't have a cluster ready, visit [this example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/v4.13.1/examples/eks-cluster-with-new-vpc)
 first to create a new one.
 
 Add your cluster name for `eks_cluster_id="..."` to the `terraform.tfvars` or use an environment variable `export TF_VAR_eks_cluster_id=xxx`.
@@ -74,7 +73,7 @@ export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "
 terraform apply -var-file=terraform.tfvars
 ```
 
-or if you had only setup environment variables, run
+or if you had setup environment variables, run
 
 ```sh
 terraform apply
@@ -108,82 +107,94 @@ terraform output grafana_prometheus_datasource_test
 
 2. Grafana dashboards
 
-Go to the Dashboards panel of your Grafana workspace. There will be a folder called `Observability Accelerator Dashboards`
+Go to the Dashboards panel of your Grafana workspace. You should see a list of dashboards under the `Observability Accelerator Dashboards`
 
-<img width="832" alt="image" src="https://user-images.githubusercontent.com/97046295/194903648-57c55d30-6f90-4b03-9eb6-577aaba7dc22.png">
+<img width="1208" alt="image" src="https://user-images.githubusercontent.com/97046295/190665211-60faef71-d83d-4d59-ac80-bf4309d8c082.png">
 
-Open the "Java/JMX" dashboard to view its visualization
+Open the NGINX dashboard and you should be able to view its visualization
 
-<img width="2560" alt="Grafana Java dashboard" src="https://user-images.githubusercontent.com/10175027/217821001-2119c81f-94bd-4811-8bbb-caaf1ae5a77a.png">
+<img width="1850" alt="image" src="https://user-images.githubusercontent.com/97046295/196226043-e49afeb9-7828-467f-9199-5707cdc69aa9.png">
 
 2. Amazon Managed Service for Prometheus rules and alerts
 
-Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you will find new rules deployed.
+Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you should find new rules deployed.
 
-<img width="1314" alt="image" src="https://user-images.githubusercontent.com/97046295/194904104-09a28577-d149-478e-b0a1-dc21cb7effc1.png">
+<img width="1054" alt="image" src="https://user-images.githubusercontent.com/97046295/190665728-ae8bb709-ad93-4629-b845-85c158dd1925.png">
+
 
 To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
 
+## Deploy an example application to visualize metrics
 
-## Deploy an example Java application
+In this section we will deploy sample application and extract metrics using AWS OpenTelemetry collector
 
-In this section we will reuse an example from the AWS OpenTelemetry collector [repository](https://github.com/aws-observability/aws-otel-collector/blob/main/docs/developers/container-insights-eks-jmx.md). For convenience, the steps can be found below.
-
-1. Clone [this repository](https://github.com/aws-observability/aws-otel-test-framework) and navigate to the `sample-apps/jmx/` directory.
-
-2. Authenticate to Amazon ECR
+1. Add the helm incubator repo:
 
 ```sh
-export AWS_ACCOUNT_ID=`aws sts get-caller-identity --query Account --output text`
-export AWS_REGION={region}
-aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 ```
 
-3. Create an Amazon ECR repository
+2. Enter the following command to create a new namespace:
 
 ```sh
-aws ecr create-repository --repository-name prometheus-sample-tomcat-jmx \
- --image-scanning-configuration scanOnPush=true \
- --region $AWS_REGION
+kubectl create namespace nginx-ingress-sample
 ```
 
-4. Build Docker image and push to ECR.
+3. Enter the following commands to install NGINX:
 
 ```sh
-docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/prometheus-sample-tomcat-jmx:latest .
-docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/prometheus-sample-tomcat-jmx:latest
+helm install my-nginx ingress-nginx/ingress-nginx \
+--namespace nginx-ingress-sample \
+--set controller.metrics.enabled=true \
+--set-string controller.metrics.service.annotations."prometheus\.io/port"="10254" \
+--set-string controller.metrics.service.annotations."prometheus\.io/scrape"="true"
 ```
 
-5. Install sample application
+4. Set an EXTERNAL-IP variable to the value of the EXTERNAL-IP column in the row of the NGINX ingress controller.
 
 ```sh
-export SAMPLE_TRAFFIC_NAMESPACE=javajmx-sample
-curl https://raw.githubusercontent.com/aws-observability/aws-otel-test-framework/terraform/sample-apps/jmx/examples/prometheus-metrics-sample.yaml > metrics-sample.yaml
-sed -i "s/{{aws_account_id}}/$AWS_ACCOUNT_ID/g" metrics-sample.yaml
-sed -i "s/{{region}}/$AWS_REGION/g" metrics-sample.yaml
-sed -i "s/{{namespace}}/$SAMPLE_TRAFFIC_NAMESPACE/g" metrics-sample.yaml
-kubectl apply -f metrics-sample.yaml
+EXTERNAL_IP=your-nginx-controller-external-ip
 ```
 
-Verify that the sample application is running:
+5. Start some sample NGINX traffic by entering the following command.
 
 ```sh
-kubectl get pods -n $SAMPLE_TRAFFIC_NAMESPACE
-
-NAME                              READY   STATUS              RESTARTS   AGE
-tomcat-bad-traffic-generator      1/1     Running             0          11s
-tomcat-example-7958666589-2q755   0/1     ContainerCreating   0          11s
-tomcat-traffic-generator          1/1     Running             0          11s
+SAMPLE_TRAFFIC_NAMESPACE=nginx-sample-traffic
+cat ./sample_traffic/nginx-traffic-sample.yaml |
+sed "s/{{external_ip}}/$EXTERNAL_IP/g" |
+sed "s/{{namespace}}/$SAMPLE_TRAFFIC_NAMESPACE/g" |
+kubectl apply -f -
 ```
 
-## Destroy resources
-
-If you leave this stack running, you will continue to incur charges. To remove all resources
-created by Terraform, [refresh your Grafana API key](#apikey) and run:
+4. Verify if the application is running
 
 ```sh
-terraform destroy -var-file=terraform.tfvars
+kubectl get pods -n nginx-ingress-sample
 ```
+
+#### Visualize the application's dashboard
+
+Log back into your Managed Grafana Workspace and navigate to the dashboard side panel, click on `Observability Accelerator Dashboards` Folder and open the `NGINX` Dashboard.
+
+## Destroy
+
+To teardown and remove the resources created in this example:
+
+```sh
+terraform destroy
+```
+
+## Advanced configuration
+
+1. Cross-region Amazon Managed Prometheus workspace
+
+If your existing Amazon Managed Prometheus workspace is in another AWS Region,
+add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws-xxx`.
+
+2. Cross-region Amazon Managed Grafana workspace
+
+If your existing Amazon Managed Prometheus workspace is in another AWS Region,
+add this `managed_prometheus_region=xxx` and `managed_prometheus_workspace_id=ws-xxx`.
 
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
@@ -222,11 +233,11 @@ terraform destroy -var-file=terraform.tfvars
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS Region | `string` | n/a | yes |
-| <a name="input_eks_cluster_id"></a> [eks\_cluster\_id](#input\_eks\_cluster\_id) | Name of the EKS cluster | `string` | n/a | yes |
+| <a name="input_eks_cluster_id"></a> [eks\_cluster\_id](#input\_eks\_cluster\_id) | EKS Cluster Id | `string` | n/a | yes |
 | <a name="input_enable_dashboards"></a> [enable\_dashboards](#input\_enable\_dashboards) | Enables or disables curated dashboards | `bool` | `true` | no |
 | <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | API key for external-secrets to create secrets for grafana-operator | `string` | n/a | yes |
-| <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana Workspace ID | `string` | n/a | yes |
-| <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Service for Prometheus Workspace ID | `string` | `""` | no |
+| <a name="input_managed_grafana_workspace_id"></a> [managed\_grafana\_workspace\_id](#input\_managed\_grafana\_workspace\_id) | Amazon Managed Grafana (AMG) workspace ID | `string` | n/a | yes |
+| <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Service for Prometheus (AMP) workspace ID | `string` | `""` | no |
 
 ## Outputs
 

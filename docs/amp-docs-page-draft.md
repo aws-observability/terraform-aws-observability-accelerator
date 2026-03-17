@@ -4,7 +4,7 @@
 > https://docs.aws.amazon.com/prometheus/latest/userguide/obs_accelerator.html
 >
 > Hold merge until the doc team publishes the updated page.
-> The existing-cluster-with-base-and-infra example has been rewritten for v3.
+> The eks-amp-otel-getting-started example has been rewritten for v3.
 
 ---
 
@@ -45,7 +45,7 @@ git clone https://github.com/aws-observability/terraform-aws-observability-accel
 #### 2. Initialize Terraform
 
 ```bash
-cd examples/existing-cluster-with-base-and-infra
+cd examples/eks-amp-otel-getting-started
 terraform init
 ```
 

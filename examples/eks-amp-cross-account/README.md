@@ -62,7 +62,7 @@ You can obtain the AMG Workspace ID based on its URL. For the URL `https://g-xyz
 
 git  clone  https://github.com/aws-observability/terraform-aws-observability-accelerator.git
 
-cd  terraform-aws-observability-accelerator/examples/eks-cross-account-with-central-amp
+cd  terraform-aws-observability-accelerator/examples/eks-amp-cross-account
 
 terraform  init
 

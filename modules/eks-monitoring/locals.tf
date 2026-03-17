@@ -225,9 +225,120 @@ locals {
     }
   }) : ""
 
-  # Profile-driven OTel Collector values — currently only cloudwatch-otlp;
-  # self-managed-amp branch will be added in task 5.3.
-  otel_collector_values = local.is_cloudwatch_otlp ? local.cloudwatch_otel_collector_values : ""
+  #--------------------------------------------------------------
+  # Self-Managed AMP — OTel Collector Values
+  #--------------------------------------------------------------
+
+  self_managed_amp_otel_collector_values = local.is_self_managed_amp ? yamlencode({
+    mode = "deployment"
+
+    serviceAccount = {
+      create = true
+      annotations = {
+        "eks.amazonaws.com/role-arn" = try(module.collector_irsa_role[0].iam_role_arn, "")
+      }
+    }
+
+    config = {
+      extensions = {
+        "sigv4auth/aps" = {
+          service = "aps"
+          region  = local.region
+        }
+        "sigv4auth/xray" = {
+          service = "xray"
+          region  = local.region
+        }
+        "sigv4auth/logs" = {
+          service = "logs"
+          region  = local.region
+        }
+      }
+
+      receivers = {
+        prometheus = {
+          config = {
+            scrape_configs = local.default_otel_scrape_configs
+          }
+        }
+        otlp = {
+          protocols = {
+            grpc = { endpoint = "0.0.0.0:4317" }
+            http = { endpoint = "0.0.0.0:4318" }
+          }
+        }
+      }
+
+      processors = {
+        batch = {}
+      }
+
+      exporters = merge(
+        {
+          prometheusremotewrite = {
+            endpoint = "${local.amp_workspace_endpoint}api/v1/remote_write"
+            auth = {
+              authenticator = "sigv4auth/aps"
+            }
+          }
+        },
+        var.enable_tracing ? {
+          "otlphttp/xray" = {
+            endpoint = "https://xray.${local.region}.amazonaws.com/v1/traces"
+            auth = {
+              authenticator = "sigv4auth/xray"
+            }
+          }
+        } : {},
+        var.enable_logs ? {
+          "otlphttp/cwlogs" = {
+            endpoint = "https://logs.${local.region}.amazonaws.com/v1/logs"
+            auth = {
+              authenticator = "sigv4auth/logs"
+            }
+          }
+        } : {},
+      )
+
+      service = {
+        extensions = compact([
+          "sigv4auth/aps",
+          var.enable_tracing ? "sigv4auth/xray" : "",
+          var.enable_logs ? "sigv4auth/logs" : "",
+        ])
+        pipelines = merge(
+          {
+            metrics = {
+              receivers  = ["prometheus", "otlp"]
+              processors = ["batch"]
+              exporters  = ["prometheusremotewrite"]
+            }
+          },
+          var.enable_tracing ? {
+            traces = {
+              receivers  = ["otlp"]
+              processors = ["batch"]
+              exporters  = ["otlphttp/xray"]
+            }
+          } : {},
+          var.enable_logs ? {
+            logs = {
+              receivers  = ["otlp"]
+              processors = ["batch"]
+              exporters  = ["otlphttp/cwlogs"]
+            }
+          } : {},
+        )
+      }
+    }
+  }) : ""
+
+  # Profile-driven OTel Collector values
+  otel_collector_values = (
+    local.is_cloudwatch_otlp ? local.cloudwatch_otel_collector_values :
+    local.is_self_managed_amp ? local.self_managed_amp_otel_collector_values :
+    ""
+  )
 }
 
 #--------------------------------------------------------------

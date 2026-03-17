@@ -6,7 +6,7 @@ Replace the current `modules/eks-monitoring/` module with a profile-driven v2 ar
 
 ## Tasks
 
-- [ ] 1. Shared foundation — module skeleton and profile routing
+- [x] 1. Shared foundation — module skeleton and profile routing
   - [x] 1.1 Create `modules/eks-monitoring/versions.tf` with provider constraints
     - Require Terraform >= 1.5.0, AWS provider >= 5.0.0, Helm >= 2.10.0, Grafana >= 2.0.0
     - Remove `kubernetes` and `kubectl` provider requirements
@@ -56,7 +56,7 @@ Replace the current `modules/eks-monitoring/` module with a profile-driven v2 ar
   - Run `terraform validate` on the module skeleton with each profile value
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 3. CloudWatch flavor — OTel Collector for cloudwatch-otlp profile (Priority Stream)
+- [x] 3. CloudWatch flavor — OTel Collector for cloudwatch-otlp profile (Priority Stream)
   - [x] 3.1 Create `modules/eks-monitoring/iam.tf` with IRSA for cloudwatch-otlp
     - `module.collector_irsa_role` using `terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks` gated by `local.needs_irsa`
     - `aws_iam_policy.cloudwatch_put_metric` custom policy for `cloudwatch:PutMetricData` (no namespace condition key) gated by `local.is_cloudwatch_otlp`
@@ -107,7 +107,7 @@ Replace the current `modules/eks-monitoring/` module with a profile-driven v2 ar
   - Run `terraform validate` on the module and `examples/eks-cloudwatch-otlp/`
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 5. AMP flavor — managed-metrics and self-managed-amp profiles (Stream 2)
+- [x] 5. AMP flavor — managed-metrics and self-managed-amp profiles (Stream 2)
   - [x] 5.1 Add scrape configuration renderer to `modules/eks-monitoring/locals.tf`
     - Define `local.default_scrape_jobs` for kube-state-metrics, node-exporter, kubelet
     - Merge with `var.additional_scrape_jobs`
@@ -164,7 +164,7 @@ Replace the current `modules/eks-monitoring/` module with a profile-driven v2 ar
   - Run `terraform validate` on the module and both AMP examples
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 7. Shared validation and property tests
+- [x] 7. Shared validation and property tests
   - [ ]* 7.1 Write property test for profile validation
     - **Property 1: Profile validation is exhaustive** — For any random string, validation passes iff value is in `["managed-metrics", "self-managed-amp", "cloudwatch-otlp"]`
     - **Validates: Requirements 1.1, 1.5**
@@ -196,8 +196,8 @@ Replace the current `modules/eks-monitoring/` module with a profile-driven v2 ar
   - Run `terraform validate` on the complete module and all examples
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 10. Documentation refresh (Hugo site in `docs/`)
-  - [ ] 10.1 Rewrite `docs/eks/index.md` for v3 profile-driven architecture
+- [x] 10. Documentation refresh (Hugo site in `docs/`)
+  - [x] 10.1 Rewrite `docs/eks/index.md` for v3 profile-driven architecture
     - Replace ADOT/FluxCD/Grafana Operator references with OTel Collector profiles
     - Update getting-started walkthrough to use `examples/eks-amp-otel/` (self-managed-amp) as the primary AMP path
     - Add section for `managed-metrics` profile (agentless) as an alternative
@@ -205,55 +205,56 @@ Replace the current `modules/eks-monitoring/` module with a profile-driven v2 ar
     - Update custom metrics section: replace `enable_custom_metrics`/`custom_metrics_config` with `additional_scrape_jobs`
     - Update prerequisites to include Grafana Terraform provider setup
 
-  - [ ] 10.2 Add `docs/eks/cloudwatch-otlp.md` for CloudWatch flavor
+  - [x] 10.2 Add `docs/eks/cloudwatch-otlp.md` for CloudWatch flavor
     - Document `cloudwatch-otlp` profile setup using `examples/eks-cloudwatch-otlp/`
     - Cover CloudWatch OTLP metrics endpoint (Zeus), traces, logs configuration
     - Document Grafana PromQL datasource for CloudWatch metrics
     - Document PMD IAM policy scope and guidance for namespace restriction
 
-  - [ ] 10.3 Update or deprecate workload-specific doc pages
+  - [x] 10.3 Update or deprecate workload-specific doc pages
     - `docs/eks/java.md` — update to show `additional_scrape_jobs` for JMX metrics, or mark deprecated
     - `docs/eks/nginx.md` — update to show `additional_scrape_jobs` for NGINX metrics, or mark deprecated
     - `docs/eks/istio.md` — update to show `additional_scrape_jobs` for Istio metrics, or mark deprecated
     - `docs/eks/tracing.md` — update for OTel Collector traces pipeline (self-managed-amp `enable_tracing`, cloudwatch-otlp built-in)
     - `docs/eks/logs.md` — update for OTel Collector logs pipeline (self-managed-amp `enable_logs`, cloudwatch-otlp built-in)
 
-  - [ ] 10.4 Update `docs/eks/troubleshooting.md`
+  - [x] 10.4 Update `docs/eks/troubleshooting.md`
     - Remove ADOT operator troubleshooting steps
     - Add OTel Collector pod troubleshooting (logs, config validation)
     - Add AMP Managed Collector scraper troubleshooting
     - Update Helm-related troubleshooting for Helm provider v3
 
-- [ ] 11. Legacy examples refresh
-  - [ ] 11.1 Rewrite `examples/existing-cluster-with-base-and-infra/` for v3
+- [x] 11. Legacy examples refresh
+  - [x] 11.1 Rewrite `examples/existing-cluster-with-base-and-infra/` for v3
     - This is the primary getting-started example referenced in Hugo docs and the AMP docs page
     - Update to use `collector_profile = "self-managed-amp"` (closest to the old default behavior)
     - Replace old variable names with v3 variables
     - Update README.md with v3 setup instructions
     - Ensure backward compatibility with the AMP docs page walkthrough flow (same env var names where possible)
 
-  - [ ] 11.2 Update or remove workload-specific examples
+  - [x] 11.2 Update or remove workload-specific examples
     - `examples/existing-cluster-java/` — rewrite to use `additional_scrape_jobs` or remove
     - `examples/existing-cluster-nginx/` — rewrite to use `additional_scrape_jobs` or remove
     - `examples/eks-istio/` — rewrite to use `additional_scrape_jobs` or remove
 
-  - [ ] 11.3 Update multi-cluster and cross-account examples
+  - [x] 11.3 Update multi-cluster and cross-account examples
     - `examples/eks-cross-account-with-central-amp/` — update module interface to v3 variables
     - `examples/eks-multicluster/` — update module interface to v3 variables
 
-  - [ ] 11.4 Update `modules/eks-monitoring/README.md`
+  - [x] 11.4 Update `modules/eks-monitoring/README.md`
     - Regenerate resource/variable/output tables for v3 module
     - Remove references to ADOT, FluxCD, Grafana Operator, EKS Blueprints v4
     - Document the three collector profiles with usage examples
     - Document `dashboard_delivery_method` and BYO GitOps approach
 
-- [ ] 12. External documentation coordination (BLOCKED — requires doc team)
-  - [ ] 12.1 Coordinate AMP docs page update with AWS docs team
-    - Page: https://docs.aws.amazon.com/prometheus/latest/userguide/obs_accelerator.html
-    - Current page references `existing-cluster-with-base-and-infra`, ADOT operator, old variable names, FluxCD dashboards
-    - Needs update to reflect v3 profile-driven architecture, new variable names, Terraform-based dashboard provisioning
-    - File a doc update request with the AMP docs team before tagging v3.0.0
-    - Consider keeping v2.x tag available for users following the current doc page until the update lands
+- [x] 12. External documentation coordination (prepare in advance, merge with doc team publish)
+  - [x] 12.1 Prepare replacement AMP docs page example using managed scraper
+    - Create a polished `examples/existing-cluster-with-base-and-infra/` rewrite that uses `collector_profile = "managed-metrics"` (agentless managed scraper)
+    - Write a step-by-step walkthrough matching the structure of the current AMP docs page (https://docs.aws.amazon.com/prometheus/latest/userguide/obs_accelerator.html)
+    - Preserve same env var names where possible (`TF_VAR_eks_cluster_id`, `TF_VAR_managed_prometheus_workspace_id`, `TF_VAR_managed_grafana_workspace_id`, `TF_VAR_grafana_api_key`)
+    - Document the new resources created (AMP workspace, managed scraper, Grafana dashboards via Terraform)
+    - Prepare a draft doc page update for the doc team to review
+    - Hold merge until doc team publishes the updated page
 
 ## Notes
 

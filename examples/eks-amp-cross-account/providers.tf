@@ -28,10 +28,10 @@ provider "aws" {
 
 provider "helm" {
   alias = "eks_cluster_one"
-  kubernetes {
+  kubernetes = {
     host                   = data.aws_eks_cluster.eks_one.endpoint
     cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_one.certificate_authority[0].data)
-    exec {
+    exec = {
       api_version = "client.authentication.k8s.io/v1beta1"
       args        = ["eks", "get-token", "--role-arn", var.cluster_one.tf_role, "--cluster-name", var.cluster_one.name]
       command     = "aws"
@@ -41,10 +41,10 @@ provider "helm" {
 
 provider "helm" {
   alias = "eks_cluster_two"
-  kubernetes {
+  kubernetes = {
     host                   = data.aws_eks_cluster.eks_two.endpoint
     cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_two.certificate_authority[0].data)
-    exec {
+    exec = {
       api_version = "client.authentication.k8s.io/v1beta1"
       args        = ["eks", "get-token", "--role-arn", var.cluster_two.tf_role, "--cluster-name", var.cluster_two.name]
       command     = "aws"

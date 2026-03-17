@@ -1,54 +1,61 @@
 # Viewing Logs
 
-By default, we deploy a FluentBit daemon set in the cluster to collect worker
-logs for all namespaces. Logs collection can be disabled with
-`enable_logs = false`. Logs are collected and exported to Amazon CloudWatch Logs,
-which enables you to centralize the logs from all of your systems, applications,
-and AWS services that you use, in a single, highly scalable service.
+The `eks-monitoring` module supports logs collection via the OpenTelemetry
+Collector for profiles that deploy one.
 
-Further configuration options are available in the [module documentation](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring#inputs).
-This guide shows how you can leverage CloudWatch Logs in Amazon Managed Grafana
-for your cluster and application logs.
+## How logs work in v3
+
+| Profile | Logs support | Destination |
+|---------|-------------|-------------|
+| `self-managed-amp` | Yes (toggle with `enable_logs`) | CloudWatch Logs via OTLP |
+| `cloudwatch-otlp` | Yes (always enabled) | CloudWatch Logs via OTLP |
+| `managed-metrics` | No (metrics only) | — |
+
+Logs collection can be disabled in the `self-managed-amp` profile with
+`enable_logs = false`.
+
+## Sending application logs
+
+Applications send logs to the OTel Collector via OTLP. Configure your
+application's OTLP exporter:
+
+```yaml
+env:
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: "http://otel-collector.otel-collector.svc.cluster.local:4317"
+```
+
+For the `cloudwatch-otlp` profile, logs are exported with the `x-aws-log-group`
+and `x-aws-log-stream` headers set from `cloudwatch_log_group` and
+`cloudwatch_log_stream` variables.
 
 ## Using CloudWatch Logs as data source in Grafana
 
 Follow [the documentation](https://docs.aws.amazon.com/grafana/latest/userguide/using-amazon-cloudwatch-in-AMG.html)
-to enable Amazon CloudWatch as a data source. Make sure to provide permissions.
+to enable Amazon CloudWatch as a data source in your Grafana workspace.
 
 !!! tip
     If you created your workspace with our [provided example](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/managed-grafana/),
-    Amazon CloudWatch data source has already been setup for you.
+    Amazon CloudWatch data source has already been set up for you.
 
-All logs are delivered in the following CloudWatch Log groups naming pattern:
-`/aws/eks/observability-accelerator/{cluster-name}/{namespace}`. Log streams
-follow `{container-name}.{pod-name}`. In Grafana, querying and analyzing logs
-is done with [CloudWatch Logs Insights](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html)
+In Grafana, querying and analyzing logs is done with
+[CloudWatch Logs Insights](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html).
 
-### Example - ADOT collector logs
+### Example query
 
-Select one or many log groups and run the following query. The example below,
-queries AWS Distro for OpenTelemetry (ADOT) logs
+Select your log group and run:
 
-```console
+```
 fields @timestamp, log
 | order @timestamp desc
 | limit 100
 ```
 
-<img width="1987" alt="Screenshot 2023-03-27 at 19 08 35" src="https://user-images.githubusercontent.com/10175027/228037030-95005f47-ff46-4f7a-af74-d31809c52fcd.png">
+### Time series from logs
 
+Use the `stats()` function to create visualizations from log data:
 
-### Example - Using time series visualizations
-
-[CloudWatch Logs syntax](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html)
-provide powerful functions to extract data from your logs. The `stats()`
-function allows you to calculate aggregate statistics with log field values.
-This is useful to have visualization on non-metric data from your applications.
-
-In the example below, we use the following query to graph the number of metrics
-collected by the ADOT collector
-
-```console
+```
 fields @timestamp, log
 | parse log /"#metrics": (?<metrics_count>\d+)}/
 | stats avg(metrics_count) by bin(5m)
@@ -59,9 +66,7 @@ fields @timestamp, log
     You can add logs in your dashboards with logs panel types or time series
     depending on your query results type.
 
-<img width="2056" alt="image" src="https://user-images.githubusercontent.com/10175027/228037186-12691590-0bfe-465b-a83b-5c4f583ebf96.png">
-
 !!! warning
-    Querying CloudWatch logs will incur costs per GB scanned. Use small time
-    windows and limits in your queries. Checkout the CloudWatch
-    [pricing page](https://aws.amazon.com/cloudwatch/pricing/) for more infos.
+    Querying CloudWatch logs incurs costs per GB scanned. Use small time
+    windows and limits in your queries. See the CloudWatch
+    [pricing page](https://aws.amazon.com/cloudwatch/pricing/) for details.

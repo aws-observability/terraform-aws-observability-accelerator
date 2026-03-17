@@ -2,51 +2,57 @@
 
 [Distributed tracing](https://aws-observability.github.io/observability-best-practices/signals/traces/)
 helps you have end-to-end visibility between transactions in distributed nodes.
-The `eks-monitoring` module is configured  by default to collect traces into
-[AWS X-Ray](https://docs.aws.amazon.com/xray/latest/devguide/aws-xray.html).
 
-The AWS Distro for OpenTelemetry collector is configured to receive traces
-in the OTLP format (OTLP receiver), using the OpenTelemetry SDK or
-auto-instrumentation agents.
+## How tracing works in v3
+
+The `eks-monitoring` module configures traces collection depending on the
+collector profile:
+
+| Profile | Traces support | Exporter |
+|---------|---------------|----------|
+| `self-managed-amp` | Yes (toggle with `enable_tracing`) | OTLP → AWS X-Ray |
+| `cloudwatch-otlp` | Yes (always enabled) | OTLP → AWS X-Ray |
+| `managed-metrics` | No (metrics only) | — |
+
+The OpenTelemetry Collector receives traces via the OTLP protocol (gRPC on
+port 4317, HTTP on port 4318) and exports them to AWS X-Ray.
 
 !!! note
-    To disable the tracing configuration, set up `enable_tracing = false` in
-    the [module configuration](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring#input_enable_tracing)
-
+    To disable tracing in the `self-managed-amp` profile, set
+    `enable_tracing = false` in the
+    [module configuration](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring#input_enable_tracing).
 
 ## Instrumentation
 
-Let's take a [sample application](https://github.com/aws-observability/aws-otel-community/tree/master/sample-apps/go-sample-app)
-that is already instrumented with the OpenTelemetry SDK.
+Applications send traces to the OTel Collector using the OpenTelemetry SDK.
+Point your application's OTLP exporter at the collector service:
+
+```yaml
+env:
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: "http://otel-collector.otel-collector.svc.cluster.local:4317"
+```
 
 !!! note
-    To learn more about instrumenting with OpenTelemetry, please visit the
+    To learn more about instrumenting with OpenTelemetry, visit the
     [OpenTelemetry documentation](https://opentelemetry.io/docs/instrumentation/)
     for your programming language.
 
-Cloning the repo
+## Example: Go sample application
 
-```console
+Let's use a [sample application](https://github.com/aws-observability/aws-otel-community/tree/master/sample-apps/go-sample-app)
+that is already instrumented with the OpenTelemetry SDK.
+
+```bash
 git clone https://github.com/aws-observability/aws-otel-community.git
 cd aws-otel-community/sample-apps/go-sample-app
 ```
 
-## Deploying on Amazon EKS
-
-Using the sample application, we will build a container image, create and push
-an image on Amazon ECR. We will use a Kubernetes manifest to deploy to an EKS
-cluster.
-
-!!! warning
-    The following steps require that you have an EKS cluster ready. To deploy
-    an EKS cluster, please visit [our example](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/new-eks-cluster/).
-
-### Building container image
-
+### Building and publishing the container image
 
 === "amd64 linux"
 
-    ```console
+    ```bash
     docker build -t go-sample-app .
     ```
 
@@ -56,21 +62,16 @@ cluster.
     docker buildx build -t go-sample-app . --platform=linux/amd64
     ```
 
-### Publishing on Amazon ECR
+Publish to Amazon ECR:
 
+```bash
+export ECR_REPOSITORY_URI=$(aws ecr create-repository --repository go-sample-app --query repository.repositoryUri --output text)
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URI
+docker tag go-sample-app:latest "${ECR_REPOSITORY_URI}:latest"
+docker push "${ECR_REPOSITORY_URI}:latest"
+```
 
-=== "using docker"
-
-    ```console
-    export ECR_REPOSITORY_URI=$(aws ecr create-repository --repository go-sample-app --query repository.repositoryUri --output text)
-    aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URI
-    docker tag go-sample-app:latest "${ECR_REPOSITORY_URI}:latest"
-    docker push "${ECR_REPOSITORY_URI}:latest"
-    ```
-
-
-## Deploying on Amazon EKS
-
+### Deploying on Amazon EKS
 
 ```yaml title="eks.yaml" linenums="1"
 apiVersion: apps/v1
@@ -90,11 +91,11 @@ spec:
     spec:
       containers:
         - name: go-sample-app
-          image: "${ECR_REPOSITORY_URI}:latest" # make sure to replace this variable
+          image: "${ECR_REPOSITORY_URI}:latest" # replace with your ECR URI
           imagePullPolicy: Always
           env:
           - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-            value: adot-collector.adot-collector-kubeprometheus.svc.cluster.local:4317
+            value: otel-collector.otel-collector.svc.cluster.local:4317
           resources:
             limits:
               cpu:  300m
@@ -104,21 +105,6 @@ spec:
               memory: 180Mi
           ports:
             - containerPort: 8080
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: go-sample-app
-  namespace: default
-  labels:
-    app: go-sample-app
-spec:
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
-  selector:
-    app: go-sample-app
 ---
 apiVersion: v1
 kind: Service
@@ -135,70 +121,33 @@ spec:
       targetPort: 8080
 ```
 
-### Deploying and testing
-
-With the Kubernetes manifest ready, run:
+Deploy and test:
 
 ```bash
 kubectl apply -f eks.yaml
-```
-
-You should see the pods running with the command:
-
-```console
-kubectl get pods
-NAME                              READY   STATUS    RESTARTS        AGE
-go-sample-app-67c48ff8c6-bdw74    1/1     Running   0               4s
-go-sample-app-67c48ff8c6-t6k2j    1/1     Running   0               4s
-```
-
-To simulate some traffic you can forward the service port to your local host
-and test a few queries
-
-```console
 kubectl port-forward deployment/go-sample-app 8080:8080
 ```
 
-Test a few endpoints
-
-```
+```bash
 curl http://localhost:8080/
 curl http://localhost:8080/outgoing-http-call
 curl http://localhost:8080/aws-sdk-call
-curl http://localhost:8080/outgoing-sampleapp
 ```
 
 ## Visualizing traces
 
-As this is a basic example, the service map doesn't have a lot of nodes,
-but this shows you how to setup tracing in your application and deploying
-it on Amazon EKS using the `eks-monitoring` module.
+Open your Amazon Managed Grafana workspace and add the AWS X-Ray data source.
+In the Grafana Explorer view, select the X-Ray data source and use **Query
+Type: Trace List** to browse traces.
 
-With Flux and Grafana Operator, the `eks-monitoring` module configures
-an AWS X-Ray data source on your provided Grafana workspace. Open the
-Grafana explorer view and select the X-Ray data source. If you type the query
-below, and select `Trace List` for **Query Type**, you should see the list
-of traces occured in the selected timeframe.
+You can also view traces in the
+[CloudWatch console](https://docs.aws.amazon.com/xray/latest/devguide/xray-console.html),
+which provides a service map and trace detail views. If your logs are stored in
+CloudWatch Logs, the trace detail page can correlate logs automatically.
 
-<img width="1721" alt="Screenshot 2023-07-20 at 21 42 30" src="https://github.com/aws-observability/terraform-aws-observability-accelerator/assets/10175027/bd992a77-05fb-47d2-8ed4-af05d96e951d">
-
-You can add the service map to a dashboard, for example a service focused
-dashboard. You can click on any of the traces to view a node map and the traces
-details.
-
-There is a button that can take you the CloudWatch console to view the same
-data. If your logs are stored on CloudWatch Logs, this page can present
-all the logs in the trace details page. The CloudWatch Log Group name should
-be added to the trace as an attribute.
-Read more about this in our [One Observability Workshop](https://catalog.workshops.aws/observability/en-US/use-cases/trace-to-logs-java-instrumentation/concepts)
-
-![CloudWatch service map](https://user-images.githubusercontent.com/10175027/254973349-1028f428-c2ef-4bd2-8114-0d0961d7cdd8.png)
-
-
-## Resoures
+## Resources
 
 - [AWS Observability Best Practices](https://aws-observability.github.io/observability-best-practices/)
 - [One Observability Workshop](https://catalog.workshops.aws/observability/en-US/)
-- [AWS Distro for OpenTelemetry documentation](https://aws-otel.github.io/docs/introduction)
 - [AWS X-Ray user guide](https://docs.aws.amazon.com/xray/latest/devguide/aws-xray.html)
 - [OpenTelemetry documentation](https://opentelemetry.io/docs/what-is-opentelemetry/)

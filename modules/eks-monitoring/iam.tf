@@ -21,8 +21,13 @@ module "collector_irsa_role" {
 
   role_policy_arns = merge(
     # Self-managed AMP: X-Ray write for traces
-    local.is_self_managed_amp ? {
+    local.is_self_managed_amp && var.enable_tracing ? {
       xray = "arn:${local.partition}:iam::aws:policy/AWSXrayWriteOnlyAccess"
+    } : {},
+
+    # Self-managed AMP: CloudWatch Logs for logs pipeline
+    local.is_self_managed_amp && var.enable_logs ? {
+      cw_logs = "arn:${local.partition}:iam::aws:policy/CloudWatchLogsFullAccess"
     } : {},
 
     # CloudWatch OTLP: custom PutMetricData policy for metrics via Zeus endpoint

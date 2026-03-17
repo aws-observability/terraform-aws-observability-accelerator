@@ -23,12 +23,12 @@ output "managed_prometheus_workspace_region" {
 
 output "collector_irsa_arn" {
   description = "IRSA role ARN for the OTel Collector service account (self-managed profiles only)"
-  value       = local.needs_irsa ? try(module.collector_irsa_role[0].iam_role_arn, null) : null
+  value       = null # Populated when iam.tf is implemented (task 3.1)
 }
 
 output "amp_scraper_arn" {
   description = "ARN of the AMP Managed Collector scraper (managed-metrics profile only)"
-  value       = local.is_managed_metrics ? try(aws_prometheus_scraper.this[0].arn, null) : null
+  value       = null # Populated when collector-managed.tf is implemented (task 5.2)
 }
 
 #--------------------------------------------------------------

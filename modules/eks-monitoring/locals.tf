@@ -67,6 +67,23 @@ resource "terraform_data" "amp_workspace_validation" {
 }
 
 #--------------------------------------------------------------
+# Dashboard Sources
+#--------------------------------------------------------------
+
+locals {
+  default_dashboard_sources = {
+    cluster             = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/${var.dashboard_git_tag}/artifacts/grafana-dashboards/eks/infrastructure/cluster.json"
+    kubelet             = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/${var.dashboard_git_tag}/artifacts/grafana-dashboards/eks/infrastructure/kubelet.json"
+    namespace-workloads = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/${var.dashboard_git_tag}/artifacts/grafana-dashboards/eks/infrastructure/namespace-workloads.json"
+    node-exporter       = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/${var.dashboard_git_tag}/artifacts/grafana-dashboards/eks/infrastructure/nodeexporter-nodes.json"
+    nodes               = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/${var.dashboard_git_tag}/artifacts/grafana-dashboards/eks/infrastructure/nodes.json"
+    workloads           = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/${var.dashboard_git_tag}/artifacts/grafana-dashboards/eks/infrastructure/workloads.json"
+  }
+
+  dashboard_sources = length(var.dashboard_sources) > 0 ? var.dashboard_sources : local.default_dashboard_sources
+}
+
+#--------------------------------------------------------------
 # Default Scrape Configs (shared by OTel profiles)
 #--------------------------------------------------------------
 

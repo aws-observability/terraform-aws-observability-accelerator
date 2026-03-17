@@ -15,5 +15,9 @@ terraform {
       version               = ">= 2.0.0"
       configuration_aliases = [grafana]
     }
+    http = {
+      source  = "hashicorp/http"
+      version = ">= 3.0.0"
+    }
   }
 }

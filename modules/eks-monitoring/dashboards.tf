@@ -22,14 +22,14 @@ resource "grafana_dashboard" "this" {
 resource "grafana_data_source" "cloudwatch_promql" {
   count = local.is_cloudwatch_otlp && local.provision_dashboards ? 1 : 0
 
-  type = "prometheus"
+  type = "grafana-amazonprometheus-datasource"
   name = var.grafana_cw_datasource_name
   url  = var.cloudwatch_metrics_endpoint
 
   json_data_encoded = jsonencode({
-    httpMethod   = "POST"
-    sigV4Auth    = true
-    sigV4Region  = local.region
-    sigV4Service = "monitoring"
+    httpMethod    = "POST"
+    sigV4Auth     = true
+    sigV4Region   = local.region
+    sigV4Service  = "monitoring"
   })
 }

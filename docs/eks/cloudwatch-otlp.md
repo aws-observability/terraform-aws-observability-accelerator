@@ -109,9 +109,13 @@ collector namespace, limiting the blast radius.
 
 ## Grafana PromQL datasource
 
-The module automatically creates a Grafana Prometheus datasource pointing at
-the CloudWatch PromQL endpoint. This allows the standard infrastructure
-dashboards to query CloudWatch metrics using PromQL.
+The module automatically creates a Grafana datasource using the
+[Amazon Managed Service for Prometheus plugin](https://grafana.com/grafana/plugins/grafana-amazonprometheus-datasource/)
+pointing at the CloudWatch PromQL endpoint. This allows the standard
+infrastructure dashboards to query CloudWatch metrics using PromQL.
+
+> The plugin must be installed in your Managed Grafana workspace. It is
+> available by default in Amazon Managed Grafana.
 
 The datasource uses SigV4 authentication with service `monitoring`. You can
 customize the datasource name with `grafana_cw_datasource_name`.

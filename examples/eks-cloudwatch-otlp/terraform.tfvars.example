@@ -1,0 +1,22 @@
+# Copy this file to terraform.tfvars and fill in the values
+# Alternatively, export TF_VAR_<name> environment variables
+
+aws_region            = "us-west-2"
+eks_cluster_id        = "my-cluster"
+eks_oidc_provider_arn = "arn:aws:iam::123456789012:oidc-provider/oidc.eks.us-west-2.amazonaws.com/id/EXAMPLE"
+
+# CloudWatch OTLP endpoint — get from the CloudWatch console or API
+cloudwatch_metrics_endpoint = "https://monitoring.us-west-2.amazonaws.com"
+
+# Optional: override defaults
+# cloudwatch_log_group  = "/eks/otel-collector"
+# cloudwatch_log_stream = "otel-logs"
+
+# Grafana workspace
+grafana_endpoint = "https://g-xxx.grafana-workspace.us-west-2.amazonaws.com"
+grafana_api_key  = ""  # generate via: aws grafana create-workspace-api-key ...
+
+# tags = {
+#   Environment = "dev"
+#   Project     = "observability"
+# }

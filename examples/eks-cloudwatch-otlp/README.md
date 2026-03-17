@@ -7,7 +7,7 @@ This example deploys the `eks-monitoring` module with the `cloudwatch-otlp` coll
 - Upstream OpenTelemetry Collector via Helm (with SigV4 auth)
 - kube-state-metrics and node-exporter Helm charts
 - IRSA role with `cloudwatch:PutMetricData`, `CloudWatchLogsFullAccess`, and `AWSXrayWriteOnlyAccess`
-- Grafana Prometheus datasource pointing at the CloudWatch PromQL endpoint
+- Grafana datasource (Amazon Managed Prometheus plugin) pointing at the CloudWatch PromQL endpoint
 - Default infrastructure dashboards in Grafana
 
 ## Prerequisites

@@ -1,12 +1,12 @@
 provider "aws" {
-  region = local.region
-}
-
-data "aws_eks_cluster_auth" "this" {
-  name = var.eks_cluster_id
+  region = var.aws_region
 }
 
 data "aws_eks_cluster" "this" {
+  name = var.eks_cluster_id
+}
+
+data "aws_eks_cluster_auth" "this" {
   name = var.eks_cluster_id
 }
 
@@ -14,84 +14,80 @@ data "aws_grafana_workspace" "this" {
   workspace_id = var.managed_grafana_workspace_id
 }
 
-provider "kubernetes" {
-  host                   = local.eks_cluster_endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.this.token
-}
-
 provider "helm" {
   kubernetes {
-    host                   = local.eks_cluster_endpoint
+    host                   = data.aws_eks_cluster.this.endpoint
     cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
     token                  = data.aws_eks_cluster_auth.this.token
   }
 }
 
+provider "grafana" {
+  url  = "https://${data.aws_grafana_workspace.this.endpoint}"
+  auth = var.grafana_api_key
+}
+
 locals {
-  region               = var.aws_region
-  eks_cluster_endpoint = data.aws_eks_cluster.this.endpoint
-  create_new_workspace = var.managed_prometheus_workspace_id == "" ? true : false
   tags = {
     Source = "github.com/aws-observability/terraform-aws-observability-accelerator"
   }
 }
 
-module "eks_blueprints_kubernetes_addons" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.32.1"
-
-  eks_cluster_id = var.eks_cluster_id
-  #eks_cluster_endpoint = module.eks_blueprints.eks_cluster_endpoint
-  #eks_oidc_provider    = module.eks_blueprints.oidc_provider
-  #eks_cluster_version  = module.eks_blueprints.eks_cluster_version
-
-  # EKS Managed Add-ons
-  #enable_amazon_eks_vpc_cni    = true
-  #enable_amazon_eks_coredns    = true
-  #enable_amazon_eks_kube_proxy = true
-
-  # Add-ons
-  enable_metrics_server     = true
-  enable_cluster_autoscaler = true
-
-  # Tetrate Istio Add-on
-  enable_tetrate_istio = true
-
-  tags = local.tags
-}
-
 module "eks_monitoring" {
   source = "../../modules/eks-monitoring"
-  # source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v2.0.0"
-  enable_istio   = true
-  eks_cluster_id = var.eks_cluster_id
 
-  # deploys AWS Distro for OpenTelemetry operator into the cluster
-  enable_amazon_eks_adot = true
+  providers = {
+    grafana = grafana
+  }
 
-  # reusing existing certificate manager? defaults to true
-  enable_cert_manager = true
+  collector_profile     = "self-managed-amp"
+  eks_cluster_id        = var.eks_cluster_id
+  eks_oidc_provider_arn = var.eks_oidc_provider_arn
 
-  # deploys external-secrets in to the cluster
-  enable_external_secrets = true
-  grafana_api_key         = var.grafana_api_key
-  target_secret_name      = "grafana-admin-credentials"
-  target_secret_namespace = "grafana-operator"
-  grafana_url             = "https://${data.aws_grafana_workspace.this.endpoint}"
+  create_amp_workspace            = var.managed_prometheus_workspace_id == "" ? true : false
+  managed_prometheus_workspace_id = var.managed_prometheus_workspace_id != "" ? var.managed_prometheus_workspace_id : null
 
-  # control the publishing of dashboards by specifying the boolean value for the variable 'enable_dashboards', default is 'true'
   enable_dashboards = var.enable_dashboards
+  enable_tracing    = true
+  enable_logs       = true
 
-  enable_managed_prometheus       = local.create_new_workspace
-  managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+  # Istio scrape targets
+  additional_scrape_jobs = [
+    {
+      job_name        = "istiod"
+      scrape_interval = "30s"
+      static_configs = [
+        { targets = ["istiod.istio-system.svc.cluster.local:15014"] }
+      ]
+    },
+    {
+      job_name     = "envoy-stats"
+      metrics_path = "/stats/prometheus"
+      kubernetes_sd_configs = [
+        { role = "pod" }
+      ]
+      relabel_configs = [
+        {
+          source_labels = ["__meta_kubernetes_pod_container_port_name"]
+          action        = "keep"
+          regex         = ".*-envoy-prom"
+        }
+      ]
+    }
+  ]
 
-  # optional, defaults to 60s interval and 15s timeout
+  # Istio dashboards
+  dashboard_sources = {
+    istio-mesh     = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.3.2/artifacts/grafana-dashboards/eks/istio/istio-mesh-dashboard.json"
+    istio-service  = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.3.2/artifacts/grafana-dashboards/eks/istio/istio-service-dashboard.json"
+    istio-workload = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.3.2/artifacts/grafana-dashboards/eks/istio/istio-workload-dashboard.json"
+    istio-cp       = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.3.2/artifacts/grafana-dashboards/eks/istio/istio-control-plane-dashboard.json"
+  }
+
   prometheus_config = {
     global_scrape_interval = "60s"
     global_scrape_timeout  = "15s"
   }
-
-  enable_logs = true
 
   tags = local.tags
 }

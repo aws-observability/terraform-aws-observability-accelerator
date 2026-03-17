@@ -1,12 +1,12 @@
 provider "aws" {
-  region = local.region
-}
-
-data "aws_eks_cluster_auth" "this" {
-  name = var.eks_cluster_id
+  region = var.aws_region
 }
 
 data "aws_eks_cluster" "this" {
+  name = var.eks_cluster_id
+}
+
+data "aws_eks_cluster_auth" "this" {
   name = var.eks_cluster_id
 }
 
@@ -14,24 +14,20 @@ data "aws_grafana_workspace" "this" {
   workspace_id = var.managed_grafana_workspace_id
 }
 
-provider "kubernetes" {
-  host                   = local.eks_cluster_endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.this.token
-}
-
 provider "helm" {
   kubernetes {
-    host                   = local.eks_cluster_endpoint
+    host                   = data.aws_eks_cluster.this.endpoint
     cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
     token                  = data.aws_eks_cluster_auth.this.token
   }
 }
 
+provider "grafana" {
+  url  = "https://${data.aws_grafana_workspace.this.endpoint}"
+  auth = var.grafana_api_key
+}
+
 locals {
-  region               = var.aws_region
-  eks_cluster_endpoint = data.aws_eks_cluster.this.endpoint
-  create_new_workspace = var.managed_prometheus_workspace_id == "" ? true : false
   tags = {
     Source = "github.com/aws-observability/terraform-aws-observability-accelerator"
   }
@@ -39,34 +35,43 @@ locals {
 
 module "eks_monitoring" {
   source = "../../modules/eks-monitoring"
-  # source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v2.0.0"
 
-  # enable java metrics collection, dashboards and alerts rules creation
-  enable_java = true
+  providers = {
+    grafana = grafana
+  }
 
-  # deploys external-secrets in to the cluster
-  enable_external_secrets = true
-  grafana_api_key         = var.grafana_api_key
-  target_secret_name      = "grafana-admin-credentials"
-  target_secret_namespace = "grafana-operator"
-  grafana_url             = "https://${data.aws_grafana_workspace.this.endpoint}"
+  collector_profile     = "self-managed-amp"
+  eks_cluster_id        = var.eks_cluster_id
+  eks_oidc_provider_arn = var.eks_oidc_provider_arn
 
-  eks_cluster_id = var.eks_cluster_id
+  create_amp_workspace            = var.managed_prometheus_workspace_id == "" ? true : false
+  managed_prometheus_workspace_id = var.managed_prometheus_workspace_id != "" ? var.managed_prometheus_workspace_id : null
 
-  # control the publishing of dashboards by specifying the boolean value for the variable 'enable_dashboards', default is 'true'
   enable_dashboards = var.enable_dashboards
+  enable_tracing    = true
+  enable_logs       = true
 
-  enable_managed_prometheus       = local.create_new_workspace
-  managed_prometheus_workspace_id = var.managed_prometheus_workspace_id
+  # Java/JMX scrape target — update the target to match your application
+  additional_scrape_jobs = [
+    {
+      job_name        = "java-jmx"
+      scrape_interval = "30s"
+      scrape_timeout  = "15s"
+      static_configs = [
+        { targets = ["tomcat-example.javajmx-sample.svc.cluster.local:9404"] }
+      ]
+    }
+  ]
 
-  # optional, defaults to 60s interval and 15s timeout
+  # Java/JMX dashboard
+  dashboard_sources = {
+    java-jmx = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.3.2/artifacts/grafana-dashboards/eks/java/default.json"
+  }
+
   prometheus_config = {
     global_scrape_interval = "60s"
     global_scrape_timeout  = "15s"
-    scrape_sample_limit    = 2000
   }
-
-  enable_logs = true
 
   tags = local.tags
 }

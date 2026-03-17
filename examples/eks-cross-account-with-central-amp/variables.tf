@@ -12,6 +12,11 @@ variable "cluster_one" {
   }
 }
 
+variable "cluster_one_oidc_provider_arn" {
+  description = "ARN of the EKS OIDC provider for cluster one"
+  type        = string
+}
+
 variable "cluster_two" {
   description = "Input for your second EKS Cluster"
   type = object({
@@ -24,6 +29,11 @@ variable "cluster_two" {
     region  = "us-east-1"
     tf_role = "<iam-role-in-eks-cluster-2-account>"
   }
+}
+
+variable "cluster_two_oidc_provider_arn" {
+  description = "ARN of the EKS OIDC provider for cluster two"
+  type        = string
 }
 
 variable "monitoring" {

@@ -1,7 +1,11 @@
 variable "eks_cluster_id" {
   description = "Name of the EKS cluster"
   type        = string
-  default     = "eks-cluster-with-vpc"
+}
+
+variable "eks_oidc_provider_arn" {
+  description = "ARN of the EKS OIDC provider for IRSA role creation"
+  type        = string
 }
 
 variable "aws_region" {
@@ -10,7 +14,7 @@ variable "aws_region" {
 }
 
 variable "managed_prometheus_workspace_id" {
-  description = "Amazon Managed Service for Prometheus Workspace ID"
+  description = "Amazon Managed Service for Prometheus Workspace ID. Leave empty to create a new workspace."
   type        = string
   default     = ""
 }
@@ -27,7 +31,7 @@ variable "grafana_api_key" {
 }
 
 variable "enable_dashboards" {
-  description = "Enables or disables curated dashboards. Dashboards are managed by the Grafana Operator"
+  description = "Whether to provision Grafana dashboards via the Grafana Terraform provider"
   type        = bool
   default     = true
 }

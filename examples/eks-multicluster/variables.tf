@@ -5,6 +5,11 @@ variable "eks_cluster_1_id" {
   nullable    = false
 }
 
+variable "eks_cluster_1_oidc_provider_arn" {
+  description = "ARN of the EKS OIDC provider for cluster 1"
+  type        = string
+}
+
 variable "eks_cluster_1_region" {
   description = "AWS region of the EKS cluster 1"
   type        = string
@@ -19,6 +24,11 @@ variable "eks_cluster_2_id" {
   nullable    = true
 }
 
+variable "eks_cluster_2_oidc_provider_arn" {
+  description = "ARN of the EKS OIDC provider for cluster 2"
+  type        = string
+}
+
 variable "eks_cluster_2_region" {
   description = "AWS region of the EKS cluster 2"
   type        = string
@@ -27,7 +37,7 @@ variable "eks_cluster_2_region" {
 }
 
 variable "managed_prometheus_workspace_id" {
-  description = "Amazon Managed Service for Prometheus Workspace ID"
+  description = "Amazon Managed Service for Prometheus Workspace ID. Leave empty to create a new workspace."
   type        = string
   default     = ""
 }
@@ -35,12 +45,10 @@ variable "managed_prometheus_workspace_id" {
 variable "managed_grafana_workspace_id" {
   description = "Amazon Managed Grafana Workspace ID"
   type        = string
-  default     = ""
 }
 
 variable "grafana_api_key" {
-  description = "API key for external-secrets to create secrets for grafana-operator"
+  description = "API key for authorizing the Grafana provider to make changes to Amazon Managed Grafana"
   type        = string
-  default     = ""
   sensitive   = true
 }

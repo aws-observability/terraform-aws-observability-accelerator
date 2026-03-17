@@ -33,8 +33,18 @@ variable "tags" {
 
 variable "enable_dashboards" {
   type        = bool
-  description = "Whether to provision Grafana dashboards via the Grafana provider"
+  description = "Whether to provision Grafana dashboards via the Grafana provider. Only applies when dashboard_delivery_method is terraform."
   default     = true
+}
+
+variable "dashboard_delivery_method" {
+  type        = string
+  description = "How dashboards are delivered: terraform (module provisions via grafana_dashboard) or none (skip, bring your own GitOps)."
+  default     = "terraform"
+  validation {
+    condition     = contains(["terraform", "none"], var.dashboard_delivery_method)
+    error_message = "dashboard_delivery_method must be one of: terraform, none"
+  }
 }
 
 variable "dashboard_sources" {

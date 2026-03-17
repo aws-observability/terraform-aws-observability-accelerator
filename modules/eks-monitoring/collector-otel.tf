@@ -15,13 +15,7 @@ resource "helm_release" "otel_collector" {
 
   values = [local.otel_collector_values]
 
-  dynamic "set" {
-    for_each = var.helm_values
-    content {
-      name  = set.key
-      value = set.value
-    }
-  }
+  set = [for k, v in var.helm_values : { name = k, value = v }]
 
   depends_on = [
     module.collector_irsa_role,

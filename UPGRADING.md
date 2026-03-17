@@ -218,3 +218,39 @@ address changes mean Terraform will destroy-then-create rather than update in pl
 If you need to preserve the AMP workspace, set `create_amp_workspace = false` and pass
 the existing workspace ID via `managed_prometheus_workspace_id`. Then import or let
 Terraform manage the workspace separately.
+
+
+## Helm Provider v3 Requirement
+
+v3.0.0 requires Helm Terraform provider `>= 3.0.0`. The Helm provider v3 changed `set`
+from a nested block to a list attribute. If you are currently on Helm provider v2, you
+will need to upgrade. Run `terraform init -upgrade` after updating your module reference.
+
+## CloudWatch PutMetricData IAM Policy
+
+The `cloudwatch-otlp` profile grants `cloudwatch:PutMetricData` on `Resource = "*"`
+without namespace scoping. This is intentional — the OTel Collector sends metrics across
+multiple CloudWatch namespaces (infrastructure metrics from kube-state-metrics,
+node-exporter, kubelet, plus application metrics via OTLP), and the Zeus OTLP endpoint
+may not support the `aws:cloudwatch:namespace` condition key.
+
+If you need to restrict PutMetricData to specific namespaces, you can:
+1. Set `collector_profile = "cloudwatch-otlp"` and override the IRSA role policy
+   externally by creating a more restrictive policy and attaching it to the role
+2. Use `helm_values` to configure the OTel Collector to prefix all metric namespaces,
+   then scope the IAM policy with `StringLike` on `aws:cloudwatch:namespace`
+
+The IRSA role is scoped to the `otel-collector` service account in the collector
+namespace, limiting the blast radius to pods running with that service account.
+
+## Dashboard Delivery Method
+
+v3.0.0 introduces `dashboard_delivery_method` (default: `"terraform"`):
+
+- `"terraform"` — Module provisions dashboards via `grafana_dashboard` resources (default)
+- `"none"` — Module skips dashboard provisioning; use the `dashboard_sources` and
+  `amp_datasource_config` / `cloudwatch_promql_datasource_config` outputs to wire up
+  your own FluxCD, ArgoCD, or Grafana Operator pipeline
+
+This replaces the v2.x FluxCD + Grafana Operator approach. FluxCD support may be
+re-introduced as a delivery method in a future release.

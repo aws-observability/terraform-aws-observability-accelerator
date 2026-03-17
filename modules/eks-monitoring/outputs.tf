@@ -28,7 +28,7 @@ output "collector_irsa_arn" {
 
 output "amp_scraper_arn" {
   description = "ARN of the AMP Managed Collector scraper (managed-metrics profile only)"
-  value       = null # Populated when collector-managed.tf is implemented (task 5.2)
+  value       = local.is_managed_metrics ? aws_prometheus_scraper.this[0].arn : null
 }
 
 #--------------------------------------------------------------
@@ -53,4 +53,28 @@ output "cloudwatch_promql_datasource_config" {
     type          = "prometheus"
     http_method   = "POST"
   } : null
+}
+
+#--------------------------------------------------------------
+# AMP Datasource Output (for BYO GitOps dashboard delivery)
+#--------------------------------------------------------------
+
+output "amp_datasource_config" {
+  description = "Configuration for Grafana Prometheus datasource pointing at AMP workspace (AMP flavor profiles). Useful when dashboard_delivery_method = none."
+  value = local.is_amp_flavor ? {
+    endpoint      = local.amp_workspace_endpoint
+    sigv4_region  = local.region
+    sigv4_service = "aps"
+    type          = "prometheus"
+    http_method   = "POST"
+  } : null
+}
+
+#--------------------------------------------------------------
+# Dashboard Sources Output (for BYO GitOps dashboard delivery)
+#--------------------------------------------------------------
+
+output "dashboard_sources" {
+  description = "Map of dashboard names to JSON source URLs. Useful when dashboard_delivery_method = none and you want to sync dashboards via FluxCD/ArgoCD."
+  value       = local.dashboard_sources
 }

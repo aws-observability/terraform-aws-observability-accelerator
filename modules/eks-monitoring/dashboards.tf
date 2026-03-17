@@ -3,12 +3,12 @@
 #--------------------------------------------------------------
 
 data "http" "dashboard_json" {
-  for_each = var.enable_dashboards ? local.dashboard_sources : {}
+  for_each = local.provision_dashboards ? local.dashboard_sources : {}
   url      = each.value
 }
 
 resource "grafana_dashboard" "this" {
-  for_each = var.enable_dashboards ? local.dashboard_sources : {}
+  for_each = local.provision_dashboards ? local.dashboard_sources : {}
 
   config_json = data.http.dashboard_json[each.key].response_body
   folder      = var.grafana_folder_id
@@ -20,7 +20,7 @@ resource "grafana_dashboard" "this" {
 #--------------------------------------------------------------
 
 resource "grafana_data_source" "cloudwatch_promql" {
-  count = local.is_cloudwatch_otlp && var.enable_dashboards ? 1 : 0
+  count = local.is_cloudwatch_otlp && local.provision_dashboards ? 1 : 0
 
   type = "prometheus"
   name = var.grafana_cw_datasource_name

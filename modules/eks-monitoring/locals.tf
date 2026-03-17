@@ -81,6 +81,9 @@ locals {
   }
 
   dashboard_sources = length(var.dashboard_sources) > 0 ? var.dashboard_sources : local.default_dashboard_sources
+
+  # Dashboards are provisioned only when delivery method is terraform AND enable_dashboards is true
+  provision_dashboards = var.dashboard_delivery_method == "terraform" && var.enable_dashboards
 }
 
 #--------------------------------------------------------------

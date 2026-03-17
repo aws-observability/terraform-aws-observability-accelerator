@@ -19,18 +19,6 @@ dashboards for your AWS infrastructure and custom applications.
 
 To explore the complete project documentation, please visit our [documentation site.](https://aws-observability.github.io/terraform-aws-observability-accelerator/)
 
-## ⚠️  Dropping base module
-
-Starting in v2.12.0, we have removed the [base module](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/v2.10.3/docs/concepts.md#base-module)
-which previously served as a glue between modules. However, the modules were quite
-independent and the base module provided limited functionality.
-
-We have moved the creation of Managed Prometheus Workspaces into the
-[eks-monitoring module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring).
-
-See our [examples](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples)
-to understand the changes.
-
 ## Modules
 
 This accelerator provides the following observability modules:

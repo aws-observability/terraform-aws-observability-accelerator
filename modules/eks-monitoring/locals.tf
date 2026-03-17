@@ -65,3 +65,150 @@ resource "terraform_data" "amp_workspace_validation" {
     }
   }
 }
+
+#--------------------------------------------------------------
+# Default Scrape Configs (shared by OTel profiles)
+#--------------------------------------------------------------
+
+locals {
+  default_otel_scrape_configs = [
+    {
+      job_name        = "kube-state-metrics"
+      scrape_interval = var.prometheus_config.global_scrape_interval
+      scrape_timeout  = var.prometheus_config.global_scrape_timeout
+      static_configs = [
+        { targets = ["kube-state-metrics.kube-system.svc.cluster.local:8080"] }
+      ]
+    },
+    {
+      job_name        = "node-exporter"
+      scrape_interval = var.prometheus_config.global_scrape_interval
+      scrape_timeout  = var.prometheus_config.global_scrape_timeout
+      static_configs = [
+        { targets = ["prometheus-node-exporter.prometheus-node-exporter.svc.cluster.local:9100"] }
+      ]
+    },
+    {
+      job_name = "kubelet"
+      scheme   = "https"
+      tls_config = {
+        ca_file              = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+        insecure_skip_verify = true
+      }
+      bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+      kubernetes_sd_configs = [
+        { role = "node" }
+      ]
+      scrape_interval = var.prometheus_config.global_scrape_interval
+      scrape_timeout  = var.prometheus_config.global_scrape_timeout
+      relabel_configs = [
+        {
+          action = "labelmap"
+          regex  = "__meta_kubernetes_node_label_(.+)"
+        }
+      ]
+    },
+  ]
+}
+
+#--------------------------------------------------------------
+# CloudWatch OTLP — OTel Collector Values
+#--------------------------------------------------------------
+
+locals {
+  cloudwatch_otel_collector_values = local.is_cloudwatch_otlp ? yamlencode({
+    mode = "deployment"
+
+    serviceAccount = {
+      create = true
+      annotations = {
+        "eks.amazonaws.com/role-arn" = try(module.collector_irsa_role[0].iam_role_arn, "")
+      }
+    }
+
+    config = {
+      extensions = {
+        "sigv4auth/monitoring" = {
+          service = "monitoring"
+          region  = local.region
+        }
+        "sigv4auth/xray" = {
+          service = "xray"
+          region  = local.region
+        }
+        "sigv4auth/logs" = {
+          service = "logs"
+          region  = local.region
+        }
+      }
+
+      receivers = {
+        prometheus = {
+          config = {
+            scrape_configs = local.default_otel_scrape_configs
+          }
+        }
+        otlp = {
+          protocols = {
+            grpc = { endpoint = "0.0.0.0:4317" }
+            http = { endpoint = "0.0.0.0:4318" }
+          }
+        }
+      }
+
+      processors = {
+        batch = {}
+      }
+
+      exporters = {
+        "otlphttp/metrics" = {
+          endpoint = var.cloudwatch_metrics_endpoint
+          auth = {
+            authenticator = "sigv4auth/monitoring"
+          }
+        }
+        "otlphttp/traces" = {
+          endpoint = "https://xray.${local.region}.amazonaws.com/v1/traces"
+          auth = {
+            authenticator = "sigv4auth/xray"
+          }
+        }
+        "otlphttp/logs" = {
+          endpoint = "https://logs.${local.region}.amazonaws.com/v1/logs"
+          auth = {
+            authenticator = "sigv4auth/logs"
+          }
+          headers = {
+            "x-aws-log-group"  = var.cloudwatch_log_group
+            "x-aws-log-stream" = var.cloudwatch_log_stream
+          }
+        }
+      }
+
+      service = {
+        extensions = ["sigv4auth/monitoring", "sigv4auth/xray", "sigv4auth/logs"]
+        pipelines = {
+          metrics = {
+            receivers  = ["prometheus", "otlp"]
+            processors = ["batch"]
+            exporters  = ["otlphttp/metrics"]
+          }
+          traces = {
+            receivers  = ["otlp"]
+            processors = ["batch"]
+            exporters  = ["otlphttp/traces"]
+          }
+          logs = {
+            receivers  = ["otlp"]
+            processors = ["batch"]
+            exporters  = ["otlphttp/logs"]
+          }
+        }
+      }
+    }
+  }) : ""
+
+  # Profile-driven OTel Collector values — currently only cloudwatch-otlp;
+  # self-managed-amp branch will be added in task 5.3.
+  otel_collector_values = local.is_cloudwatch_otlp ? local.cloudwatch_otel_collector_values : ""
+}

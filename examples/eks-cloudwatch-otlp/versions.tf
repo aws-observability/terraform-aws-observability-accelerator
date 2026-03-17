@@ -11,13 +11,19 @@ terraform {
       version = ">= 2.10.0, < 3.0.0"
     }
     grafana = {
-      source                = "grafana/grafana"
-      version               = ">= 2.0.0"
-      configuration_aliases = [grafana]
-    }
-    http = {
-      source  = "hashicorp/http"
-      version = ">= 3.0.0"
+      source  = "grafana/grafana"
+      version = ">= 2.0.0"
     }
   }
+}
+
+provider "aws" {
+  region = var.aws_region
+}
+
+provider "helm" {}
+
+provider "grafana" {
+  url  = var.grafana_endpoint
+  auth = var.grafana_api_key
 }

@@ -193,7 +193,7 @@ variable "helm_values" {
 
 variable "cloudwatch_metrics_endpoint" {
   type        = string
-  description = "CloudWatch OTLP metrics endpoint URL for the cloudwatch-otlp profile"
+  description = "CloudWatch OTLP metrics endpoint URL for the cloudwatch-otlp profile. Defaults to the regional endpoint if empty."
   default     = ""
 }
 

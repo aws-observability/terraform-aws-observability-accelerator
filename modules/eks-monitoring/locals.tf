@@ -66,6 +66,9 @@ locals {
   )
 
   amp_workspace_endpoint = local.is_amp_flavor ? "https://aps-workspaces.${local.region}.amazonaws.com/workspaces/${local.amp_workspace_id}/" : null
+
+  # CloudWatch OTLP metrics endpoint — default to regional endpoint when not provided
+  cw_metrics_endpoint = var.cloudwatch_metrics_endpoint != "" ? var.cloudwatch_metrics_endpoint : "https://monitoring.${local.region}.amazonaws.com/v1/metrics"
 }
 
 # Precondition: fail when create_amp_workspace = false and no workspace ID provided
@@ -161,6 +164,21 @@ locals {
       }
     }
 
+    clusterRole = {
+      create = true
+      rules = [
+        {
+          apiGroups = [""]
+          resources = ["nodes", "nodes/proxy", "nodes/metrics", "services", "endpoints", "pods"]
+          verbs     = ["get", "list", "watch"]
+        },
+        {
+          nonResourceURLs = ["/metrics", "/metrics/cadvisor"]
+          verbs           = ["get"]
+        },
+      ]
+    }
+
     config = {
       extensions = {
         "sigv4auth/monitoring" = {
@@ -197,7 +215,7 @@ locals {
 
       exporters = {
         "otlphttp/metrics" = {
-          endpoint = var.cloudwatch_metrics_endpoint
+          endpoint = local.cw_metrics_endpoint
           auth = {
             authenticator = "sigv4auth/monitoring"
           }
@@ -256,6 +274,21 @@ locals {
       annotations = {
         "eks.amazonaws.com/role-arn" = try(module.collector_irsa_role[0].iam_role_arn, "")
       }
+    }
+
+    clusterRole = {
+      create = true
+      rules = [
+        {
+          apiGroups = [""]
+          resources = ["nodes", "nodes/proxy", "nodes/metrics", "services", "endpoints", "pods"]
+          verbs     = ["get", "list", "watch"]
+        },
+        {
+          nonResourceURLs = ["/metrics", "/metrics/cadvisor"]
+          verbs           = ["get"]
+        },
+      ]
     }
 
     config = {

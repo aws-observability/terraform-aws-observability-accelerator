@@ -11,6 +11,10 @@ Profile-driven EKS cluster monitoring with three collector profiles:
 All profiles deploy kube-state-metrics and node-exporter for infrastructure
 metrics, and provision Grafana dashboards for cluster visibility.
 
+## Prerequisites
+
+- The EKS cluster must have an [IAM OIDC identity provider](https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html) registered in your account (required for IRSA). The module auto-derives the OIDC provider ARN from the cluster; if the provider does not exist, `terraform plan` will fail with a clear error. You can override with `eks_oidc_provider_arn` if needed.
+
 ## Usage
 
 ### Self-managed AMP (most common)
@@ -23,7 +27,6 @@ module "eks_monitoring" {
 
   collector_profile     = "self-managed-amp"
   eks_cluster_id        = "my-cluster"
-  eks_oidc_provider_arn = module.eks.oidc_provider_arn
   enable_tracing        = true
   enable_logs           = true
 }
@@ -39,7 +42,6 @@ module "eks_monitoring" {
 
   collector_profile          = "managed-metrics"
   eks_cluster_id             = "my-cluster"
-  eks_oidc_provider_arn      = module.eks.oidc_provider_arn
   scraper_subnet_ids         = module.vpc.private_subnets
   scraper_security_group_ids = [aws_security_group.scraper.id]
 }
@@ -55,7 +57,6 @@ module "eks_monitoring" {
 
   collector_profile           = "cloudwatch-otlp"
   eks_cluster_id              = "my-cluster"
-  eks_oidc_provider_arn       = module.eks.oidc_provider_arn
   cloudwatch_metrics_endpoint = "https://monitoring.us-west-2.amazonaws.com/v1/metrics"
   cloudwatch_log_group        = "/eks/my-cluster/otel"
   cloudwatch_log_stream       = "collector"
@@ -85,7 +86,7 @@ Control how dashboards are provisioned with `dashboard_delivery_method`:
 |------|-------------|------|---------|:--------:|
 | `collector_profile` | Collector profile: `managed-metrics`, `self-managed-amp`, `cloudwatch-otlp` | `string` | n/a | yes |
 | `eks_cluster_id` | EKS cluster identifier | `string` | n/a | yes |
-| `eks_oidc_provider_arn` | ARN of the EKS OIDC provider for IRSA | `string` | n/a | yes |
+| `eks_oidc_provider_arn` | ARN of the EKS OIDC provider for IRSA (auto-derived if empty) | `string` | `""` | no |
 | `tags` | Tags to apply to all resources | `map(string)` | `{}` | no |
 | `enable_dashboards` | Whether to provision Grafana dashboards | `bool` | `true` | no |
 | `dashboard_delivery_method` | `terraform` or `none` | `string` | `"terraform"` | no |

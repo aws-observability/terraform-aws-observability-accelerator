@@ -100,7 +100,10 @@ The following variables no longer exist. Remove them from your module call:
 | Variable | Description |
 |---|---|
 | `collector_profile` | One of `managed-metrics`, `self-managed-amp`, `cloudwatch-otlp` |
-| `eks_oidc_provider_arn` | ARN of the EKS OIDC provider (needed for IRSA) |
+
+## Prerequisites
+
+The EKS cluster must have an [IAM OIDC identity provider](https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html) registered in your account for IRSA to work. The module auto-derives the OIDC provider ARN from the cluster data source. If the provider does not exist, `terraform plan` will fail with a clear error. You can override with `eks_oidc_provider_arn` if needed (e.g. cross-account setups).
 
 ## New Provider Requirements
 
@@ -157,7 +160,6 @@ module "eks_monitoring" {
 
   collector_profile      = "self-managed-amp"
   eks_cluster_id         = "my-cluster"
-  eks_oidc_provider_arn  = module.eks.oidc_provider_arn
   enable_tracing         = true
   enable_logs            = true
 }
@@ -174,7 +176,6 @@ module "eks_monitoring" {
 
   collector_profile          = "managed-metrics"
   eks_cluster_id             = "my-cluster"
-  eks_oidc_provider_arn      = module.eks.oidc_provider_arn
   scraper_subnet_ids         = module.vpc.private_subnets
   scraper_security_group_ids = [aws_security_group.scraper.id]
 }
@@ -190,7 +191,6 @@ module "eks_monitoring" {
 
   collector_profile            = "cloudwatch-otlp"
   eks_cluster_id               = "my-cluster"
-  eks_oidc_provider_arn        = module.eks.oidc_provider_arn
   cloudwatch_metrics_endpoint  = "https://monitoring.us-west-2.amazonaws.com/v1/metrics"
   cloudwatch_log_group         = "/eks/my-cluster/otel"
   cloudwatch_log_stream        = "collector"

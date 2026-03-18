@@ -13,6 +13,15 @@ data "aws_eks_cluster" "this" {
 }
 
 #--------------------------------------------------------------
+# OIDC Provider Lookup (validates the provider exists in IAM)
+#--------------------------------------------------------------
+
+data "aws_iam_openid_connect_provider" "eks" {
+  count = local.needs_irsa && var.eks_oidc_provider_arn == "" ? 1 : 0
+  url   = data.aws_eks_cluster.this.identity[0].oidc[0].issuer
+}
+
+#--------------------------------------------------------------
 # Profile Routing Booleans
 #--------------------------------------------------------------
 
@@ -40,7 +49,9 @@ locals {
 
   # Derive OIDC provider ARN from EKS cluster when not explicitly provided
   eks_oidc_issuer_url   = replace(data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")
-  eks_oidc_provider_arn = var.eks_oidc_provider_arn != "" ? var.eks_oidc_provider_arn : "arn:${local.partition}:iam::${local.account_id}:oidc-provider/${local.eks_oidc_issuer_url}"
+  eks_oidc_provider_arn = var.eks_oidc_provider_arn != "" ? var.eks_oidc_provider_arn : (
+    local.needs_irsa ? data.aws_iam_openid_connect_provider.eks[0].arn : "arn:${local.partition}:iam::${local.account_id}:oidc-provider/${local.eks_oidc_issuer_url}"
+  )
 }
 
 #--------------------------------------------------------------

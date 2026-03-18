@@ -179,8 +179,9 @@ locals {
       ]
     }
 
-    # Use alternateConfig to avoid merging with chart defaults (jaeger, zipkin, etc.)
-    alternateConfig = {
+    # Override chart defaults by explicitly setting only our config.
+    # Null out default receivers/exporters/processors the chart injects.
+    config = {
       extensions = {
         health_check = {}
         "sigv4auth/monitoring" = {
@@ -209,13 +210,18 @@ locals {
             http = { endpoint = "0.0.0.0:4318" }
           }
         }
+        jaeger  = null
+        zipkin  = null
       }
 
       processors = {
-        batch = {}
+        batch          = {}
+        memory_limiter = null
       }
 
       exporters = {
+        logging = null
+        debug   = null
         "otlphttp/metrics" = {
           endpoint = local.cw_metrics_endpoint
           auth = {
@@ -293,8 +299,9 @@ locals {
       ]
     }
 
-    # Use alternateConfig to avoid merging with chart defaults (jaeger, zipkin, etc.)
-    alternateConfig = {
+    # Override chart defaults by explicitly setting only our config.
+    # Null out default receivers/exporters/processors the chart injects.
+    config = {
       extensions = {
         health_check = {}
         "sigv4auth/aps" = {
@@ -323,14 +330,19 @@ locals {
             http = { endpoint = "0.0.0.0:4318" }
           }
         }
+        jaeger  = null
+        zipkin  = null
       }
 
       processors = {
-        batch = {}
+        batch          = {}
+        memory_limiter = null
       }
 
       exporters = merge(
         {
+          logging = null
+          debug   = null
           prometheusremotewrite = {
             endpoint = "${local.amp_workspace_endpoint}api/v1/remote_write"
             auth = {

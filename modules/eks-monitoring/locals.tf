@@ -155,6 +155,7 @@ locals {
 
     serviceAccount = {
       create = true
+      name   = "otel-collector"
       annotations = {
         "eks.amazonaws.com/role-arn" = try(module.collector_irsa_role[0].iam_role_arn, "")
       }
@@ -251,6 +252,7 @@ locals {
 
     serviceAccount = {
       create = true
+      name   = "otel-collector"
       annotations = {
         "eks.amazonaws.com/role-arn" = try(module.collector_irsa_role[0].iam_role_arn, "")
       }

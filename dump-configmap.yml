@@ -1,0 +1,113 @@
+data:
+  relay: |
+    exporters:
+      debug: {}
+      logging: {}
+      otlphttp/logs:
+        auth:
+          authenticator: sigv4auth/logs
+        endpoint: https://logs.us-west-2.amazonaws.com/v1/logs
+        headers:
+          x-aws-log-group: /eks/otel-collector
+          x-aws-log-stream: otel-logs
+      otlphttp/metrics:
+        auth:
+          authenticator: sigv4auth/monitoring
+        endpoint: https://granite.amazonaws.com:443
+      otlphttp/traces:
+        auth:
+          authenticator: sigv4auth/xray
+        endpoint: https://xray.us-west-2.amazonaws.com/v1/traces
+    extensions:
+      health_check: {}
+      sigv4auth/logs:
+        region: us-west-2
+        service: logs
+      sigv4auth/monitoring:
+        region: us-west-2
+        service: monitoring
+      sigv4auth/xray:
+        region: us-west-2
+        service: xray
+    processors:
+      batch: {}
+      memory_limiter:
+        check_interval: 5s
+        limit_percentage: 80
+        spike_limit_percentage: 25
+    receivers:
+      jaeger:
+        protocols:
+          grpc:
+            endpoint: ${env:MY_POD_IP}:14250
+          thrift_compact:
+            endpoint: ${env:MY_POD_IP}:6831
+          thrift_http:
+            endpoint: ${env:MY_POD_IP}:14268
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+      prometheus:
+        config:
+          scrape_configs:
+          - job_name: kube-state-metrics
+            scrape_interval: 60s
+            scrape_timeout: 15s
+            static_configs:
+            - targets:
+              - kube-state-metrics.kube-system.svc.cluster.local:8080
+          - job_name: node-exporter
+            scrape_interval: 60s
+            scrape_timeout: 15s
+            static_configs:
+            - targets:
+              - prometheus-node-exporter.prometheus-node-exporter.svc.cluster.local:9100
+          - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+            job_name: kubelet
+            kubernetes_sd_configs:
+            - role: node
+            relabel_configs:
+            - action: labelmap
+              regex: __meta_kubernetes_node_label_(.+)
+            scheme: https
+            scrape_interval: 60s
+            scrape_timeout: 15s
+            tls_config:
+              ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              insecure_skip_verify: true
+      zipkin:
+        endpoint: ${env:MY_POD_IP}:9411
+    service:
+      extensions:
+      - sigv4auth/monitoring
+      - sigv4auth/xray
+      - sigv4auth/logs
+      pipelines:
+        logs:
+          exporters:
+          - otlphttp/logs
+          processors:
+          - batch
+          receivers:
+          - otlp
+        metrics:
+          exporters:
+          - otlphttp/metrics
+          processors:
+          - batch
+          receivers:
+          - prometheus
+          - otlp
+        traces:
+          exporters:
+          - otlphttp/traces
+          processors:
+          - batch
+          receivers:
+          - otlp
+      telemetry:
+        metrics:
+          address: ${env:MY_POD_IP}:8888

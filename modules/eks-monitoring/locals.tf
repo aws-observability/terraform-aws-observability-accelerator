@@ -179,8 +179,10 @@ locals {
       ]
     }
 
-    config = {
+    # Use alternateConfig to avoid merging with chart defaults (jaeger, zipkin, etc.)
+    alternateConfig = {
       extensions = {
+        health_check = {}
         "sigv4auth/monitoring" = {
           service = "monitoring"
           region  = local.region
@@ -239,7 +241,7 @@ locals {
       }
 
       service = {
-        extensions = ["sigv4auth/monitoring", "sigv4auth/xray", "sigv4auth/logs"]
+        extensions = ["health_check", "sigv4auth/monitoring", "sigv4auth/xray", "sigv4auth/logs"]
         pipelines = {
           metrics = {
             receivers  = ["prometheus", "otlp"]
@@ -291,8 +293,10 @@ locals {
       ]
     }
 
-    config = {
+    # Use alternateConfig to avoid merging with chart defaults (jaeger, zipkin, etc.)
+    alternateConfig = {
       extensions = {
+        health_check = {}
         "sigv4auth/aps" = {
           service = "aps"
           region  = local.region
@@ -354,6 +358,7 @@ locals {
 
       service = {
         extensions = compact([
+          "health_check",
           "sigv4auth/aps",
           var.enable_tracing ? "sigv4auth/xray" : "",
           var.enable_logs ? "sigv4auth/logs" : "",

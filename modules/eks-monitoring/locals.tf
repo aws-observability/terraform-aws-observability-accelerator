@@ -145,6 +145,27 @@ locals {
         }
       ]
     },
+    {
+      job_name     = "kubelet-cadvisor"
+      scheme       = "https"
+      metrics_path = "/metrics/cadvisor"
+      tls_config = {
+        ca_file              = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+        insecure_skip_verify = true
+      }
+      bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+      kubernetes_sd_configs = [
+        { role = "node" }
+      ]
+      scrape_interval = var.prometheus_config.global_scrape_interval
+      scrape_timeout  = var.prometheus_config.global_scrape_timeout
+      relabel_configs = [
+        {
+          action = "labelmap"
+          regex  = "__meta_kubernetes_node_label_(.+)"
+        }
+      ]
+    },
   ]
 }
 
@@ -215,6 +236,25 @@ locals {
       }
 
       processors = {
+        # Delete blank resource attributes that Zeus rejects with:
+        # "Attribute string value cannot be blank [ResourceMetrics.N]"
+        # The Prometheus receiver can produce empty string attributes from
+        # kubernetes_sd_configs metadata labels that have no value.
+        "transform/drop_blank_attrs" = {
+          error_mode = "ignore"
+          resource_statements = [
+            {
+              context    = "resource"
+              statements = [
+                "delete_key(attributes, \"net.host.name\") where attributes[\"net.host.name\"] == \"\"",
+                "delete_key(attributes, \"net.host.port\") where attributes[\"net.host.port\"] == \"\"",
+                "delete_key(attributes, \"http.scheme\") where attributes[\"http.scheme\"] == \"\"",
+                "delete_key(attributes, \"service.instance.id\") where attributes[\"service.instance.id\"] == \"\"",
+                "delete_key(attributes, \"service.name\") where attributes[\"service.name\"] == \"\"",
+              ]
+            }
+          ]
+        }
         batch = {
           send_batch_max_size = 200
           send_batch_size     = 200
@@ -255,7 +295,7 @@ locals {
         pipelines = {
           metrics = {
             receivers  = ["prometheus", "otlp"]
-            processors = ["batch"]
+            processors = ["transform/drop_blank_attrs", "batch"]
             exporters  = ["otlphttp/metrics"]
           }
           traces = {
@@ -443,6 +483,27 @@ locals {
     {
       job_name = "kubelet"
       scheme   = "https"
+      tls_config = {
+        ca_file              = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+        insecure_skip_verify = true
+      }
+      bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+      kubernetes_sd_configs = [
+        { role = "node" }
+      ]
+      scrape_interval = var.prometheus_config.global_scrape_interval
+      scrape_timeout  = var.prometheus_config.global_scrape_timeout
+      relabel_configs = [
+        {
+          action = "labelmap"
+          regex  = "__meta_kubernetes_node_label_(.+)"
+        }
+      ]
+    },
+    {
+      job_name     = "kubelet-cadvisor"
+      scheme       = "https"
+      metrics_path = "/metrics/cadvisor"
       tls_config = {
         ca_file              = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
         insecure_skip_verify = true

@@ -4,9 +4,9 @@ Profile-driven EKS cluster monitoring with three collector profiles:
 
 | Profile | Backend | Collector | Best for |
 |---------|---------|-----------|----------|
-| `managed-metrics` | Amazon Managed Prometheus | AMP Managed Collector (agentless) | Simplest setup, no in-cluster pods |
-| `self-managed-amp` | Amazon Managed Prometheus | OpenTelemetry Collector (Helm) | Full pipeline control, traces + logs |
 | `cloudwatch-otlp` | Amazon CloudWatch | OpenTelemetry Collector (Helm) | CloudWatch-native observability |
+| `managed-metrics` | Amazon Managed Prometheus | AMP Managed Collector (agentless) | Agentless setup, no in-cluster pods |
+| `self-managed-amp` | Amazon Managed Prometheus | OpenTelemetry Collector (Helm) | Full pipeline control, traces + logs |
 
 All profiles deploy kube-state-metrics and node-exporter for infrastructure
 metrics, and provision Grafana dashboards for cluster visibility.
@@ -16,36 +16,6 @@ metrics, and provision Grafana dashboards for cluster visibility.
 - The EKS cluster must have an [IAM OIDC identity provider](https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html) registered in your account (required for IRSA). The module auto-derives the OIDC provider ARN from the cluster; if the provider does not exist, `terraform plan` will fail with a clear error. You can override with `eks_oidc_provider_arn` if needed.
 
 ## Usage
-
-### Self-managed AMP (most common)
-
-```hcl
-module "eks_monitoring" {
-  source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v3.0.0"
-
-  providers = { grafana = grafana }
-
-  collector_profile     = "self-managed-amp"
-  eks_cluster_id        = "my-cluster"
-  enable_tracing        = true
-  enable_logs           = true
-}
-```
-
-### Managed metrics (agentless)
-
-```hcl
-module "eks_monitoring" {
-  source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v3.0.0"
-
-  providers = { grafana = grafana }
-
-  collector_profile          = "managed-metrics"
-  eks_cluster_id             = "my-cluster"
-  scraper_subnet_ids         = module.vpc.private_subnets
-  scraper_security_group_ids = [aws_security_group.scraper.id]
-}
-```
 
 ### CloudWatch OTLP
 
@@ -60,6 +30,37 @@ module "eks_monitoring" {
   cloudwatch_metrics_endpoint = "https://monitoring.us-west-2.amazonaws.com/v1/metrics"
   cloudwatch_log_group        = "/eks/my-cluster/otel"
   cloudwatch_log_stream       = "collector"
+}
+```
+
+### Amazon Managed Prometheus metrics (agentless)
+
+```hcl
+module "eks_monitoring" {
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v3.0.0"
+
+  providers = { grafana = grafana }
+
+  collector_profile          = "managed-metrics"
+  eks_cluster_id             = "my-cluster"
+  scraper_subnet_ids         = module.vpc.private_subnets
+  scraper_security_group_ids = [aws_security_group.scraper.id]
+}
+```
+
+
+### Amazon Managed Prometheus metrics (self managed collector)
+
+```hcl
+module "eks_monitoring" {
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v3.0.0"
+
+  providers = { grafana = grafana }
+
+  collector_profile     = "self-managed-amp"
+  eks_cluster_id        = "my-cluster"
+  enable_tracing        = true
+  enable_logs           = true
 }
 ```
 
@@ -84,7 +85,7 @@ Control how dashboards are provisioned with `dashboard_delivery_method`:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| `collector_profile` | Collector profile: `managed-metrics`, `self-managed-amp`, `cloudwatch-otlp` | `string` | n/a | yes |
+| `collector_profile` | Collector profile: `cloudwatch-otlp`, `managed-metrics`, `self-managed-amp` | `string` | n/a | yes |
 | `eks_cluster_id` | EKS cluster identifier | `string` | n/a | yes |
 | `eks_oidc_provider_arn` | ARN of the EKS OIDC provider for IRSA (auto-derived if empty) | `string` | `""` | no |
 | `tags` | Tags to apply to all resources | `map(string)` | `{}` | no |

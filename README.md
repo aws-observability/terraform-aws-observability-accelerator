@@ -7,8 +7,8 @@ Welcome to the AWS Observability Accelerator for Terraform!
 
 The AWS Observability Accelerator for Terraform is a set of opinionated modules
 to help you set up observability for your AWS environments with
-AWS-managed observability services such as Amazon Managed Service for Prometheus,
-Amazon Managed Grafana, AWS Distro for OpenTelemetry (ADOT) and Amazon CloudWatch.
+AWS-managed observability services such as Amazon CloudWatch, Amazon Managed
+Service for Prometheus, Amazon Managed Grafana, and OpenTelemetry.
 
 We provide curated metrics, logs, traces collection, alerting rules and Grafana
 dashboards for your AWS infrastructure and custom applications.
@@ -19,17 +19,45 @@ dashboards for your AWS infrastructure and custom applications.
 
 To explore the complete project documentation, please visit our [documentation site.](https://aws-observability.github.io/terraform-aws-observability-accelerator/)
 
-## Modules
+## EKS Monitoring — Collector Profiles
 
-This accelerator provides the following observability modules:
+The [EKS monitoring module](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/)
+offers three collector profiles. Pick the one that matches your observability
+backend:
 
-- [EKS Monitoring with AWS-Managed Open Source](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/) - Get Prometheus metrics, CloudWatch logs collection, and X-Ray traces (with OTLP support) for your EKS cluster. Visualize key metrics and logs with provided Grafana dashboards and get pre-built alerting rules.
+| Profile | Backend | Collector | Best for |
+|---------|---------|-----------|----------|
+| `cloudwatch-otlp` | Amazon CloudWatch | OpenTelemetry Collector (Helm) | CloudWatch-native observability with OTLP |
+| `managed-metrics` | Amazon Managed Prometheus | AMP Managed Collector (agentless) | Agentless setup, no in-cluster collector to manage |
+| `self-managed-amp` | Amazon Managed Prometheus | OpenTelemetry Collector (Helm) | Full control over collection pipeline, traces + logs |
 
-- [EKS Monitoring with Enhanced CloudWatch Container Insights](https://aws-observability.github.io/terraform-aws-observability-accelerator/container-insights/eks/) - Get deep visibility into EKS using Amazon CloudWatch for metrics collection, aggregation, and insights summaries. Includes support for [CloudWatch Application Signals (preview)](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Application-Monitoring-Sections.html)
+All profiles deploy kube-state-metrics and node-exporter for infrastructure
+metrics, and provision Grafana dashboards for cluster visibility.
 
-- [ECS Monitoring on EC2 with AWS-Managed Open Source](https://aws-observability.github.io/terraform-aws-observability-accelerator/ecs/ecs-monitoring-on-ec2/) - Collect metrics, traces, and logs for ECS on EC2 and send them to a Managed Prometheus workspace , X-Ray, and CloudWatch Logs. Includes pre-built Grafana dashboards for key metrics and logs.
+```hcl
+module "eks_monitoring" {
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v3.0.0"
 
-- [Managed Prometheus Monitoring](https://aws-observability.github.io/terraform-aws-observability-accelerator/workloads/managed-prometheus/) - This module sets up automated observability for Amazon Managed Service for Prometheus workspaces, including a Grafana dashboard, CloudWatch monitoring, and service quota alarms.
+  providers = { grafana = grafana }
+
+  collector_profile           = "cloudwatch-otlp"  # or "managed-metrics", "self-managed-amp"
+  eks_cluster_id              = "my-cluster"
+  cloudwatch_metrics_endpoint = "https://monitoring.us-west-2.amazonaws.com/v1/metrics"
+  cloudwatch_log_group        = "/eks/my-cluster/otel"
+  cloudwatch_log_stream       = "collector"
+}
+```
+
+See the [EKS monitoring guide](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/)
+for full walkthroughs of each profile.
+
+## Other Modules
+
+- [EKS Monitoring with Enhanced CloudWatch Container Insights](https://aws-observability.github.io/terraform-aws-observability-accelerator/container-insights/eks/) - Deep visibility into EKS using Amazon CloudWatch for metrics collection, aggregation, and insights summaries. Includes support for [CloudWatch Application Signals (preview)](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Application-Monitoring-Sections.html)
+
+- [ECS Monitoring on EC2 with AWS-Managed Open Source](https://aws-observability.github.io/terraform-aws-observability-accelerator/ecs/ecs-monitoring-on-ec2/) - Collect metrics, traces, and logs for ECS on EC2 and send them to a Managed Prometheus workspace, X-Ray, and CloudWatch Logs. Includes pre-built Grafana dashboards for key metrics and logs.
+
+- [Managed Prometheus Monitoring](https://aws-observability.github.io/terraform-aws-observability-accelerator/workloads/managed-prometheus/) - Automated observability for Amazon Managed Service for Prometheus workspaces, including a Grafana dashboard, CloudWatch monitoring, and service quota alarms.
 
 
 ## Motivation

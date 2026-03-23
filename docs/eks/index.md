@@ -11,9 +11,9 @@ collector profiles:
 
 | Profile | Backend | Collector | Best for |
 |---------|---------|-----------|----------|
-| `managed-metrics` | Amazon Managed Prometheus | AMP Managed Collector (agentless) | Simplest setup, no in-cluster collector to manage |
-| `self-managed-amp` | Amazon Managed Prometheus | OpenTelemetry Collector (Helm) | Full control over collection pipeline, traces + logs support |
 | `cloudwatch-otlp` | Amazon CloudWatch | OpenTelemetry Collector (Helm) | CloudWatch-native observability with OTLP |
+| `managed-metrics` | Amazon Managed Prometheus | AMP Managed Collector (agentless) | Agentless setup, no in-cluster collector to manage |
+| `self-managed-amp` | Amazon Managed Prometheus | OpenTelemetry Collector (Helm) | Full control over collection pipeline, traces + logs support |
 
 All profiles deploy [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics)
 and [node-exporter](https://github.com/prometheus/node_exporter) for infrastructure
@@ -29,17 +29,17 @@ metrics, and provision Grafana dashboards for cluster visibility.
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 - An [Amazon Managed Grafana](https://docs.aws.amazon.com/grafana/latest/userguide/what-is-Amazon-Managed-Service-Grafana.html) workspace (for dashboards)
 
-## Quick start — Self-managed AMP profile
+## Quick start — CloudWatch OTLP profile
 
-This walkthrough uses the `self-managed-amp` profile, which deploys an
-OpenTelemetry Collector to scrape metrics and remote-write to AMP. This is the
-most common setup and supports metrics, traces, and logs.
+This walkthrough uses the `cloudwatch-otlp` profile, which deploys an
+OpenTelemetry Collector to send metrics, traces, and logs to Amazon CloudWatch
+using the OTLP protocol.
 
 #### 1. Clone and initialize
 
 ```bash
 git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
-cd examples/eks-amp-otel
+cd examples/eks-cloudwatch-otlp
 terraform init
 ```
 
@@ -48,6 +48,9 @@ terraform init
 ```bash
 export TF_VAR_eks_cluster_id=my-cluster
 export TF_VAR_aws_region=us-west-2
+export TF_VAR_cloudwatch_metrics_endpoint="https://monitoring.us-west-2.amazonaws.com/v1/metrics"
+export TF_VAR_cloudwatch_log_group="/eks/my-cluster/otel"
+export TF_VAR_cloudwatch_log_stream="collector"
 ```
 
 #### 3. Amazon Managed Grafana workspace
@@ -78,34 +81,27 @@ export TF_VAR_grafana_api_key=$(aws grafana create-workspace-api-key \
   --query key --output text)
 ```
 
-#### 4. (Optional) Amazon Managed Prometheus workspace
-
-By default the module creates a new AMP workspace. To use an existing one:
-
-```bash
-export TF_VAR_managed_prometheus_workspace_id=ws-xxx
-```
-
-And set `create_amp_workspace = false` in your module call.
-
-#### 5. Deploy
+#### 4. Deploy
 
 ```bash
 terraform apply
 ```
 
-#### 6. Visualization
+#### 5. Visualization
 
 Open your Amazon Managed Grafana workspace. The module provisions infrastructure
 dashboards (cluster, kubelet, namespace workloads, node-exporter, nodes,
-workloads) via the `grafana_dashboard` Terraform resource.
+workloads) via the `grafana_dashboard` Terraform resource. The CloudWatch OTLP
+profile uses a Prometheus-compatible PromQL datasource backed by CloudWatch.
 
-## Managed-metrics profile (agentless)
+For more details, see the [CloudWatch OTLP guide](cloudwatch-otlp.md).
+
+## Managed-metrics profile (agentless AMP scraper)
 
 The `managed-metrics` profile uses the
 [AMP Managed Collector](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-collector.html)
 — a fully managed, agentless scraper that runs outside your cluster. No
-OpenTelemetry Collector pods are deployed.
+OpenTelemetry Collector pods are deployed. Metrics-only (no traces or logs).
 
 ```hcl
 module "eks_monitoring" {
@@ -124,10 +120,46 @@ module "eks_monitoring" {
     The managed scraper requires at least 2 subnets in 2 distinct Availability
     Zones. See the [managed-metrics example](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples/eks-amp-managed).
 
-## CloudWatch OTLP profile
+## Self-managed AMP profile
 
-For CloudWatch-native observability, see the dedicated
-[CloudWatch OTLP guide](cloudwatch-otlp.md).
+The `self-managed-amp` profile deploys an OpenTelemetry Collector via Helm to
+scrape Prometheus metrics and remote-write to Amazon Managed Prometheus. It
+supports metrics, traces (X-Ray), and logs (CloudWatch Logs).
+
+```bash
+git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
+cd examples/eks-amp-otel
+terraform init
+```
+
+```bash
+export TF_VAR_eks_cluster_id=my-cluster
+export TF_VAR_aws_region=us-west-2
+```
+
+By default the module creates a new AMP workspace. To use an existing one:
+
+```bash
+export TF_VAR_managed_prometheus_workspace_id=ws-xxx
+```
+
+And set `create_amp_workspace = false` in your module call.
+
+```hcl
+module "eks_monitoring" {
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v3.0.0"
+
+  providers = { grafana = grafana }
+
+  collector_profile = "self-managed-amp"
+  eks_cluster_id    = var.eks_cluster_id
+  enable_tracing    = true
+  enable_logs       = true
+}
+```
+
+See the [self-managed AMP example](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples/eks-amp-otel)
+for a complete working configuration.
 
 ## Dashboards
 

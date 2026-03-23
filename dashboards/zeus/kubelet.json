@@ -72,7 +72,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(kubelet_node_name{\"@resource.service.name\"=\"kubelet\"})",
+          "expr": "sum(kubelet_node_name{job=\"kubelet\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -126,7 +126,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(kubelet_running_pods{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\"}) OR sum(kubelet_running_pod_count{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\"})",
+          "expr": "sum(kubelet_running_pods{job=\"kubelet\", instance=~\"$instance\"}) OR sum(kubelet_running_pod_count{job=\"kubelet\", instance=~\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -180,7 +180,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(kubelet_running_containers{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\"}) OR sum(kubelet_running_container_count{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\"})",
+          "expr": "sum(kubelet_running_containers{job=\"kubelet\", instance=~\"$instance\"}) OR sum(kubelet_running_container_count{job=\"kubelet\", instance=~\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -234,7 +234,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(volume_manager_total_volumes{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\", state=\"actual_state_of_world\"})",
+          "expr": "sum(volume_manager_total_volumes{job=\"kubelet\", instance=~\"$instance\", state=\"actual_state_of_world\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -288,7 +288,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(volume_manager_total_volumes{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\",state=\"desired_state_of_world\"})",
+          "expr": "sum(volume_manager_total_volumes{job=\"kubelet\", instance=~\"$instance\",state=\"desired_state_of_world\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -342,7 +342,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum(rate(kubelet_node_config_error{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval]))",
+          "expr": "sum(rate(kubelet_node_config_error{job=\"kubelet\", instance=~\"$instance\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -437,7 +437,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "sum(rate(kubelet_runtime_operations_total{\"@resource.service.name\"=\"kubelet\",\"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (operation_type, `@resource.service.instance.id`)",
+          "expr": "sum(rate(kubelet_runtime_operations_total{job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (operation_type, instance)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -533,7 +533,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "sum(rate(kubelet_runtime_operations_errors_total{\"@resource.service.name\"=\"kubelet\",\"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (`@resource.service.instance.id`, operation_type)",
+          "expr": "sum(rate(kubelet_runtime_operations_errors_total{job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_type)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -629,7 +629,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(kubelet_runtime_operations_duration_seconds_bucket{\"@resource.service.name\"=\"kubelet\",\"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (`@resource.service.instance.id`, operation_type, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(kubelet_runtime_operations_duration_seconds_bucket{job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_type, le))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -725,7 +725,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "sum(rate(kubelet_pod_start_duration_seconds_count{\"@resource.service.name\"=\"kubelet\",\"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (`@resource.service.instance.id`)",
+          "expr": "sum(rate(kubelet_pod_start_duration_seconds_count{job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -737,7 +737,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "sum(rate(kubelet_pod_worker_duration_seconds_count{\"@resource.service.name\"=\"kubelet\",\"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (`@resource.service.instance.id`)",
+          "expr": "sum(rate(kubelet_pod_worker_duration_seconds_count{job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -833,7 +833,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pod_start_duration_seconds_count{\"@resource.service.name\"=\"kubelet\",\"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (`@resource.service.instance.id`, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pod_start_duration_seconds_count{job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, le))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -845,7 +845,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pod_worker_duration_seconds_bucket{\"@resource.service.name\"=\"kubelet\",\"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (`@resource.service.instance.id`, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pod_worker_duration_seconds_bucket{job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, le))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -941,7 +941,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "sum(rate(storage_operation_duration_seconds_count{\"@resource.service.name\"=\"kubelet\",\"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (`@resource.service.instance.id`, operation_name, volume_plugin)",
+          "expr": "sum(rate(storage_operation_duration_seconds_count{job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_name, volume_plugin)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1037,7 +1037,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "sum(rate(storage_operation_errors_total{\"@resource.service.name\"=\"kubelet\",\"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (`@resource.service.instance.id`, operation_name, volume_plugin)",
+          "expr": "sum(rate(storage_operation_errors_total{job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_name, volume_plugin)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1133,7 +1133,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(storage_operation_duration_seconds_bucket{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (`@resource.service.instance.id`, operation_name, volume_plugin, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(storage_operation_duration_seconds_bucket{job=\"kubelet\", instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_name, volume_plugin, le))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1229,7 +1229,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "sum(rate(kubelet_cgroup_manager_duration_seconds_count{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (`@resource.service.instance.id`, operation_type)",
+          "expr": "sum(rate(kubelet_cgroup_manager_duration_seconds_count{job=\"kubelet\", instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_type)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1325,7 +1325,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(kubelet_cgroup_manager_duration_seconds_bucket{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (`@resource.service.instance.id`, operation_type, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(kubelet_cgroup_manager_duration_seconds_bucket{job=\"kubelet\", instance=~\"$instance\"}[$__rate_interval])) by (instance, operation_type, le))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1422,7 +1422,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "sum(rate(kubelet_pleg_relist_duration_seconds_count{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (`@resource.service.instance.id`)",
+          "expr": "sum(rate(kubelet_pleg_relist_duration_seconds_count{job=\"kubelet\", instance=~\"$instance\"}[$__rate_interval])) by (instance)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1518,7 +1518,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pleg_relist_interval_seconds_bucket{\"@resource.service.name\"=\"kubelet\",\"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (`@resource.service.instance.id`, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pleg_relist_interval_seconds_bucket{job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, le))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1614,7 +1614,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pleg_relist_duration_seconds_bucket{\"@resource.service.name\"=\"kubelet\",\"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (`@resource.service.instance.id`, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(kubelet_pleg_relist_duration_seconds_bucket{job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])) by (instance, le))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1708,7 +1708,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "sum(rate(rest_client_requests_total{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\",code=~\"2..\"}[$__rate_interval]))",
+          "expr": "sum(rate(rest_client_requests_total{job=\"kubelet\", instance=~\"$instance\",code=~\"2..\"}[$__rate_interval]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1720,7 +1720,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "sum(rate(rest_client_requests_total{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\",code=~\"3..\"}[$__rate_interval]))",
+          "expr": "sum(rate(rest_client_requests_total{job=\"kubelet\", instance=~\"$instance\",code=~\"3..\"}[$__rate_interval]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1732,7 +1732,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "sum(rate(rest_client_requests_total{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\",code=~\"4..\"}[$__rate_interval]))",
+          "expr": "sum(rate(rest_client_requests_total{job=\"kubelet\", instance=~\"$instance\",code=~\"4..\"}[$__rate_interval]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1744,7 +1744,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "sum(rate(rest_client_requests_total{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\",code=~\"5..\"}[$__rate_interval]))",
+          "expr": "sum(rate(rest_client_requests_total{job=\"kubelet\", instance=~\"$instance\",code=~\"5..\"}[$__rate_interval]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1808,7 +1808,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(rest_client_request_duration_seconds_bucket{\"@resource.service.name\"=\"kubelet\", \"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])) by (`@resource.service.instance.id`, verb, url, le))",
+          "expr": "histogram_quantile(0.99, sum(rate(rest_client_request_duration_seconds_bucket{job=\"kubelet\", instance=~\"$instance\"}[$__rate_interval])) by (instance, verb, url, le))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1896,7 +1896,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "process_resident_memory_bytes{\"@resource.service.name\"=\"kubelet\",\"@resource.service.instance.id\"=~\"$instance\"}",
+          "expr": "process_resident_memory_bytes{job=\"kubelet\",instance=~\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -2016,7 +2016,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "rate(process_cpu_seconds_total{\"@resource.service.name\"=\"kubelet\",\"@resource.service.instance.id\"=~\"$instance\"}[$__rate_interval])",
+          "expr": "rate(process_cpu_seconds_total{job=\"kubelet\",instance=~\"$instance\"}[$__rate_interval])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2077,7 +2077,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "go_goroutines{\"@resource.service.name\"=\"kubelet\",\"@resource.service.instance.id\"=~\"$instance\"}",
+          "expr": "go_goroutines{job=\"kubelet\",instance=~\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -2160,7 +2160,7 @@
         "name": "instance",
         "options": [],
         "query": {
-          "query": "label_values(up{\"@resource.service.name\"=\"kubelet\"}, @resource.service.instance.id)",
+          "query": "label_values(up{job=\"kubelet\"}, instance)",
           "refId": "Prometheus-instance-Variable-Query"
         },
         "refresh": 2,

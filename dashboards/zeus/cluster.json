@@ -209,7 +209,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum((sum(kube_pod_container_resource_requests{resource=\"cpu\"}) by (namespace))) / sum(kube_node_status_allocatable{\"@resource.service.name\"=\"kube-state-metrics\",resource=\"cpu\"})",
+          "expr": "sum((sum(kube_pod_container_resource_requests{resource=\"cpu\"}) by (namespace))) / sum(kube_node_status_allocatable{job=\"kube-state-metrics\",resource=\"cpu\"})",
           "format": "time_series",
           "instant": true,
           "intervalFactor": 2,
@@ -275,7 +275,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum((sum(kube_pod_container_resource_limits{resource=\"cpu\"}) by (namespace))) / sum(kube_node_status_allocatable{\"@resource.service.name\"=\"kube-state-metrics\",resource=\"cpu\"})",
+          "expr": "sum((sum(kube_pod_container_resource_limits{resource=\"cpu\"}) by (namespace))) / sum(kube_node_status_allocatable{job=\"kube-state-metrics\",resource=\"cpu\"})",
           "format": "time_series",
           "instant": true,
           "intervalFactor": 2,
@@ -341,7 +341,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "1 - sum((node_memory_MemAvailable_bytes)) / sum(node_memory_MemTotal_bytes{\"@resource.service.name\"=\"node-exporter\"})",
+          "expr": "1 - sum((node_memory_MemAvailable_bytes)) / sum(node_memory_MemTotal_bytes{job=\"node-exporter\"})",
           "format": "time_series",
           "instant": true,
           "intervalFactor": 2,
@@ -407,7 +407,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum((sum(kube_pod_container_resource_requests{resource=\"memory\"}) by (namespace))) / sum(kube_node_status_allocatable{\"@resource.service.name\"=\"kube-state-metrics\",resource=\"memory\"})",
+          "expr": "sum((sum(kube_pod_container_resource_requests{resource=\"memory\"}) by (namespace))) / sum(kube_node_status_allocatable{job=\"kube-state-metrics\",resource=\"memory\"})",
           "format": "time_series",
           "instant": true,
           "intervalFactor": 2,
@@ -473,7 +473,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum((sum(kube_pod_container_resource_limits{resource=\"memory\"}) by (namespace))) / sum(kube_node_status_allocatable{\"@resource.service.name\"=\"kube-state-metrics\",resource=\"memory\"})",
+          "expr": "sum((sum(kube_pod_container_resource_limits{resource=\"memory\"}) by (namespace))) / sum(kube_node_status_allocatable{job=\"kube-state-metrics\",resource=\"memory\"})",
           "format": "time_series",
           "instant": true,
           "intervalFactor": 2,
@@ -923,7 +923,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(kube_pod_owner{\"@resource.service.name\"=\"kube-state-metrics\"}) by (namespace)",
+          "expr": "sum(kube_pod_owner{job=\"kube-state-metrics\"}) by (namespace)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1141,7 +1141,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(container_memory_rss{\"@resource.service.name\"=\"kubelet\", container!=\"\"}) by (namespace)",
+          "expr": "sum(container_memory_rss{job=\"kubelet\", container!=\"\"}) by (namespace)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1465,7 +1465,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(kube_pod_owner{\"@resource.service.name\"=\"kube-state-metrics\"}) by (namespace)",
+          "expr": "sum(kube_pod_owner{job=\"kube-state-metrics\"}) by (namespace)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1493,7 +1493,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(container_memory_rss{\"@resource.service.name\"=\"kubelet\", container!=\"\"}) by (namespace)",
+          "expr": "sum(container_memory_rss{job=\"kubelet\", container!=\"\"}) by (namespace)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1521,7 +1521,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(container_memory_rss{\"@resource.service.name\"=\"kubelet\", container!=\"\"}) by (namespace) / sum((sum(kube_pod_container_resource_requests{resource=\"memory\"}) by (namespace))) by (namespace)",
+          "expr": "sum(container_memory_rss{job=\"kubelet\", container!=\"\"}) by (namespace) / sum((sum(kube_pod_container_resource_requests{resource=\"memory\"}) by (namespace))) by (namespace)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1549,7 +1549,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(container_memory_rss{\"@resource.service.name\"=\"kubelet\", container!=\"\"}) by (namespace) / sum((sum(kube_pod_container_resource_limits{resource=\"memory\"}) by (namespace))) by (namespace)",
+          "expr": "sum(container_memory_rss{job=\"kubelet\", container!=\"\"}) by (namespace) / sum((sum(kube_pod_container_resource_limits{resource=\"memory\"}) by (namespace))) by (namespace)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1848,7 +1848,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(irate(container_network_receive_bytes_total{\"@resource.service.name\"=\"kubelet\", namespace=~\".+\"}[$__interval])) by (namespace)",
+          "expr": "sum(irate(container_network_receive_bytes_total{job=\"kubelet\", namespace=~\".+\"}[$__interval])) by (namespace)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1863,7 +1863,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(irate(container_network_transmit_bytes_total{\"@resource.service.name\"=\"kubelet\", namespace=~\".+\"}[$__interval])) by (namespace)",
+          "expr": "sum(irate(container_network_transmit_bytes_total{job=\"kubelet\", namespace=~\".+\"}[$__interval])) by (namespace)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1878,7 +1878,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(irate(container_network_receive_packets_total{\"@resource.service.name\"=\"kubelet\", namespace=~\".+\"}[$__interval])) by (namespace)",
+          "expr": "sum(irate(container_network_receive_packets_total{job=\"kubelet\", namespace=~\".+\"}[$__interval])) by (namespace)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1893,7 +1893,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(irate(container_network_transmit_packets_total{\"@resource.service.name\"=\"kubelet\", namespace=~\".+\"}[$__interval])) by (namespace)",
+          "expr": "sum(irate(container_network_transmit_packets_total{job=\"kubelet\", namespace=~\".+\"}[$__interval])) by (namespace)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1908,7 +1908,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(irate(container_network_receive_packets_dropped_total{\"@resource.service.name\"=\"kubelet\", namespace=~\".+\"}[$__interval])) by (namespace)",
+          "expr": "sum(irate(container_network_receive_packets_dropped_total{job=\"kubelet\", namespace=~\".+\"}[$__interval])) by (namespace)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1923,7 +1923,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(irate(container_network_transmit_packets_dropped_total{\"@resource.service.name\"=\"kubelet\", namespace=~\".+\"}[$__interval])) by (namespace)",
+          "expr": "sum(irate(container_network_transmit_packets_dropped_total{job=\"kubelet\", namespace=~\".+\"}[$__interval])) by (namespace)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -2057,7 +2057,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(irate(container_network_receive_bytes_total{\"@resource.service.name\"=\"kubelet\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
+          "expr": "sum(irate(container_network_receive_bytes_total{job=\"kubelet\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2156,7 +2156,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(irate(container_network_transmit_bytes_total{\"@resource.service.name\"=\"kubelet\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
+          "expr": "sum(irate(container_network_transmit_bytes_total{job=\"kubelet\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2281,7 +2281,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(irate(container_network_receive_packets_dropped_total{\"@resource.service.name\"=\"kubelet\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
+          "expr": "sum(irate(container_network_receive_packets_dropped_total{job=\"kubelet\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2380,7 +2380,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(irate(container_network_transmit_packets_dropped_total{\"@resource.service.name\"=\"kubelet\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
+          "expr": "sum(irate(container_network_transmit_packets_dropped_total{job=\"kubelet\", namespace=~\".+\"}[$__rate_interval])) by (namespace)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2505,7 +2505,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "ceil(sum by(namespace) (rate(container_fs_reads_total{\"@resource.service.name\"=\"kubelet\", container!=\"\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", namespace!=\"\"}[$__rate_interval]) + rate(container_fs_writes_total{\"@resource.service.name\"=\"kubelet\", container!=\"\", namespace!=\"\"}[$__rate_interval])))",
+          "expr": "ceil(sum by(namespace) (rate(container_fs_reads_total{job=\"kubelet\", container!=\"\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", namespace!=\"\"}[$__rate_interval]) + rate(container_fs_writes_total{job=\"kubelet\", container!=\"\", namespace!=\"\"}[$__rate_interval])))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2604,7 +2604,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum by(namespace) (rate(container_fs_reads_bytes_total{\"@resource.service.name\"=\"kubelet\", container!=\"\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", namespace!=\"\"}[$__rate_interval]) + rate(container_fs_writes_bytes_total{\"@resource.service.name\"=\"kubelet\", container!=\"\", namespace!=\"\"}[$__rate_interval]))",
+          "expr": "sum by(namespace) (rate(container_fs_reads_bytes_total{job=\"kubelet\", container!=\"\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", namespace!=\"\"}[$__rate_interval]) + rate(container_fs_writes_bytes_total{job=\"kubelet\", container!=\"\", namespace!=\"\"}[$__rate_interval]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2894,7 +2894,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by(namespace) (rate(container_fs_reads_total{\"@resource.service.name\"=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]))",
+          "expr": "sum by(namespace) (rate(container_fs_reads_total{job=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]))",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -2909,7 +2909,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum by(namespace) (rate(container_fs_writes_total{\"@resource.service.name\"=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]))",
+          "expr": "sum by(namespace) (rate(container_fs_writes_total{job=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]))",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -2924,7 +2924,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by(namespace) (rate(container_fs_reads_total{\"@resource.service.name\"=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]) + rate(container_fs_writes_total{\"@resource.service.name\"=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]))",
+          "expr": "sum by(namespace) (rate(container_fs_reads_total{job=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]) + rate(container_fs_writes_total{job=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]))",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -2938,7 +2938,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum by(namespace) (rate(container_fs_reads_bytes_total{\"@resource.service.name\"=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]))",
+          "expr": "sum by(namespace) (rate(container_fs_reads_bytes_total{job=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]))",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -2952,7 +2952,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum by(namespace) (rate(container_fs_writes_bytes_total{\"@resource.service.name\"=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]))",
+          "expr": "sum by(namespace) (rate(container_fs_writes_bytes_total{job=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]))",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -2966,7 +2966,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum by(namespace) (rate(container_fs_reads_bytes_total{\"@resource.service.name\"=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]) + rate(container_fs_writes_bytes_total{\"@resource.service.name\"=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]))",
+          "expr": "sum by(namespace) (rate(container_fs_reads_bytes_total{job=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]) + rate(container_fs_writes_bytes_total{job=\"kubelet\", device=~\"mmcblk.p.+|.*nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\", container!=\"\", namespace!=\"\"}[$__rate_interval]))",
           "format": "table",
           "instant": true,
           "interval": "",

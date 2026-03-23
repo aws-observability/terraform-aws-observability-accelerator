@@ -236,13 +236,15 @@ locals {
       }
 
       processors = {
-        # Delete blank resource attributes that Zeus rejects with:
-        # "Attribute string value cannot be blank [ResourceMetrics.N]"
-        # The Prometheus receiver can produce empty string attributes from
-        # kubernetes_sd_configs metadata labels that have no value.
-        "transform/drop_blank_attrs" = {
+        # Two-phase transform for Zeus compatibility:
+        # 1. Delete blank resource attributes that Zeus rejects with
+        #    "Attribute string value cannot be blank [ResourceMetrics.N]"
+        # 2. Promote service.name → job and service.instance.id → instance
+        #    as metric-level attributes so dashboards can use standard
+        #    Prometheus label names on any Grafana version (v10+).
+        "transform/zeus_compat" = {
           error_mode = "ignore"
-          resource_statements = [
+          metric_statements = [
             {
               context    = "resource"
               statements = [
@@ -252,7 +254,14 @@ locals {
                 "delete_key(attributes, \"service.instance.id\") where attributes[\"service.instance.id\"] == \"\"",
                 "delete_key(attributes, \"service.name\") where attributes[\"service.name\"] == \"\"",
               ]
-            }
+            },
+            {
+              context    = "datapoint"
+              statements = [
+                "set(attributes[\"job\"], resource.attributes[\"service.name\"]) where resource.attributes[\"service.name\"] != nil",
+                "set(attributes[\"instance\"], resource.attributes[\"service.instance.id\"]) where resource.attributes[\"service.instance.id\"] != nil",
+              ]
+            },
           ]
         }
         batch = {
@@ -295,7 +304,7 @@ locals {
         pipelines = {
           metrics = {
             receivers  = ["prometheus", "otlp"]
-            processors = ["transform/drop_blank_attrs", "batch"]
+            processors = ["transform/zeus_compat", "batch"]
             exporters  = ["otlphttp/metrics"]
           }
           traces = {

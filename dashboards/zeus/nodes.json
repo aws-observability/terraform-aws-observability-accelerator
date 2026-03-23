@@ -1242,7 +1242,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "sum(irate(container_network_receive_bytes_total{\"@resource.service.instance.id\"=~\"$node\"}[$__rate_interval])) by (node, pod)",
+          "expr": "sum(irate(container_network_receive_bytes_total{instance=~\"$node\"}[$__rate_interval])) by (node, pod)",
           "interval": "",
           "legendFormat": "{{ node }} {{ pod }}",
           "refId": "A"
@@ -1359,7 +1359,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "sum(irate(container_network_transmit_bytes_total{\"@resource.service.instance.id\"=~\"$node\"}[$__rate_interval])) by (node, pod)",
+          "expr": "sum(irate(container_network_transmit_bytes_total{instance=~\"$node\"}[$__rate_interval])) by (node, pod)",
           "interval": "",
           "legendFormat": "{{ node }} {{ pod }}",
           "refId": "A"

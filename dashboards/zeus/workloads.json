@@ -400,7 +400,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(\n    kube_pod_container_resource_requests{\"@resource.service.name\"=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"cpu\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
+          "expr": "sum(\n    kube_pod_container_resource_requests{job=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"cpu\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -414,7 +414,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(\n    (sum(irate(container_cpu_usage_seconds_total[5m])) by (namespace, pod, container, node)){namespace=\"$namespace\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n/sum(\n    kube_pod_container_resource_requests{\"@resource.service.name\"=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"cpu\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
+          "expr": "sum(\n    (sum(irate(container_cpu_usage_seconds_total[5m])) by (namespace, pod, container, node)){namespace=\"$namespace\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n/sum(\n    kube_pod_container_resource_requests{job=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"cpu\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -428,7 +428,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(\n    kube_pod_container_resource_limits{\"@resource.service.name\"=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"cpu\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
+          "expr": "sum(\n    kube_pod_container_resource_limits{job=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"cpu\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -442,7 +442,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(\n    (sum(irate(container_cpu_usage_seconds_total[5m])) by (namespace, pod, container, node)){namespace=\"$namespace\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n/sum(\n    kube_pod_container_resource_limits{\"@resource.service.name\"=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"cpu\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
+          "expr": "sum(\n    (sum(irate(container_cpu_usage_seconds_total[5m])) by (namespace, pod, container, node)){namespace=\"$namespace\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n/sum(\n    kube_pod_container_resource_limits{job=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"cpu\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -835,7 +835,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(\n    kube_pod_container_resource_requests{\"@resource.service.name\"=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"memory\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
+          "expr": "sum(\n    kube_pod_container_resource_requests{job=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"memory\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -849,7 +849,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(\n    container_memory_working_set_bytes{namespace=\"$namespace\", container!=\"\", image!=\"\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n/sum(\n    kube_pod_container_resource_requests{\"@resource.service.name\"=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"memory\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
+          "expr": "sum(\n    container_memory_working_set_bytes{namespace=\"$namespace\", container!=\"\", image!=\"\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n/sum(\n    kube_pod_container_resource_requests{job=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"memory\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -863,7 +863,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(\n    kube_pod_container_resource_limits{\"@resource.service.name\"=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"memory\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
+          "expr": "sum(\n    kube_pod_container_resource_limits{job=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"memory\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -877,7 +877,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "sum(\n    container_memory_working_set_bytes{namespace=\"$namespace\", container!=\"\", image!=\"\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n/sum(\n    kube_pod_container_resource_limits{\"@resource.service.name\"=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"memory\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
+          "expr": "sum(\n    container_memory_working_set_bytes{namespace=\"$namespace\", container!=\"\", image!=\"\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n/sum(\n    kube_pod_container_resource_limits{job=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"memory\"}\n  * on(namespace,pod)\n    group_left(workload, workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=\"$workload\", workload_type=\"$type\"}\n) by (pod)\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1160,7 +1160,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "(sum(irate(container_network_receive_bytes_total{\"@resource.service.name\"=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
+          "expr": "(sum(irate(container_network_receive_bytes_total{job=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1174,7 +1174,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "(sum(irate(container_network_transmit_bytes_total{\"@resource.service.name\"=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
+          "expr": "(sum(irate(container_network_transmit_bytes_total{job=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1188,7 +1188,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "(sum(irate(container_network_receive_packets_total{\"@resource.service.name\"=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
+          "expr": "(sum(irate(container_network_receive_packets_total{job=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1202,7 +1202,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "(sum(irate(container_network_transmit_packets_total{\"@resource.service.name\"=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
+          "expr": "(sum(irate(container_network_transmit_packets_total{job=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1216,7 +1216,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "(sum(irate(container_network_receive_packets_dropped_total{\"@resource.service.name\"=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
+          "expr": "(sum(irate(container_network_receive_packets_dropped_total{job=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1230,7 +1230,7 @@
             "uid": "$datasource"
           },
           "exemplar": false,
-          "expr": "(sum(irate(container_network_transmit_packets_dropped_total{\"@resource.service.name\"=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
+          "expr": "(sum(irate(container_network_transmit_packets_dropped_total{job=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1361,7 +1361,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "(sum(irate(container_network_receive_bytes_total{\"@resource.service.name\"=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
+          "expr": "(sum(irate(container_network_receive_bytes_total{job=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1455,7 +1455,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "(sum(irate(container_network_transmit_bytes_total{\"@resource.service.name\"=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
+          "expr": "(sum(irate(container_network_transmit_bytes_total{job=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{pod}}",
@@ -1574,7 +1574,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "(avg(irate(container_network_receive_bytes_total{\"@resource.service.name\"=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
+          "expr": "(avg(irate(container_network_receive_bytes_total{job=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{pod}}",
@@ -1667,7 +1667,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "(avg(irate(container_network_transmit_bytes_total{\"@resource.service.name\"=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
+          "expr": "(avg(irate(container_network_transmit_bytes_total{job=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{pod}}",
@@ -1788,7 +1788,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "(sum(irate(container_network_receive_packets_total{\"@resource.service.name\"=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
+          "expr": "(sum(irate(container_network_receive_packets_total{job=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1882,7 +1882,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "(sum(irate(container_network_transmit_packets_total{\"@resource.service.name\"=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
+          "expr": "(sum(irate(container_network_transmit_packets_total{job=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{pod}}",
@@ -2001,7 +2001,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "(sum(irate(container_network_receive_packets_dropped_total{\"@resource.service.name\"=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
+          "expr": "(sum(irate(container_network_receive_packets_dropped_total{job=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{pod}}",
@@ -2094,7 +2094,7 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "(sum(irate(container_network_transmit_packets_dropped_total{\"@resource.service.name\"=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
+          "expr": "(sum(irate(container_network_transmit_packets_dropped_total{job=\"kubelet\", namespace=\"$namespace\"}[$__rate_interval])\n* on (namespace,pod)\ngroup_left(workload,workload_type) (max(kube_pod_owner{owner_kind=~\"ReplicaSet|StatefulSet|DaemonSet|Job\"}) by (namespace, workload, pod, workload_type)){namespace=\"$namespace\", workload=~\"$workload\", workload_type=\"$type\"}) by (pod))\n",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{pod}}",
@@ -2145,7 +2145,7 @@
         "name": "namespace",
         "options": [],
         "query": {
-          "query": "label_values(kube_namespace_status_phase{\"@resource.service.name\"=\"kube-state-metrics\"}, namespace)",
+          "query": "label_values(kube_namespace_status_phase{job=\"kube-state-metrics\"}, namespace)",
           "refId": "Prometheus-namespace-Variable-Query"
         },
         "refresh": 2,

@@ -10,8 +10,9 @@ variable "eks_cluster_id" {
 }
 
 variable "cloudwatch_metrics_endpoint" {
-  description = "CloudWatch OTLP metrics endpoint URL (Zeus)"
+  description = "CloudWatch OTLP metrics endpoint URL. Defaults to the regional endpoint if empty."
   type        = string
+  default     = ""
 }
 
 variable "cloudwatch_log_group" {
@@ -26,14 +27,18 @@ variable "cloudwatch_log_stream" {
   default     = "otel-logs"
 }
 
+# These are auto-populated by install.sh on the second apply.
+# Leave empty for the first apply (creates workspace + collector).
 variable "grafana_endpoint" {
-  description = "Amazon Managed Grafana workspace endpoint URL"
+  description = "Amazon Managed Grafana workspace URL. Leave empty on first apply — install.sh fills it automatically."
   type        = string
+  default     = ""
 }
 
 variable "grafana_api_key" {
-  description = "Grafana API key for dashboard provisioning"
+  description = "Grafana service account token. Leave empty on first apply — install.sh fills it automatically."
   type        = string
+  default     = ""
   sensitive   = true
 }
 

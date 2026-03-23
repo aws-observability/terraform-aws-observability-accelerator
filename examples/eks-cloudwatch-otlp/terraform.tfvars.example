@@ -1,21 +1,15 @@
-# Copy this file to terraform.tfvars and fill in the values
-# Alternatively, export TF_VAR_<name> environment variables
+# Copy to terraform.tfvars or use -var flags / install.sh
 
-aws_region            = "us-west-2"
-eks_cluster_id        = "my-cluster"
+aws_region     = "us-west-2"
+eks_cluster_id = "my-cluster"
 
-# CloudWatch OTLP endpoint — get from the CloudWatch console or API
-cloudwatch_metrics_endpoint = "https://monitoring.us-west-2.amazonaws.com"
+# Optional: override the CloudWatch OTLP metrics endpoint (defaults to regional)
+# cloudwatch_metrics_endpoint = "https://monitoring.us-west-2.amazonaws.com/v1/metrics"
 
-# Optional: override defaults
+# Optional: override log group/stream
 # cloudwatch_log_group  = "/eks/otel-collector"
 # cloudwatch_log_stream = "otel-logs"
 
-# Grafana workspace
-grafana_endpoint = "https://g-xxx.grafana-workspace.us-west-2.amazonaws.com"
-grafana_api_key  = ""  # generate via: aws grafana create-workspace-api-key ...
-
-# tags = {
-#   Environment = "dev"
-#   Project     = "observability"
-# }
+# Leave these empty — install.sh populates them automatically on the second apply.
+# grafana_endpoint = ""
+# grafana_api_key  = ""

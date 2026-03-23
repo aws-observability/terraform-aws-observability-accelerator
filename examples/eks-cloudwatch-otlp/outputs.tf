@@ -1,3 +1,19 @@
+output "grafana_workspace_endpoint" {
+  description = "Amazon Managed Grafana workspace URL"
+  value       = "https://${module.managed_grafana.workspace_endpoint}"
+}
+
+output "grafana_workspace_id" {
+  description = "Amazon Managed Grafana workspace ID"
+  value       = module.managed_grafana.workspace_id
+}
+
+output "grafana_api_key" {
+  description = "Grafana service account token for dashboard provisioning"
+  value       = aws_grafana_workspace_service_account_token.terraform.key
+  sensitive   = true
+}
+
 output "collector_irsa_arn" {
   description = "IAM role ARN for the OTel Collector service account"
   value       = module.eks_monitoring.collector_irsa_arn

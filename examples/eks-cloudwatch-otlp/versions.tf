@@ -37,7 +37,12 @@ provider "helm" {
   }
 }
 
+# Phase 1: grafana_endpoint is empty → Grafana workspace gets created,
+#           dashboards are skipped (enable_dashboards = false).
+# Phase 2: re-apply with grafana_endpoint from output → dashboards provisioned.
+# The install.sh script automates both phases.
 provider "grafana" {
-  url  = var.grafana_endpoint
-  auth = var.grafana_api_key
+  alias = "provisioner"
+  url   = var.grafana_endpoint
+  auth  = var.grafana_api_key
 }

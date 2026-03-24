@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Two-phase install for EKS CloudWatch OTLP observability.
-# Phase 1: Create Grafana workspace, OTel Collector, supporting infra.
+# Phase 1: Create Grafana workspace, CloudWatch Agent, supporting infra.
 # Phase 2: Use the Grafana token from Phase 1 to provision dashboards.
 #
 # Usage:
@@ -12,7 +12,7 @@ set -euo pipefail
 
 EXTRA_ARGS=("$@")
 
-echo "=== Phase 1: Infrastructure (Grafana workspace + OTel Collector) ==="
+echo "=== Phase 1: Infrastructure (Grafana workspace + CloudWatch Agent) ==="
 terraform init -upgrade
 terraform apply "${EXTRA_ARGS[@]}"
 
@@ -29,4 +29,4 @@ terraform apply \
 echo ""
 echo "=== Done ==="
 echo "Grafana: ${GRAFANA_ENDPOINT}"
-echo "EKS Cluster: $(terraform output -raw eks_cluster_id)"
+echo "EKS Cluster: $(terraform output -raw eks_cluster_id 2>/dev/null || echo 'N/A')"

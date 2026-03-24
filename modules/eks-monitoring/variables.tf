@@ -4,10 +4,10 @@
 
 variable "collector_profile" {
   type        = string
-  description = "Collector deployment profile: managed-metrics (AMP, agentless), self-managed-amp (AMP, OTel Collector), cloudwatch-otlp (CloudWatch, OTel Collector)"
+  description = "Collector deployment profile: cloudwatch-otlp (CloudWatch, CW Agent), managed-metrics (AMP, agentless), self-managed-amp (AMP, OTel Collector)"
   validation {
-    condition     = contains(["managed-metrics", "self-managed-amp", "cloudwatch-otlp"], var.collector_profile)
-    error_message = "collector_profile must be one of: managed-metrics, self-managed-amp, cloudwatch-otlp"
+    condition     = contains(["cloudwatch-otlp", "managed-metrics", "self-managed-amp"], var.collector_profile)
+    error_message = "collector_profile must be one of: cloudwatch-otlp, managed-metrics, self-managed-amp"
   }
 }
 
@@ -154,25 +154,13 @@ variable "prometheus_config" {
 }
 
 #--------------------------------------------------------------
-# OTel Collector Variables (self-managed-amp, cloudwatch-otlp)
+# OTel Collector Variables (self-managed-amp only)
 #--------------------------------------------------------------
 
 variable "otel_collector_chart_version" {
   type        = string
   description = "Version of the opentelemetry-collector Helm chart to deploy"
   default     = "0.78.0"
-}
-
-variable "kube_state_metrics_chart_version" {
-  type        = string
-  description = "Version of the kube-state-metrics Helm chart to deploy"
-  default     = "5.15.2"
-}
-
-variable "node_exporter_chart_version" {
-  type        = string
-  description = "Version of the prometheus-node-exporter Helm chart to deploy"
-  default     = "4.24.0"
 }
 
 variable "collector_namespace" {
@@ -188,24 +176,58 @@ variable "helm_values" {
 }
 
 #--------------------------------------------------------------
-# CloudWatch OTLP Variables (cloudwatch-otlp profile)
+# Helm Support Chart Versions (AMP profiles only)
 #--------------------------------------------------------------
+
+variable "kube_state_metrics_chart_version" {
+  type        = string
+  description = "Version of the kube-state-metrics Helm chart to deploy (AMP profiles only)"
+  default     = "5.15.2"
+}
+
+variable "node_exporter_chart_version" {
+  type        = string
+  description = "Version of the prometheus-node-exporter Helm chart to deploy (AMP profiles only)"
+  default     = "4.24.0"
+}
+
+#--------------------------------------------------------------
+# CloudWatch Agent Variables (cloudwatch-otlp profile)
+#--------------------------------------------------------------
+
+variable "cw_agent_chart_path" {
+  type        = string
+  description = "Path or URL to the amazon-cloudwatch-observability Helm chart. Use a local path for pre-release testing or the public repo URL for GA."
+  default     = "amazon-cloudwatch-observability"
+}
+
+variable "cw_agent_chart_version" {
+  type        = string
+  description = "Version of the amazon-cloudwatch-observability Helm chart"
+  default     = "4.8.0"
+}
+
+variable "cw_agent_namespace" {
+  type        = string
+  description = "Kubernetes namespace for the CloudWatch Agent deployment"
+  default     = "amazon-cloudwatch"
+}
+
+variable "cw_agent_enable_container_logs" {
+  type        = bool
+  description = "Whether to enable Fluent Bit container log collection in the CW Agent chart"
+  default     = true
+}
+
+variable "cw_agent_enable_application_signals" {
+  type        = bool
+  description = "Whether to enable Application Signals auto-instrumentation in the CW Agent chart"
+  default     = false
+}
 
 variable "cloudwatch_metrics_endpoint" {
   type        = string
-  description = "CloudWatch OTLP metrics endpoint URL for the cloudwatch-otlp profile. Defaults to the regional endpoint if empty."
-  default     = ""
-}
-
-variable "cloudwatch_log_group" {
-  type        = string
-  description = "CloudWatch Logs log group name for the x-aws-log-group header in the OTLP logs exporter"
-  default     = ""
-}
-
-variable "cloudwatch_log_stream" {
-  type        = string
-  description = "CloudWatch Logs log stream name for the x-aws-log-stream header in the OTLP logs exporter"
+  description = "CloudWatch OTLP metrics endpoint URL override. If empty, the CW Agent uses its default regional endpoint."
   default     = ""
 }
 

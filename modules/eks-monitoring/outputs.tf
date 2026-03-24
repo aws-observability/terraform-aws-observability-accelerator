@@ -9,7 +9,7 @@ output "managed_prometheus_workspace_endpoint" {
 
 output "managed_prometheus_workspace_id" {
   description = "Amazon Managed Prometheus workspace ID"
-  value       = local.amp_workspace_id
+  value       = local.is_amp_flavor ? local.amp_workspace_id : null
 }
 
 output "managed_prometheus_workspace_region" {
@@ -22,7 +22,7 @@ output "managed_prometheus_workspace_region" {
 #--------------------------------------------------------------
 
 output "collector_irsa_arn" {
-  description = "IRSA role ARN for the OTel Collector service account (self-managed profiles only)"
+  description = "IRSA role ARN for the OTel Collector service account (self-managed-amp only)"
   value       = local.needs_irsa ? module.collector_irsa_role[0].iam_role_arn : null
 }
 
@@ -77,4 +77,13 @@ output "amp_datasource_config" {
 output "dashboard_sources" {
   description = "Map of dashboard names to JSON source URLs. Useful when dashboard_delivery_method = none and you want to sync dashboards via FluxCD/ArgoCD."
   value       = local.dashboard_sources
+}
+
+#--------------------------------------------------------------
+# CloudWatch Agent Output (cloudwatch-otlp profile)
+#--------------------------------------------------------------
+
+output "cw_agent_namespace" {
+  description = "Kubernetes namespace where the CloudWatch Agent is deployed (cloudwatch-otlp profile only)"
+  value       = local.is_cloudwatch_otlp ? var.cw_agent_namespace : null
 }

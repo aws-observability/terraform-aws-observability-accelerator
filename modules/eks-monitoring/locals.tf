@@ -32,10 +32,16 @@ locals {
   is_cloudwatch_otlp  = var.collector_profile == "cloudwatch-otlp"
 
   # Derived booleans
-  needs_otel_helm = local.is_self_managed_amp || local.is_cloudwatch_otlp
+  # OTel Helm chart only needed for self-managed-amp now.
+  # cloudwatch-otlp uses the CW Observability Helm chart (future: EKS add-on).
+  needs_otel_helm = local.is_self_managed_amp
   needs_irsa      = local.needs_otel_helm
   is_amp_flavor   = local.is_managed_metrics || local.is_self_managed_amp
   is_cw_flavor    = local.is_cloudwatch_otlp
+
+  # Helm support charts (kube-state-metrics, node-exporter) are only needed
+  # for AMP profiles. The CW Agent chart bundles its own.
+  needs_helm_support = local.is_amp_flavor
 }
 
 #--------------------------------------------------------------
@@ -43,14 +49,18 @@ locals {
 #--------------------------------------------------------------
 
 locals {
-  region               = data.aws_region.current.id
-  partition            = data.aws_partition.current.partition
-  account_id           = data.aws_caller_identity.current.account_id
+  region     = data.aws_region.current.id
+  partition  = data.aws_partition.current.partition
+  account_id = data.aws_caller_identity.current.account_id
 
   # Derive OIDC provider ARN from EKS cluster when not explicitly provided
-  eks_oidc_issuer_url   = replace(data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")
+  eks_oidc_issuer_url = replace(
+    data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", ""
+  )
   eks_oidc_provider_arn = var.eks_oidc_provider_arn != "" ? var.eks_oidc_provider_arn : (
-    local.needs_irsa ? data.aws_iam_openid_connect_provider.eks[0].arn : "arn:${local.partition}:iam::${local.account_id}:oidc-provider/${local.eks_oidc_issuer_url}"
+    local.needs_irsa
+    ? data.aws_iam_openid_connect_provider.eks[0].arn
+    : "arn:${local.partition}:iam::${local.account_id}:oidc-provider/${local.eks_oidc_issuer_url}"
   )
 }
 
@@ -65,10 +75,14 @@ locals {
     var.managed_prometheus_workspace_id != null ? data.aws_prometheus_workspace.existing[0].arn : null
   )
 
-  amp_workspace_endpoint = local.is_amp_flavor ? "https://aps-workspaces.${local.region}.amazonaws.com/workspaces/${local.amp_workspace_id}/" : null
+  amp_workspace_endpoint = local.is_amp_flavor ? (
+    "https://aps-workspaces.${local.region}.amazonaws.com/workspaces/${local.amp_workspace_id}/"
+  ) : null
 
-  # CloudWatch OTLP metrics endpoint — default to regional endpoint when not provided
-  cw_metrics_endpoint = var.cloudwatch_metrics_endpoint != "" ? var.cloudwatch_metrics_endpoint : "https://monitoring.${local.region}.amazonaws.com/v1/metrics"
+  # CloudWatch OTLP metrics endpoint — default to regional endpoint
+  cw_metrics_endpoint = var.cloudwatch_metrics_endpoint != "" ? var.cloudwatch_metrics_endpoint : (
+    "https://monitoring.${local.region}.amazonaws.com/v1/metrics"
+  )
 }
 
 # Precondition: fail when create_amp_workspace = false and no workspace ID provided
@@ -104,7 +118,7 @@ locals {
 }
 
 #--------------------------------------------------------------
-# Default Scrape Configs (shared by OTel profiles)
+# Default Scrape Configs (AMP profiles only)
 #--------------------------------------------------------------
 
 locals {
@@ -170,162 +184,10 @@ locals {
 }
 
 #--------------------------------------------------------------
-# CloudWatch OTLP — OTel Collector Values
+# Self-Managed AMP — OTel Collector Values
 #--------------------------------------------------------------
 
 locals {
-  cloudwatch_otel_collector_values = local.is_cloudwatch_otlp ? yamlencode({
-    mode = "deployment"
-
-    serviceAccount = {
-      create = true
-      name   = "otel-collector"
-      annotations = {
-        "eks.amazonaws.com/role-arn" = try(module.collector_irsa_role[0].iam_role_arn, "")
-      }
-    }
-
-    clusterRole = {
-      create = true
-      rules = [
-        {
-          apiGroups = [""]
-          resources = ["nodes", "nodes/proxy", "nodes/metrics", "services", "endpoints", "pods"]
-          verbs     = ["get", "list", "watch"]
-        },
-        {
-          nonResourceURLs = ["/metrics", "/metrics/cadvisor"]
-          verbs           = ["get"]
-        },
-      ]
-    }
-
-    # Override chart defaults by explicitly setting only our config.
-    # Null out default receivers/exporters/processors the chart injects.
-    config = {
-      extensions = {
-        health_check = {}
-        "sigv4auth/monitoring" = {
-          service = "monitoring"
-          region  = local.region
-        }
-        "sigv4auth/xray" = {
-          service = "xray"
-          region  = local.region
-        }
-        "sigv4auth/logs" = {
-          service = "logs"
-          region  = local.region
-        }
-      }
-
-      receivers = {
-        prometheus = {
-          config = {
-            scrape_configs = local.default_otel_scrape_configs
-          }
-        }
-        otlp = {
-          protocols = {
-            grpc = { endpoint = "0.0.0.0:4317" }
-            http = { endpoint = "0.0.0.0:4318" }
-          }
-        }
-        jaeger  = null
-        zipkin  = null
-      }
-
-      processors = {
-        # Two-phase transform for Zeus compatibility:
-        # 1. Delete blank resource attributes that Zeus rejects with
-        #    "Attribute string value cannot be blank [ResourceMetrics.N]"
-        # 2. Promote service.name → job and service.instance.id → instance
-        #    as metric-level attributes so dashboards can use standard
-        #    Prometheus label names on any Grafana version (v10+).
-        "transform/zeus_compat" = {
-          error_mode = "ignore"
-          metric_statements = [
-            {
-              context    = "resource"
-              statements = [
-                "delete_key(attributes, \"net.host.name\") where attributes[\"net.host.name\"] == \"\"",
-                "delete_key(attributes, \"net.host.port\") where attributes[\"net.host.port\"] == \"\"",
-                "delete_key(attributes, \"http.scheme\") where attributes[\"http.scheme\"] == \"\"",
-                "delete_key(attributes, \"service.instance.id\") where attributes[\"service.instance.id\"] == \"\"",
-                "delete_key(attributes, \"service.name\") where attributes[\"service.name\"] == \"\"",
-              ]
-            },
-            {
-              context    = "datapoint"
-              statements = [
-                "set(attributes[\"job\"], resource.attributes[\"service.name\"]) where resource.attributes[\"service.name\"] != nil",
-                "set(attributes[\"instance\"], resource.attributes[\"service.instance.id\"]) where resource.attributes[\"service.instance.id\"] != nil",
-              ]
-            },
-          ]
-        }
-        batch = {
-          send_batch_max_size = 200
-          send_batch_size     = 200
-          timeout             = "5s"
-        }
-        memory_limiter = null
-      }
-
-      exporters = {
-        logging = null
-        debug   = null
-        "otlphttp/metrics" = {
-          endpoint = local.cw_metrics_endpoint
-          auth = {
-            authenticator = "sigv4auth/monitoring"
-          }
-        }
-        "otlphttp/traces" = {
-          endpoint = "https://xray.${local.region}.amazonaws.com/v1/traces"
-          auth = {
-            authenticator = "sigv4auth/xray"
-          }
-        }
-        "otlphttp/logs" = {
-          endpoint = "https://logs.${local.region}.amazonaws.com/v1/logs"
-          auth = {
-            authenticator = "sigv4auth/logs"
-          }
-          headers = {
-            "x-aws-log-group"  = var.cloudwatch_log_group
-            "x-aws-log-stream" = var.cloudwatch_log_stream
-          }
-        }
-      }
-
-      service = {
-        extensions = ["health_check", "sigv4auth/monitoring", "sigv4auth/xray", "sigv4auth/logs"]
-        pipelines = {
-          metrics = {
-            receivers  = ["prometheus", "otlp"]
-            processors = ["transform/zeus_compat", "batch"]
-            exporters  = ["otlphttp/metrics"]
-          }
-          traces = {
-            receivers  = ["otlp"]
-            processors = ["batch"]
-            exporters  = ["otlphttp/traces"]
-          }
-          logs = {
-            receivers  = ["otlp"]
-            processors = ["batch"]
-            exporters  = ["otlphttp/logs"]
-          }
-        }
-      }
-    }
-  }) : ""
-
-  #--------------------------------------------------------------
-  # Self-Managed AMP — OTel Collector Values
-  #--------------------------------------------------------------
-
   self_managed_amp_otel_collector_values = local.is_self_managed_amp ? yamlencode({
     mode = "deployment"
 
@@ -352,8 +214,6 @@ locals {
       ]
     }
 
-    # Override chart defaults by explicitly setting only our config.
-    # Null out default receivers/exporters/processors the chart injects.
     config = {
       extensions = {
         health_check = {}
@@ -383,8 +243,8 @@ locals {
             http = { endpoint = "0.0.0.0:4318" }
           }
         }
-        jaeger  = null
-        zipkin  = null
+        jaeger = null
+        zipkin = null
       }
 
       processors = {
@@ -459,12 +319,8 @@ locals {
     }
   }) : ""
 
-  # Profile-driven OTel Collector values
-  otel_collector_values = (
-    local.is_cloudwatch_otlp ? local.cloudwatch_otel_collector_values :
-    local.is_self_managed_amp ? local.self_managed_amp_otel_collector_values :
-    ""
-  )
+  # Profile-driven OTel Collector values (self-managed-amp only now)
+  otel_collector_values = local.is_self_managed_amp ? local.self_managed_amp_otel_collector_values : ""
 }
 
 #--------------------------------------------------------------

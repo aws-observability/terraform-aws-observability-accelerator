@@ -9,26 +9,20 @@ variable "eks_cluster_id" {
   type        = string
 }
 
+variable "cw_agent_chart_path" {
+  description = "Path to the amazon-cloudwatch-observability Helm chart. Use a local path for pre-release testing."
+  type        = string
+  default     = "amazon-cloudwatch-observability"
+}
+
 variable "cloudwatch_metrics_endpoint" {
-  description = "CloudWatch OTLP metrics endpoint URL. Defaults to the regional endpoint if empty."
+  description = "CloudWatch OTLP metrics endpoint URL. Leave empty to use the CW Agent's default regional endpoint."
   type        = string
   default     = ""
 }
 
-variable "cloudwatch_log_group" {
-  description = "CloudWatch Logs log group for OTLP logs exporter"
-  type        = string
-  default     = "/eks/otel-collector"
-}
-
-variable "cloudwatch_log_stream" {
-  description = "CloudWatch Logs log stream for OTLP logs exporter"
-  type        = string
-  default     = "otel-logs"
-}
-
 # These are auto-populated by install.sh on the second apply.
-# Leave empty for the first apply (creates workspace + collector).
+# Leave empty for the first apply (creates workspace + CW Agent).
 variable "grafana_endpoint" {
   description = "Amazon Managed Grafana workspace URL. Leave empty on first apply — install.sh fills it automatically."
   type        = string

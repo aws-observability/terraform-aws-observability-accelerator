@@ -4,16 +4,22 @@ Profile-driven EKS cluster monitoring with three collector profiles:
 
 | Profile | Backend | Collector | Best for |
 |---------|---------|-----------|----------|
-| `cloudwatch-otlp` | Amazon CloudWatch | OpenTelemetry Collector (Helm) | CloudWatch-native observability |
+| `cloudwatch-otlp` | Amazon CloudWatch | CloudWatch Agent (Helm) | CloudWatch-native observability, no AMP needed |
 | `managed-metrics` | Amazon Managed Prometheus | AMP Managed Collector (agentless) | Agentless setup, no in-cluster pods |
 | `self-managed-amp` | Amazon Managed Prometheus | OpenTelemetry Collector (Helm) | Full pipeline control, traces + logs |
 
-All profiles deploy kube-state-metrics and node-exporter for infrastructure
-metrics, and provision Grafana dashboards for cluster visibility.
+The `cloudwatch-otlp` profile deploys the Amazon CloudWatch Observability Helm
+chart, which bundles the CW Agent DaemonSet, Fluent Bit, kube-state-metrics,
+node-exporter, and a cluster scraper. AMP profiles deploy separate
+kube-state-metrics and node-exporter Helm releases alongside the collector.
+
+All profiles provision Grafana dashboards for cluster visibility.
 
 ## Prerequisites
 
-- The EKS cluster must have an [IAM OIDC identity provider](https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html) registered in your account (required for IRSA). The module auto-derives the OIDC provider ARN from the cluster; if the provider does not exist, `terraform plan` will fail with a clear error. You can override with `eks_oidc_provider_arn` if needed.
+- EKS cluster with at least one managed node group
+- For `cloudwatch-otlp`: `CloudWatchAgentServerPolicy` attached to the node IAM role (the example handles this automatically)
+- For AMP profiles: an [IAM OIDC identity provider](https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html) registered for IRSA. The module auto-derives the OIDC provider ARN; override with `eks_oidc_provider_arn` if needed.
 
 ## Usage
 
@@ -25,11 +31,12 @@ module "eks_monitoring" {
 
   providers = { grafana = grafana }
 
-  collector_profile           = "cloudwatch-otlp"
-  eks_cluster_id              = "my-cluster"
-  cloudwatch_metrics_endpoint = "https://monitoring.us-west-2.amazonaws.com/v1/metrics"
-  cloudwatch_log_group        = "/eks/my-cluster/otel"
-  cloudwatch_log_stream       = "collector"
+  collector_profile   = "cloudwatch-otlp"
+  eks_cluster_id      = "my-cluster"
+  create_amp_workspace = false
+
+  # Optional: local chart path for pre-release testing
+  # cw_agent_chart_path = "/path/to/amazon-cloudwatch-observability"
 }
 ```
 
@@ -48,7 +55,6 @@ module "eks_monitoring" {
 }
 ```
 
-
 ### Amazon Managed Prometheus metrics (self managed collector)
 
 ```hcl
@@ -57,10 +63,10 @@ module "eks_monitoring" {
 
   providers = { grafana = grafana }
 
-  collector_profile     = "self-managed-amp"
-  eks_cluster_id        = "my-cluster"
-  enable_tracing        = true
-  enable_logs           = true
+  collector_profile = "self-managed-amp"
+  eks_cluster_id    = "my-cluster"
+  enable_tracing    = true
+  enable_logs       = true
 }
 ```
 
@@ -106,14 +112,17 @@ Control how dashboards are provisioned with `dashboard_delivery_method`:
 | `scrape_configuration` | Custom Prometheus scrape config YAML (overrides defaults) | `string` | `""` | no |
 | `additional_scrape_jobs` | Additional scrape jobs to append to defaults | `list(any)` | `[]` | no |
 | `prometheus_config` | Global scrape interval/timeout settings | `object` | `{}` | no |
-| `otel_collector_chart_version` | OTel Collector Helm chart version | `string` | `"0.78.0"` | no |
-| `kube_state_metrics_chart_version` | kube-state-metrics Helm chart version | `string` | `"5.15.2"` | no |
-| `node_exporter_chart_version` | node-exporter Helm chart version | `string` | `"4.24.0"` | no |
-| `collector_namespace` | Kubernetes namespace for OTel Collector | `string` | `"otel-collector"` | no |
+| `otel_collector_chart_version` | OTel Collector Helm chart version (self-managed-amp) | `string` | `"0.78.0"` | no |
+| `kube_state_metrics_chart_version` | kube-state-metrics Helm chart version (AMP profiles) | `string` | `"5.15.2"` | no |
+| `node_exporter_chart_version` | node-exporter Helm chart version (AMP profiles) | `string` | `"4.24.0"` | no |
+| `collector_namespace` | Kubernetes namespace for OTel Collector (self-managed-amp) | `string` | `"otel-collector"` | no |
 | `helm_values` | Additional Helm values for OTel Collector chart | `map(string)` | `{}` | no |
-| `cloudwatch_metrics_endpoint` | CloudWatch OTLP metrics endpoint URL | `string` | `""` | no |
-| `cloudwatch_log_group` | CloudWatch Logs log group name | `string` | `""` | no |
-| `cloudwatch_log_stream` | CloudWatch Logs log stream name | `string` | `""` | no |
+| `cw_agent_chart_path` | Path/URL to the CW Observability Helm chart | `string` | `"amazon-cloudwatch-observability"` | no |
+| `cw_agent_chart_version` | CW Observability Helm chart version | `string` | `"4.8.0"` | no |
+| `cw_agent_namespace` | Kubernetes namespace for CW Agent | `string` | `"amazon-cloudwatch"` | no |
+| `cw_agent_enable_container_logs` | Enable Fluent Bit container logs | `bool` | `true` | no |
+| `cw_agent_enable_application_signals` | Enable Application Signals auto-instrumentation | `bool` | `false` | no |
+| `cloudwatch_metrics_endpoint` | CloudWatch OTLP metrics endpoint URL override | `string` | `""` | no |
 | `grafana_cw_datasource_name` | Grafana datasource name for CloudWatch PromQL | `string` | `"CloudWatch PromQL"` | no |
 | `enable_tracing` | Enable traces pipeline (self-managed-amp only) | `bool` | `true` | no |
 | `enable_logs` | Enable logs pipeline (self-managed-amp only) | `bool` | `true` | no |
@@ -125,12 +134,13 @@ Control how dashboards are provisioned with `dashboard_delivery_method`:
 | `managed_prometheus_workspace_endpoint` | AMP workspace endpoint URL |
 | `managed_prometheus_workspace_id` | AMP workspace ID |
 | `managed_prometheus_workspace_region` | AMP workspace region |
-| `collector_irsa_arn` | IRSA role ARN for OTel Collector (self-managed profiles) |
-| `amp_scraper_arn` | AMP Managed Collector scraper ARN (managed-metrics profile) |
+| `collector_irsa_arn` | IRSA role ARN for OTel Collector (self-managed-amp only) |
+| `amp_scraper_arn` | AMP Managed Collector scraper ARN (managed-metrics only) |
 | `eks_cluster_id` | EKS cluster identifier |
 | `cloudwatch_promql_datasource_config` | Grafana datasource config for CloudWatch PromQL (cloudwatch-otlp) |
 | `amp_datasource_config` | Grafana datasource config for AMP (AMP profiles, for BYO GitOps) |
 | `dashboard_sources` | Map of dashboard names to JSON URLs (for BYO GitOps) |
+| `cw_agent_namespace` | CW Agent Kubernetes namespace (cloudwatch-otlp only) |
 
 ## Resources
 
@@ -140,9 +150,9 @@ Control how dashboards are provisioned with `dashboard_delivery_method`:
 | `aws_prometheus_scraper.this` | resource |
 | `aws_prometheus_rule_group_namespace.recording_rules` | resource |
 | `aws_prometheus_rule_group_namespace.alerting_rules` | resource |
-| `aws_iam_policy.cloudwatch_put_metric` | resource |
 | `module.collector_irsa_role` | module |
 | `helm_release.otel_collector` | resource |
+| `helm_release.cloudwatch_agent` | resource |
 | `helm_release.kube_state_metrics` | resource |
 | `helm_release.prometheus_node_exporter` | resource |
 | `grafana_dashboard.this` | resource |

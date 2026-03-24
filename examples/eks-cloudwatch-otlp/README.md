@@ -2,20 +2,19 @@
 
 Self-contained example that deploys full EKS observability via CloudWatch OTLP.
 A single `./install.sh` creates everything — Grafana workspace, service account,
-datasource, dashboards, and OTel Collector.
+datasource, dashboards, and CloudWatch Agent.
 
 ## What gets deployed
 
 - Amazon Managed Grafana workspace with service account + API token
 - Grafana Prometheus datasource pointing at CloudWatch PromQL endpoint (SigV4 auth)
 - Infrastructure dashboards (cluster, kubelet, nodes, workloads, namespace-workloads, node-exporter)
-- OpenTelemetry Collector via Helm (Prometheus receiver → CloudWatch OTLP exporter)
-- kube-state-metrics and node-exporter Helm charts
-- IRSA role with `cloudwatch:PutMetricData`, `CloudWatchLogsFullAccess`, and `AWSXrayWriteOnlyAccess`
+- Amazon CloudWatch Observability Helm chart (CW Agent DaemonSet, Fluent Bit, kube-state-metrics, node-exporter, cluster scraper)
+- `CloudWatchAgentServerPolicy` attached to EKS node IAM role
 
 ## Prerequisites
 
-- An existing EKS cluster with OIDC provider
+- An existing EKS cluster with at least one managed node group
 - AWS IAM Identity Center (SSO) configured in the account (for Grafana auth)
 - Terraform >= 1.5.0
 
@@ -26,10 +25,19 @@ datasource, dashboards, and OTel Collector.
 ```
 
 The script runs two Terraform applies:
-1. Creates Grafana workspace, OTel Collector, and supporting infra
+1. Creates Grafana workspace, CloudWatch Agent, and supporting infra
 2. Uses the Grafana service account token from step 1 to provision dashboards
 
-The CloudWatch metrics endpoint defaults to `https://monitoring.<region>.amazonaws.com/v1/metrics`.
+### Pre-release testing with a local chart
+
+To test with an internal build of the CloudWatch Agent chart:
+
+```bash
+./install.sh \
+  -var="eks_cluster_id=my-cluster" \
+  -var="aws_region=us-west-2" \
+  -var="cw_agent_chart_path=/path/to/cloudwatch-agent/helm/amazon-cloudwatch-observability"
+```
 
 ## Manual two-step apply
 
@@ -51,8 +59,8 @@ terraform apply \
 
 - `grafana_workspace_endpoint` — open this URL to view dashboards
 - `grafana_workspace_id` — workspace ID for AWS CLI operations
-- `collector_irsa_arn` — IAM role used by the OTel Collector
-- `cloudwatch_promql_datasource_config` — datasource connection details
+- `cloudwatch_promql_datasource` — datasource connection details
+- `cw_agent_namespace` — Kubernetes namespace where the CW Agent runs
 
 ## Cleanup
 

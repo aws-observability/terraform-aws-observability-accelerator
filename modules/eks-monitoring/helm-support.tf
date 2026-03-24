@@ -1,12 +1,12 @@
 #--------------------------------------------------------------
-# kube-state-metrics
-# Deployed for all profiles: managed-metrics needs it for scraper
-# discovery, self-managed-amp and cloudwatch-otlp need it for
-# the OTel Collector's Prometheus receiver.
+# kube-state-metrics (AMP profiles only)
+#
+# The CW Agent chart bundles its own kube-state-metrics, so
+# these are only needed for managed-metrics and self-managed-amp.
 #--------------------------------------------------------------
 
 resource "helm_release" "kube_state_metrics" {
-  count = 1
+  count = local.needs_helm_support ? 1 : 0
 
   name             = "kube-state-metrics"
   repository       = "https://prometheus-community.github.io/helm-charts"
@@ -18,12 +18,11 @@ resource "helm_release" "kube_state_metrics" {
 }
 
 #--------------------------------------------------------------
-# prometheus-node-exporter
-# Deployed for all profiles for the same reasons as above.
+# prometheus-node-exporter (AMP profiles only)
 #--------------------------------------------------------------
 
 resource "helm_release" "prometheus_node_exporter" {
-  count = 1
+  count = local.needs_helm_support ? 1 : 0
 
   name             = "prometheus-node-exporter"
   repository       = "https://prometheus-community.github.io/helm-charts"

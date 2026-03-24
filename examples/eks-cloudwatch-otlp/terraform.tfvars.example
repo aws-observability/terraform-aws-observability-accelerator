@@ -1,15 +1,13 @@
-# Copy to terraform.tfvars or use -var flags / install.sh
-
-aws_region     = "us-west-2"
+# Required
 eks_cluster_id = "my-cluster"
+aws_region     = "us-west-2"
 
-# Optional: override the CloudWatch OTLP metrics endpoint (defaults to regional)
+# Optional: local chart path for pre-release testing
+# cw_agent_chart_path = "/path/to/cloudwatch-agent/helm/amazon-cloudwatch-observability"
+
+# Optional: override CloudWatch OTLP metrics endpoint
 # cloudwatch_metrics_endpoint = "https://monitoring.us-west-2.amazonaws.com/v1/metrics"
 
-# Optional: override log group/stream
-# cloudwatch_log_group  = "/eks/otel-collector"
-# cloudwatch_log_stream = "otel-logs"
-
-# Leave these empty — install.sh populates them automatically on the second apply.
+# Leave empty on first apply — install.sh fills these automatically
 # grafana_endpoint = ""
 # grafana_api_key  = ""

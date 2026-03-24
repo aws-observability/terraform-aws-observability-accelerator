@@ -1,5 +1,5 @@
 #--------------------------------------------------------------
-# IRSA Role for OTel Collector (self-managed-amp, cloudwatch-otlp)
+# IRSA Role for OTel Collector (self-managed-amp only)
 #--------------------------------------------------------------
 
 module "collector_irsa_role" {
@@ -9,8 +9,8 @@ module "collector_irsa_role" {
 
   role_name = "${var.eks_cluster_id}-otel-collector"
 
-  # AMP flavor: attach managed Prometheus remote write policy
-  attach_amazon_managed_service_prometheus_policy = local.is_self_managed_amp
+  # AMP: attach managed Prometheus remote write policy
+  attach_amazon_managed_service_prometheus_policy = true
 
   oidc_providers = {
     ex = {
@@ -20,29 +20,14 @@ module "collector_irsa_role" {
   }
 
   role_policy_arns = merge(
-    # Self-managed AMP: X-Ray write for traces
-    local.is_self_managed_amp && var.enable_tracing ? {
+    # X-Ray write for traces
+    var.enable_tracing ? {
       xray = "arn:${local.partition}:iam::aws:policy/AWSXrayWriteOnlyAccess"
     } : {},
 
-    # Self-managed AMP: CloudWatch Logs for logs pipeline
-    local.is_self_managed_amp && var.enable_logs ? {
+    # CloudWatch Logs for logs pipeline
+    var.enable_logs ? {
       cw_logs = "arn:${local.partition}:iam::aws:policy/CloudWatchLogsFullAccess"
-    } : {},
-
-    # CloudWatch OTLP: custom PutMetricData policy for metrics via Zeus endpoint
-    local.is_cloudwatch_otlp ? {
-      cw_put_metric = aws_iam_policy.cloudwatch_put_metric[0].arn
-    } : {},
-
-    # CloudWatch OTLP: CloudWatch Logs full access for logs pipeline
-    local.is_cloudwatch_otlp ? {
-      cw_logs = "arn:${local.partition}:iam::aws:policy/CloudWatchLogsFullAccess"
-    } : {},
-
-    # CloudWatch OTLP: X-Ray write for traces pipeline
-    local.is_cloudwatch_otlp ? {
-      xray = "arn:${local.partition}:iam::aws:policy/AWSXrayWriteOnlyAccess"
     } : {},
   )
 
@@ -50,21 +35,16 @@ module "collector_irsa_role" {
 }
 
 #--------------------------------------------------------------
-# Custom IAM Policy: cloudwatch:PutMetricData (cloudwatch-otlp)
+# IAM Role for CloudWatch Agent (cloudwatch-otlp profile)
+#
+# The CW Agent needs CloudWatchAgentServerPolicy attached to
+# the EKS node IAM role. This module outputs the policy ARN
+# so the caller can attach it to their node group role.
+#
+# When the upstream EKS add-on supports Zeus, this will switch
+# to Pod Identity associations instead.
 #--------------------------------------------------------------
 
-resource "aws_iam_policy" "cloudwatch_put_metric" {
-  count       = local.is_cloudwatch_otlp ? 1 : 0
-  name_prefix = "${var.eks_cluster_id}-cw-put-metric"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Effect   = "Allow"
-      Action   = ["cloudwatch:PutMetricData"]
-      Resource = "*"
-    }]
-  })
-
-  tags = var.tags
-}
+# No IRSA needed — the CW Agent chart's SA template doesn't
+# support annotations. IAM permissions come from the node role.
+# The example and AGENT.md document attaching the managed policy.

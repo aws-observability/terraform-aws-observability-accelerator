@@ -1,5 +1,5 @@
 #--------------------------------------------------------------
-# OTel Collector Helm Release (self-managed-amp, cloudwatch-otlp)
+# OTel Collector Helm Release (self-managed-amp only)
 #--------------------------------------------------------------
 
 resource "helm_release" "otel_collector" {

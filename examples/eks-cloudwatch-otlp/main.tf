@@ -56,21 +56,35 @@ resource "aws_grafana_workspace_service_account_token" "terraform" {
 }
 
 #--------------------------------------------------------------
-# Attach CloudWatchAgentServerPolicy to EKS node role
+# Auto-discover EKS node role and attach CloudWatchAgentServerPolicy
 #
-# The CW Agent DaemonSet runs on every node and needs IAM
-# permissions to send metrics/logs/traces to CloudWatch.
-# Until the upstream EKS add-on supports Pod Identity for
-# Zeus, the simplest path is node-level IAM.
-#
-# Gated on var.eks_node_role_name so destroy works even when
-# node groups have already been removed.
+# Looks up the first node group's IAM role and attaches the
+# managed policy. Gated on whether node groups exist so that
+# destroy works even after node groups are removed.
 #--------------------------------------------------------------
 
-resource "aws_iam_role_policy_attachment" "cw_agent" {
-  count = var.eks_node_role_name != "" ? 1 : 0
+data "aws_eks_node_groups" "this" {
+  cluster_name = var.eks_cluster_id
+}
 
-  role       = var.eks_node_role_name
+locals {
+  has_node_groups = length(data.aws_eks_node_groups.this.names) > 0
+}
+
+data "aws_eks_node_group" "first" {
+  count           = local.has_node_groups ? 1 : 0
+  cluster_name    = var.eks_cluster_id
+  node_group_name = tolist(data.aws_eks_node_groups.this.names)[0]
+}
+
+locals {
+  node_role_name = local.has_node_groups ? regex(".*/(.+)$", data.aws_eks_node_group.first[0].node_role_arn)[0] : ""
+}
+
+resource "aws_iam_role_policy_attachment" "cw_agent" {
+  count = local.has_node_groups ? 1 : 0
+
+  role       = local.node_role_name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
@@ -101,4 +115,6 @@ module "eks_monitoring" {
   enable_dashboards = var.grafana_endpoint != "" ? true : false
 
   tags = local.tags
+
+  depends_on = [aws_iam_role_policy_attachment.cw_agent]
 }

@@ -197,8 +197,14 @@ variable "node_exporter_chart_version" {
 
 variable "cw_agent_chart_path" {
   type        = string
-  description = "Path or URL to the amazon-cloudwatch-observability Helm chart. Use a local path for pre-release testing or the public repo URL for GA."
-  default     = "amazon-cloudwatch-observability"
+  description = "Absolute local path to the amazon-cloudwatch-observability Helm chart for pre-release testing. When set, cw_agent_chart_repo is ignored."
+  default     = ""
+}
+
+variable "cw_agent_chart_repo" {
+  type        = string
+  description = "Helm repository URL for the amazon-cloudwatch-observability chart. Ignored when cw_agent_chart_path is set."
+  default     = "https://aws.github.io/eks-charts"
 }
 
 variable "cw_agent_chart_version" {

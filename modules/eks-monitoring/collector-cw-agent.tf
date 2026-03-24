@@ -9,23 +9,29 @@
 #   - node-exporter
 #   - Cluster scraper Deployment (kube-state-metrics + apiserver)
 #
-# Currently uses a Helm release from a local or custom chart path.
+# When cw_agent_chart_path is set (local path), repository is omitted.
+# Otherwise, the chart is pulled from cw_agent_chart_repo.
+#
 # TODO: Switch to aws_eks_addon once the upstream add-on ships
 #       with OTELContainerInsights (Zeus) support.
 #--------------------------------------------------------------
+
+locals {
+  cw_agent_use_local_chart = var.cw_agent_chart_path != ""
+}
 
 resource "helm_release" "cloudwatch_agent" {
   count = local.is_cloudwatch_otlp ? 1 : 0
 
   name       = "amazon-cloudwatch"
-  chart      = var.cw_agent_chart_path
+  repository = local.cw_agent_use_local_chart ? null : var.cw_agent_chart_repo
+  chart      = local.cw_agent_use_local_chart ? var.cw_agent_chart_path : "amazon-cloudwatch-observability"
   namespace  = var.cw_agent_namespace
   version    = var.cw_agent_chart_version
 
   create_namespace = true
   max_history      = 3
 
-  # Helm v3 provider uses set as a list attribute, not blocks.
   set = concat(
     [
       {

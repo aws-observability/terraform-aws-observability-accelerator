@@ -10,9 +10,9 @@ variable "eks_cluster_id" {
 }
 
 variable "cw_agent_chart_path" {
-  description = "Path to the amazon-cloudwatch-observability Helm chart. Use a local path for pre-release testing."
+  description = "Absolute local path to the amazon-cloudwatch-observability Helm chart for pre-release testing. Leave empty to pull from the public Helm repo."
   type        = string
-  default     = "amazon-cloudwatch-observability"
+  default     = ""
 }
 
 variable "cloudwatch_metrics_endpoint" {

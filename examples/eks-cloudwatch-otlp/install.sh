@@ -6,7 +6,7 @@ set -euo pipefail
 # Phase 2: Use the Grafana token from Phase 1 to provision dashboards.
 #
 # Usage:
-#   ./install.sh -var="eks_cluster_id=my-cluster" -var="aws_region=us-west-2"
+#   ./install.sh -var="eks_cluster_id=my-cluster" -var="eks_node_role_name=my-node-role"
 #
 # All arguments are forwarded to terraform apply.
 
@@ -29,4 +29,3 @@ terraform apply \
 echo ""
 echo "=== Done ==="
 echo "Grafana: ${GRAFANA_ENDPOINT}"
-echo "EKS Cluster: $(terraform output -raw eks_cluster_id 2>/dev/null || echo 'N/A')"

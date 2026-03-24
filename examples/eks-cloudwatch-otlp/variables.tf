@@ -21,6 +21,12 @@ variable "cloudwatch_metrics_endpoint" {
   default     = ""
 }
 
+variable "eks_node_role_name" {
+  description = "Name of the EKS node group IAM role to attach CloudWatchAgentServerPolicy to. Leave empty to skip (e.g. during destroy when node groups are already gone)."
+  type        = string
+  default     = ""
+}
+
 # These are auto-populated by install.sh on the second apply.
 # Leave empty for the first apply (creates workspace + CW Agent).
 variable "grafana_endpoint" {

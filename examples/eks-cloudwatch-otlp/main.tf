@@ -1,5 +1,6 @@
 locals {
-  name = "eks-cw-otlp-${var.eks_cluster_id}"
+  # Keep the name short to avoid IAM role name_prefix 38-char limit
+  name = "cw-otlp-${substr(var.eks_cluster_id, 0, 20)}"
 
   tags = merge(var.tags, {
     Example = "eks-cloudwatch-otlp"
@@ -61,19 +62,15 @@ resource "aws_grafana_workspace_service_account_token" "terraform" {
 # permissions to send metrics/logs/traces to CloudWatch.
 # Until the upstream EKS add-on supports Pod Identity for
 # Zeus, the simplest path is node-level IAM.
+#
+# Gated on var.eks_node_role_name so destroy works even when
+# node groups have already been removed.
 #--------------------------------------------------------------
 
-data "aws_eks_node_groups" "this" {
-  cluster_name = var.eks_cluster_id
-}
-
-data "aws_eks_node_group" "first" {
-  cluster_name    = var.eks_cluster_id
-  node_group_name = tolist(data.aws_eks_node_groups.this.names)[0]
-}
-
 resource "aws_iam_role_policy_attachment" "cw_agent" {
-  role       = regex(".*/(.*)", data.aws_eks_node_group.first.node_role_arn)[0]
+  count = var.eks_node_role_name != "" ? 1 : 0
+
+  role       = var.eks_node_role_name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
@@ -104,6 +101,4 @@ module "eks_monitoring" {
   enable_dashboards = var.grafana_endpoint != "" ? true : false
 
   tags = local.tags
-
-  depends_on = [aws_iam_role_policy_attachment.cw_agent]
 }

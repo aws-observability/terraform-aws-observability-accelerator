@@ -2,6 +2,10 @@
 eks_cluster_id = "my-cluster"
 aws_region     = "us-west-2"
 
+# Required: IAM role name of the EKS node group (for CloudWatchAgentServerPolicy)
+# Find it with: aws eks describe-nodegroup --cluster-name <cluster> --nodegroup-name <ng> --query 'nodegroup.nodeRole' --output text | sed 's|.*/||'
+eks_node_role_name = "my-cluster-node-group-role"
+
 # Optional: local chart path for pre-release testing
 # cw_agent_chart_path = "/path/to/cloudwatch-agent/helm/amazon-cloudwatch-observability"
 

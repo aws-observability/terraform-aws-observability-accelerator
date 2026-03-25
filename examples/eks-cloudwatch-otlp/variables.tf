@@ -15,6 +15,12 @@ variable "cw_agent_chart_path" {
   default     = ""
 }
 
+variable "cw_agent_image" {
+  description = "Override the CloudWatch Agent container image (e.g. '123456789.dkr.ecr.us-east-1.amazonaws.com/cw-agent-dev:latest'). Leave empty for chart default."
+  type        = string
+  default     = ""
+}
+
 variable "cloudwatch_metrics_endpoint" {
   description = "CloudWatch OTLP metrics endpoint URL. Leave empty to use the CW Agent's default regional endpoint."
   type        = string

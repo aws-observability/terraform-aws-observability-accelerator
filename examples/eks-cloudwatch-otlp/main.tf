@@ -104,6 +104,7 @@ module "eks_monitoring" {
 
   # CW Agent chart — use local path for pre-release testing
   cw_agent_chart_path = var.cw_agent_chart_path
+  cw_agent_image      = var.cw_agent_image
 
   # CloudWatch OTLP — defaults to regional endpoint if empty
   cloudwatch_metrics_endpoint = var.cloudwatch_metrics_endpoint

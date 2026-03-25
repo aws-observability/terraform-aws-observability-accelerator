@@ -18,6 +18,23 @@
 
 locals {
   cw_agent_use_local_chart = var.cw_agent_chart_path != ""
+
+  # Parse image override: "registry/repo:tag" → domain, repo, tag
+  cw_agent_has_image_override = var.cw_agent_image != ""
+  # Split on last colon that follows a non-colon (to handle registry ports)
+  # e.g. "123.dkr.ecr.us-east-1.amazonaws.com/cw-agent-dev:latest"
+  #   → image_ref = "123.dkr.ecr.us-east-1.amazonaws.com/cw-agent-dev"
+  #   → tag = "latest"
+  cw_agent_image_parts = local.cw_agent_has_image_override ? regex("^(.+?)(?::([^/]+))?$", var.cw_agent_image) : ["", ""]
+  cw_agent_image_ref   = local.cw_agent_image_parts[0]
+  cw_agent_image_tag   = local.cw_agent_image_parts[1] != null ? local.cw_agent_image_parts[1] : ""
+
+  # Split image_ref into domain and repository at the first "/"
+  # e.g. "123.dkr.ecr.us-east-1.amazonaws.com/cw-agent-dev"
+  #   → domain = "123.dkr.ecr.us-east-1.amazonaws.com"
+  #   → repo   = "cw-agent-dev"
+  cw_agent_image_domain = local.cw_agent_has_image_override ? regex("^([^/]+)/(.+)$", local.cw_agent_image_ref)[0] : ""
+  cw_agent_image_repo   = local.cw_agent_has_image_override ? regex("^([^/]+)/(.+)$", local.cw_agent_image_ref)[1] : ""
 }
 
 resource "helm_release" "cloudwatch_agent" {
@@ -42,33 +59,48 @@ resource "helm_release" "cloudwatch_agent" {
         name  = "region"
         value = local.region
       },
-      # Enable OTel-based Container Insights (sends metrics via OTLP to Zeus)
       {
         name  = "OTELContainerInsights.enabled"
         value = "true"
       },
-      # Disable legacy Container Insights (mutually exclusive with OTEL CI)
       {
         name  = "containerInsights.enabled"
         value = "false"
       },
-      # Container logs via Fluent Bit
       {
         name  = "containerLogs.enabled"
         value = tostring(var.cw_agent_enable_container_logs)
       },
-      # Application Signals (auto-instrumentation)
       {
         name  = "manager.applicationSignals.autoMonitor.monitorAllServices"
         value = tostring(var.cw_agent_enable_application_signals)
       },
     ],
-    # Override the CloudWatch Metrics OTLP endpoint if provided
+    # Override CloudWatch Metrics OTLP endpoint
     var.cloudwatch_metrics_endpoint != "" ? [
       {
         name  = "OTELContainerInsights.cloudwatchMetricsEndpoint"
         value = var.cloudwatch_metrics_endpoint
       },
     ] : [],
+    # Override CW Agent container image
+    local.cw_agent_has_image_override ? concat(
+      [
+        {
+          name  = "agent.image.repositoryDomainMap.public"
+          value = local.cw_agent_image_domain
+        },
+        {
+          name  = "agent.image.repository"
+          value = local.cw_agent_image_repo
+        },
+      ],
+      local.cw_agent_image_tag != "" ? [
+        {
+          name  = "agent.image.tag"
+          value = local.cw_agent_image_tag
+        },
+      ] : [],
+    ) : [],
   )
 }

@@ -45,5 +45,5 @@ provider "helm" {
 provider "grafana" {
   alias = "provisioner"
   url   = var.grafana_endpoint != "" ? var.grafana_endpoint : "https://placeholder.grafana.local"
-  auth  = var.grafana_api_key
+  auth  = var.grafana_api_key != "" ? var.grafana_api_key : "placeholder"
 }

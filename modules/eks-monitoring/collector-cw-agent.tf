@@ -12,8 +12,12 @@
 # When cw_agent_chart_path is set (local path), repository is omitted.
 # Otherwise, the chart is pulled from cw_agent_chart_repo.
 #
-# TODO: Switch to aws_eks_addon once the upstream add-on ships
-#       with OTELContainerInsights (Zeus) support.
+# TODO(launch): Switch to aws_eks_addon once the upstream add-on ships
+#       with OTELContainerInsights (Zeus) support. At that point:
+#       - Remove cw_agent_chart_path, cw_agent_chart_repo, cw_agent_image vars
+#       - Replace helm_release with aws_eks_addon resource
+#       - Switch IAM from node role to Pod Identity association
+#       - This also enables EKS Auto Mode support
 #--------------------------------------------------------------
 
 locals {
@@ -83,7 +87,8 @@ resource "helm_release" "cloudwatch_agent" {
         value = var.cloudwatch_metrics_endpoint
       },
     ] : [],
-    # Override CW Agent container image
+# TODO(launch): Remove cw_agent_image once GA chart is published.
+# Only needed for internal pre-release testing.
     local.cw_agent_has_image_override ? concat(
       [
         {

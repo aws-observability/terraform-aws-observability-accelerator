@@ -199,12 +199,15 @@ variable "cw_agent_chart_path" {
   type        = string
   description = "Absolute local path to the amazon-cloudwatch-observability Helm chart for pre-release testing. When set, cw_agent_chart_repo is ignored."
   default     = ""
+  # TODO(launch): Remove this variable before GA. Once the upstream EKS add-on
+  # supports Zeus, switch to aws_eks_addon and drop the local chart path.
 }
 
 variable "cw_agent_chart_repo" {
   type        = string
   description = "Helm repository URL for the amazon-cloudwatch-observability chart. Ignored when cw_agent_chart_path is set."
   default     = "https://aws.github.io/eks-charts"
+  # TODO(launch): Verify this is the correct public repo URL for the GA chart.
 }
 
 variable "cw_agent_chart_version" {
@@ -235,6 +238,8 @@ variable "cw_agent_image" {
   type        = string
   description = "Override the CloudWatch Agent container image (e.g. '123456789.dkr.ecr.us-east-1.amazonaws.com/cw-agent-dev:latest'). When set, overrides the chart's default image. Format: REGISTRY/REPO or REGISTRY/REPO:TAG"
   default     = ""
+  # TODO(launch): Remove this variable before GA. Only needed for internal
+  # pre-release testing with private ECR builds.
 }
 
 variable "cloudwatch_metrics_endpoint" {

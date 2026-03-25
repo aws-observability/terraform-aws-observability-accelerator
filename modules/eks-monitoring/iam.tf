@@ -48,3 +48,5 @@ module "collector_irsa_role" {
 # No IRSA needed — the CW Agent chart's SA template doesn't
 # support annotations. IAM permissions come from the node role.
 # The example and AGENT.md document attaching the managed policy.
+# TODO(launch): Switch to Pod Identity when aws_eks_addon supports Zeus.
+# This will also enable EKS Auto Mode support.

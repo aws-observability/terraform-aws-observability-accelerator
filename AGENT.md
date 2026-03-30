@@ -338,9 +338,9 @@ Both commands are idempotent. Run them once per account before deploying the
 Destroy in reverse order:
 
 ```bash
-# Monitoring
+# Monitoring (uninstall helm releases first — terraform helm upgrades/destroys are unreliable)
 cd examples/eks-cloudwatch-otlp  # or eks-amp-managed, eks-amp-otel
-./destroy.sh  # or terraform destroy
+./destroy.sh  # handles helm uninstall + terraform destroy
 
 # Grafana (if created)
 cd ../managed-grafana-workspace
@@ -375,6 +375,7 @@ terraform destroy -var="aws_region=<REGION>"
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
+| Terraform helm upgrade fails/times out | Helm in-place upgrades unreliable via Terraform | Uninstall first: `helm uninstall otel-collector -n otel-collector`, then `terraform apply` |
 | No metrics in Grafana | Collector not running | Check pods in collector namespace |
 | 504 on Grafana datasource | SigV4 auth misconfigured | Check Grafana workspace IAM role |
 | Dashboards show "No data" | Metrics not yet ingested | Wait 5 min, check collector logs |

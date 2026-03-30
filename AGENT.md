@@ -126,6 +126,21 @@ GRAFANA_ENDPOINT=$(terraform output -raw grafana_workspace_endpoint)
 GRAFANA_API_KEY=$(terraform output -raw grafana_api_key)
 ```
 
+**Important**: A new workspace has no users by default — you won't be able to
+log in until at least one SSO user or group is assigned. After creating the
+workspace, assign a user via the AWS console or CLI:
+
+```bash
+aws grafana update-permissions \
+  --workspace-id <WORKSPACE_ID> \
+  --update-instruction-batch \
+    'action=ADD,role=ADMIN,users=[{id=<SSO_USER_ID>,type=SSO_USER}]' \
+  --region <REGION>
+```
+
+See [Manage user and group access to Amazon Managed Grafana workspaces](https://docs.aws.amazon.com/grafana/latest/userguide/AMG-manage-users-and-groups-AMG.html)
+for full instructions on assigning users and groups via the console or API.
+
 If the user has an existing workspace but no API token:
 
 ```bash

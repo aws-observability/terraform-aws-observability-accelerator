@@ -36,6 +36,9 @@ terraform init && terraform apply -var="aws_region=us-east-1"
 ```
 
 This requires AWS IAM Identity Center (SSO) configured in the account.
+After creating the workspace, you must
+[assign at least one SSO user or group](https://docs.aws.amazon.com/grafana/latest/userguide/AMG-manage-users-and-groups-AMG.html)
+before you can log in.
 
 ### 3. Terraform >= 1.5
 

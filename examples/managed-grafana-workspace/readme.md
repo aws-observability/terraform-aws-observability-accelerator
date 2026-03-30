@@ -21,7 +21,24 @@ terraform init
 terraform apply -var="aws_region=us-east-1"
 ```
 
-Pass the outputs to any monitoring example:
+### Assign a user to the workspace
+
+A new workspace has no users — you must assign at least one SSO user or group
+before you can log in. Use the AWS console (Grafana → Workspace → Authentication tab)
+or the CLI:
+
+```bash
+aws grafana update-permissions \
+  --workspace-id $(terraform output -raw grafana_workspace_id) \
+  --update-instruction-batch \
+    'action=ADD,role=ADMIN,users=[{id=<SSO_USER_ID>,type=SSO_USER}]' \
+  --region us-east-1
+```
+
+See [Manage user and group access](https://docs.aws.amazon.com/grafana/latest/userguide/AMG-manage-users-and-groups-AMG.html)
+for details on finding your SSO user ID and assigning users via console or API.
+
+Then pass the outputs to any monitoring example:
 
 ```bash
 cd ../eks-cloudwatch-otlp

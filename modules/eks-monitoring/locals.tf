@@ -393,7 +393,7 @@ locals {
 
       exporters = {
         debug = null
-        prometheusremotewrite = {
+        otlphttp = {
           endpoint = local.cw_metrics_endpoint
           auth = {
             authenticator = "sigv4auth/cw"
@@ -407,7 +407,7 @@ locals {
           metrics = {
             receivers  = ["prometheus", "otlp"]
             processors = ["batch"]
-            exporters  = ["prometheusremotewrite"]
+            exporters  = ["otlphttp"]
           }
           logs    = null
           traces  = null

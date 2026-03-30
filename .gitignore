@@ -44,3 +44,6 @@ site
 
 # Checks
 .tfsec
+
+# Pre-launch: OTel enrichment resource not yet public
+modules/eks-monitoring/enrichment.tf

@@ -271,6 +271,24 @@ CloudWatch and can be queried via the CloudWatch PromQL endpoint.
 
 ---
 
+## Vended Metrics Enrichment (CloudWatch OTLP)
+
+CloudWatch OTel enrichment adds AWS resource attributes (account, region, service)
+to vended metrics. This is a one-time account-level enablement.
+
+```bash
+# Step 1: Enable telemetry enrichment (available now)
+aws observabilityadmin start-telemetry-enrichment
+
+# Step 2: Enable OTel enrichment (available 4/2/2026)
+aws cloudwatch start-o-tel-enrichment
+```
+
+Both commands are idempotent. Run them once per account before deploying the
+`cloudwatch-otlp` profile for full metric attribution in dashboards.
+
+---
+
 ## Cleanup
 
 Destroy in reverse order:

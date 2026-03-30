@@ -388,6 +388,16 @@ locals {
           send_batch_size     = 200
           timeout             = "5s"
         }
+        # TODO: Some scraped metrics have blank resource attribute values
+        # which cause 400 errors on the CloudWatch OTLP endpoint. Options:
+        # 1. Endpoint team removes the 400 validation (under discussion)
+        # 2. Add transform processor to strip blank attributes:
+        #    transform/remove-blank:
+        #      resource_statements:
+        #        - context: resource
+        #          statements:
+        #            - delete_matching_keys(attributes, ".*") where IsMatch(value, "^$")
+        #    (requires OTel Collector >= 0.100 for correct OTTL resource context)
         memory_limiter = null
       }
 

@@ -271,6 +271,50 @@ CloudWatch and can be queried via the CloudWatch PromQL endpoint.
 
 ---
 
+## Optional: Deploy a Sample App (OTel Demo)
+
+After the base monitoring is running, you can deploy the
+[OpenTelemetry Demo](https://opentelemetry.io/docs/demo/) to generate
+application-level OTLP metrics and see them flow through the collector
+into CloudWatch.
+
+### Deploy the demo
+
+```bash
+helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
+helm install otel-demo open-telemetry/opentelemetry-demo \
+  --namespace otel-demo --create-namespace \
+  --set components.frontendProxy.service.type=LoadBalancer \
+  --set default.env[0].name=OTEL_EXPORTER_OTLP_ENDPOINT \
+  --set default.env[0].value=http://otel-collector-opentelemetry-collector.otel-collector:4317
+```
+
+This points all demo services at the existing OTel Collector's OTLP receiver.
+The collector batches and exports the metrics to the CloudWatch OTLP endpoint.
+
+### Verify
+
+```bash
+# Demo pods running
+kubectl get pods -n otel-demo
+
+# Check collector logs for OTLP data flowing
+kubectl logs -n otel-collector \
+  -l app.kubernetes.io/name=opentelemetry-collector --tail=10
+```
+
+Application metrics from the demo (e.g. `http_server_duration`, `rpc_client_duration`)
+should appear in Grafana within a few minutes via the CloudWatch PromQL datasource.
+
+### Cleanup
+
+```bash
+helm uninstall otel-demo -n otel-demo
+kubectl delete namespace otel-demo
+```
+
+---
+
 ## Vended Metrics Enrichment (CloudWatch OTLP)
 
 CloudWatch OTel enrichment adds AWS resource attributes (account, region, service)

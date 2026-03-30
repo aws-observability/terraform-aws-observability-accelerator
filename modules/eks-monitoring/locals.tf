@@ -30,18 +30,19 @@ locals {
   is_managed_metrics  = var.collector_profile == "managed-metrics"
   is_self_managed_amp = var.collector_profile == "self-managed-amp"
   is_cloudwatch_otlp  = var.collector_profile == "cloudwatch-otlp"
+  is_container_insights = false # future: var.collector_profile == "cloudwatch-container-insights"
 
   # Derived booleans
-  # OTel Helm chart only needed for self-managed-amp now.
-  # cloudwatch-otlp uses the CW Observability Helm chart (future: EKS add-on).
-  needs_otel_helm = local.is_self_managed_amp
+  # OTel Helm chart needed for self-managed-amp and cloudwatch-otlp.
+  # cloudwatch-container-insights (future) will use the CW Agent chart.
+  needs_otel_helm = local.is_self_managed_amp || local.is_cloudwatch_otlp
   needs_irsa      = local.needs_otel_helm
   is_amp_flavor   = local.is_managed_metrics || local.is_self_managed_amp
   is_cw_flavor    = local.is_cloudwatch_otlp
 
-  # Helm support charts (kube-state-metrics, node-exporter) are only needed
-  # for AMP profiles. The CW Agent chart bundles its own.
-  needs_helm_support = local.is_amp_flavor
+  # Helm support charts (kube-state-metrics, node-exporter) needed for all
+  # profiles that use OTel Collector or managed scraper.
+  needs_helm_support = local.is_amp_flavor || local.is_cloudwatch_otlp
 }
 
 #--------------------------------------------------------------
@@ -319,8 +320,101 @@ locals {
     }
   }) : ""
 
-  # Profile-driven OTel Collector values (self-managed-amp only now)
-  otel_collector_values = local.is_self_managed_amp ? local.self_managed_amp_otel_collector_values : ""
+  # Profile-driven OTel Collector values
+  otel_collector_values = local.is_self_managed_amp ? local.self_managed_amp_otel_collector_values : (
+    local.is_cloudwatch_otlp ? local.cloudwatch_otlp_otel_collector_values : ""
+  )
+}
+
+#--------------------------------------------------------------
+# CloudWatch OTLP — OTel Collector Values
+#--------------------------------------------------------------
+
+locals {
+  cloudwatch_otlp_otel_collector_values = local.is_cloudwatch_otlp ? yamlencode({
+    mode = "deployment"
+
+    serviceAccount = {
+      create = true
+      name   = "otel-collector"
+      annotations = {
+        "eks.amazonaws.com/role-arn" = try(module.collector_irsa_role[0].iam_role_arn, "")
+      }
+    }
+
+    clusterRole = {
+      create = true
+      rules = [
+        {
+          apiGroups = [""]
+          resources = ["nodes", "nodes/proxy", "nodes/metrics", "services", "endpoints", "pods"]
+          verbs     = ["get", "list", "watch"]
+        },
+        {
+          nonResourceURLs = ["/metrics", "/metrics/cadvisor"]
+          verbs           = ["get"]
+        },
+      ]
+    }
+
+    config = {
+      extensions = {
+        health_check = {}
+        "sigv4auth/cw" = {
+          service = "monitoring"
+          region  = local.region
+        }
+      }
+
+      receivers = {
+        prometheus = {
+          config = {
+            scrape_configs = local.default_otel_scrape_configs
+          }
+        }
+        otlp = {
+          protocols = {
+            grpc = { endpoint = "0.0.0.0:4317" }
+            http = { endpoint = "0.0.0.0:4318" }
+          }
+        }
+        jaeger = null
+        zipkin = null
+      }
+
+      processors = {
+        batch = {
+          send_batch_max_size = 200
+          send_batch_size     = 200
+          timeout             = "5s"
+        }
+        memory_limiter = null
+      }
+
+      exporters = {
+        debug = null
+        prometheusremotewrite = {
+          endpoint = local.cw_metrics_endpoint
+          auth = {
+            authenticator = "sigv4auth/cw"
+          }
+        }
+      }
+
+      service = {
+        extensions = ["health_check", "sigv4auth/cw"]
+        pipelines = {
+          metrics = {
+            receivers  = ["prometheus", "otlp"]
+            processors = ["batch"]
+            exporters  = ["prometheusremotewrite"]
+          }
+          logs    = null
+          traces  = null
+        }
+      }
+    }
+  }) : ""
 }
 
 #--------------------------------------------------------------

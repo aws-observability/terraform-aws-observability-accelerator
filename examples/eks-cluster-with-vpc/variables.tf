@@ -1,30 +1,40 @@
-variable "cluster_name" {
-  description = "Name of cluster - used by Terratest for e2e test automation"
-  type        = string
-  default     = "eks-cluster-with-vpc"
-
-  validation {
-    # cluster name is used as prefix on eks_blueprint module and cannot be >25 characters
-    condition     = can(regex("^[a-zA-Z][-a-zA-Z0-9]{3,24}$", var.cluster_name))
-    error_message = "Cluster name is used as a prefix-name for other resources. Max size is 25 chars and must satisfy regular expression pattern: '[a-zA-Z][-a-zA-Z0-9]{3,19}'."
-  }
-}
 variable "aws_region" {
   description = "AWS Region"
   type        = string
+  default     = "us-east-1"
 }
-variable "managed_node_instance_type" {
-  description = "Instance type for the cluster managed node groups"
+
+variable "cluster_name" {
+  description = "EKS cluster name"
   type        = string
-  default     = "t3.xlarge"
+  default     = "cw-otlp-test"
+
+  validation {
+    condition     = can(regex("^[a-zA-Z][-a-zA-Z0-9]{3,24}$", var.cluster_name))
+    error_message = "Cluster name max 25 chars, alphanumeric and hyphens only."
+  }
 }
+
+variable "eks_version" {
+  description = "EKS Kubernetes version"
+  type        = string
+  default     = "1.35"
+}
+
+variable "managed_node_instance_type" {
+  description = "EC2 instance type for managed node group"
+  type        = string
+  default     = "t3.medium"
+}
+
 variable "managed_node_min_size" {
-  description = "Minumum number of instances in the node group"
+  description = "Minimum number of nodes"
   type        = number
   default     = 2
 }
-variable "eks_version" {
-  type        = string
-  description = "EKS Cluster version"
-  default     = "1.28"
+
+variable "managed_node_max_size" {
+  description = "Maximum number of nodes"
+  type        = number
+  default     = 3
 }

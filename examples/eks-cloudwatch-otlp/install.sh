@@ -1,31 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Two-phase install for EKS CloudWatch OTLP observability.
-# Phase 1: Create Grafana workspace, CloudWatch Agent, supporting infra.
-# Phase 2: Use the Grafana token from Phase 1 to provision dashboards.
+# Install EKS CloudWatch OTLP observability.
 #
 # Usage:
 #   ./install.sh -var="eks_cluster_id=my-cluster"
 #
+# To include Grafana dashboards, pass the workspace outputs:
+#   ./install.sh \
+#     -var="eks_cluster_id=my-cluster" \
+#     -var="grafana_endpoint=https://g-xxx.grafana-workspace.us-east-1.amazonaws.com" \
+#     -var="grafana_api_key=glsa_xxx"
+#
 # All arguments are forwarded to terraform apply.
 
-EXTRA_ARGS=("$@")
-
-echo "=== Phase 1: Infrastructure (Grafana workspace + CloudWatch Agent) ==="
 terraform init -upgrade
-terraform apply "${EXTRA_ARGS[@]}"
-
-echo ""
-echo "=== Phase 2: Provision dashboards ==="
-GRAFANA_ENDPOINT=$(terraform output -raw grafana_workspace_endpoint)
-GRAFANA_API_KEY=$(terraform output -raw grafana_api_key)
-
-terraform apply \
-  -var="grafana_endpoint=${GRAFANA_ENDPOINT}" \
-  -var="grafana_api_key=${GRAFANA_API_KEY}" \
-  "${EXTRA_ARGS[@]}"
-
-echo ""
-echo "=== Done ==="
-echo "Grafana: ${GRAFANA_ENDPOINT}"
+terraform apply "$@"

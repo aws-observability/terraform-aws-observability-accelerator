@@ -42,7 +42,7 @@ locals {
 }
 
 resource "helm_release" "cloudwatch_agent" {
-  count = local.is_cloudwatch_otlp ? 1 : 0
+  count = local.is_container_insights ? 1 : 0
 
   name       = "amazon-cloudwatch"
   repository = local.cw_agent_use_local_chart ? null : var.cw_agent_chart_repo

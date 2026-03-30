@@ -1,11 +1,31 @@
-# EKS Cluster Deployment with new VPC
+# EKS Cluster with VPC
 
-Note: This example is a subset from [this EKS Blueprint example](https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/v4.13.1/examples/eks-cluster-with-new-vpc)
+Creates a ready-to-use EKS cluster for the observability accelerator examples.
 
-This example deploys the following Basic EKS Cluster with VPC
+## What it provisions
 
-- Creates a new sample VPC, 3 Private Subnets and 3 Public Subnets
-- Creates Internet gateway for Public Subnets and NAT Gateway for Private Subnets
-- Creates EKS Cluster Control plane with one managed node group
+- VPC with 2 private and 2 public subnets, NAT gateway
+- EKS cluster (default: v1.31) with a managed `t3.medium` node group
+- Node IAM roles pre-configured with:
+  - `CloudWatchAgentServerPolicy` — metrics/logs collection
+  - `AmazonEC2ContainerRegistryReadOnly` — ECR image pulls
 
-You can view the full documentation for this example [here](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/new-eks-cluster/)
+## Usage
+
+```bash
+terraform init
+terraform apply -var="cluster_name=cw-otlp-test" -var="aws_region=us-east-1"
+```
+
+Then configure kubectl:
+
+```bash
+$(terraform output -raw configure_kubectl)
+```
+
+Use the cluster name in any monitoring example:
+
+```bash
+cd ../eks-cloudwatch-otlp
+./install.sh -var="eks_cluster_id=cw-otlp-test" -var="aws_region=us-east-1"
+```

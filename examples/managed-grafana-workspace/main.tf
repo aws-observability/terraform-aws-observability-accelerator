@@ -14,7 +14,7 @@ locals {
 
 module "managed_grafana" {
   source  = "terraform-aws-modules/managed-service-grafana/aws"
-  version = "1.10.0"
+  version = "~> 2.1"
 
   name                      = local.name
   associate_license         = false
@@ -24,18 +24,13 @@ module "managed_grafana" {
   permission_type           = "SERVICE_MANAGED"
   data_sources              = ["CLOUDWATCH", "PROMETHEUS", "XRAY"]
   notification_destinations = ["SNS"]
-  stack_set_name            = local.name
+  grafana_version           = "10.4"
 
   configuration = jsonencode({
-    unifiedAlerting = {
-      enabled = true
-    }
+    unifiedAlerting = { enabled = true }
+    plugins         = { pluginAdminEnabled = true }
   })
 
-  grafana_version = "9.4"
-
-
-  # Workspace IAM role
   create_iam_role                = true
   iam_role_name                  = local.name
   use_iam_role_name_prefix       = true
@@ -46,4 +41,21 @@ module "managed_grafana" {
   iam_role_tags                  = local.tags
 
   tags = local.tags
+}
+
+#--------------------------------------------------------------
+# Service Account + Token (for Terraform-driven provisioning)
+#--------------------------------------------------------------
+
+resource "aws_grafana_workspace_service_account" "terraform" {
+  name         = "terraform-provisioner"
+  grafana_role = "ADMIN"
+  workspace_id = module.managed_grafana.workspace_id
+}
+
+resource "aws_grafana_workspace_service_account_token" "terraform" {
+  name               = "terraform-token"
+  service_account_id = aws_grafana_workspace_service_account.terraform.service_account_id
+  workspace_id       = module.managed_grafana.workspace_id
+  seconds_to_live    = 2592000 # 30 days
 }

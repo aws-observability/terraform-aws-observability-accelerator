@@ -37,13 +37,7 @@ provider "helm" {
   }
 }
 
-# Phase 1: grafana_endpoint is empty → use a placeholder URL so the
-#           provider initializes without error. Dashboards are skipped
-#           because enable_dashboards = false when endpoint is empty.
-# Phase 2: re-apply with grafana_endpoint from output → dashboards provisioned.
-# The install.sh script automates both phases.
 provider "grafana" {
-  alias = "provisioner"
-  url   = var.grafana_endpoint != "" ? var.grafana_endpoint : "https://placeholder.grafana.local"
-  auth  = var.grafana_api_key != "" ? var.grafana_api_key : "placeholder"
+  url  = var.grafana_endpoint != "" ? var.grafana_endpoint : "https://placeholder.grafana.local"
+  auth = var.grafana_api_key != "" ? var.grafana_api_key : "placeholder"
 }

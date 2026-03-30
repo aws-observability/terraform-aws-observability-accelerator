@@ -2,180 +2,257 @@
 
 You are helping a user deploy EKS observability using this Terraform repository.
 Your job is to guide them through deployment conversationally — gather the info
-you need, pick the right example, run Terraform, and hand them working dashboard URLs.
+you need, provision prerequisites, run Terraform, and hand them working dashboard URLs.
 
 ## Repository Structure
 
 ```
 modules/eks-monitoring/          # Core module — all profiles
 examples/
-  eks-cloudwatch-otlp/           # CloudWatch OTLP (recommended, self-contained)
+  eks-cluster-with-vpc/          # Prereq: create an EKS cluster + VPC
+  managed-grafana-workspace/     # Prereq: create a Grafana workspace + API token
+  eks-cloudwatch-otlp/           # CloudWatch OTLP via OTel Collector (public-ready)
   eks-amp-managed/               # AMP with managed collector (agentless)
   eks-amp-otel/                  # AMP with self-managed OTel Collector
-  eks-cluster-with-vpc/          # Helper: create an EKS cluster
-  managed-grafana-workspace/     # Helper: create a Grafana workspace
 dashboards/
-  original/                      # Standard Prometheus/AMP dashboards
-  zeus/                          # Zeus (CloudWatch OTLP) dashboards
+  original/                      # Standard Prometheus dashboards (AMP + OTel→CW OTLP)
+  zeus/                          # Container Insights dashboards (CW Agent, not public yet)
 scripts/
-  zeus-dashboard-transform.py    # Converts original → Zeus dashboards
+  zeus-dashboard-transform.py    # Converts original → zeus dashboards
 ```
 
 ## Collector Profiles
 
-The `eks-monitoring` module supports three profiles via `collector_profile`:
+| Profile | Collector | Backend | Example | Status |
+|---------|-----------|---------|---------|--------|
+| `cloudwatch-otlp` | OTel Collector (Helm) | CloudWatch OTLP endpoint | `eks-cloudwatch-otlp/` | Public-ready (dashboards need work) |
+| `managed-metrics` | AMP Managed Scraper (agentless) | AMP | `eks-amp-managed/` | Public-ready |
+| `self-managed-amp` | OTel Collector (Helm) | AMP | `eks-amp-otel/` | Public-ready |
+| `cloudwatch-container-insights` | CW Agent / EKS add-on | CloudWatch | — | **Parked** — waiting for public chart/add-on GA |
 
-| Profile | Backend | Collector | Best for |
-|---------|---------|-----------|----------|
-| `cloudwatch-otlp` | CloudWatch (Zeus) | CloudWatch Agent (Helm) | New deployments, no AMP needed |
-| `managed-metrics` | AMP | AWS Managed Collector (agentless) | Zero collector management |
-| `self-managed-amp` | AMP | OTel Collector (Helm) | Full control over collector config |
+### Profile details
 
-**Recommendation: `cloudwatch-otlp`** — simplest path, no AMP workspace needed,
-metrics queryable via CloudWatch PromQL endpoint in Grafana. Deploys the Amazon
-CloudWatch Observability Helm chart which bundles the CW Agent DaemonSet,
-Fluent Bit, kube-state-metrics, node-exporter, and a cluster scraper.
+**`cloudwatch-otlp`** (recommended for CloudWatch users)
+- Deploys OTel Collector scraping kube-state-metrics, node-exporter, kubelet
+- Exports to CloudWatch OTLP metrics endpoint via SigV4 auth
+- Endpoint is configurable: defaults to `https://monitoring.<region>.amazonaws.com/v1/metrics`
+  but can be overridden via `cloudwatch_metrics_endpoint` for internal/pre-release testing
+- Uses `original/` dashboards with a CloudWatch PromQL datasource
+- IRSA role needs `cloudwatch:PutMetricData`
 
-## Deployment Workflow
+**`managed-metrics`** (recommended for AMP users wanting zero management)
+- AMP managed scraper — no in-cluster collector to manage
+- Requires at least 2 subnets in 2 AZs
+- Uses `original/` dashboards with an AMP datasource
 
-### Step 1: Gather Information
+**`self-managed-amp`** (full control)
+- OTel Collector with AMP remote write, optional X-Ray traces + CW Logs
+- IRSA role with AMP, X-Ray, and CW Logs policies
+- Uses `original/` dashboards with an AMP datasource
 
-Ask the user for (or look up via AWS CLI):
+**`cloudwatch-container-insights`** (NOT YET PUBLIC)
+- Amazon CloudWatch Observability Helm chart (CW Agent DaemonSet, Fluent Bit,
+  kube-state-metrics, node-exporter, cluster scraper)
+- Chart `amazon-cloudwatch-observability` is not yet in a public Helm repo
+- Will eventually become an EKS add-on (`aws_eks_addon` resource)
+- Uses `zeus/` dashboards
+- **Do not use for public examples** — dependencies are pending
 
-1. **AWS Region** — where to deploy (default: `us-west-2`)
-2. **EKS Cluster Name** — must already exist with at least one managed node group
-   - Check: `aws eks list-clusters --region <region>`
-3. **Profile choice** — recommend `cloudwatch-otlp` unless they specifically need AMP
-4. **Existing Grafana workspace?** — the `eks-cloudwatch-otlp` example creates one automatically
+---
 
-If the user doesn't have an EKS cluster, point them to `examples/eks-cluster-with-vpc/`.
+## Deployment Playbook
 
-### Step 2: Deploy (CloudWatch OTLP — recommended)
+Follow these steps in order. Each step checks whether the resource exists
+before creating it.
+
+### Step 0: Gather Information
+
+Ask the user for:
+
+1. **AWS Region** (default: `us-east-1`)
+2. **Profile choice** — recommend `cloudwatch-otlp` for CloudWatch, `managed-metrics` for AMP
+
+Then check what already exists:
+
+```bash
+# Existing EKS clusters
+aws eks list-clusters --region <REGION>
+
+# Existing Grafana workspaces
+aws grafana list-workspaces --region <REGION> \
+  --query 'workspaces[*].{name:name,id:id,endpoint:endpoint,status:status}'
+```
+
+Ask the user:
+- Do you have an EKS cluster to use, or should I create one?
+- Do you have a Grafana workspace, or should I create one? (optional — dashboards can be skipped)
+
+### Step 1: EKS Cluster (if needed)
+
+If the user has no cluster, provision one:
+
+```bash
+cd examples/eks-cluster-with-vpc
+terraform init
+terraform apply -var="cluster_name=<NAME>" -var="aws_region=<REGION>"
+```
+
+This creates:
+- VPC with private/public subnets and NAT gateway
+- EKS cluster with `t3.medium` managed node group
+- Node IAM roles with `CloudWatchAgentServerPolicy` + `AmazonEC2ContainerRegistryReadOnly`
+
+After completion:
+
+```bash
+aws eks update-kubeconfig --name $(terraform output -raw eks_cluster_id) --region <REGION>
+```
+
+### Step 2: Grafana Workspace (if needed, optional)
+
+If the user wants dashboards and has no workspace:
+
+```bash
+cd examples/managed-grafana-workspace
+terraform init
+terraform apply -var="aws_region=<REGION>"
+```
+
+**Requires**: AWS IAM Identity Center (SSO) configured in the account.
+
+Record the outputs:
+```bash
+GRAFANA_ENDPOINT=$(terraform output -raw grafana_workspace_endpoint)
+GRAFANA_API_KEY=$(terraform output -raw grafana_api_key)
+```
+
+If the user has an existing workspace but no API token:
+
+```bash
+SA_ID=$(aws grafana create-workspace-service-account \
+  --workspace-id <ID> --name terraform --grafana-role ADMIN \
+  --region <REGION> --query 'id' --output text)
+
+aws grafana create-workspace-service-account-token \
+  --workspace-id <ID> --service-account-id $SA_ID \
+  --name terraform-token --seconds-to-live 2592000 \
+  --region <REGION>
+```
+
+### Step 3: Deploy Monitoring
+
+Write `terraform.tfvars` in the chosen example directory:
+
+```hcl
+eks_cluster_id = "<CLUSTER_NAME>"
+aws_region     = "<REGION>"
+```
+
+#### CloudWatch OTLP
 
 ```bash
 cd examples/eks-cloudwatch-otlp
 
-# Option A: One-command install (recommended)
-./install.sh -var="eks_cluster_id=<CLUSTER>" -var="aws_region=<REGION>"
+# Without dashboards
+./install.sh
 
-# Option B: Manual two-step
-terraform init
-terraform apply -var="eks_cluster_id=<CLUSTER>" -var="aws_region=<REGION>"
-
-# Then provision dashboards:
-terraform apply \
-  -var="eks_cluster_id=<CLUSTER>" \
-  -var="aws_region=<REGION>" \
-  -var="grafana_endpoint=$(terraform output -raw grafana_workspace_endpoint)" \
-  -var="grafana_api_key=$(terraform output -raw grafana_api_key)"
-```
-
-For pre-release testing with a local chart build:
-```bash
+# With dashboards
 ./install.sh \
-  -var="eks_cluster_id=<CLUSTER>" \
-  -var="aws_region=<REGION>" \
-  -var="cw_agent_chart_path=/path/to/cloudwatch-agent/helm/amazon-cloudwatch-observability"
+  -var="grafana_endpoint=<ENDPOINT>" \
+  -var="grafana_api_key=<KEY>"
+
+# With custom OTLP endpoint (for internal testing)
+./install.sh \
+  -var="cloudwatch_metrics_endpoint=https://custom-endpoint.example.com/v1/metrics"
 ```
 
-### Step 3: Hand Over Results
-
-After successful apply, give the user:
-
-1. **Grafana URL**: `terraform output grafana_workspace_endpoint`
-2. **Dashboards available**:
-   - Cluster overview
-   - Kubelet metrics
-   - Node metrics
-   - Node Exporter metrics
-   - Namespace Workloads
-   - Workloads
-3. **Note**: User must log in via AWS IAM Identity Center (SSO) to access Grafana
-
-### Step 4: Verify Data Flow
-
-```bash
-# Check CloudWatch Agent pods are running
-kubectl get pods -n amazon-cloudwatch
-
-# Verify the DaemonSet is healthy
-kubectl get daemonset -n amazon-cloudwatch
-
-# Check Fluent Bit pods
-kubectl get pods -n amazon-cloudwatch -l app.kubernetes.io/name=fluent-bit
-```
-
-If metrics aren't showing in dashboards after 5 minutes, check CW Agent logs:
-```bash
-kubectl logs -n amazon-cloudwatch -l app.kubernetes.io/name=cloudwatch-agent --tail=50
-```
-
-## Deploy with AMP (managed-metrics profile)
-
-If the user wants AMP instead:
+#### AMP Managed Scraper
 
 ```bash
 cd examples/eks-amp-managed
 terraform init
-terraform apply \
-  -var="eks_cluster_id=<CLUSTER>" \
-  -var="aws_region=<REGION>"
+terraform apply
 ```
 
-This creates an AMP workspace + managed collector (agentless). Requires:
-- At least 2 subnets in 2 AZs for the scraper
-- Security groups allowing scraper → EKS API access
+#### AMP Self-Managed OTel
 
-## Configuration Reference
+```bash
+cd examples/eks-amp-otel
+terraform init
+terraform apply \
+  -var="grafana_endpoint=<ENDPOINT>" \
+  -var="grafana_api_key=<KEY>"
+```
 
-### Key Variables (eks-monitoring module)
+### Step 4: Verify
+
+```bash
+# For cloudwatch-otlp or self-managed-amp (OTel Collector)
+kubectl get pods -n otel-collector
+
+# For managed-metrics (no in-cluster pods — check AMP scraper)
+aws amp list-scrapers --region <REGION>
+
+# Check kube-state-metrics and node-exporter
+kubectl get pods -n kube-system -l app.kubernetes.io/name=kube-state-metrics
+kubectl get pods -n prometheus-node-exporter
+```
+
+### Step 5: Hand Over Results
+
+Give the user:
+
+1. **Grafana URL** (if provisioned) — log in via AWS IAM Identity Center (SSO)
+2. **Dashboards**: Cluster, Kubelet, Nodes, Node Exporter, Namespace Workloads, Workloads
+3. **Collector namespace**: `otel-collector` (OTel profiles) or check AMP scraper (managed)
+
+---
+
+## Cleanup
+
+Destroy in reverse order:
+
+```bash
+# Monitoring
+cd examples/eks-cloudwatch-otlp  # or eks-amp-managed, eks-amp-otel
+./destroy.sh  # or terraform destroy
+
+# Grafana (if created)
+cd ../managed-grafana-workspace
+terraform destroy -var="aws_region=<REGION>"
+
+# Cluster (if created)
+cd ../eks-cluster-with-vpc
+terraform destroy -var="aws_region=<REGION>"
+```
+
+---
+
+## Key Variables (eks-monitoring module)
 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `collector_profile` | (required) | `cloudwatch-otlp`, `managed-metrics`, or `self-managed-amp` |
 | `eks_cluster_id` | (required) | EKS cluster name |
-| `cw_agent_chart_path` | `"amazon-cloudwatch-observability"` | Helm chart path/URL (cloudwatch-otlp) |
-| `cw_agent_chart_version` | `"4.8.0"` | CW Agent chart version |
-| `cw_agent_enable_container_logs` | `true` | Enable Fluent Bit logs |
-| `cw_agent_enable_application_signals` | `false` | Enable auto-instrumentation |
-| `cloudwatch_metrics_endpoint` | regional default | Override CloudWatch OTLP endpoint |
+| `cloudwatch_metrics_endpoint` | regional default | Override CloudWatch OTLP endpoint URL |
 | `create_amp_workspace` | `true` | Create new AMP workspace (AMP profiles) |
 | `enable_dashboards` | `true` | Provision Grafana dashboards |
-| `enable_tracing` | `true` | Enable X-Ray traces pipeline (self-managed-amp) |
-| `enable_logs` | `true` | Enable CloudWatch Logs pipeline (self-managed-amp) |
-
-### Key Outputs
-
-| Output | Description |
-|--------|-------------|
-| `grafana_workspace_endpoint` | Grafana URL (eks-cloudwatch-otlp example) |
-| `cw_agent_namespace` | CW Agent Kubernetes namespace |
-| `cloudwatch_promql_datasource_config` | Grafana datasource connection details |
-| `collector_irsa_arn` | OTel Collector IAM role ARN (self-managed-amp) |
-| `managed_prometheus_workspace_endpoint` | AMP endpoint (AMP profiles) |
+| `enable_tracing` | `true` | Enable X-Ray traces (self-managed-amp) |
+| `enable_logs` | `true` | Enable CloudWatch Logs (self-managed-amp) |
 
 ## IAM Notes
 
-- **cloudwatch-otlp**: The CW Agent gets permissions from the EKS node IAM role
-  (`CloudWatchAgentServerPolicy`). The example attaches this automatically.
-  Future: switch to Pod Identity when the upstream EKS add-on supports Zeus.
-- **self-managed-amp**: Uses IRSA (IAM Roles for Service Accounts) for the
-  OTel Collector with AMP remote write, X-Ray, and CloudWatch Logs policies.
-- **managed-metrics**: No in-cluster IAM needed — the managed scraper uses
-  its own service-linked role.
-
-## Cleanup
-
-```bash
-terraform destroy -var="eks_cluster_id=<CLUSTER>" -var="aws_region=<REGION>"
-```
+- **cloudwatch-otlp**: IRSA role with `cloudwatch:PutMetricData` for the OTel Collector
+- **self-managed-amp**: IRSA role with AMP remote write, X-Ray, and CW Logs policies
+- **managed-metrics**: No in-cluster IAM — managed scraper uses its own service-linked role
 
 ## Troubleshooting
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| No metrics in Grafana | CW Agent not running | `kubectl get pods -n amazon-cloudwatch` |
-| 504 timeout on Grafana datasource | SigV4 auth misconfigured | Check Grafana workspace IAM role has CloudWatch read permissions |
-| Dashboards show "No data" | Metrics not yet ingested | Wait 5 min, check CW Agent logs |
-| CW Agent CrashLoopBackOff | Missing IAM permissions | Verify `CloudWatchAgentServerPolicy` is on the node role |
-| Helm install fails | Chart not found | Check `cw_agent_chart_path` points to a valid chart |
+| No metrics in Grafana | Collector not running | Check pods in collector namespace |
+| 504 on Grafana datasource | SigV4 auth misconfigured | Check Grafana workspace IAM role |
+| Dashboards show "No data" | Metrics not yet ingested | Wait 5 min, check collector logs |
+| OTel Collector CrashLoopBackOff | Missing IRSA permissions | Check IAM role trust policy and policies |
+| ECR image pull errors | Missing ECR policy | Verify `AmazonEC2ContainerRegistryReadOnly` on node role |
+| AMP scraper not collecting | Network access | Check security groups allow scraper → EKS API |

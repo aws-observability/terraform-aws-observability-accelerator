@@ -1,69 +1,78 @@
 # EKS CloudWatch OTLP Example
 
-Self-contained example that deploys full EKS observability via CloudWatch OTLP.
-A single `./install.sh` creates everything — Grafana workspace, service account,
-datasource, dashboards, and CloudWatch Agent.
+Deploys EKS observability via CloudWatch OTLP — CloudWatch Agent, kube-state-metrics,
+node-exporter, and optionally Grafana dashboards.
 
 ## What gets deployed
 
-- Amazon Managed Grafana workspace with service account + API token
-- Grafana Prometheus datasource pointing at CloudWatch PromQL endpoint (SigV4 auth)
-- Infrastructure dashboards (cluster, kubelet, nodes, workloads, namespace-workloads, node-exporter)
-- Amazon CloudWatch Observability Helm chart (CW Agent DaemonSet, Fluent Bit, kube-state-metrics, node-exporter, cluster scraper)
+- Amazon CloudWatch Observability Helm chart (CW Agent DaemonSet, Fluent Bit, kube-state-metrics, node-exporter)
 - `CloudWatchAgentServerPolicy` attached to EKS node IAM role
+- Grafana dashboards (cluster, kubelet, nodes, workloads, namespace-workloads, node-exporter) — when Grafana endpoint is provided
 
 ## Prerequisites
 
-- An existing EKS cluster with at least one managed node group
-- AWS IAM Identity Center (SSO) configured in the account (for Grafana auth)
-- Terraform >= 1.5.0
+### 1. EKS cluster
+
+You need a running EKS cluster with at least one managed node group. Node roles
+should include `CloudWatchAgentServerPolicy` and `AmazonEC2ContainerRegistryReadOnly`.
+
+Use the [`eks-cluster-with-vpc`](../eks-cluster-with-vpc/) example to create one:
+
+```bash
+cd ../eks-cluster-with-vpc
+terraform init && terraform apply -var="aws_region=us-east-1"
+aws eks update-kubeconfig --name $(terraform output -raw eks_cluster_id) --region us-east-1
+```
+
+### 2. Grafana workspace (optional — for dashboards)
+
+To provision dashboards, you need an Amazon Managed Grafana workspace with a
+service account token. Use the [`managed-grafana-workspace`](../managed-grafana-workspace/)
+example:
+
+```bash
+cd ../managed-grafana-workspace
+terraform init && terraform apply -var="aws_region=us-east-1"
+```
+
+This requires AWS IAM Identity Center (SSO) configured in the account.
+
+### 3. Terraform >= 1.5
 
 ## Quick start
 
+CW Agent only (no dashboards):
+
 ```bash
-./install.sh -var="eks_cluster_id=my-cluster" -var="aws_region=us-west-2"
+./install.sh -var="eks_cluster_id=cw-otlp-test"
 ```
 
-The script runs two Terraform applies:
-1. Creates Grafana workspace, CloudWatch Agent, and supporting infra
-2. Uses the Grafana service account token from step 1 to provision dashboards
-
-### Pre-release testing with a local chart
-
-To test with an internal build of the CloudWatch Agent chart:
+With Grafana dashboards:
 
 ```bash
 ./install.sh \
-  -var="eks_cluster_id=my-cluster" \
-  -var="aws_region=us-west-2" \
-  -var="cw_agent_chart_path=/path/to/cloudwatch-agent/helm/amazon-cloudwatch-observability"
+  -var="eks_cluster_id=cw-otlp-test" \
+  -var="grafana_endpoint=$(cd ../managed-grafana-workspace && terraform output -raw grafana_workspace_endpoint)" \
+  -var="grafana_api_key=$(cd ../managed-grafana-workspace && terraform output -raw grafana_api_key)"
 ```
 
-## Manual two-step apply
-
-If you prefer not to use the script:
+### Pre-release testing with a local chart
 
 ```bash
-# Step 1: Create infra (dashboards skipped — no Grafana token yet)
-terraform init
-terraform apply -var="eks_cluster_id=my-cluster"
-
-# Step 2: Grab the token and re-apply with dashboards
-terraform apply \
-  -var="eks_cluster_id=my-cluster" \
-  -var="grafana_endpoint=$(terraform output -raw grafana_workspace_endpoint)" \
-  -var="grafana_api_key=$(terraform output -raw grafana_api_key)"
+./install.sh \
+  -var="eks_cluster_id=cw-otlp-test" \
+  -var="cw_agent_chart_path=/path/to/cloudwatch-agent/helm/amazon-cloudwatch-observability"
 ```
 
 ## Outputs
 
-- `grafana_workspace_endpoint` — open this URL to view dashboards
-- `grafana_workspace_id` — workspace ID for AWS CLI operations
-- `cloudwatch_promql_datasource` — datasource connection details
-- `cw_agent_namespace` — Kubernetes namespace where the CW Agent runs
+| Name | Description |
+|------|-------------|
+| `cloudwatch_promql_datasource` | Datasource connection details for Grafana |
+| `cw_agent_namespace` | Kubernetes namespace where the CW Agent runs |
 
 ## Cleanup
 
 ```bash
-terraform destroy -var="eks_cluster_id=my-cluster"
+./destroy.sh -var="eks_cluster_id=cw-otlp-test"
 ```

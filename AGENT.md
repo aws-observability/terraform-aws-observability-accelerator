@@ -199,27 +199,75 @@ terraform apply \
   -var="grafana_api_key=<KEY>"
 ```
 
-### Step 4: Verify
+### Step 4: Verify and Hand Over
+
+After a successful apply, walk the user through verification and give them
+everything they need.
+
+#### 4a. Check deployed components
 
 ```bash
-# For cloudwatch-otlp or self-managed-amp (OTel Collector)
+echo "=== OTel Collector ==="
 kubectl get pods -n otel-collector
 
-# For managed-metrics (no in-cluster pods — check AMP scraper)
-aws amp list-scrapers --region <REGION>
-
-# Check kube-state-metrics and node-exporter
+echo ""
+echo "=== kube-state-metrics ==="
 kubectl get pods -n kube-system -l app.kubernetes.io/name=kube-state-metrics
+
+echo ""
+echo "=== node-exporter ==="
 kubectl get pods -n prometheus-node-exporter
 ```
 
-### Step 5: Hand Over Results
+For `managed-metrics` (no in-cluster collector):
+```bash
+aws amp list-scrapers --region <REGION> \
+  --query 'scrapers[*].{id:scraperId,status:status.statusCode}'
+```
 
-Give the user:
+#### 4b. Inspect the OTel Collector config
 
-1. **Grafana URL** (if provisioned) — log in via AWS IAM Identity Center (SSO)
-2. **Dashboards**: Cluster, Kubelet, Nodes, Node Exporter, Namespace Workloads, Workloads
-3. **Collector namespace**: `otel-collector` (OTel profiles) or check AMP scraper (managed)
+```bash
+kubectl get configmap -n otel-collector \
+  otel-collector-opentelemetry-collector \
+  -o jsonpath='{.data.relay}' | head -60
+```
+
+This shows the rendered collector config — confirm the `prometheusremotewrite`
+exporter endpoint, scrape targets, and SigV4 auth are correct.
+
+#### 4c. Check collector logs
+
+```bash
+kubectl logs -n otel-collector \
+  -l app.kubernetes.io/name=opentelemetry-collector --tail=20
+```
+
+Look for `Everything is ready. Begin running and processing data.` and
+successful scrape messages. If you see auth errors, check the IRSA role.
+
+#### 4d. Recap for the user
+
+Present a summary like this:
+
+```
+✅ Deployment complete!
+
+Components:
+  - OTel Collector:    otel-collector namespace (1 pod)
+  - kube-state-metrics: kube-system namespace
+  - node-exporter:     prometheus-node-exporter namespace (1 pod per node)
+
+Grafana: https://<WORKSPACE_ENDPOINT>
+  → Log in via AWS IAM Identity Center (SSO)
+  → Dashboards: Cluster, Kubelet, Nodes, Node Exporter,
+    Namespace Workloads, Workloads
+
+Metrics may take 3-5 minutes to appear in dashboards.
+```
+
+If Grafana was not provisioned, note that metrics are still flowing to
+CloudWatch and can be queried via the CloudWatch PromQL endpoint.
 
 ---
 

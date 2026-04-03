@@ -183,8 +183,34 @@ respectively.
 
 ### Demo application
 
-Deploy the [OpenTelemetry Python sample app](https://github.com/aws-observability/aws-otel-community/tree/main/sample-apps/python-auto-instrumentation-sample-app)
-to generate application metrics:
+#### Option 1: OpenTelemetry Demo (recommended)
+
+The [OpenTelemetry Demo](https://opentelemetry.io/docs/demo/) is a
+community-maintained microservices application that generates metrics, traces,
+and logs across multiple languages. It's the best way to see the full OTLP
+pipeline in action.
+
+```bash
+helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
+helm install otel-demo open-telemetry/opentelemetry-demo \
+  --namespace otel-demo --create-namespace \
+  --set components.frontendProxy.service.type=ClusterIP \
+  --set opentelemetry-collector.enabled=false \
+  --set default.env[0].name=OTEL_EXPORTER_OTLP_ENDPOINT \
+  --set default.env[0].value=http://otel-collector-opentelemetry-collector.otel-collector.svc.cluster.local:4317
+```
+
+Verify pods are running:
+
+```bash
+kubectl get pods -n otel-demo
+```
+
+#### Option 2: Lightweight Python sample app
+
+For a minimal setup, deploy the
+[OpenTelemetry Python sample app](https://github.com/aws-observability/aws-otel-community/tree/main/sample-apps/python-auto-instrumentation-sample-app)
+which emits 7 custom metrics covering all OTel metric types:
 
 ```bash
 kubectl apply -f - <<EOF
@@ -205,7 +231,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: <ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/python-demo-app:latest
+          image: <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/python-demo-app:latest
           env:
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               value: http://otel-collector-opentelemetry-collector.otel-collector.svc.cluster.local:4317
@@ -214,7 +240,11 @@ spec:
 EOF
 ```
 
-Query in Grafana Explore:
+Build the image from the
+[aws-otel-community](https://github.com/aws-observability/aws-otel-community)
+repository and push to ECR before deploying.
+
+#### Query in Grafana
 
 ```promql
 {@resource.service.name="python-demo-app"}

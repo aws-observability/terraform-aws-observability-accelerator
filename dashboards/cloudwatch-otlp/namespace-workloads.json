@@ -2548,7 +2548,7 @@
         "name": "cluster",
         "options": [],
         "query": {
-          "query": "label_values(kube_node_info, `@resource.k8s.cluster.name`)",
+          "query": "label_values(kube_node_info, k8s_cluster_name)",
           "refId": "Prometheus-cluster-Variable-Query"
         },
         "refresh": 2,
@@ -2574,7 +2574,7 @@
         "name": "aws_account",
         "options": [],
         "query": {
-          "query": "label_values(kube_node_info, `@aws.account`)",
+          "query": "label_values(kube_node_info, aws_account)",
           "refId": "Prometheus-account-Variable-Query"
         },
         "refresh": 2,

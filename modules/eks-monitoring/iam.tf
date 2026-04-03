@@ -25,13 +25,13 @@ module "collector_irsa_role" {
       cw_agent = "arn:${local.partition}:iam::aws:policy/CloudWatchAgentServerPolicy"
     } : {},
 
-    # X-Ray write for traces (self-managed-amp)
-    var.enable_tracing && local.is_self_managed_amp ? {
+    # X-Ray write for traces
+    var.enable_tracing && (local.is_self_managed_amp || local.is_cloudwatch_otlp) ? {
       xray = "arn:${local.partition}:iam::aws:policy/AWSXrayWriteOnlyAccess"
     } : {},
 
-    # CloudWatch Logs (self-managed-amp)
-    var.enable_logs && local.is_self_managed_amp ? {
+    # CloudWatch Logs
+    var.enable_logs && (local.is_self_managed_amp || local.is_cloudwatch_otlp) ? {
       cw_logs = "arn:${local.partition}:iam::aws:policy/CloudWatchLogsFullAccess"
     } : {},
   )

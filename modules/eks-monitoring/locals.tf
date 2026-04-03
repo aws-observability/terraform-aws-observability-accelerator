@@ -80,9 +80,15 @@ locals {
     "https://aps-workspaces.${local.region}.amazonaws.com/workspaces/${local.amp_workspace_id}/"
   ) : null
 
-  # CloudWatch OTLP metrics endpoint — default to regional endpoint
+  # CloudWatch OTLP endpoints — default to regional endpoints
   cw_metrics_endpoint = var.cloudwatch_metrics_endpoint != "" ? var.cloudwatch_metrics_endpoint : (
     "https://monitoring.${local.region}.amazonaws.com/v1/metrics"
+  )
+  cw_traces_endpoint = var.cloudwatch_traces_endpoint != "" ? var.cloudwatch_traces_endpoint : (
+    "https://xray.${local.region}.amazonaws.com/v1/traces"
+  )
+  cw_logs_endpoint = var.cloudwatch_logs_endpoint != "" ? var.cloudwatch_logs_endpoint : (
+    "https://logs.${local.region}.amazonaws.com/v1/logs"
   )
 }
 
@@ -364,6 +370,14 @@ locals {
           service = "monitoring"
           region  = local.region
         }
+        "sigv4auth/xray" = {
+          service = "xray"
+          region  = local.region
+        }
+        "sigv4auth/logs" = {
+          service = "logs"
+          region  = local.region
+        }
       }
 
       receivers = {
@@ -401,27 +415,68 @@ locals {
         memory_limiter = null
       }
 
-      exporters = {
-        debug = null
-        otlphttp = {
-          endpoint = local.cw_metrics_endpoint
-          auth = {
-            authenticator = "sigv4auth/cw"
+      exporters = merge(
+        {
+          debug = null
+          "otlphttp/metrics" = {
+            endpoint = local.cw_metrics_endpoint
+            auth = {
+              authenticator = "sigv4auth/cw"
+            }
           }
-        }
-      }
+        },
+        var.enable_tracing ? {
+          "otlphttp/traces" = {
+            endpoint = local.cw_traces_endpoint
+            auth = {
+              authenticator = "sigv4auth/xray"
+            }
+          }
+        } : {},
+        var.enable_logs && var.cloudwatch_log_group != "" ? {
+          "otlphttp/logs" = {
+            endpoint = local.cw_logs_endpoint
+            auth = {
+              authenticator = "sigv4auth/logs"
+            }
+            headers = {
+              "x-aws-log-group"  = var.cloudwatch_log_group
+              "x-aws-log-stream" = var.cloudwatch_log_stream
+            }
+          }
+        } : {},
+      )
 
       service = {
-        extensions = ["health_check", "sigv4auth/cw"]
-        pipelines = {
-          metrics = {
-            receivers  = ["prometheus", "otlp"]
-            processors = ["batch"]
-            exporters  = ["otlphttp"]
-          }
-          logs    = null
-          traces  = null
-        }
+        extensions = compact([
+          "health_check",
+          "sigv4auth/cw",
+          var.enable_tracing ? "sigv4auth/xray" : "",
+          var.enable_logs && var.cloudwatch_log_group != "" ? "sigv4auth/logs" : "",
+        ])
+        pipelines = merge(
+          {
+            metrics = {
+              receivers  = ["prometheus", "otlp"]
+              processors = ["batch"]
+              exporters  = ["otlphttp/metrics"]
+            }
+          },
+          var.enable_tracing ? {
+            traces = {
+              receivers  = ["otlp"]
+              processors = ["batch"]
+              exporters  = ["otlphttp/traces"]
+            }
+          } : { traces = null },
+          var.enable_logs && var.cloudwatch_log_group != "" ? {
+            logs = {
+              receivers  = ["otlp"]
+              processors = ["batch"]
+              exporters  = ["otlphttp/logs"]
+            }
+          } : { logs = null },
+        )
       }
     }
   }) : ""

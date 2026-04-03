@@ -244,8 +244,32 @@ variable "cw_agent_image" {
 
 variable "cloudwatch_metrics_endpoint" {
   type        = string
-  description = "CloudWatch OTLP metrics endpoint URL override. If empty, the CW Agent uses its default regional endpoint."
+  description = "CloudWatch OTLP metrics endpoint URL override. If empty, the default regional endpoint is used."
   default     = ""
+}
+
+variable "cloudwatch_traces_endpoint" {
+  type        = string
+  description = "CloudWatch OTLP traces endpoint URL override. If empty, the default regional X-Ray endpoint is used."
+  default     = ""
+}
+
+variable "cloudwatch_logs_endpoint" {
+  type        = string
+  description = "CloudWatch OTLP logs endpoint URL override. If empty, the default regional logs endpoint is used."
+  default     = ""
+}
+
+variable "cloudwatch_log_group" {
+  type        = string
+  description = "CloudWatch Log Group name for the OTLP logs pipeline (required when enable_logs is true with cloudwatch-otlp profile)"
+  default     = ""
+}
+
+variable "cloudwatch_log_stream" {
+  type        = string
+  description = "CloudWatch Log Stream name for the OTLP logs pipeline"
+  default     = "otel"
 }
 
 variable "grafana_cw_datasource_name" {

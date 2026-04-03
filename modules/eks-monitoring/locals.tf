@@ -80,15 +80,15 @@ locals {
     "https://aps-workspaces.${local.region}.amazonaws.com/workspaces/${local.amp_workspace_id}/"
   ) : null
 
-  # CloudWatch OTLP endpoints — default to regional endpoints
+  # CloudWatch OTLP endpoints — base URLs only, otlphttp appends /v1/{signal}
   cw_metrics_endpoint = var.cloudwatch_metrics_endpoint != "" ? var.cloudwatch_metrics_endpoint : (
-    "https://monitoring.${local.region}.amazonaws.com/v1/metrics"
+    "https://monitoring.${local.region}.amazonaws.com"
   )
   cw_traces_endpoint = var.cloudwatch_traces_endpoint != "" ? var.cloudwatch_traces_endpoint : (
-    "https://xray.${local.region}.amazonaws.com/v1/traces"
+    "https://xray.${local.region}.amazonaws.com"
   )
   cw_logs_endpoint = var.cloudwatch_logs_endpoint != "" ? var.cloudwatch_logs_endpoint : (
-    "https://logs.${local.region}.amazonaws.com/v1/logs"
+    "https://logs.${local.region}.amazonaws.com"
   )
 }
 

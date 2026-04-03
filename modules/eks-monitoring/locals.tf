@@ -211,6 +211,10 @@ locals {
   self_managed_amp_otel_collector_values = local.is_self_managed_amp ? yamlencode({
     mode = "deployment"
 
+    image = {
+      repository = "otel/opentelemetry-collector-contrib"
+    }
+
     serviceAccount = {
       create = true
       name   = "otel-collector"
@@ -353,6 +357,10 @@ locals {
   cloudwatch_otlp_otel_collector_values = local.is_cloudwatch_otlp ? yamlencode({
     mode = "deployment"
 
+    image = {
+      repository = "otel/opentelemetry-collector-contrib"
+    }
+
     serviceAccount = {
       create = true
       name   = "otel-collector"
@@ -415,16 +423,23 @@ locals {
           send_batch_size     = 200
           timeout             = "5s"
         }
-        # TODO: Some scraped metrics have blank resource attribute values
-        # which cause 400 errors on the CloudWatch OTLP endpoint. Options:
-        # 1. Endpoint team removes the 400 validation (under discussion)
-        # 2. Add transform processor to strip blank attributes:
-        #    transform/remove-blank:
-        #      resource_statements:
-        #        - context: resource
-        #          statements:
-        #            - delete_matching_keys(attributes, ".*") where IsMatch(value, "^$")
-        #    (requires OTel Collector >= 0.100 for correct OTTL resource context)
+        "transform/remove-blank" = {
+          metric_statements = [
+            {
+              context    = "datapoint"
+              statements = [
+                "delete_key(resource.attributes, \"net.host.name\") where resource.attributes[\"net.host.name\"] == \"\"",
+                "delete_key(resource.attributes, \"net.host.port\") where resource.attributes[\"net.host.port\"] == \"\"",
+                "delete_key(resource.attributes, \"service.name\") where resource.attributes[\"service.name\"] == \"\"",
+                "delete_key(resource.attributes, \"service.instance.id\") where resource.attributes[\"service.instance.id\"] == \"\"",
+                "delete_key(resource.attributes, \"http.scheme\") where resource.attributes[\"http.scheme\"] == \"\"",
+                "delete_key(resource.attributes, \"server.address\") where resource.attributes[\"server.address\"] == \"\"",
+                "delete_key(resource.attributes, \"server.port\") where resource.attributes[\"server.port\"] == \"\"",
+                "delete_key(resource.attributes, \"url.scheme\") where resource.attributes[\"url.scheme\"] == \"\"",
+              ]
+            }
+          ]
+        }
         memory_limiter = null
       }
 
@@ -471,21 +486,21 @@ locals {
           {
             metrics = {
               receivers  = ["prometheus", "otlp"]
-              processors = ["batch"]
+              processors = ["transform/remove-blank", "batch"]
               exporters  = ["otlphttp/metrics"]
             }
           },
           var.enable_tracing ? {
             traces = {
               receivers  = ["otlp"]
-              processors = ["batch"]
+              processors = ["transform/remove-blank", "batch"]
               exporters  = ["otlphttp/traces"]
             }
           } : { traces = null },
           var.enable_logs && var.cloudwatch_log_group != "" ? {
             logs = {
               receivers  = ["otlp"]
-              processors = ["batch"]
+              processors = ["transform/remove-blank", "batch"]
               exporters  = ["otlphttp/logs"]
             }
           } : { logs = null },

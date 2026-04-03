@@ -160,7 +160,7 @@ variable "prometheus_config" {
 variable "otel_collector_chart_version" {
   type        = string
   description = "Version of the opentelemetry-collector Helm chart to deploy"
-  default     = "0.78.0"
+  default     = "0.114.0"
 }
 
 variable "collector_namespace" {

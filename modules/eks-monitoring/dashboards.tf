@@ -24,7 +24,7 @@ resource "grafana_data_source" "cloudwatch_promql" {
 
   type = "prometheus"
   name = var.grafana_cw_datasource_name
-  url  = local.cw_metrics_endpoint
+  url  = "https://monitoring.${local.region}.amazonaws.com"
 
   json_data_encoded = jsonencode({
     httpMethod    = "POST"

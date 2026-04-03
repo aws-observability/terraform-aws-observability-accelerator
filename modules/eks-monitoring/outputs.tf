@@ -47,7 +47,7 @@ output "eks_cluster_id" {
 output "cloudwatch_promql_datasource_config" {
   description = "Configuration for Grafana Prometheus datasource pointing at CloudWatch PromQL endpoint (cloudwatch-otlp profile only)"
   value = local.is_cloudwatch_otlp ? {
-    endpoint      = local.cw_metrics_endpoint
+    endpoint      = "https://monitoring.${local.region}.amazonaws.com"
     sigv4_region  = local.region
     sigv4_service = "monitoring"
     type          = "prometheus"

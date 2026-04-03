@@ -109,7 +109,8 @@ resource "terraform_data" "amp_workspace_validation" {
 #--------------------------------------------------------------
 
 locals {
-  default_dashboard_sources = {
+  # AMP dashboards (original — use recording rules, cluster label)
+  amp_dashboard_sources = {
     cluster             = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/${var.dashboard_git_tag}/artifacts/grafana-dashboards/eks/infrastructure/cluster.json"
     kubelet             = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/${var.dashboard_git_tag}/artifacts/grafana-dashboards/eks/infrastructure/kubelet.json"
     namespace-workloads = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/${var.dashboard_git_tag}/artifacts/grafana-dashboards/eks/infrastructure/namespace-workloads.json"
@@ -117,6 +118,18 @@ locals {
     nodes               = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/${var.dashboard_git_tag}/artifacts/grafana-dashboards/eks/infrastructure/nodes.json"
     workloads           = "https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/${var.dashboard_git_tag}/artifacts/grafana-dashboards/eks/infrastructure/workloads.json"
   }
+
+  # CloudWatch OTLP dashboards (uses @resource.k8s.cluster.name, @aws.account, no recording rules)
+  cw_dashboard_sources = {
+    cluster             = "https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/${var.dashboard_git_tag}/dashboards/cloudwatch-otlp/cluster.json"
+    kubelet             = "https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/${var.dashboard_git_tag}/dashboards/cloudwatch-otlp/kubelet.json"
+    namespace-workloads = "https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/${var.dashboard_git_tag}/dashboards/cloudwatch-otlp/namespace-workloads.json"
+    node-exporter       = "https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/${var.dashboard_git_tag}/dashboards/cloudwatch-otlp/nodeexporter-nodes.json"
+    nodes               = "https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/${var.dashboard_git_tag}/dashboards/cloudwatch-otlp/nodes.json"
+    workloads           = "https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/${var.dashboard_git_tag}/dashboards/cloudwatch-otlp/workloads.json"
+  }
+
+  default_dashboard_sources = local.is_cloudwatch_otlp ? local.cw_dashboard_sources : local.amp_dashboard_sources
 
   dashboard_sources = length(var.dashboard_sources) > 0 ? var.dashboard_sources : local.default_dashboard_sources
 

@@ -16,9 +16,9 @@ examples/
   eks-amp-otel/                  # AMP with self-managed OTel Collector
 dashboards/
   original/                      # Standard Prometheus dashboards (AMP + OTel→CW OTLP)
-  zeus/                          # Container Insights dashboards (CW Agent, not public yet)
+  cw-otel/                       # Container Insights dashboards (CW Agent, not public yet)
 scripts/
-  zeus-dashboard-transform.py    # Converts original → zeus dashboards
+  zeus-dashboard-transform.py    # Converts original → cw-otel dashboards
 ```
 
 ## Collector Profiles
@@ -55,7 +55,7 @@ scripts/
   kube-state-metrics, node-exporter, cluster scraper)
 - Chart `amazon-cloudwatch-observability` is not yet in a public Helm repo
 - Will eventually become an EKS add-on (`aws_eks_addon` resource)
-- Uses `zeus/` dashboards
+- Uses `cw-otel/` dashboards
 - **Do not use for public examples** — dependencies are pending
 
 ---

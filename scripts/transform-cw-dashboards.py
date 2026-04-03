@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Transform zeus dashboards for CloudWatch PromQL compatibility.
+"""Transform CW OTel dashboards for CloudWatch PromQL compatibility.
 
 Changes:
 1. Add @resource.k8s.cluster.name variable for multi-cluster filtering
@@ -9,7 +9,7 @@ Changes:
 """
 import json, glob, sys, os, copy
 
-SRC = "dashboards/zeus"
+SRC = "dashboards/cw-otel"
 DST = "dashboards/cloudwatch-otlp"
 
 os.makedirs(DST, exist_ok=True)

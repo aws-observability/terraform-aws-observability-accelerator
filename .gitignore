@@ -47,3 +47,6 @@ site
 
 # Pre-launch: OTel enrichment resource not yet public
 modules/eks-monitoring/enrichment.tf
+
+# Internal planning doc
+PUBLISH_PLAN.md

@@ -61,8 +61,8 @@ for endpoint limits and restrictions.
 
 ```bash
 # EKS cluster
-cd examples/eks-cluster-with-vpc
-terraform init && terraform apply -var="aws_region=us-east-1"
+eksctl create cluster --name my-cluster --region us-east-1 --version 1.32 \
+  --nodegroup-name system --node-type t3.medium --nodes 2 --managed
 
 # Grafana workspace
 cd ../managed-grafana-workspace
@@ -263,3 +263,5 @@ cd examples/eks-cloudwatch-otlp
 
 The `destroy.sh` script uninstalls Helm releases before running
 `terraform destroy` to avoid timeout issues.
+
+To delete the cluster: `eksctl delete cluster --name my-cluster --region us-east-1`

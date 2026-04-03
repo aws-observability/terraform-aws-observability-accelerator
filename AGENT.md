@@ -9,7 +9,6 @@ you need, provision prerequisites, run Terraform, and hand them working dashboar
 ```
 modules/eks-monitoring/          # Core module — all profiles
 examples/
-  eks-cluster-with-vpc/          # Prereq: create an EKS cluster + VPC
   managed-grafana-workspace/     # Prereq: create a Grafana workspace + API token
   eks-cloudwatch-otlp/           # CloudWatch OTLP via OTel Collector (public-ready)
   eks-amp-managed/               # AMP with managed collector (agentless)
@@ -89,23 +88,26 @@ Ask the user:
 
 ### Step 1: EKS Cluster (if needed)
 
-If the user has no cluster, provision one:
+If the user has no cluster, create one with eksctl:
 
 ```bash
-cd examples/eks-cluster-with-vpc
-terraform init
-terraform apply -var="cluster_name=<NAME>" -var="aws_region=<REGION>"
+eksctl create cluster \
+  --name <NAME> \
+  --region <REGION> \
+  --version 1.32 \
+  --nodegroup-name system \
+  --node-type t3.medium \
+  --nodes 2 \
+  --managed
 ```
 
-This creates:
-- VPC with private/public subnets and NAT gateway
-- EKS cluster with `t3.medium` managed node group
-- Node IAM roles with `CloudWatchAgentServerPolicy` + `AmazonEC2ContainerRegistryReadOnly`
-
-After completion:
+Then attach the CloudWatch policy to the node role:
 
 ```bash
-aws eks update-kubeconfig --name $(terraform output -raw eks_cluster_id) --region <REGION>
+ROLE=$(aws eks describe-nodegroup --cluster-name <NAME> --nodegroup-name system \
+  --region <REGION> --query 'nodegroup.nodeRole' --output text | awk -F/ '{print $NF}')
+aws iam attach-role-policy --role-name $ROLE \
+  --policy-arn arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
 ```
 
 ### Step 2: Grafana Workspace (if needed, optional)
@@ -346,9 +348,8 @@ cd examples/eks-cloudwatch-otlp  # or eks-amp-managed, eks-amp-otel
 cd ../managed-grafana-workspace
 terraform destroy -var="aws_region=<REGION>"
 
-# Cluster (if created)
-cd ../eks-cluster-with-vpc
-terraform destroy -var="aws_region=<REGION>"
+# Cluster (if created with eksctl)
+eksctl delete cluster --name <NAME> --region <REGION>
 ```
 
 ---

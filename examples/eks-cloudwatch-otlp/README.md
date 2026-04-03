@@ -16,12 +16,11 @@ node-exporter, and optionally Grafana dashboards.
 You need a running EKS cluster with at least one managed node group. Node roles
 should include `CloudWatchAgentServerPolicy` and `AmazonEC2ContainerRegistryReadOnly`.
 
-Use the [`eks-cluster-with-vpc`](../eks-cluster-with-vpc/) example to create one:
+Use eksctl to create one:
 
 ```bash
-cd ../eks-cluster-with-vpc
-terraform init && terraform apply -var="aws_region=us-east-1"
-aws eks update-kubeconfig --name $(terraform output -raw eks_cluster_id) --region us-east-1
+eksctl create cluster --name my-cluster --region us-east-1 --version 1.32 \
+  --nodegroup-name system --node-type t3.medium --nodes 2 --managed
 ```
 
 ### 2. Grafana workspace (optional — for dashboards)

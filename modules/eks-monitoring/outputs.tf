@@ -87,3 +87,11 @@ output "cw_agent_namespace" {
   description = "Kubernetes namespace where the CloudWatch Agent is deployed (cloudwatch-otlp profile only)"
   value       = local.is_cloudwatch_otlp ? var.cw_agent_namespace : null
 }
+
+output "otlp_gateway_endpoint" {
+  description = "In-cluster OTLP gateway endpoint for application telemetry (cloudwatch-otlp profile with enable_otlp_gateway = true). Apps send OTLP to this address."
+  value = local.needs_otlp_gateway ? {
+    grpc = "${local.otlp_gateway_name}.${local.otlp_gateway_namespace}:4315"
+    http = "http://${local.otlp_gateway_name}.${local.otlp_gateway_namespace}:4316"
+  } : null
+}

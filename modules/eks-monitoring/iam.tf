@@ -1,5 +1,5 @@
 #--------------------------------------------------------------
-# IRSA Role for OTel Collector
+# IRSA Role for OTel Collector (self-managed-amp only)
 #--------------------------------------------------------------
 
 module "collector_irsa_role" {
@@ -9,8 +9,7 @@ module "collector_irsa_role" {
 
   role_name = "${var.eks_cluster_id}-otel-collector"
 
-  # AMP remote write policy (self-managed-amp only)
-  attach_amazon_managed_service_prometheus_policy = local.is_self_managed_amp
+  attach_amazon_managed_service_prometheus_policy = true
 
   oidc_providers = {
     ex = {
@@ -20,18 +19,10 @@ module "collector_irsa_role" {
   }
 
   role_policy_arns = merge(
-    # CloudWatch metrics for cloudwatch-otlp
-    local.is_cloudwatch_otlp ? {
-      cw_agent = "arn:${local.partition}:iam::aws:policy/CloudWatchAgentServerPolicy"
-    } : {},
-
-    # X-Ray write for traces
-    var.enable_tracing && (local.is_self_managed_amp || local.is_cloudwatch_otlp) ? {
+    var.enable_tracing ? {
       xray = "arn:${local.partition}:iam::aws:policy/AWSXrayWriteOnlyAccess"
     } : {},
-
-    # CloudWatch Logs
-    var.enable_logs && (local.is_self_managed_amp || local.is_cloudwatch_otlp) ? {
+    var.enable_logs ? {
       cw_logs = "arn:${local.partition}:iam::aws:policy/CloudWatchLogsFullAccess"
     } : {},
   )

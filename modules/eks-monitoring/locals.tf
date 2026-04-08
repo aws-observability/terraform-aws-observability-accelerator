@@ -33,16 +33,19 @@ locals {
   is_container_insights = false # future: var.collector_profile == "cloudwatch-container-insights"
 
   # Derived booleans
-  # OTel Helm chart needed for self-managed-amp and cloudwatch-otlp.
-  # cloudwatch-container-insights (future) will use the CW Agent chart.
-  needs_otel_helm = local.is_self_managed_amp || local.is_cloudwatch_otlp
+  # OTel Helm chart only needed for self-managed-amp.
+  # cloudwatch-otlp uses the CW Agent EKS add-on (no OTel Helm).
+  needs_otel_helm = local.is_self_managed_amp
   needs_irsa      = local.needs_otel_helm
   is_amp_flavor   = local.is_managed_metrics || local.is_self_managed_amp
   is_cw_flavor    = local.is_cloudwatch_otlp
 
-  # Helm support charts (kube-state-metrics, node-exporter) needed for all
-  # profiles that use OTel Collector or managed scraper.
-  needs_helm_support = local.is_amp_flavor || local.is_cloudwatch_otlp
+  # OTLP gateway: CWA Deployment with OTLP receivers for app telemetry
+  needs_otlp_gateway = local.is_cloudwatch_otlp && var.enable_otlp_gateway
+
+  # Helm support charts (kube-state-metrics, node-exporter) only for AMP
+  # profiles. The CW Agent add-on bundles its own KSM + node-exporter.
+  needs_helm_support = local.is_amp_flavor
 }
 
 #--------------------------------------------------------------
@@ -122,10 +125,13 @@ locals {
   # CloudWatch OTLP dashboards (uses @resource.k8s.cluster.name, @aws.account, no recording rules)
   cw_dashboard_sources = {
     cluster             = "https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/${var.dashboard_git_tag}/dashboards/cloudwatch-otlp/cluster.json"
+    containers          = "https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/${var.dashboard_git_tag}/dashboards/cloudwatch-otlp/containers.json"
+    gpu-fleet           = "https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/${var.dashboard_git_tag}/dashboards/cloudwatch-otlp/gpu-fleet.json"
     kubelet             = "https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/${var.dashboard_git_tag}/dashboards/cloudwatch-otlp/kubelet.json"
     namespace-workloads = "https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/${var.dashboard_git_tag}/dashboards/cloudwatch-otlp/namespace-workloads.json"
     node-exporter       = "https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/${var.dashboard_git_tag}/dashboards/cloudwatch-otlp/nodeexporter-nodes.json"
     nodes               = "https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/${var.dashboard_git_tag}/dashboards/cloudwatch-otlp/nodes.json"
+    unified-service     = "https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/${var.dashboard_git_tag}/dashboards/cloudwatch-otlp/unified-service.json"
     workloads           = "https://raw.githubusercontent.com/aws-observability/terraform-aws-observability-accelerator/${var.dashboard_git_tag}/dashboards/cloudwatch-otlp/workloads.json"
   }
 
@@ -343,171 +349,8 @@ locals {
     }
   }) : ""
 
-  # Profile-driven OTel Collector values
-  otel_collector_values = local.is_self_managed_amp ? local.self_managed_amp_otel_collector_values : (
-    local.is_cloudwatch_otlp ? local.cloudwatch_otlp_otel_collector_values : ""
-  )
-}
-
-#--------------------------------------------------------------
-# CloudWatch OTLP — OTel Collector Values
-#--------------------------------------------------------------
-
-locals {
-  cloudwatch_otlp_otel_collector_values = local.is_cloudwatch_otlp ? yamlencode({
-    mode = "deployment"
-
-    image = {
-      repository = "otel/opentelemetry-collector-contrib"
-    }
-
-    serviceAccount = {
-      create = true
-      name   = "otel-collector"
-      annotations = {
-        "eks.amazonaws.com/role-arn" = try(module.collector_irsa_role[0].iam_role_arn, "")
-      }
-    }
-
-    clusterRole = {
-      create = true
-      rules = [
-        {
-          apiGroups = [""]
-          resources = ["nodes", "nodes/proxy", "nodes/metrics", "services", "endpoints", "pods"]
-          verbs     = ["get", "list", "watch"]
-        },
-        {
-          nonResourceURLs = ["/metrics", "/metrics/cadvisor"]
-          verbs           = ["get"]
-        },
-      ]
-    }
-
-    config = {
-      extensions = {
-        health_check = {}
-        "sigv4auth/cw" = {
-          service = "monitoring"
-          region  = local.region
-        }
-        "sigv4auth/xray" = {
-          service = "xray"
-          region  = local.region
-        }
-        "sigv4auth/logs" = {
-          service = "logs"
-          region  = local.region
-        }
-      }
-
-      receivers = {
-        prometheus = {
-          config = {
-            scrape_configs = local.default_otel_scrape_configs
-          }
-        }
-        otlp = {
-          protocols = {
-            grpc = { endpoint = "0.0.0.0:4317" }
-            http = { endpoint = "0.0.0.0:4318" }
-          }
-        }
-        jaeger = null
-        zipkin = null
-      }
-
-      processors = {
-        batch = {
-          send_batch_max_size = 200
-          send_batch_size     = 200
-          timeout             = "5s"
-        }
-        "transform/remove-blank" = {
-          metric_statements = [
-            {
-              context    = "datapoint"
-              statements = [
-                "delete_key(resource.attributes, \"net.host.name\") where resource.attributes[\"net.host.name\"] == \"\"",
-                "delete_key(resource.attributes, \"net.host.port\") where resource.attributes[\"net.host.port\"] == \"\"",
-                "delete_key(resource.attributes, \"service.name\") where resource.attributes[\"service.name\"] == \"\"",
-                "delete_key(resource.attributes, \"service.instance.id\") where resource.attributes[\"service.instance.id\"] == \"\"",
-                "delete_key(resource.attributes, \"http.scheme\") where resource.attributes[\"http.scheme\"] == \"\"",
-                "delete_key(resource.attributes, \"server.address\") where resource.attributes[\"server.address\"] == \"\"",
-                "delete_key(resource.attributes, \"server.port\") where resource.attributes[\"server.port\"] == \"\"",
-                "delete_key(resource.attributes, \"url.scheme\") where resource.attributes[\"url.scheme\"] == \"\"",
-              ]
-            }
-          ]
-        }
-        memory_limiter = null
-      }
-
-      exporters = merge(
-        {
-          debug = null
-          "otlphttp/metrics" = {
-            endpoint = local.cw_metrics_endpoint
-            auth = {
-              authenticator = "sigv4auth/cw"
-            }
-          }
-        },
-        var.enable_tracing ? {
-          "otlphttp/traces" = {
-            endpoint = local.cw_traces_endpoint
-            auth = {
-              authenticator = "sigv4auth/xray"
-            }
-          }
-        } : {},
-        var.enable_logs && var.cloudwatch_log_group != "" ? {
-          "otlphttp/logs" = {
-            endpoint = local.cw_logs_endpoint
-            auth = {
-              authenticator = "sigv4auth/logs"
-            }
-            headers = {
-              "x-aws-log-group"  = var.cloudwatch_log_group
-              "x-aws-log-stream" = var.cloudwatch_log_stream
-            }
-          }
-        } : {},
-      )
-
-      service = {
-        extensions = compact([
-          "health_check",
-          "sigv4auth/cw",
-          var.enable_tracing ? "sigv4auth/xray" : "",
-          var.enable_logs && var.cloudwatch_log_group != "" ? "sigv4auth/logs" : "",
-        ])
-        pipelines = merge(
-          {
-            metrics = {
-              receivers  = ["prometheus", "otlp"]
-              processors = ["transform/remove-blank", "batch"]
-              exporters  = ["otlphttp/metrics"]
-            }
-          },
-          var.enable_tracing ? {
-            traces = {
-              receivers  = ["otlp"]
-              processors = ["transform/remove-blank", "batch"]
-              exporters  = ["otlphttp/traces"]
-            }
-          } : { traces = null },
-          var.enable_logs && var.cloudwatch_log_group != "" ? {
-            logs = {
-              receivers  = ["otlp"]
-              processors = ["transform/remove-blank", "batch"]
-              exporters  = ["otlphttp/logs"]
-            }
-          } : { logs = null },
-        )
-      }
-    }
-  }) : ""
+  # Profile-driven OTel Collector values (only self-managed-amp uses OTel Helm)
+  otel_collector_values = local.is_self_managed_amp ? local.self_managed_amp_otel_collector_values : ""
 }
 
 #--------------------------------------------------------------
@@ -586,4 +429,33 @@ locals {
   })
 
   scrape_configuration_base64 = base64encode(local.scrape_configuration_yaml)
+}
+
+#--------------------------------------------------------------
+# CWA OTLP Gateway Config (cloudwatch-otlp + enable_otlp_gateway)
+#--------------------------------------------------------------
+
+locals {
+  otlp_gateway_name      = "cwa-otlp-gateway"
+  otlp_gateway_namespace = var.cw_agent_namespace
+
+  # EKS add-on images are hosted in an AWS-managed ECR account per region
+  eks_ecr_account = "602401143452"
+  cwa_agent_image        = "${local.eks_ecr_account}.dkr.ecr.${local.region}.amazonaws.com/eks/observability/cloudwatch-agent:${var.cw_agent_image_tag}"
+
+  otlp_gateway_config = local.needs_otlp_gateway ? jsonencode({
+    agent = { region = local.region }
+    logs = {
+      metrics_collected = {
+        application_signals = {
+          hosted_in = var.eks_cluster_id
+        }
+      }
+    }
+    traces = {
+      traces_collected = {
+        application_signals = {}
+      }
+    }
+  }) : ""
 }

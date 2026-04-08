@@ -195,25 +195,22 @@ variable "node_exporter_chart_version" {
 # CloudWatch Agent Variables (cloudwatch-otlp profile)
 #--------------------------------------------------------------
 
-variable "cw_agent_chart_path" {
+variable "enable_otlp_gateway" {
+  type        = bool
+  description = "Deploy a CWA Deployment as an OTLP gateway for application metrics/traces/logs. Apps send OTLP to this gateway, which forwards to CloudWatch. Only applies to cloudwatch-otlp profile."
+  default     = false
+}
+
+variable "cw_agent_image_tag" {
   type        = string
-  description = "Absolute local path to the amazon-cloudwatch-observability Helm chart for pre-release testing. When set, cw_agent_chart_repo is ignored."
+  description = "CloudWatch Agent container image tag for the OTLP gateway Deployment."
+  default     = "1.300066.0b1367"
+}
+
+variable "cw_agent_addon_version" {
+  type        = string
+  description = "Version of the amazon-cloudwatch-observability EKS add-on. When empty, the cluster's default version is used."
   default     = ""
-  # TODO(launch): Remove this variable before GA. Once the upstream EKS add-on
-  # supports Zeus, switch to aws_eks_addon and drop the local chart path.
-}
-
-variable "cw_agent_chart_repo" {
-  type        = string
-  description = "Helm repository URL for the amazon-cloudwatch-observability chart. Ignored when cw_agent_chart_path is set."
-  default     = "https://aws.github.io/eks-charts"
-  # TODO(launch): Verify this is the correct public repo URL for the GA chart.
-}
-
-variable "cw_agent_chart_version" {
-  type        = string
-  description = "Version of the amazon-cloudwatch-observability Helm chart"
-  default     = "4.8.0"
 }
 
 variable "cw_agent_namespace" {
@@ -232,14 +229,6 @@ variable "cw_agent_enable_application_signals" {
   type        = bool
   description = "Whether to enable Application Signals auto-instrumentation in the CW Agent chart"
   default     = false
-}
-
-variable "cw_agent_image" {
-  type        = string
-  description = "Override the CloudWatch Agent container image (e.g. '123456789.dkr.ecr.us-east-1.amazonaws.com/cw-agent-dev:latest'). When set, overrides the chart's default image. Format: REGISTRY/REPO or REGISTRY/REPO:TAG"
-  default     = ""
-  # TODO(launch): Remove this variable before GA. Only needed for internal
-  # pre-release testing with private ECR builds.
 }
 
 variable "cloudwatch_metrics_endpoint" {
@@ -276,6 +265,19 @@ variable "grafana_cw_datasource_name" {
   type        = string
   description = "Name for the Grafana Prometheus datasource pointing at the CloudWatch PromQL endpoint"
   default     = "CloudWatch PromQL"
+}
+
+variable "grafana_endpoint" {
+  type        = string
+  description = "Grafana workspace URL (e.g. https://g-xxx.grafana-workspace.us-east-1.amazonaws.com). Required when enable_dashboards is true, used to validate datasources after creation."
+  default     = ""
+}
+
+variable "grafana_api_key" {
+  type        = string
+  description = "Grafana API key or service account token. Required when enable_dashboards is true, used to validate datasources after creation."
+  default     = ""
+  sensitive   = true
 }
 
 #--------------------------------------------------------------

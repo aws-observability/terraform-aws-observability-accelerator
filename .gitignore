@@ -50,3 +50,6 @@ modules/eks-monitoring/enrichment.tf
 
 # Internal planning doc
 PUBLISH_PLAN.md
+.kiro/
+dashboards/
+docs/amp-docs-page-draft.md

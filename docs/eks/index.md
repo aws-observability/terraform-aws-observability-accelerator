@@ -11,7 +11,7 @@ collector profiles:
 
 | Profile | Backend | Collector | Best for |
 |---------|---------|-----------|----------|
-| `cloudwatch-otlp` | Amazon CloudWatch | OpenTelemetry Collector (Helm) | CloudWatch-native observability with OTLP |
+| `cloudwatch-otlp` | Amazon CloudWatch | CW Agent EKS Add-on | CloudWatch-native observability with OTLP |
 | `managed-metrics` | Amazon Managed Prometheus | AMP Managed Collector (agentless) | Agentless setup, no in-cluster collector to manage |
 | `self-managed-amp` | Amazon Managed Prometheus | OpenTelemetry Collector (Helm) | Full control over collection pipeline, traces + logs support |
 
@@ -31,9 +31,9 @@ metrics, and provision Grafana dashboards for cluster visibility.
 
 ## Quick start — CloudWatch OTLP profile
 
-This walkthrough uses the `cloudwatch-otlp` profile, which deploys an
-OpenTelemetry Collector to send metrics, traces, and logs to Amazon CloudWatch
-using the OTLP protocol.
+This walkthrough uses the `cloudwatch-otlp` profile, which deploys the
+Amazon CloudWatch Observability EKS add-on for Container Insights, with an
+optional OTLP gateway for application metrics queryable via PromQL.
 
 #### 1. Clone and initialize
 
@@ -47,38 +47,18 @@ terraform init
 
 ```bash
 export TF_VAR_eks_cluster_id=my-cluster
-export TF_VAR_aws_region=us-west-2
-export TF_VAR_cloudwatch_metrics_endpoint="https://monitoring.us-west-2.amazonaws.com/v1/metrics"
-export TF_VAR_cloudwatch_log_group="/eks/my-cluster/otel"
-export TF_VAR_cloudwatch_log_stream="collector"
+export TF_VAR_aws_region=us-east-1
 ```
 
-#### 3. Amazon Managed Grafana workspace
+#### 3. Amazon Managed Grafana workspace (optional)
 
-If you don't have an Amazon Managed Grafana workspace, follow
+If you want Grafana dashboards, follow
 [our helper guide](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/managed-grafana/)
-to create one.
-
-v3.0.0 uses the [Grafana Terraform provider](https://registry.terraform.io/providers/grafana/grafana/latest/docs)
-to provision dashboards. Configure it in your root module:
-
-```hcl
-provider "grafana" {
-  url  = "https://${var.managed_grafana_workspace_id}.grafana-workspace.${var.aws_region}.amazonaws.com"
-  auth = var.grafana_api_key
-}
-```
-
-Generate a short-lived API key:
+to create a workspace, then:
 
 ```bash
-export TF_VAR_managed_grafana_workspace_id=g-xxx
-export TF_VAR_grafana_api_key=$(aws grafana create-workspace-api-key \
-  --key-name "observability-accelerator-$(date +%s)" \
-  --key-role ADMIN \
-  --seconds-to-live 7200 \
-  --workspace-id $TF_VAR_managed_grafana_workspace_id \
-  --query key --output text)
+export TF_VAR_grafana_endpoint="https://g-xxx.grafana-workspace.us-east-1.amazonaws.com"
+export TF_VAR_grafana_api_key="glsa_xxx"
 ```
 
 #### 4. Deploy
@@ -87,12 +67,24 @@ export TF_VAR_grafana_api_key=$(aws grafana create-workspace-api-key \
 terraform apply
 ```
 
-#### 5. Visualization
+#### 5. Verification
 
-Open your Amazon Managed Grafana workspace. The module provisions infrastructure
-dashboards (cluster, kubelet, namespace workloads, node-exporter, nodes,
-workloads) via the `grafana_dashboard` Terraform resource. The CloudWatch OTLP
-profile uses a Prometheus-compatible PromQL datasource backed by CloudWatch.
+```bash
+# Check add-on and pods
+kubectl get pods -n amazon-cloudwatch
+
+# Check OTLP gateway (if enable_otlp_gateway = true)
+kubectl get amazoncloudwatchagent cwa-otlp-gateway -n amazon-cloudwatch
+```
+
+Container Insights metrics appear in CloudWatch within 3-5 minutes.
+Application metrics sent to the OTLP gateway are queryable via PromQL
+in Grafana using the CloudWatch PromQL datasource.
+
+!!! tip
+    This repository includes an AI agent guide (`AGENT.md`) that can walk you
+    through the entire deployment conversationally — gathering prerequisites,
+    running Terraform, and handing you working dashboard URLs.
 
 For more details, see the [CloudWatch OTLP guide](cloudwatch-otlp.md).
 

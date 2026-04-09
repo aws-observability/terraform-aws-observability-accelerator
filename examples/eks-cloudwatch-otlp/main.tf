@@ -28,22 +28,10 @@ module "eks_monitoring" {
   # AMP not needed
   create_amp_workspace = false
 
-  # Dashboards
+  # Dashboards — uses default git raw URLs from the module
   enable_dashboards  = var.grafana_endpoint != "" ? true : false
   grafana_endpoint   = var.grafana_endpoint
   grafana_api_key    = var.grafana_api_key
-
-  dashboard_sources = {
-    cluster             = "${path.module}/../../dashboards/cloudwatch-otlp/cluster.json"
-    containers          = "${path.module}/../../dashboards/cloudwatch-otlp/containers.json"
-    gpu-fleet           = "${path.module}/../../dashboards/cloudwatch-otlp/gpu-fleet.json"
-    kubelet             = "${path.module}/../../dashboards/cloudwatch-otlp/kubelet.json"
-    namespace-workloads = "${path.module}/../../dashboards/cloudwatch-otlp/namespace-workloads.json"
-    node-exporter       = "${path.module}/../../dashboards/cloudwatch-otlp/nodeexporter-nodes.json"
-    nodes               = "${path.module}/../../dashboards/cloudwatch-otlp/nodes.json"
-    unified-service     = "${path.module}/../../dashboards/cloudwatch-otlp/unified-service.json"
-    workloads           = "${path.module}/../../dashboards/cloudwatch-otlp/workloads.json"
-  }
 
   tags = local.tags
 }

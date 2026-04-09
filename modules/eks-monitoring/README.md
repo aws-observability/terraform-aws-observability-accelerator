@@ -34,9 +34,6 @@ module "eks_monitoring" {
   collector_profile   = "cloudwatch-otlp"
   eks_cluster_id      = "my-cluster"
   create_amp_workspace = false
-
-  # Optional: local chart path for pre-release testing
-  # cw_agent_chart_path = "/path/to/amazon-cloudwatch-observability"
 }
 ```
 

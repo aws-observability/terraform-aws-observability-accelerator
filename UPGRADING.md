@@ -231,7 +231,7 @@ will need to upgrade. Run `terraform init -upgrade` after updating your module r
 The `cloudwatch-otlp` profile grants `cloudwatch:PutMetricData` on `Resource = "*"`
 without namespace scoping. This is intentional — the OTel Collector sends metrics across
 multiple CloudWatch namespaces (infrastructure metrics from kube-state-metrics,
-node-exporter, kubelet, plus application metrics via OTLP), and the Zeus OTLP endpoint
+node-exporter, kubelet, plus application metrics via OTLP), and the CloudWatch OTLP endpoint
 may not support the `aws:cloudwatch:namespace` condition key.
 
 If you need to restrict PutMetricData to specific namespaces, you can:

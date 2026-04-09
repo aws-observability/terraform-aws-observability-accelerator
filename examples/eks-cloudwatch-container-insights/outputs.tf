@@ -1,3 +1,3 @@
-output "cw_agent_namespace" {
-  value = helm_release.cloudwatch_agent.namespace
+output "addon_arn" {
+  value = aws_eks_addon.cloudwatch_agent.arn
 }

@@ -1,0 +1,10 @@
+# Required
+eks_cluster_id = "my-cluster"
+aws_region     = "us-east-1"
+
+# Optional: override CloudWatch OTLP metrics endpoint
+# cloudwatch_metrics_endpoint = "https://monitoring.us-east-1.amazonaws.com"
+
+# Optional: Grafana workspace for dashboard provisioning
+# grafana_endpoint = "https://g-xxxxx.grafana-workspace.us-east-1.amazonaws.com"
+# grafana_api_key  = "glsa_xxxxx"

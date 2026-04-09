@@ -1,138 +1,98 @@
-resource "kubectl_manifest" "flux_gitrepository" {
-  count = var.enable_dashboards ? 1 : 0
+#--------------------------------------------------------------
+# Grafana Dashboard Folder
+#--------------------------------------------------------------
 
-  yaml_body = <<YAML
-apiVersion: source.toolkit.fluxcd.io/v1beta2
-kind: GitRepository
-metadata:
-  name: ${var.flux_gitrepository_name}
-  namespace: flux-system
-spec:
-  interval: 5m0s
-  url: ${var.flux_gitrepository_url}
-  ref:
-    tag: ${var.flux_gitrepository_branch}
-YAML
+resource "grafana_folder" "this" {
+  count = local.provision_dashboards && var.grafana_folder_id == null ? 1 : 0
 
-  depends_on = [module.external_secrets]
+  title = local.is_cloudwatch_otlp ? "CloudWatch Container Insights" : "EKS Monitoring"
 }
 
-resource "kubectl_manifest" "flux_kustomization" {
-  yaml_body  = <<YAML
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: ${var.flux_kustomization_name}
-  namespace: flux-system
-spec:
-  interval: 1m0s
-  path: ${var.flux_kustomization_path}
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: ${var.flux_gitrepository_name}
-  postBuild:
-    substitute:
-      AMG_AWS_REGION: ${local.managed_prometheus_workspace_region}
-      AMP_ENDPOINT_URL: ${local.managed_prometheus_workspace_endpoint}
-      AMG_ENDPOINT_URL: ${var.grafana_url}
-      GRAFANA_CLUSTER_DASH_URL: ${var.grafana_cluster_dashboard_url}
-      GRAFANA_KUBELET_DASH_URL: ${var.grafana_kubelet_dashboard_url}
-      GRAFANA_NSWRKLDS_DASH_URL: ${var.grafana_namespace_workloads_dashboard_url}
-      GRAFANA_NODEEXP_DASH_URL: ${var.grafana_node_exporter_dashboard_url}
-      GRAFANA_NODES_DASH_URL: ${var.grafana_nodes_dashboard_url}
-      GRAFANA_WORKLOADS_DASH_URL: ${var.grafana_workloads_dashboard_url}
-YAML
-  count      = var.enable_dashboards ? 1 : 0
-  depends_on = [module.external_secrets]
+locals {
+  grafana_folder_id = var.grafana_folder_id != null ? var.grafana_folder_id : (
+    local.provision_dashboards ? grafana_folder.this[0].id : null
+  )
+
+  # Split dashboard sources into HTTP URLs vs local file paths
+  http_dashboard_sources  = { for k, v in local.dashboard_sources : k => v if startswith(v, "http") }
+  local_dashboard_sources = { for k, v in local.dashboard_sources : k => v if !startswith(v, "http") }
 }
 
-# api server dashboards
-resource "kubectl_manifest" "api_server_dashboards" {
-  yaml_body  = <<YAML
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: ${local.apiserver_monitoring_config.flux_kustomization_name}
-  namespace: flux-system
-spec:
-  interval: 1m0s
-  path: ${local.apiserver_monitoring_config.flux_kustomization_path}
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: ${local.apiserver_monitoring_config.flux_gitrepository_name}
-  postBuild:
-    substitute:
-      GRAFANA_APISERVER_BASIC_DASH_URL: ${local.apiserver_monitoring_config.dashboards.basic}
-      GRAFANA_APISERVER_ADVANCED_DASH_URL: ${local.apiserver_monitoring_config.dashboards.advanced}
-      GRAFANA_APISERVER_TROUBLESHOOTING_DASH_URL: ${local.apiserver_monitoring_config.dashboards.troubleshooting}
-YAML
-  count      = var.enable_apiserver_monitoring ? 1 : 0
-  depends_on = [module.external_secrets]
+#--------------------------------------------------------------
+# Grafana Dashboard Provisioning
+#--------------------------------------------------------------
+
+data "http" "dashboard_json" {
+  for_each = local.provision_dashboards ? local.http_dashboard_sources : {}
+  url      = each.value
 }
 
-# adot health dashboards
-resource "kubectl_manifest" "adothealth_monitoring_dashboards" {
-  yaml_body  = <<YAML
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: ${local.adothealth_monitoring_config.flux_kustomization_name}
-  namespace: flux-system
-spec:
-  interval: 1m0s
-  path: ${local.adothealth_monitoring_config.flux_kustomization_path}
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: ${local.adothealth_monitoring_config.flux_gitrepository_name}
-  postBuild:
-    substitute:
-      GRAFANA_ADOTHEALTH_DASH_URL: ${local.adothealth_monitoring_config.dashboards.health}
-YAML
-  count      = var.enable_adotcollector_metrics ? 1 : 0
-  depends_on = [module.external_secrets]
+resource "grafana_dashboard" "http" {
+  for_each = local.provision_dashboards ? local.http_dashboard_sources : {}
+
+  config_json = data.http.dashboard_json[each.key].response_body
+  folder      = local.grafana_folder_id
+  overwrite   = true
 }
 
-# nvidia dashboards
-resource "kubectl_manifest" "nvidia_monitoring_dashboards" {
-  yaml_body  = <<YAML
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: ${local.nvidia_monitoring_config.flux_kustomization_name}
-  namespace: flux-system
-spec:
-  interval: 1m0s
-  path: ${local.nvidia_monitoring_config.flux_kustomization_path}
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: ${local.nvidia_monitoring_config.flux_gitrepository_name}
-YAML
-  count      = var.enable_nvidia_monitoring ? 1 : 0
-  depends_on = [module.external_secrets]
+resource "grafana_dashboard" "local" {
+  for_each = local.provision_dashboards ? local.local_dashboard_sources : {}
+
+  config_json = file(each.value)
+  folder      = local.grafana_folder_id
+  overwrite   = true
 }
 
-resource "kubectl_manifest" "kubeproxy_monitoring_dashboard" {
-  yaml_body  = <<YAML
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: ${local.kubeproxy_monitoring_config.flux_kustomization_name}
-  namespace: flux-system
-spec:
-  interval: 1m0s
-  path: ${local.kubeproxy_monitoring_config.flux_kustomization_path}
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: ${local.kubeproxy_monitoring_config.flux_gitrepository_name}
-  postBuild:
-    substitute:
-      GRAFANA_KUBEPROXY_DASH_URL: ${local.kubeproxy_monitoring_config.dashboards.default}
-YAML
-  count      = var.enable_dashboards ? 1 : 0
-  depends_on = [module.external_secrets]
+#--------------------------------------------------------------
+# CloudWatch PromQL Datasource (cloudwatch-otlp profile)
+#--------------------------------------------------------------
+
+resource "grafana_data_source" "cloudwatch_promql" {
+  count = local.is_cloudwatch_otlp && local.provision_dashboards ? 1 : 0
+
+  type = "prometheus"
+  name = var.grafana_cw_datasource_name
+  url  = "https://monitoring.${local.region}.amazonaws.com"
+
+  json_data_encoded = jsonencode({
+    httpMethod     = "POST"
+    sigV4Auth      = true
+    sigV4AuthType  = "ec2_iam_role"
+    sigV4Region    = local.region
+    sigV4Service   = "monitoring"
+  })
+}
+
+#--------------------------------------------------------------
+# Datasource Health Check (equivalent to "Save & Test" in UI)
+#--------------------------------------------------------------
+
+resource "terraform_data" "validate_cw_datasource" {
+  count = local.is_cloudwatch_otlp && local.provision_dashboards && var.grafana_endpoint != "" ? 1 : 0
+
+  triggers_replace = grafana_data_source.cloudwatch_promql[0].uid
+
+  provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
+    command     = <<-EOT
+      for i in 1 2 3; do
+        HTTP_CODE=$(curl -s -o /dev/null -w "%%{http_code}" \
+          -H "Authorization: Bearer $GRAFANA_API_KEY" \
+          "$GRAFANA_URL/api/datasources/uid/$DS_UID/health")
+        if [ "$HTTP_CODE" = "200" ]; then
+          echo "Datasource health check passed"
+          exit 0
+        fi
+        echo "Attempt $i: HTTP $HTTP_CODE, retrying in 5s..."
+        sleep 5
+      done
+      echo "WARNING: Datasource health check did not return 200 after 3 attempts"
+      exit 0
+    EOT
+    environment = {
+      GRAFANA_URL     = var.grafana_endpoint
+      GRAFANA_API_KEY = var.grafana_api_key
+      DS_UID          = grafana_data_source.cloudwatch_promql[0].uid
+    }
+  }
 }

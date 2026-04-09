@@ -1,150 +1,164 @@
-# Infrastructure monitoring
+# EKS Monitoring Module (v3)
 
-This module provides EKS cluster monitoring with the following resources:
+Profile-driven EKS cluster monitoring with three collector profiles:
 
-- AWS Distro For OpenTelemetry Operator and Collector for Metrics and Traces
-- Logs with [AWS for FluentBit](https://github.com/aws/aws-for-fluent-bit)
-- Installs Grafana Operator to add AWS data sources and create Grafana Dashboards to Amazon Managed Grafana.
-- Installs FluxCD to perform GitOps sync of a Git Repo to EKS Cluster. We will use this later for creating Grafana Dashboards and AWS datasources to Amazon Managed Grafana.
-- Installs External Secrets Operator to retrieve and Sync the Grafana API keys from AWS SSM Parameter Store.
-- Amazon Managed Grafana Dashboard and data source
-- Alerts and recording rules with AWS Managed Service for Prometheus
+| Profile | Backend | Collector | Best for |
+|---------|---------|-----------|----------|
+| `cloudwatch-otlp` | Amazon CloudWatch | CloudWatch Agent (Helm) | CloudWatch-native observability, no AMP needed |
+| `managed-metrics` | Amazon Managed Prometheus | AMP Managed Collector (agentless) | Agentless setup, no in-cluster pods |
+| `self-managed-amp` | Amazon Managed Prometheus | OpenTelemetry Collector (Helm) | Full pipeline control, traces + logs |
 
-This module makes use of the open source [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
+The `cloudwatch-otlp` profile deploys the Amazon CloudWatch Observability Helm
+chart, which bundles the CW Agent DaemonSet, Fluent Bit, kube-state-metrics,
+node-exporter, and a cluster scraper. AMP profiles deploy separate
+kube-state-metrics and node-exporter Helm releases alongside the collector.
 
-See examples using this Terraform modules in the **Amazon EKS** section of [this documentation](https://aws-observability.github.io/terraform-aws-observability-accelerator/)
+All profiles provision Grafana dashboards for cluster visibility.
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Prerequisites
+
+- EKS cluster with at least one managed node group
+- For `cloudwatch-otlp`: `CloudWatchAgentServerPolicy` attached to the node IAM role (the example handles this automatically)
+- For AMP profiles: an [IAM OIDC identity provider](https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html) registered for IRSA. The module auto-derives the OIDC provider ARN; override with `eks_oidc_provider_arn` if needed.
+
+## Usage
+
+### CloudWatch OTLP
+
+```hcl
+module "eks_monitoring" {
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v3.0.0"
+
+  providers = { grafana = grafana }
+
+  collector_profile   = "cloudwatch-otlp"
+  eks_cluster_id      = "my-cluster"
+  create_amp_workspace = false
+}
+```
+
+### Amazon Managed Prometheus metrics (agentless)
+
+```hcl
+module "eks_monitoring" {
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v3.0.0"
+
+  providers = { grafana = grafana }
+
+  collector_profile          = "managed-metrics"
+  eks_cluster_id             = "my-cluster"
+  scraper_subnet_ids         = module.vpc.private_subnets
+  scraper_security_group_ids = [aws_security_group.scraper.id]
+}
+```
+
+### Amazon Managed Prometheus metrics (self managed collector)
+
+```hcl
+module "eks_monitoring" {
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v3.0.0"
+
+  providers = { grafana = grafana }
+
+  collector_profile = "self-managed-amp"
+  eks_cluster_id    = "my-cluster"
+  enable_tracing    = true
+  enable_logs       = true
+}
+```
+
+## Dashboard delivery
+
+Control how dashboards are provisioned with `dashboard_delivery_method`:
+
+- `"terraform"` (default) — provisions via `grafana_dashboard` resources
+- `"none"` — skips provisioning; use `dashboard_sources` and datasource config
+  outputs for BYO GitOps (FluxCD, ArgoCD, etc.)
+
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0.0 |
-| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.4.1 |
-| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >= 2.0.3 |
-| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.10 |
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
-| <a name="provider_helm"></a> [helm](#provider\_helm) | >= 2.4.1 |
-| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >= 2.0.3 |
-
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_external_secrets"></a> [external\_secrets](#module\_external\_secrets) | ./add-ons/external-secrets | n/a |
-| <a name="module_fluentbit_logs"></a> [fluentbit\_logs](#module\_fluentbit\_logs) | ./add-ons/aws-for-fluentbit | n/a |
-| <a name="module_helm_addon"></a> [helm\_addon](#module\_helm\_addon) | github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons/helm-addon | v4.32.1 |
-| <a name="module_istio_monitoring"></a> [istio\_monitoring](#module\_istio\_monitoring) | ./patterns/istio | n/a |
-| <a name="module_java_monitoring"></a> [java\_monitoring](#module\_java\_monitoring) | ./patterns/java | n/a |
-| <a name="module_nginx_monitoring"></a> [nginx\_monitoring](#module\_nginx\_monitoring) | ./patterns/nginx | n/a |
-| <a name="module_operator"></a> [operator](#module\_operator) | ./add-ons/adot-operator | n/a |
-
-## Resources
-
-| Name | Type |
-|------|------|
-| [aws_prometheus_rule_group_namespace.alerting_rules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_rule_group_namespace.recording_rules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_rule_group_namespace) | resource |
-| [aws_prometheus_workspace.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/prometheus_workspace) | resource |
-| [helm_release.fluxcd](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
-| [helm_release.grafana_operator](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
-| [helm_release.kube_state_metrics](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
-| [helm_release.prometheus_node_exporter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
-| [kubectl_manifest.adothealth_monitoring_dashboards](https://registry.terraform.io/providers/alekc/kubectl/latest/docs/resources/manifest) | resource |
-| [kubectl_manifest.api_server_dashboards](https://registry.terraform.io/providers/alekc/kubectl/latest/docs/resources/manifest) | resource |
-| [kubectl_manifest.flux_gitrepository](https://registry.terraform.io/providers/alekc/kubectl/latest/docs/resources/manifest) | resource |
-| [kubectl_manifest.flux_kustomization](https://registry.terraform.io/providers/alekc/kubectl/latest/docs/resources/manifest) | resource |
-| [kubectl_manifest.kubeproxy_monitoring_dashboard](https://registry.terraform.io/providers/alekc/kubectl/latest/docs/resources/manifest) | resource |
-| [kubectl_manifest.nvidia_monitoring_dashboards](https://registry.terraform.io/providers/alekc/kubectl/latest/docs/resources/manifest) | resource |
-| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
-| [aws_eks_cluster.eks_cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
-| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
-| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+| terraform | >= 1.5.0 |
+| aws | >= 5.0.0 |
+| helm | >= 3.0.0 |
+| grafana | >= 2.0.0 |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_adot_loglevel"></a> [adot\_loglevel](#input\_adot\_loglevel) | Verbosity level for ADOT collector logs. This accepts (detailed\|normal\|basic), see https://aws-otel.github.io/docs/components/misc-exporters for more info. | `string` | `"normal"` | no |
-| <a name="input_adot_service_telemetry_loglevel"></a> [adot\_service\_telemetry\_loglevel](#input\_adot\_service\_telemetry\_loglevel) | Verbosity level for ADOT service telemetry logs. See https://opentelemetry.io/docs/collector/configuration/#telemetry for more info. | `string` | `"INFO"` | no |
-| <a name="input_adothealth_monitoring_config"></a> [adothealth\_monitoring\_config](#input\_adothealth\_monitoring\_config) | Config object for ADOT health monitoring | <pre>object({<br>    flux_gitrepository_name   = string<br>    flux_gitrepository_url    = string<br>    flux_gitrepository_branch = string<br>    flux_kustomization_name   = string<br>    flux_kustomization_path   = string<br><br>    dashboards = object({<br>      health = string<br>    })<br>  })</pre> | `null` | no |
-| <a name="input_apiserver_monitoring_config"></a> [apiserver\_monitoring\_config](#input\_apiserver\_monitoring\_config) | Config object for API server monitoring | <pre>object({<br>    flux_gitrepository_name   = string<br>    flux_gitrepository_url    = string<br>    flux_gitrepository_branch = string<br>    flux_kustomization_name   = string<br>    flux_kustomization_path   = string<br><br>    dashboards = object({<br>      basic           = string<br>      advanced        = string<br>      troubleshooting = string<br>    })<br>  })</pre> | `null` | no |
-| <a name="input_custom_metrics_config"></a> [custom\_metrics\_config](#input\_custom\_metrics\_config) | Configuration object to enable custom metrics collection | <pre>map(object({<br>    enableBasicAuth       = bool<br>    path                  = string<br>    basicAuthUsername     = string<br>    basicAuthPassword     = string<br>    ports                 = string<br>    droppedSeriesPrefixes = string<br>  }))</pre> | `null` | no |
-| <a name="input_eks_cluster_id"></a> [eks\_cluster\_id](#input\_eks\_cluster\_id) | EKS Cluster Id | `string` | n/a | yes |
-| <a name="input_enable_adotcollector_metrics"></a> [enable\_adotcollector\_metrics](#input\_enable\_adotcollector\_metrics) | Enables collection of ADOT collector metrics | `bool` | `true` | no |
-| <a name="input_enable_alerting_rules"></a> [enable\_alerting\_rules](#input\_enable\_alerting\_rules) | Enables or disables Managed Prometheus alerting rules | `bool` | `true` | no |
-| <a name="input_enable_alertmanager"></a> [enable\_alertmanager](#input\_enable\_alertmanager) | Creates Amazon Managed Service for Prometheus AlertManager for all workloads | `bool` | `false` | no |
-| <a name="input_enable_amazon_eks_adot"></a> [enable\_amazon\_eks\_adot](#input\_enable\_amazon\_eks\_adot) | Enables the ADOT Operator on the EKS Cluster | `bool` | `true` | no |
-| <a name="input_enable_apiserver_monitoring"></a> [enable\_apiserver\_monitoring](#input\_enable\_apiserver\_monitoring) | Enable EKS kube-apiserver monitoring, alerting and dashboards | `bool` | `true` | no |
-| <a name="input_enable_cert_manager"></a> [enable\_cert\_manager](#input\_enable\_cert\_manager) | Allow reusing an existing installation of cert-manager | `bool` | `true` | no |
-| <a name="input_enable_custom_metrics"></a> [enable\_custom\_metrics](#input\_enable\_custom\_metrics) | Allows additional metrics collection for config elements in the `custom_metrics_config` config object. Automatic dashboards are not included | `bool` | `false` | no |
-| <a name="input_enable_dashboards"></a> [enable\_dashboards](#input\_enable\_dashboards) | Enables or disables curated dashboards | `bool` | `true` | no |
-| <a name="input_enable_external_secrets"></a> [enable\_external\_secrets](#input\_enable\_external\_secrets) | Installs External Secrets to EKS Cluster | `bool` | `true` | no |
-| <a name="input_enable_fluxcd"></a> [enable\_fluxcd](#input\_enable\_fluxcd) | Enables or disables FluxCD. Disabling this might affect some data in the dashboards | `bool` | `true` | no |
-| <a name="input_enable_grafana_operator"></a> [enable\_grafana\_operator](#input\_enable\_grafana\_operator) | Deploys Grafana Operator to EKS Cluster | `bool` | `true` | no |
-| <a name="input_enable_istio"></a> [enable\_istio](#input\_enable\_istio) | Enable ISTIO workloads monitoring, alerting and default dashboards | `bool` | `false` | no |
-| <a name="input_enable_java"></a> [enable\_java](#input\_enable\_java) | Enable Java workloads monitoring, alerting and default dashboards | `bool` | `false` | no |
-| <a name="input_enable_kube_state_metrics"></a> [enable\_kube\_state\_metrics](#input\_enable\_kube\_state\_metrics) | Enables or disables Kube State metrics exporter. Disabling this might affect some data in the dashboards | `bool` | `true` | no |
-| <a name="input_enable_logs"></a> [enable\_logs](#input\_enable\_logs) | Using AWS For FluentBit to collect cluster and application logs to Amazon CloudWatch | `bool` | `true` | no |
-| <a name="input_enable_managed_prometheus"></a> [enable\_managed\_prometheus](#input\_enable\_managed\_prometheus) | Creates a new Amazon Managed Service for Prometheus Workspace | `bool` | `true` | no |
-| <a name="input_enable_nginx"></a> [enable\_nginx](#input\_enable\_nginx) | Enable NGINX workloads monitoring, alerting and default dashboards | `bool` | `false` | no |
-| <a name="input_enable_node_exporter"></a> [enable\_node\_exporter](#input\_enable\_node\_exporter) | Enables or disables Node exporter. Disabling this might affect some data in the dashboards | `bool` | `true` | no |
-| <a name="input_enable_nvidia_monitoring"></a> [enable\_nvidia\_monitoring](#input\_enable\_nvidia\_monitoring) | Enables monitoring of nvidia metrics | `bool` | `true` | no |
-| <a name="input_enable_recording_rules"></a> [enable\_recording\_rules](#input\_enable\_recording\_rules) | Enables or disables Managed Prometheus recording rules | `bool` | `true` | no |
-| <a name="input_enable_tracing"></a> [enable\_tracing](#input\_enable\_tracing) | Enables tracing with OTLP traces receiver to X-Ray | `bool` | `true` | no |
-| <a name="input_flux_config"></a> [flux\_config](#input\_flux\_config) | FluxCD configuration | <pre>object({<br>    create_namespace   = optional(bool, true)<br>    k8s_namespace      = optional(string, "flux-system")<br>    helm_chart_name    = optional(string, "flux2")<br>    helm_chart_version = optional(string, "2.12.2")<br>    helm_release_name  = optional(string, "observability-fluxcd-addon")<br>    helm_repo_url      = optional(string, "https://fluxcd-community.github.io/helm-charts")<br>    helm_settings      = optional(map(string), {})<br>    helm_values        = optional(map(any), {})<br>  })</pre> | `{}` | no |
-| <a name="input_flux_gitrepository_branch"></a> [flux\_gitrepository\_branch](#input\_flux\_gitrepository\_branch) | Flux GitRepository Branch | `string` | `"v0.3.2"` | no |
-| <a name="input_flux_gitrepository_name"></a> [flux\_gitrepository\_name](#input\_flux\_gitrepository\_name) | Flux GitRepository name | `string` | `"aws-observability-accelerator"` | no |
-| <a name="input_flux_gitrepository_url"></a> [flux\_gitrepository\_url](#input\_flux\_gitrepository\_url) | Flux GitRepository URL | `string` | `"https://github.com/aws-observability/aws-observability-accelerator"` | no |
-| <a name="input_flux_kustomization_name"></a> [flux\_kustomization\_name](#input\_flux\_kustomization\_name) | Flux Kustomization name | `string` | `"grafana-dashboards-infrastructure"` | no |
-| <a name="input_flux_kustomization_path"></a> [flux\_kustomization\_path](#input\_flux\_kustomization\_path) | Flux Kustomization Path | `string` | `"./artifacts/grafana-operator-manifests/eks/infrastructure"` | no |
-| <a name="input_go_config"></a> [go\_config](#input\_go\_config) | Grafana Operator configuration | <pre>object({<br>    create_namespace   = optional(bool, true)<br>    helm_chart         = optional(string, "oci://ghcr.io/grafana-operator/helm-charts/grafana-operator")<br>    helm_name          = optional(string, "grafana-operator")<br>    k8s_namespace      = optional(string, "grafana-operator")<br>    helm_release_name  = optional(string, "grafana-operator")<br>    helm_chart_version = optional(string, "v5.5.2")<br>  })</pre> | `{}` | no |
-| <a name="input_grafana_api_key"></a> [grafana\_api\_key](#input\_grafana\_api\_key) | Grafana API key for the Amazon Managed Grafana workspace. Required if `enable_external_secrets = true` | `string` | `""` | no |
-| <a name="input_grafana_cluster_dashboard_url"></a> [grafana\_cluster\_dashboard\_url](#input\_grafana\_cluster\_dashboard\_url) | Dashboard URL for Cluster Grafana Dashboard JSON | `string` | `"https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/infrastructure/cluster.json"` | no |
-| <a name="input_grafana_kubelet_dashboard_url"></a> [grafana\_kubelet\_dashboard\_url](#input\_grafana\_kubelet\_dashboard\_url) | Dashboard URL for Kubelet Grafana Dashboard JSON | `string` | `"https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/infrastructure/kubelet.json"` | no |
-| <a name="input_grafana_kubeproxy_dashboard_url"></a> [grafana\_kubeproxy\_dashboard\_url](#input\_grafana\_kubeproxy\_dashboard\_url) | Dashboard URL for kube-proxy Grafana Dashboard JSON | `string` | `"https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/kube-proxy/kube-proxy.json"` | no |
-| <a name="input_grafana_namespace_workloads_dashboard_url"></a> [grafana\_namespace\_workloads\_dashboard\_url](#input\_grafana\_namespace\_workloads\_dashboard\_url) | Dashboard URL for Namespace Workloads Grafana Dashboard JSON | `string` | `"https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/infrastructure/namespace-workloads.json"` | no |
-| <a name="input_grafana_node_exporter_dashboard_url"></a> [grafana\_node\_exporter\_dashboard\_url](#input\_grafana\_node\_exporter\_dashboard\_url) | Dashboard URL for Node Exporter Grafana Dashboard JSON | `string` | `"https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/infrastructure/nodeexporter-nodes.json"` | no |
-| <a name="input_grafana_nodes_dashboard_url"></a> [grafana\_nodes\_dashboard\_url](#input\_grafana\_nodes\_dashboard\_url) | Dashboard URL for Nodes Grafana Dashboard JSON | `string` | `"https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/infrastructure/nodes.json"` | no |
-| <a name="input_grafana_url"></a> [grafana\_url](#input\_grafana\_url) | Endpoint URL of Amazon Managed Grafana workspace. Required if `enable_grafana_operator = true` | `string` | `""` | no |
-| <a name="input_grafana_workloads_dashboard_url"></a> [grafana\_workloads\_dashboard\_url](#input\_grafana\_workloads\_dashboard\_url) | Dashboard URL for Workloads Grafana Dashboard JSON | `string` | `"https://raw.githubusercontent.com/aws-observability/aws-observability-accelerator/v0.2.0/artifacts/grafana-dashboards/eks/infrastructure/workloads.json"` | no |
-| <a name="input_helm_config"></a> [helm\_config](#input\_helm\_config) | Helm Config for Prometheus | `any` | `{}` | no |
-| <a name="input_irsa_iam_additional_policies"></a> [irsa\_iam\_additional\_policies](#input\_irsa\_iam\_additional\_policies) | IAM additional policies for IRSA roles | `list(string)` | `[]` | no |
-| <a name="input_irsa_iam_permissions_boundary"></a> [irsa\_iam\_permissions\_boundary](#input\_irsa\_iam\_permissions\_boundary) | IAM permissions boundary for IRSA roles | `string` | `null` | no |
-| <a name="input_irsa_iam_role_name"></a> [irsa\_iam\_role\_name](#input\_irsa\_iam\_role\_name) | IAM role name for IRSA roles | `string` | `""` | no |
-| <a name="input_irsa_iam_role_path"></a> [irsa\_iam\_role\_path](#input\_irsa\_iam\_role\_path) | IAM role path for IRSA roles | `string` | `"/"` | no |
-| <a name="input_istio_config"></a> [istio\_config](#input\_istio\_config) | Configuration object for ISTIO monitoring | <pre>object({<br>    enable_alerting_rules  = bool<br>    enable_recording_rules = bool<br>    enable_dashboards      = bool<br>    scrape_sample_limit    = number<br><br>    flux_gitrepository_name   = string<br>    flux_gitrepository_url    = string<br>    flux_gitrepository_branch = string<br>    flux_kustomization_name   = string<br>    flux_kustomization_path   = string<br><br>    managed_prometheus_workspace_id = string<br>    prometheus_metrics_endpoint     = string<br><br>    dashboards = object({<br>      cp          = string<br>      mesh        = string<br>      performance = string<br>      service     = string<br>    })<br>  })</pre> | `null` | no |
-| <a name="input_java_config"></a> [java\_config](#input\_java\_config) | Configuration object for Java/JMX monitoring | <pre>object({<br>    enable_alerting_rules  = bool<br>    enable_recording_rules = bool<br>    enable_dashboards      = bool<br>    scrape_sample_limit    = number<br><br><br>    flux_gitrepository_name   = string<br>    flux_gitrepository_url    = string<br>    flux_gitrepository_branch = string<br>    flux_kustomization_name   = string<br>    flux_kustomization_path   = string<br><br>    grafana_dashboard_url = string<br><br>    prometheus_metrics_endpoint = string<br>  })</pre> | `null` | no |
-| <a name="input_ksm_config"></a> [ksm\_config](#input\_ksm\_config) | Kube State metrics configuration | <pre>object({<br>    create_namespace   = optional(bool, true)<br>    k8s_namespace      = optional(string, "kube-system")<br>    helm_chart_name    = optional(string, "kube-state-metrics")<br>    helm_chart_version = optional(string, "5.15.2")<br>    helm_release_name  = optional(string, "kube-state-metrics")<br>    helm_repo_url      = optional(string, "https://prometheus-community.github.io/helm-charts")<br>    helm_settings      = optional(map(string), {})<br>    helm_values        = optional(map(any), {})<br><br>    scrape_interval = optional(string, "60s")<br>    scrape_timeout  = optional(string, "15s")<br>  })</pre> | `{}` | no |
-| <a name="input_kubeproxy_monitoring_config"></a> [kubeproxy\_monitoring\_config](#input\_kubeproxy\_monitoring\_config) | Config object for kube-proxy monitoring | <pre>object({<br>    flux_gitrepository_name   = string<br>    flux_gitrepository_url    = string<br>    flux_gitrepository_branch = string<br>    flux_kustomization_name   = string<br>    flux_kustomization_path   = string<br><br>    dashboards = object({<br>      default = string<br>    })<br>  })</pre> | `null` | no |
-| <a name="input_logs_config"></a> [logs\_config](#input\_logs\_config) | Configuration object for logs collection | <pre>object({<br>    cw_log_retention_days = number<br>  })</pre> | <pre>{<br>  "cw_log_retention_days": 90<br>}</pre> | no |
-| <a name="input_managed_prometheus_cross_account_role"></a> [managed\_prometheus\_cross\_account\_role](#input\_managed\_prometheus\_cross\_account\_role) | Amazon Managed Prometheus Workspace's Account Role Arn | `string` | `""` | no |
-| <a name="input_managed_prometheus_workspace_endpoint"></a> [managed\_prometheus\_workspace\_endpoint](#input\_managed\_prometheus\_workspace\_endpoint) | Amazon Managed Prometheus Workspace Endpoint | `string` | `""` | no |
-| <a name="input_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#input\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus Workspace ID | `string` | `null` | no |
-| <a name="input_managed_prometheus_workspace_region"></a> [managed\_prometheus\_workspace\_region](#input\_managed\_prometheus\_workspace\_region) | Amazon Managed Prometheus Workspace's Region | `string` | `null` | no |
-| <a name="input_ne_config"></a> [ne\_config](#input\_ne\_config) | Node exporter configuration | <pre>object({<br>    create_namespace   = optional(bool, true)<br>    k8s_namespace      = optional(string, "prometheus-node-exporter")<br>    helm_chart_name    = optional(string, "prometheus-node-exporter")<br>    helm_chart_version = optional(string, "4.24.0")<br>    helm_release_name  = optional(string, "prometheus-node-exporter")<br>    helm_repo_url      = optional(string, "https://prometheus-community.github.io/helm-charts")<br>    helm_settings      = optional(map(string), {})<br>    helm_values        = optional(map(any), {})<br><br>    scrape_interval = optional(string, "60s")<br>    scrape_timeout  = optional(string, "60s")<br>  })</pre> | `{}` | no |
-| <a name="input_nginx_config"></a> [nginx\_config](#input\_nginx\_config) | Configuration object for NGINX monitoring | <pre>object({<br>    enable_alerting_rules  = optional(bool)<br>    enable_recording_rules = optional(bool)<br>    enable_dashboards      = optional(bool)<br>    scrape_sample_limit    = optional(number)<br><br>    flux_gitrepository_name   = optional(string)<br>    flux_gitrepository_url    = optional(string)<br>    flux_gitrepository_branch = optional(string)<br>    flux_kustomization_name   = optional(string)<br>    flux_kustomization_path   = optional(string)<br><br>    grafana_dashboard_url = optional(string)<br><br>    prometheus_metrics_endpoint = optional(string)<br>  })</pre> | `{}` | no |
-| <a name="input_nvidia_monitoring_config"></a> [nvidia\_monitoring\_config](#input\_nvidia\_monitoring\_config) | Config object for nvidia monitoring | <pre>object({<br>    flux_gitrepository_name   = string<br>    flux_gitrepository_url    = string<br>    flux_gitrepository_branch = string<br>    flux_kustomization_name   = string<br>    flux_kustomization_path   = string<br>  })</pre> | `null` | no |
-| <a name="input_prometheus_config"></a> [prometheus\_config](#input\_prometheus\_config) | Controls default values such as scrape interval, timeouts and ports globally | <pre>object({<br>    global_scrape_interval = optional(string, "120s")<br>    global_scrape_timeout  = optional(string, "15s")<br>  })</pre> | `{}` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | `map(string)` | `{}` | no |
-| <a name="input_target_secret_name"></a> [target\_secret\_name](#input\_target\_secret\_name) | Target secret in Kubernetes to store the Grafana API Key Secret | `string` | `"grafana-admin-credentials"` | no |
-| <a name="input_target_secret_namespace"></a> [target\_secret\_namespace](#input\_target\_secret\_namespace) | Target namespace of secret in Kubernetes to store the Grafana API Key Secret | `string` | `"grafana-operator"` | no |
-| <a name="input_tracing_config"></a> [tracing\_config](#input\_tracing\_config) | Configuration object for traces collection to AWS X-Ray | <pre>object({<br>    otlp_grpc_endpoint = optional(string, "0.0.0.0:4317")<br>    otlp_http_endpoint = optional(string, "0.0.0.0:4318")<br>    send_batch_size    = optional(number, 50)<br>    timeout            = optional(string, "30s")<br>  })</pre> | `{}` | no |
+| `collector_profile` | Collector profile: `cloudwatch-otlp`, `managed-metrics`, `self-managed-amp` | `string` | n/a | yes |
+| `eks_cluster_id` | EKS cluster identifier | `string` | n/a | yes |
+| `eks_oidc_provider_arn` | ARN of the EKS OIDC provider for IRSA (auto-derived if empty) | `string` | `""` | no |
+| `tags` | Tags to apply to all resources | `map(string)` | `{}` | no |
+| `enable_dashboards` | Whether to provision Grafana dashboards | `bool` | `true` | no |
+| `dashboard_delivery_method` | `terraform` or `none` | `string` | `"terraform"` | no |
+| `dashboard_sources` | Map of dashboard names to JSON source URLs | `map(string)` | `{}` | no |
+| `dashboard_git_tag` | Git tag for default dashboard JSON URLs | `string` | `"v0.3.2"` | no |
+| `grafana_folder_id` | Grafana folder ID for dashboards | `string` | `null` | no |
+| `create_amp_workspace` | Whether to create a new AMP workspace | `bool` | `true` | no |
+| `managed_prometheus_workspace_id` | Existing AMP workspace ID | `string` | `null` | no |
+| `amp_workspace_alias` | Alias for new AMP workspace | `string` | `"eks-monitoring"` | no |
+| `enable_alerting_rules` | Create Prometheus alerting rules | `bool` | `true` | no |
+| `enable_recording_rules` | Create Prometheus recording rules | `bool` | `true` | no |
+| `custom_alerting_rules` | Additional alerting rule YAML | `string` | `""` | no |
+| `custom_recording_rules` | Additional recording rule YAML | `string` | `""` | no |
+| `scraper_subnet_ids` | Subnet IDs for managed scraper (>= 2 AZs) | `list(string)` | `[]` | no |
+| `scraper_security_group_ids` | Security group IDs for managed scraper | `list(string)` | `[]` | no |
+| `scrape_configuration` | Custom Prometheus scrape config YAML (overrides defaults) | `string` | `""` | no |
+| `additional_scrape_jobs` | Additional scrape jobs to append to defaults | `list(any)` | `[]` | no |
+| `prometheus_config` | Global scrape interval/timeout settings | `object` | `{}` | no |
+| `otel_collector_chart_version` | OTel Collector Helm chart version (self-managed-amp) | `string` | `"0.78.0"` | no |
+| `kube_state_metrics_chart_version` | kube-state-metrics Helm chart version (AMP profiles) | `string` | `"5.15.2"` | no |
+| `node_exporter_chart_version` | node-exporter Helm chart version (AMP profiles) | `string` | `"4.24.0"` | no |
+| `collector_namespace` | Kubernetes namespace for OTel Collector (self-managed-amp) | `string` | `"otel-collector"` | no |
+| `helm_values` | Additional Helm values for OTel Collector chart | `map(string)` | `{}` | no |
+| `cw_agent_chart_path` | Path/URL to the CW Observability Helm chart | `string` | `"amazon-cloudwatch-observability"` | no |
+| `cw_agent_chart_version` | CW Observability Helm chart version | `string` | `"4.8.0"` | no |
+| `cw_agent_namespace` | Kubernetes namespace for CW Agent | `string` | `"amazon-cloudwatch"` | no |
+| `cw_agent_enable_container_logs` | Enable Fluent Bit container logs | `bool` | `true` | no |
+| `cw_agent_enable_application_signals` | Enable Application Signals auto-instrumentation | `bool` | `false` | no |
+| `cloudwatch_metrics_endpoint` | CloudWatch OTLP metrics endpoint URL override | `string` | `""` | no |
+| `grafana_cw_datasource_name` | Grafana datasource name for CloudWatch PromQL | `string` | `"CloudWatch PromQL"` | no |
+| `enable_tracing` | Enable traces pipeline (self-managed-amp only) | `bool` | `true` | no |
+| `enable_logs` | Enable logs pipeline (self-managed-amp only) | `bool` | `true` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_adot_irsa_arn"></a> [adot\_irsa\_arn](#output\_adot\_irsa\_arn) | IRSA Arn for ADOT |
-| <a name="output_eks_cluster_id"></a> [eks\_cluster\_id](#output\_eks\_cluster\_id) | EKS Cluster Id |
-| <a name="output_eks_cluster_version"></a> [eks\_cluster\_version](#output\_eks\_cluster\_version) | EKS Cluster version |
-| <a name="output_managed_prometheus_workspace_endpoint"></a> [managed\_prometheus\_workspace\_endpoint](#output\_managed\_prometheus\_workspace\_endpoint) | Amazon Managed Prometheus workspace endpoint |
-| <a name="output_managed_prometheus_workspace_id"></a> [managed\_prometheus\_workspace\_id](#output\_managed\_prometheus\_workspace\_id) | Amazon Managed Prometheus workspace ID |
-| <a name="output_managed_prometheus_workspace_region"></a> [managed\_prometheus\_workspace\_region](#output\_managed\_prometheus\_workspace\_region) | Amazon Managed Prometheus workspace region |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+| `managed_prometheus_workspace_endpoint` | AMP workspace endpoint URL |
+| `managed_prometheus_workspace_id` | AMP workspace ID |
+| `managed_prometheus_workspace_region` | AMP workspace region |
+| `collector_irsa_arn` | IRSA role ARN for OTel Collector (self-managed-amp only) |
+| `amp_scraper_arn` | AMP Managed Collector scraper ARN (managed-metrics only) |
+| `eks_cluster_id` | EKS cluster identifier |
+| `cloudwatch_promql_datasource_config` | Grafana datasource config for CloudWatch PromQL (cloudwatch-otlp) |
+| `amp_datasource_config` | Grafana datasource config for AMP (AMP profiles, for BYO GitOps) |
+| `dashboard_sources` | Map of dashboard names to JSON URLs (for BYO GitOps) |
+| `cw_agent_namespace` | CW Agent Kubernetes namespace (cloudwatch-otlp only) |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| `aws_prometheus_workspace.this` | resource |
+| `aws_prometheus_scraper.this` | resource |
+| `aws_prometheus_rule_group_namespace.recording_rules` | resource |
+| `aws_prometheus_rule_group_namespace.alerting_rules` | resource |
+| `module.collector_irsa_role` | module |
+| `helm_release.otel_collector` | resource |
+| `helm_release.cloudwatch_agent` | resource |
+| `helm_release.kube_state_metrics` | resource |
+| `helm_release.prometheus_node_exporter` | resource |
+| `grafana_dashboard.this` | resource |
+| `grafana_data_source.cloudwatch_promql` | resource |
+
+## Upgrading from v2.x
+
+See [UPGRADING.md](../../UPGRADING.md) for migration guide.
+
+## Documentation
+
+Full documentation: [https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/](https://aws-observability.github.io/terraform-aws-observability-accelerator/eks/)

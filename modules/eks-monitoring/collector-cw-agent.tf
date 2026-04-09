@@ -104,6 +104,7 @@ resource "kubernetes_manifest" "cwa_otlp_gateway" {
       image          = local.cwa_agent_image
       serviceAccount = "cloudwatch-agent"
       config         = local.otlp_gateway_config
+      otelConfig     = local.otlp_gateway_otel_config
     }
   }
 

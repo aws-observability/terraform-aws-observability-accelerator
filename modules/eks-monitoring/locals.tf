@@ -445,16 +445,45 @@ locals {
 
   otlp_gateway_config = local.needs_otlp_gateway ? jsonencode({
     agent = { region = local.region }
-    logs = {
-      metrics_collected = {
-        application_signals = {
-          hosted_in = var.eks_cluster_id
+  }) : ""
+
+  otlp_gateway_otel_config = local.needs_otlp_gateway ? yamlencode({
+    extensions = {
+      "sigv4auth/cw" = {
+        region  = local.region
+        service = "monitoring"
+      }
+    }
+    receivers = {
+      otlp = {
+        protocols = {
+          grpc = { endpoint = "0.0.0.0:4315" }
+          http = { endpoint = "0.0.0.0:4316" }
         }
       }
     }
-    traces = {
-      traces_collected = {
-        application_signals = {}
+    processors = {
+      batch = {
+        send_batch_max_size = 500
+        send_batch_size     = 500
+        timeout             = "10s"
+      }
+    }
+    exporters = {
+      "otlphttp/cw" = {
+        auth     = { authenticator = "sigv4auth/cw" }
+        endpoint = "${local.cw_metrics_endpoint}:443"
+        tls      = { insecure = false }
+      }
+    }
+    service = {
+      extensions = ["sigv4auth/cw"]
+      pipelines = {
+        "metrics/otlp" = {
+          receivers  = ["otlp"]
+          processors = ["batch"]
+          exporters  = ["otlphttp/cw"]
+        }
       }
     }
   }) : ""

@@ -1,48 +1,58 @@
-# Amazon Managed Grafana Workspace Setup
+# Amazon Managed Grafana Workspace
 
-This example creates an Amazon Managed Grafana Workspace with
-Amazon CloudWatch, AWS X-Ray and Amazon Managed Service for Prometheus
-datasources
+Creates an Amazon Managed Grafana workspace with a service account token
+for Terraform-driven dashboard provisioning.
 
-The authentication method chosen for this example is with IAM Identity
-Center (former SSO). You can extend this example to add SAML.
+## What it provisions
 
-Step-by-step instructions available on our [docs site](https://aws-observability.github.io/terraform-aws-observability-accelerator/)
-under **Supporting Examples**
+- Amazon Managed Grafana workspace (v10.4) with CloudWatch, Prometheus, and X-Ray datasources
+- IAM Identity Center (SSO) authentication
+- Service account with ADMIN role and a 30-day API token
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
+## Prerequisites
 
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0.0 |
+- AWS IAM Identity Center (SSO) configured in the account
+- Terraform >= 1.3
 
-## Providers
+## Usage
 
-No providers.
+```bash
+terraform init
+terraform apply -var="aws_region=us-east-1"
+```
 
-## Modules
+### Assign a user to the workspace
 
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_managed_grafana"></a> [managed\_grafana](#module\_managed\_grafana) | terraform-aws-modules/managed-service-grafana/aws | 1.10.0 |
+A new workspace has no users — you must assign at least one SSO user or group
+before you can log in. Use the AWS console (Grafana → Workspace → Authentication tab)
+or the CLI:
 
-## Resources
+```bash
+aws grafana update-permissions \
+  --workspace-id $(terraform output -raw grafana_workspace_id) \
+  --update-instruction-batch \
+    'action=ADD,role=ADMIN,users=[{id=<SSO_USER_ID>,type=SSO_USER}]' \
+  --region us-east-1
+```
 
-No resources.
+See [Manage user and group access](https://docs.aws.amazon.com/grafana/latest/userguide/AMG-manage-users-and-groups-AMG.html)
+for details on finding your SSO user ID and assigning users via console or API.
 
-## Inputs
+Then pass the outputs to any monitoring example:
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS Region | `string` | n/a | yes |
+```bash
+cd ../eks-cloudwatch-otlp
+./install.sh \
+  -var="eks_cluster_id=my-cluster" \
+  -var="grafana_endpoint=$(cd ../managed-grafana-workspace && terraform output -raw grafana_workspace_endpoint)" \
+  -var="grafana_api_key=$(cd ../managed-grafana-workspace && terraform output -raw grafana_api_key)"
+```
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_grafana_workspace_endpoint"></a> [grafana\_workspace\_endpoint](#output\_grafana\_workspace\_endpoint) | Amazon Managed Grafana Workspace endpoint |
-| <a name="output_grafana_workspace_iam_role_arn"></a> [grafana\_workspace\_iam\_role\_arn](#output\_grafana\_workspace\_iam\_role\_arn) | Amazon Managed Grafana Workspace's IAM Role ARN |
-| <a name="output_grafana_workspace_id"></a> [grafana\_workspace\_id](#output\_grafana\_workspace\_id) | Amazon Managed Grafana Workspace ID |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+| `grafana_workspace_endpoint` | Workspace URL |
+| `grafana_workspace_id` | Workspace ID |
+| `grafana_workspace_iam_role_arn` | Workspace IAM role ARN |
+| `grafana_api_key` | Service account token (sensitive, 30-day TTL) |

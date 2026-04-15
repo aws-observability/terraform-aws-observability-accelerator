@@ -1,220 +1,262 @@
-# Amazon EKS cluster metrics
+# Amazon EKS cluster monitoring
 
-This example demonstrates how to monitor your Amazon Elastic Kubernetes Service
+This guide demonstrates how to monitor your Amazon Elastic Kubernetes Service
 (Amazon EKS) cluster with the Observability Accelerator's
 [EKS monitoring module](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/modules/eks-monitoring).
 
-Monitoring Amazon Elastic Kubernetes Service (Amazon EKS) for metrics has two categories:
-the control plane and the Amazon EKS nodes (with Kubernetes objects).
-The Amazon EKS control plane consists of control plane nodes that run the Kubernetes software,
-such as etcd and the Kubernetes API server. To read more on the components of an Amazon EKS cluster,
-please read the [service documentation](https://docs.aws.amazon.com/eks/latest/userguide/clusters.html).
+## Overview
 
-The Amazon EKS infrastructure Terraform modules focuses on metrics collection to Amazon
-Managed Service for Prometheus using the [AWS Distro for OpenTelemetry Operator](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html) for Amazon EKS. It deploys the [node exporter](https://github.com/prometheus/node_exporter) and [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics) in your cluster.
+The EKS monitoring module uses a profile-driven architecture with three
+collector profiles:
 
-It provides default dashboards to get a comprehensible visibility on your nodes,
-namespaces, pods, and Kubelet operations health. Finally, you get curated Prometheus recording rules
-and alerts to operate your cluster.
+| Profile | Backend | Collector | Best for |
+|---------|---------|-----------|----------|
+| `cloudwatch-otlp` | Amazon CloudWatch | CW Agent EKS Add-on | CloudWatch-native observability with OTLP |
+| `managed-metrics` | Amazon Managed Prometheus | AMP Managed Collector (agentless) | Agentless setup, no in-cluster collector to manage |
+| `self-managed-amp` | Amazon Managed Prometheus | OpenTelemetry Collector (Helm) | Full control over collection pipeline, traces + logs support |
 
-Additionally, you can optionally collect custom Prometheus metrics from your applications running
-on your EKS cluster.
+All profiles deploy [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics)
+and [node-exporter](https://github.com/prometheus/node_exporter) for infrastructure
+metrics, and provision Grafana dashboards for cluster visibility.
 
 ## Prerequisites
 
 !!! note
     Make sure to complete the [prerequisites section](https://aws-observability.github.io/terraform-aws-observability-accelerator/concepts/#prerequisites) before proceeding.
 
-## Setup
+- An existing Amazon EKS cluster
+- [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) >= 1.5.0
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- An [Amazon Managed Grafana](https://docs.aws.amazon.com/grafana/latest/userguide/what-is-Amazon-Managed-Service-Grafana.html) workspace (for dashboards)
 
-#### 1. Download sources and initialize Terraform
+## Quick start — CloudWatch OTLP profile
 
-```
+This walkthrough uses the `cloudwatch-otlp` profile, which deploys the
+Amazon CloudWatch Observability EKS add-on for Container Insights, with an
+optional OTLP gateway for application metrics queryable via PromQL.
+
+#### 1. Clone and initialize
+
+```bash
 git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
-cd examples/existing-cluster-with-base-and-infra
+cd examples/eks-cloudwatch-otlp
 terraform init
 ```
 
-#### 2. AWS Region
-
-Specify the AWS Region where the resources will be deployed:
+#### 2. Configure variables
 
 ```bash
-export TF_VAR_aws_region=xxx
+export TF_VAR_eks_cluster_id=my-cluster
+export TF_VAR_aws_region=us-east-1
 ```
 
-#### 3. Amazon EKS Cluster
+#### 3. Amazon Managed Grafana workspace (optional)
 
-To run this example, you need to provide your EKS cluster name. If you don't
-have a cluster ready, visit [this example](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/new-eks-cluster/)
-first to create a new one.
-
-Specify your cluster name:
+If you want Grafana dashboards, follow
+[our helper guide](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/managed-grafana/)
+to create a workspace, then:
 
 ```bash
-export TF_VAR_eks_cluster_id=xxx
+export TF_VAR_grafana_endpoint="https://g-xxx.grafana-workspace.us-east-1.amazonaws.com"
+export TF_VAR_grafana_api_key="glsa_xxx"
 ```
 
-#### 4. Amazon Managed Service for Prometheus workspace (optional)
-
-By default, we create an Amazon Managed Service for Prometheus workspace for you.
-However, if you have an existing workspace you want to reuse, edit and run:
-
-```bash
-export TF_VAR_managed_prometheus_workspace_id=ws-xxx
-```
-
-To create a workspace outside of Terraform's state, simply run:
-
-```bash
-aws amp create-workspace --alias observability-accelerator --query '.workspaceId' --output text
-```
-
-#### 5. Amazon Managed Grafana workspace
-
-To visualize metrics collected, you need an Amazon Managed Grafana workspace. If you have
-an existing workspace, create an environment variable as described below.
-To create a new workspace, visit [our supporting example for Grafana](https://aws-observability.github.io/terraform-aws-observability-accelerator/helpers/managed-grafana/)
-
-!!! note
-    For the URL `https://g-xyz.grafana-workspace.eu-central-1.amazonaws.com`, the workspace ID would be `g-xyz`
-
-```bash
-export TF_VAR_managed_grafana_workspace_id=g-xxx
-```
-
-#### 6. Grafana authentication
-
-Grafana Service Accounts and Service Account Tokens have been introduced in
-Amazon Managed Grafana v9.4, which replaces Grafana API Keys in v10.4.
-Amazon Managed Grafana provides new control plane APIs to automate their creation.
-If you are still using a workspace in Grafana v8.4, you can use a Grafana API Key.
-
-As a security best practice, we will provide Terraform a short lived token to
-run the `apply` or `destroy` command.
-
-Ensure you have necessary IAM permissions
-(`CreateWorkspaceServiceAccount, CreateWorkspaceServiceAccountToken, DeleteWorkspaceServiceAccounts, DeleteWorkspaceServiceAccountToken`)
-for Service Accounts and (`CreateWorkspaceApiKey, DeleteWorkspaceApiKey`) for Grafana API key.
-
-=== "v10.4 & v9.4 workspaces"
-
-    ```console
-    # skip this command if you already have a service token
-    GRAFANA_SA_ID=$(aws grafana create-workspace-service-account \
-      --workspace-id $TF_VAR_managed_grafana_workspace_id \
-      --grafana-role ADMIN \
-      --name terraform-accelerator-eks \
-      --query 'id' \
-      --output text)
-
-    # creates a new token for running Terraform
-    export TF_VAR_grafana_api_key=$(aws grafana create-workspace-service-account-token \
-      --workspace-id $TF_VAR_managed_grafana_workspace_id \
-      --name "observability-accelerator-$(date +%s)" \
-      --seconds-to-live 7200 \
-      --service-account-id $GRAFANA_SA_ID \
-      --query 'serviceAccountToken.key' \
-      --output text)
-    ```
-
-=== "v8.4 workspaces"
-
-    ```bash
-    export TF_VAR_grafana_api_key=`aws grafana create-workspace-api-key --key-name "observability-accelerator-$(date +%s)" --key-role ADMIN --seconds-to-live 7200 --workspace-id $TF_VAR_managed_grafana_workspace_id --query key --output text`
-    ```
-
-!!! note
-    The `grafana_api_key` variable accepts both Grafana API key or a service
-    account token
-
-## Deploy
-
-Simply run this command to deploy the example
+#### 4. Deploy
 
 ```bash
 terraform apply
 ```
 
-## Visualization
+#### 5. Verification
 
+```bash
+# Check add-on and pods
+kubectl get pods -n amazon-cloudwatch
 
-#### 1. Grafana dashboards
-
-Login to your Grafana workspace and navigate to the Dashboards panel. You should see a list of dashboards under the `Observability Accelerator Dashboards`
-<img width="1540" alt="image" src="https://user-images.githubusercontent.com/10175027/190000716-29e16698-7c90-49d6-8c37-79ca1790e2cc.png">
-
-Open a specific dashboard and you should be able to view its visualization
-<img width="2056" alt="cluster headlines" src="https://user-images.githubusercontent.com/10175027/199110753-9bc7a9b7-1b45-4598-89d3-32980154080e.png">
-
-With v2.5 and above, the dashboards are managed with a Grafana Operator running in your cluster.
-From the cluster to view all dashboards as Kubernetes objects, run
-
-```console
-kubectl get grafanadashboards -A
-NAMESPACE          NAME                                   AGE
-grafana-operator   cluster-grafanadashboard               138m
-grafana-operator   java-grafanadashboard                  143m
-grafana-operator   kubelet-grafanadashboard               13h
-grafana-operator   namespace-workloads-grafanadashboard   13h
-grafana-operator   nginx-grafanadashboard                 134m
-grafana-operator   node-exporter-grafanadashboard         13h
-grafana-operator   nodes-grafanadashboard                 13h
-grafana-operator   workloads-grafanadashboard             13h
+# Check OTLP gateway (if enable_otlp_gateway = true)
+kubectl get amazoncloudwatchagent cwa-otlp-gateway -n amazon-cloudwatch
 ```
 
-You can inspect more details per dashboard using this command
+Container Insights metrics appear in CloudWatch within 3-5 minutes.
+Application metrics sent to the OTLP gateway are queryable via PromQL
+in Grafana using the CloudWatch PromQL datasource.
 
-```console
-kubectl describe grafanadashboards cluster-grafanadashboard -n grafana-operator
-```
+!!! tip
+    This repository includes an AI agent guide (`AGENT.md`) that can walk you
+    through the entire deployment conversationally — gathering prerequisites,
+    running Terraform, and handing you working dashboard URLs.
 
-Grafana Operator and Flux always work together to synchronize your dashboards with Git.
-If you delete your dashboards by accident, they will be re-provisioned automatically.
+For more details, see the [CloudWatch OTLP guide](cloudwatch-otlp.md).
 
+## Managed-metrics profile (agentless AMP scraper)
 
-#### 3. Amazon Managed Service for Prometheus rules and alerts
-
-Open the Amazon Managed Service for Prometheus console and view the details of your workspace. Under the `Rules management` tab, you should find new rules deployed.
-
-<img width="1629" alt="image" src="https://user-images.githubusercontent.com/10175027/189301297-4865e75d-2d71-434f-b5d0-9750b3533632.png">
-
-!!! note
-    To setup your alert receiver, with Amazon SNS, follow [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html)
-
-
-## Custom Prometheus metrics collection
-
-In addition to the cluster metrics, if you are interested in collecting Prometheus
-metrics from your pods, you can use setup `custom metrics collection`.
-This will instruct the ADOT collector to scrape your applications metrics based
-on the configuration you provide. You can also exclude some of the metrics and save costs.
-
-Using the example, you can edit `examples/existing-cluster-with-base-and-infra/main.tf`.
-In the module `module "workloads_infra" {` add the following config (make sure the values matches your use case):
+The `managed-metrics` profile uses the
+[AMP Managed Collector](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-collector.html)
+— a fully managed, agentless scraper that runs outside your cluster. No
+OpenTelemetry Collector pods are deployed. Metrics-only (no traces or logs).
 
 ```hcl
-enable_custom_metrics = true
+module "eks_monitoring" {
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v3.0.0"
 
-custom_metrics_config = {
-    custom_app_1 = {
-        enableBasicAuth       = true
-        path                  = "/metrics"
-        basicAuthUsername     = "username"
-        basicAuthPassword     = "password"
-        ports                 = ".*:(8080)$"
-        droppedSeriesPrefixes = "(unspecified.*)$"
-    }
+  providers = { grafana = grafana }
+
+  collector_profile          = "managed-metrics"
+  eks_cluster_id             = var.eks_cluster_id
+  scraper_subnet_ids         = var.scraper_subnet_ids         # >= 2 subnets in 2 AZs
+  scraper_security_group_ids = var.scraper_security_group_ids
 }
 ```
 
-After applying Terraform, on Grafana, you can query Prometheus for your application metrics,
-create alerts and build on your own dashboards. On the explorer section of Grafana, the
-following query will give you the containers exposing metrics that matched the custom metrics
-collection, grouped by cluster and node.
+!!! note
+    The managed scraper requires at least 2 subnets in 2 distinct Availability
+    Zones. See the [managed-metrics example](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples/eks-amp-managed).
 
-```promql
-sum(up{job="custom-metrics"}) by (container_name, cluster, nodename)
+## Self-managed AMP profile
+
+The `self-managed-amp` profile deploys an OpenTelemetry Collector via Helm to
+scrape Prometheus metrics and remote-write to Amazon Managed Prometheus. It
+supports metrics, traces (X-Ray), and logs (CloudWatch Logs).
+
+```bash
+git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
+cd examples/eks-amp-otel
+terraform init
 ```
 
-<img width="2560" alt="Screenshot 2023-01-31 at 11 16 21" src="https://user-images.githubusercontent.com/10175027/215869004-e05f557d-c81a-41fb-a452-ede9f986cb27.png">
+```bash
+export TF_VAR_eks_cluster_id=my-cluster
+export TF_VAR_aws_region=us-west-2
+```
+
+By default the module creates a new AMP workspace. To use an existing one:
+
+```bash
+export TF_VAR_managed_prometheus_workspace_id=ws-xxx
+```
+
+And set `create_amp_workspace = false` in your module call.
+
+```hcl
+module "eks_monitoring" {
+  source = "github.com/aws-observability/terraform-aws-observability-accelerator//modules/eks-monitoring?ref=v3.0.0"
+
+  providers = { grafana = grafana }
+
+  collector_profile = "self-managed-amp"
+  eks_cluster_id    = var.eks_cluster_id
+  enable_tracing    = true
+  enable_logs       = true
+}
+```
+
+See the [self-managed AMP example](https://github.com/aws-observability/terraform-aws-observability-accelerator/tree/main/examples/eks-amp-otel)
+for a complete working configuration.
+
+## Dashboards
+
+The module provisions Grafana dashboards via the `grafana_dashboard` Terraform
+resource. For the `cloudwatch-otlp` profile, dashboards include Container
+Insights Containers, Container Insights Nodes, GPU Fleet Utilization, and
+Unified Service Dashboard views. For AMP-backed profiles, dashboards cover
+cluster, namespace workloads, node-exporter, nodes, and workloads views.
+
+You can control dashboard delivery with `dashboard_delivery_method`:
+
+- `"terraform"` (default) — the module provisions dashboards directly
+- `"none"` — skip provisioning; use the `dashboard_sources` and
+  `amp_datasource_config` / `cloudwatch_promql_datasource_config` outputs to
+  wire up your own GitOps pipeline (FluxCD, ArgoCD, etc.)
+
+To override the default dashboard set, pass a custom `dashboard_sources` map:
+
+```hcl
+module "eks_monitoring" {
+  # ...
+  dashboard_sources = {
+    my-custom = "https://example.com/my-dashboard.json"
+  }
+}
+```
+
+## Custom metrics and scrape jobs
+
+To scrape additional workload metrics (Java/JMX, NGINX, Istio, your own apps),
+use the `additional_scrape_jobs` variable:
+
+```hcl
+module "eks_monitoring" {
+  # ...
+  additional_scrape_jobs = [
+    {
+      job_name        = "my-app"
+      scrape_interval = "30s"
+      static_configs = [
+        { targets = ["my-app.default.svc.cluster.local:8080"] }
+      ]
+    }
+  ]
+}
+```
+
+For the `self-managed-amp` and `cloudwatch-otlp` profiles, you can also pass
+arbitrary OTel Collector Helm values via `helm_values` for full pipeline
+customization.
+
+For the `managed-metrics` profile, you can provide a complete custom Prometheus
+scrape configuration via `scrape_configuration` to override the defaults entirely.
+
+## AMP recording and alerting rules
+
+When using an AMP-backed profile (`managed-metrics` or `self-managed-amp`), the
+module creates default infrastructure recording and alerting rules. You can
+extend them with custom rules:
+
+```hcl
+module "eks_monitoring" {
+  # ...
+  enable_recording_rules = true
+  enable_alerting_rules  = true
+
+  custom_recording_rules = <<-YAML
+    - record: my_custom:metric
+      expr: sum(rate(http_requests_total[5m]))
+  YAML
+
+  custom_alerting_rules = <<-YAML
+    - alert: HighErrorRate
+      expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
+      for: 5m
+      labels:
+        severity: critical
+  YAML
+}
+```
+
+!!! note
+    To setup your alert receiver with Amazon SNS, follow
+    [this documentation](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-alertmanager-receiver.html).
+
+## Tracing and logs
+
+The `self-managed-amp` profile supports traces and logs pipelines via the
+OpenTelemetry Collector:
+
+- **Traces** — enabled by default (`enable_tracing = true`), exported to
+  AWS X-Ray via OTLP
+- **Logs** — enabled by default (`enable_logs = true`), exported to
+  CloudWatch Logs via OTLP
+
+The `cloudwatch-otlp` profile includes traces and logs pipelines by default
+with no additional configuration needed.
+
+The `managed-metrics` profile is metrics-only (no traces or logs).
+
+For details on instrumenting your applications, see the
+[tracing guide](tracing.md) and [logs guide](logs.md).
+
+## Upgrading from v2.x
+
+If you are migrating from v2.x, see the [Upgrading to v3.0.0](https://github.com/aws-observability/terraform-aws-observability-accelerator/blob/main/UPGRADING.md)
+guide for a complete list of removed variables, new requirements, and migration
+examples.

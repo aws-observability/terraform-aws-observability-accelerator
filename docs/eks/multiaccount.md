@@ -56,7 +56,7 @@ Add the Grafana Workspace ID and its corresponding region name in the `variables
 
 git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git
 
-cd terraform-aws-observability-accelerator/examples/eks-cross-account-with-central-amp
+cd terraform-aws-observability-accelerator/examples/eks-amp-cross-account
 
 terraform init
 

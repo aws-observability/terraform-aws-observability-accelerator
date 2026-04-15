@@ -7,6 +7,22 @@ datasources.
 The authentication method chosen for this example is with IAM Identity
 Center (former SSO). You can extend this example to add SAML.
 
+!!! warning
+    A new workspace has no users by default. You must assign at least one
+    SSO user or group before you can log in. After creating the workspace,
+    use the AWS console (Grafana → Workspace → Authentication tab) or the CLI:
+
+    ```bash
+    aws grafana update-permissions \
+      --workspace-id <WORKSPACE_ID> \
+      --update-instruction-batch \
+        'action=ADD,role=ADMIN,users=[{id=<SSO_USER_ID>,type=SSO_USER}]' \
+      --region <REGION>
+    ```
+
+    See [Manage user and group access](https://docs.aws.amazon.com/grafana/latest/userguide/AMG-manage-users-and-groups-AMG.html)
+    for details.
+
 ## Prerequisites
 
 !!! note

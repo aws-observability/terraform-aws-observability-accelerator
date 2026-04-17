@@ -1,7 +1,6 @@
 name: plan-examples
 
 on:
-  # this will allow to run test on main and not modify the status badge when opening a PR
   push:
   workflow_dispatch:
 
@@ -20,9 +19,8 @@ jobs:
     outputs:
       directories: ${{ steps.dirs.outputs.directories }}
     steps:
-      # Be careful not to change this to explicit checkout from PR ref/code, as below we run a python code that may change from the PR code.
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get Terraform directories for evaluation
         id: dirs
@@ -34,10 +32,8 @@ jobs:
     name: Plan examples
     needs: getExampleDirectories
     runs-on: ubuntu-latest
-    # Skip running on forks since it won't have access to secrets
     if: github.repository == 'aws-observability/terraform-aws-observability-accelerator'
 
-    # These permissions are needed to interact with GitHub's OIDC Token endpoint.
     permissions:
       id-token: write
       contents: read
@@ -52,20 +48,17 @@ jobs:
 
       - name: checkout-merge
         if: "contains(github.event_name, 'pull_request')"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: refs/pull/${{github.event.pull_request.number}}/merge
 
       - name: checkout
         if: "!contains(github.event_name, 'pull_request')"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
-          # Need to check not only the example directory
-          # but also the supporting module(s) code
-          # for plans (not for pre-commit)
           filters: |
             src:
               - '${{ matrix.directory }}/**/*.(tf|yml|yaml)'
@@ -73,7 +66,7 @@ jobs:
               - '*.tf'
 
       - name: Configure AWS credentials from Test account
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         if: steps.changes.outputs.src== 'true'
         with:
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
@@ -86,33 +79,26 @@ jobs:
         uses: aws-actions/aws-codebuild-run-build@v1
         env:
           TF_VAR_aws_region: us-west-2
-          TF_VAR_managed_grafana_workspace_id: ${{ secrets.GRAFANA_WORKSPACE_ID }}
           TF_VAR_eks_cluster_id: e2e-tests
-          TF_VAR_eks_cluster_1_id: e2e-tests
-          TF_VAR_eks_cluster_2_id: e2e-tests
-          TF_VAR_managed_prometheus_workspace_ids: ${{ secrets.PROMETHEUS_WORKSPACE_ID }}
         with:
           project-name: terraform-plan
           disable-source-override: false
           env-vars-for-codebuild: |
             TF_VAR_aws_region,
-            TF_VAR_managed_grafana_workspace_id,
-            TF_VAR_eks_cluster_id,
-            TF_VAR_managed_prometheus_workspace_ids,
-            TF_VAR_eks_cluster_1_id,
-            TF_VAR_eks_cluster_2_id
+            TF_VAR_eks_cluster_id
           buildspec-override: |
             version: 0.2
             phases:
               build:
                 commands:
-                   - export TF_VAR_grafana_api_key="fakeapikey"
+                   - export TF_VAR_grafana_endpoint=""
+                   - export TF_VAR_grafana_api_key=""
                    - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
                    - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
                    - sudo apt-get update && sudo apt-get install -y terraform
                    - terraform -version
                    - aws --version
                    - cd ${{ matrix.directory }}
-                   - sed -i 's/#//' versions.tf
                    - terraform init
+                   - terraform validate
                    - terraform plan

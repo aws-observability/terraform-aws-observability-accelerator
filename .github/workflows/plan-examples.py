@@ -9,7 +9,7 @@ def get_examples():
     returning a string formatted json array of the example directories minus those that are excluded
     """
     exclude = {
-        'examples/eks-amp-cross-account',  # Add examples here to exclude from terraform plan
+        'examples/ecs-cluster-with-vpc',  # Upstream module incompatibility with latest AWS provider
     }
 
     projects = {
@@ -18,7 +18,7 @@ def get_examples():
         if not re.match(r'^.+/_', x)
     }
 
-    print(json.dumps(list(projects.difference(exclude))))
+    print(json.dumps(sorted(projects.difference(exclude))))
 
 
 if __name__ == '__main__':

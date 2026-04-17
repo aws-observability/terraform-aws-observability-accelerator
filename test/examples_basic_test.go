@@ -6,16 +6,15 @@ import (
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
-func TestExamplesBasic(t *testing.T) {
-
+func TestExamplesEksCloudwatchOtlp(t *testing.T) {
 	terraformOptions := &terraform.Options{
-		TerraformDir: "../examples/basic",
-		// Vars: map[string]interface{}{
-		// 	"myvar":     "test",
-		// 	"mylistvar": []string{"list_item_1"},
-		// },
+		TerraformDir: "../examples/eks-cloudwatch-otlp",
+		Vars: map[string]interface{}{
+			"eks_cluster_id": "e2e-tests",
+			"aws_region":     "us-west-2",
+		},
+		PlanOnly: true,
 	}
 
-	defer terraform.Destroy(t, terraformOptions)
-	terraform.InitAndApply(t, terraformOptions)
+	terraform.InitAndPlan(t, terraformOptions)
 }

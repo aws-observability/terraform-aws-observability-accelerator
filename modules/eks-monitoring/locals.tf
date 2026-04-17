@@ -493,4 +493,21 @@ locals {
       }
     }
   }) : ""
+
+  otlp_gateway_manifest_yaml = local.needs_otlp_gateway ? yamlencode({
+    apiVersion = "cloudwatch.aws.amazon.com/v1alpha1"
+    kind       = "AmazonCloudWatchAgent"
+    metadata = {
+      name      = local.otlp_gateway_name
+      namespace = local.otlp_gateway_namespace
+    }
+    spec = {
+      mode           = "deployment"
+      replicas       = 1
+      image          = local.cwa_agent_image
+      serviceAccount = "cloudwatch-agent"
+      config         = local.otlp_gateway_config
+      otelConfig     = local.otlp_gateway_otel_config
+    }
+  }) : ""
 }

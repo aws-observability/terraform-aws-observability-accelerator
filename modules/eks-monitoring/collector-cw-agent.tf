@@ -83,29 +83,50 @@ resource "aws_iam_role_policy_attachment" "cw_agent_server" {
 # Uses the AmazonCloudWatchAgent CRD managed by the operator
 # that the add-on already installed.
 #
+# NOTE: We use terraform_data + local-exec instead of
+# kubernetes_manifest because the latter validates the CRD at
+# plan time, before the EKS addon has installed it — breaking
+# single-apply workflows.
+#
 # Apps send telemetry to:
 #   grpc: cwa-otlp-gateway.<namespace>:4315
 #   http: cwa-otlp-gateway.<namespace>:4316
 #--------------------------------------------------------------
 
-resource "kubernetes_manifest" "cwa_otlp_gateway" {
+resource "terraform_data" "cwa_otlp_gateway" {
   count = local.needs_otlp_gateway ? 1 : 0
 
-  manifest = {
-    apiVersion = "cloudwatch.aws.amazon.com/v1alpha1"
-    kind       = "AmazonCloudWatchAgent"
-    metadata = {
-      name      = local.otlp_gateway_name
-      namespace = local.otlp_gateway_namespace
-    }
-    spec = {
-      mode           = "deployment"
-      replicas       = 1
-      image          = local.cwa_agent_image
-      serviceAccount = "cloudwatch-agent"
-      config         = local.otlp_gateway_config
-      otelConfig     = local.otlp_gateway_otel_config
-    }
+  input = {
+    manifest   = local.otlp_gateway_manifest_yaml
+    cluster_id = var.eks_cluster_id
+    region     = local.region
+  }
+
+  provisioner "local-exec" {
+    interpreter = ["/bin/bash", "-c"]
+    command     = <<-EOT
+      set -euo pipefail
+      KUBECONFIG=$(mktemp)
+      trap 'rm -f "$KUBECONFIG"' EXIT
+      aws eks update-kubeconfig --name '${self.input.cluster_id}' --region '${self.input.region}' --kubeconfig "$KUBECONFIG" >/dev/null
+      cat <<'EOF' | kubectl --kubeconfig "$KUBECONFIG" apply -f -
+      ${self.input.manifest}
+      EOF
+    EOT
+  }
+
+  provisioner "local-exec" {
+    when        = destroy
+    interpreter = ["/bin/bash", "-c"]
+    command     = <<-EOT
+      set -euo pipefail
+      KUBECONFIG=$(mktemp)
+      trap 'rm -f "$KUBECONFIG"' EXIT
+      aws eks update-kubeconfig --name '${self.output.cluster_id}' --region '${self.output.region}' --kubeconfig "$KUBECONFIG" >/dev/null
+      cat <<'EOF' | kubectl --kubeconfig "$KUBECONFIG" delete -f - --ignore-not-found
+      ${self.output.manifest}
+      EOF
+    EOT
   }
 
   depends_on = [aws_eks_addon.cloudwatch_agent]

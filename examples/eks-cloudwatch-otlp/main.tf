@@ -19,6 +19,9 @@ module "eks_monitoring" {
   eks_cluster_id         = var.eks_cluster_id
   cw_agent_addon_version = "v6.0.1-eksbuild.1"
 
+  # OTel enrichment — enables resource tags + PromQL for vended metrics
+  enable_otel_enrichment = true
+
   # OTLP gateway — deploys CWA as a Deployment accepting app telemetry
   enable_otlp_gateway = true
 

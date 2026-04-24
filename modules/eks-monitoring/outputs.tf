@@ -95,3 +95,12 @@ output "otlp_gateway_endpoint" {
     http = "http://${local.otlp_gateway_name}.${local.otlp_gateway_namespace}:4316"
   } : null
 }
+
+#--------------------------------------------------------------
+# OTel Enrichment Output
+#--------------------------------------------------------------
+
+output "otel_enrichment_enabled" {
+  description = "Whether OTel enrichment for vended metrics is enabled in this account"
+  value       = var.enable_otel_enrichment
+}

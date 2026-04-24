@@ -207,6 +207,12 @@ variable "node_exporter_chart_version" {
 # CloudWatch Agent Variables (cloudwatch-otlp profile)
 #--------------------------------------------------------------
 
+variable "enable_otel_enrichment" {
+  type        = bool
+  description = "Enable CloudWatch OTel enrichment for vended metrics. Enables resource tags on telemetry and PromQL access for enriched metrics. Account-level singletons — only enable in one module instance per account."
+  default     = false
+}
+
 variable "enable_otlp_gateway" {
   type        = bool
   description = "Deploy a CWA Deployment as an OTLP gateway for application metrics/traces/logs. Apps send OTLP to this gateway, which forwards to CloudWatch. Only applies to cloudwatch-otlp profile."

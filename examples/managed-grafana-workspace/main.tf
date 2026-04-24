@@ -24,7 +24,7 @@ module "managed_grafana" {
   permission_type           = "SERVICE_MANAGED"
   data_sources              = ["CLOUDWATCH", "PROMETHEUS", "XRAY"]
   notification_destinations = ["SNS"]
-  grafana_version           = "10.4"
+  grafana_version           = "12.4"
 
   configuration = jsonencode({
     unifiedAlerting = { enabled = true }

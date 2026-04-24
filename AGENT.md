@@ -52,10 +52,40 @@ dashboards/
 
 ---
 
+## Quick Start (Demo Scripts)
+
+For a zero-to-demo setup, use the scripts in `demo/`:
+
+| Script | Purpose |
+|--------|---------|
+| `demo/config.sh` | Set `AWS_REGION` and `CLUSTER_NAME` (defaults: `us-east-1`, `cw-otlp-demo`) |
+| `demo/setup.sh` | End-to-end setup: EKS cluster → Grafana → CloudWatch OTLP monitoring → Python demo app |
+| `demo/teardown.sh` | Destroys everything in reverse order |
+
+```bash
+# 1. Configure (optional — edit region/cluster name)
+vi demo/config.sh
+
+# 2. Run
+cd demo/
+./setup.sh
+```
+
+The scripts are re-entrant: re-running skips already-completed steps.
+
+**Prerequisites** (auto-checked by setup.sh): `aws`, `eksctl`, `kubectl`, `terraform`, `docker`
+
+```bash
+brew install weaveworks/tap/eksctl kubectl
+brew install --cask docker   # then open Docker Desktop once
+```
+
+---
+
 ## Deployment Playbook
 
-Follow these steps in order. Each step checks whether the resource exists
-before creating it.
+For manual or partial deployments, follow these steps in order. Each step
+checks whether the resource exists before creating it.
 
 ### Step 0: Gather Information
 
@@ -412,12 +442,24 @@ Both commands are idempotent. Run them once per account before deploying the
 
 ## Cleanup
 
-Destroy in reverse order:
+If you used the demo scripts:
 
 ```bash
+cd demo/
+./teardown.sh
+```
+
+For manual teardown, destroy in reverse order:
+
+```bash
+# Demo app (if deployed)
+kubectl delete namespace demo-app
+
 # Monitoring
 cd examples/eks-cloudwatch-otlp  # or eks-amp-managed, eks-amp-otel
-terraform destroy
+terraform destroy \
+  -var="grafana_endpoint=<ENDPOINT>" \
+  -var="grafana_api_key=<KEY>"
 
 # Grafana (if created)
 cd ../managed-grafana-workspace
@@ -426,6 +468,10 @@ terraform destroy -var="aws_region=<REGION>"
 # Cluster (if created with eksctl)
 eksctl delete cluster --name <NAME> --region <REGION>
 ```
+
+> **Note**: Always pass real Grafana credentials to `terraform destroy` for the
+> monitoring step — Terraform needs to connect to Grafana to delete dashboards
+> and datasources. Passing placeholder values will cause the destroy to fail.
 
 ---
 

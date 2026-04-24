@@ -50,16 +50,16 @@ resource "grafana_dashboard" "local" {
 resource "grafana_data_source" "cloudwatch_promql" {
   count = local.is_cloudwatch_otlp && local.provision_dashboards ? 1 : 0
 
-  type = "prometheus"
+  type = "grafana-amazonprometheus-datasource"
   name = var.grafana_cw_datasource_name
   url  = "https://monitoring.${local.region}.amazonaws.com"
 
   json_data_encoded = jsonencode({
-    httpMethod     = "POST"
-    sigV4Auth      = true
-    sigV4AuthType  = "ec2_iam_role"
-    sigV4Region    = local.region
-    sigV4Service   = "monitoring"
+    httpMethod    = "POST"
+    sigV4Auth     = true
+    sigV4AuthType = "workspace-iam-role"
+    sigV4Region   = local.region
+    sigV4Service  = "monitoring"
   })
 }
 
